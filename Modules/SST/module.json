@@ -1,0 +1,11 @@
+{
+    "name": "SST",
+    "alias": "sst",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\SST\\Providers\\SSTServiceProvider"
+    ],
+    "files": []
+}

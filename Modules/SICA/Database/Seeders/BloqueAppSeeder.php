@@ -118,5 +118,16 @@ class BloqueAppSeeder extends Seeder
             'description' => 'Administración de aprendices, instructores, asignación de turnos operacionales en SENA Empresa y control de asistencia.',
             'description_english' => 'Management of apprentices, instructors, operational shifts and attendance control.'
         ]);
+
+        App::updateOrCreate(['name' => 'Sst'], [
+            'bloque_id' => $apoyo->id,
+            'url' => '/Sst',
+            'color' => '#ff9800',
+            'icon' => 'fas fa-users-cog',
+            'description' =>  'Gestión de la seguridad laboral, prevención de riesgos y seguimiento de las condiciones de Seguridad y Salud en el Trabajo.',
+            'description_english' => 'Management of apprentices, instructors, operational shifts and attendance control.'
+        ]);
+
+        
     }
 }
