@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Modules\SST\Http\Controllers\SSTController;
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::resource('ssts', SSTController::class)->names('sst');
+ 
+Route::prefix('Sst')->name('SST.')->group(function () {
+    Route::get('/', [SSTController::class, 'welcome'])->name('welcome');
 });
+

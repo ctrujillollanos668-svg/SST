@@ -10,9 +10,9 @@ class SSTController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function welcome()
     {
-        return view('sst::index');
+        return view('sst::welcome');
     }
 
     /**
