@@ -295,18 +295,20 @@
                                             </span>
                                         </div>
                                     </li>
-                                    <li>
-                                        <a class="dropdown-item py-2 rounded-3 text-dark fw-semibold d-flex align-items-center gap-2 mt-1" href="{{ route('direccion.dashboard') }}">
-                                            <i class="fas fa-chart-line text-success fs-6"></i>
-                                            <span>Dashboard de Dirección</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item py-2 rounded-3 text-dark fw-semibold d-flex align-items-center gap-2" href="{{ route('direccion.politicas.index') }}">
-                                            <i class="fas fa-file-contract text-primary fs-6"></i>
-                                            <span>Gestión de Políticas (CRUD)</span>
-                                        </a>
-                                    </li>
+                                    @if(Auth::user()->hasRole('direccion.admin') || Auth::user()->hasSuperAdmin())
+                                        <li>
+                                            <a class="dropdown-item py-2 rounded-3 text-dark fw-semibold d-flex align-items-center gap-2 mt-1" href="{{ route('direccion.dashboard') }}">
+                                                <i class="fas fa-chart-line text-success fs-6"></i>
+                                                <span>Dashboard de Dirección</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item py-2 rounded-3 text-dark fw-semibold d-flex align-items-center gap-2" href="{{ route('direccion.politicas.index') }}">
+                                                <i class="fas fa-file-contract text-primary fs-6"></i>
+                                                <span>Gestión de Políticas (CRUD)</span>
+                                            </a>
+                                        </li>
+                                    @endif
                                     <li>
                                         <a class="dropdown-item py-2 rounded-3 text-dark fw-semibold d-flex align-items-center gap-2" href="{{ route('home') }}">
                                             <i class="fas fa-grid-horizontal text-secondary fs-6"></i>
@@ -323,11 +325,13 @@
                                 </ul>
                             </div>
 
-                            <!-- Fast Access to Dashboard / Management -->
-                            <a href="{{ route('direccion.dashboard') }}" class="btn btn-sm btn-sena d-none d-sm-inline-flex">
-                                <i class="fas fa-sliders"></i>
-                                <span>Panel de Gestión</span>
-                            </a>
+                            @if(Auth::user()->hasRole('direccion.admin') || Auth::user()->hasSuperAdmin())
+                                <!-- Fast Access to Dashboard / Management -->
+                                <a href="{{ route('direccion.dashboard') }}" class="btn btn-sm btn-sena d-none d-sm-inline-flex">
+                                    <i class="fas fa-sliders"></i>
+                                    <span>Panel de Gestión</span>
+                                </a>
+                            @endif
                         @endguest
                     </div>
                 </div>
@@ -344,6 +348,16 @@
                 <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm d-flex align-items-center gap-2" role="alert">
                     <i class="fas fa-check-circle fs-4 text-success"></i>
                     <div><strong>¡Bienvenido!</strong> {{ session('success') }}</div>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="container mt-4">
+                <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm d-flex align-items-center gap-2" role="alert">
+                    <i class="fas fa-exclamation-triangle fs-4 text-danger"></i>
+                    <div><strong>Aviso:</strong> {{ session('error') }}</div>
                     <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                 </div>
             </div>
@@ -381,12 +395,21 @@
 
                         <div class="d-flex flex-wrap gap-3 align-items-center">
                             @auth
-                                <a href="{{ route('direccion.dashboard') }}" class="btn btn-sena btn-lg px-4 py-3">
-                                    <i class="fas fa-chart-pie me-1"></i> Ir al Dashboard Ejecutivo
-                                </a>
-                                <a href="{{ route('direccion.politicas.index') }}" class="btn btn-outline-sena btn-lg px-4 py-3">
-                                    <i class="fas fa-list-check me-1"></i> Administrar Políticas
-                                </a>
+                                @if(Auth::user()->hasRole('direccion.admin') || Auth::user()->hasSuperAdmin())
+                                    <a href="{{ route('direccion.dashboard') }}" class="btn btn-sena btn-lg px-4 py-3">
+                                        <i class="fas fa-chart-pie me-1"></i> Ir al Dashboard Ejecutivo
+                                    </a>
+                                    <a href="{{ route('direccion.politicas.index') }}" class="btn btn-outline-sena btn-lg px-4 py-3">
+                                        <i class="fas fa-list-check me-1"></i> Administrar Políticas
+                                    </a>
+                                @else
+                                    <a href="{{ route('home') }}" class="btn btn-sena btn-lg px-4 py-3">
+                                        <i class="fas fa-grid-horizontal me-1"></i> Volver a Mis Módulos ERP
+                                    </a>
+                                    <a href="#politicas" class="btn btn-outline-sena btn-lg px-4 py-3">
+                                        <i class="fas fa-eye me-1"></i> Ver Políticas Públicas
+                                    </a>
+                                @endif
                             @else
                                 <a href="{{ route('login', ['redirect' => route('direccion.dashboard')]) }}" class="btn btn-sena btn-lg px-4 py-3">
                                     <i class="fas fa-right-to-bracket me-1"></i> Iniciar Sesión en el ERP
@@ -577,7 +600,7 @@
                                 </span>
                                 <h3 class="fw-bold fs-2 text-white mb-2">Administración del Módulo de Dirección</h3>
                                 <p class="text-white-50 fs-6 mb-0">
-                                    Los directores, coordinadores académicos e instructores líderes pueden autenticarse a través del portal ERP para crear, actualizar y auditar las decisiones estratégicas de la empresa didáctica.
+                                    Los directores, coordinadores académicos e instructores líderes pueden utenticarse a través del portal ERP para crear, actualizar y auditar las decisiones estratégicas de la empresa didáctica.
                                 </p>
                             </div>
                             <div class="col-lg-4 text-lg-end">

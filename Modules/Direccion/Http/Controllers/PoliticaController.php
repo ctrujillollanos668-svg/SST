@@ -9,10 +9,30 @@ use Modules\Direccion\Entities\Politica;
 class PoliticaController extends Controller
 {
     /**
+     * Validar permisos de acceso a la gestión de políticas
+     */
+    private function checkAccess()
+    {
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+
+        $user = auth()->user();
+        if (!$user->hasRole('direccion.admin') && !$user->hasSuperAdmin()) {
+            return redirect()->route('direccion.welcome')->with('error', 'Acceso denegado: No tienes permisos para gestionar políticas directivas.');
+        }
+
+        return null;
+    }
+
+    /**
      * Listar políticas / directrices con filtros y estadísticas.
      */
     public function index(Request $request)
     {
+        if ($redirect = $this->checkAccess()) {
+            return $redirect;
+        }
         $query = Politica::query();
 
         if ($request->filled('buscar')) {
@@ -49,6 +69,10 @@ class PoliticaController extends Controller
      */
     public function create()
     {
+        if ($redirect = $this->checkAccess()) {
+            return $redirect;
+        }
+
         // Generar un código sugerido automático
         $ultimoId = Politica::withTrashed()->max('id') ?? 0;
         $codigoSugerido = 'POL-' . date('Y') . '-' . str_pad($ultimoId + 1, 3, '0', STR_PAD_LEFT);
@@ -61,6 +85,10 @@ class PoliticaController extends Controller
      */
     public function store(Request $request)
     {
+        if ($redirect = $this->checkAccess()) {
+            return $redirect;
+        }
+
         $validated = $request->validate([
             'codigo' => 'required|string|max:50|unique:politicas,codigo',
             'titulo' => 'required|string|max:255',
@@ -81,6 +109,10 @@ class PoliticaController extends Controller
      */
     public function edit($id)
     {
+        if ($redirect = $this->checkAccess()) {
+            return $redirect;
+        }
+
         $politica = Politica::findOrFail($id);
         return view('direccion::edit', compact('politica'));
     }
@@ -90,6 +122,10 @@ class PoliticaController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if ($redirect = $this->checkAccess()) {
+            return $redirect;
+        }
+
         $politica = Politica::findOrFail($id);
 
         $validated = $request->validate([
@@ -112,6 +148,10 @@ class PoliticaController extends Controller
      */
     public function destroy($id)
     {
+        if ($redirect = $this->checkAccess()) {
+            return $redirect;
+        }
+
         $politica = Politica::findOrFail($id);
         $politica->delete();
 

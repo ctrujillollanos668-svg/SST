@@ -11,6 +11,8 @@ class SSTDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+        $this->call([
+            RolesTableSeeder::class,
+        ]);
     }
 }

@@ -4,11 +4,12 @@ namespace Modules\SST\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 class SSTController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Página de Bienvenida / Landing SST
      */
     public function welcome()
     {
@@ -16,41 +17,59 @@ class SSTController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Entrada inteligente: redirige al Dashboard según el Rol del usuario
      */
-    public function create()
+    public function dashboard()
     {
-        return view('sst::create');
+        // 1. Si no ha iniciado sesión, lo manda a loguearse
+        if (!Auth::check()) {
+            return redirect()->route('login', ['redirect' => route('SST.dashboard')]);
+        }
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        // 2. Si tiene el rol de Funcionario (Prioridad para ver su panel de funcionario)
+        if ($user->roles->contains('slug', 'sst.funcionario')) {
+            return redirect()->route('SST.funcionario.dashboard');
+        }
+
+        // 3. Si tiene el rol de Administrador o es Superadmin
+        if ($user->roles->contains('slug', 'sst.admin') || $user->hasSuperAdmin()) {
+            return redirect()->route('SST.admin.dashboard');
+        }
+
+        // 4. Si no tiene rol asignado en SST
+        return redirect()->route('SST.welcome')->with('error', 'Tu usuario no tiene roles asignados en el módulo SST.');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Dashboard / Panel del Administrador SST
      */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    public function adminDashboard()
     {
-        return view('sst::show');
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        if ($user && ($user->roles->contains('slug', 'sst.admin') || $user->hasSuperAdmin())) {
+            return view('sst::admin.dashboard');
+        }
+
+        return redirect()->route('SST.welcome')->with('error', 'No tienes permisos de Administrador en SST.');
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Dashboard / Panel del Funcionario SST
      */
-    public function edit($id)
+    public function funcionarioDashboard()
     {
-        return view('sst::edit');
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        if ($user && ($user->roles->contains('slug', 'sst.funcionario') || $user->roles->contains('slug', 'sst.admin') || $user->hasSuperAdmin())) {
+            return view('sst::funcionario.dashboard');
+        }
+
+        return redirect()->route('SST.welcome')->with('error', 'No tienes permisos de Funcionario en SST.');
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
 }

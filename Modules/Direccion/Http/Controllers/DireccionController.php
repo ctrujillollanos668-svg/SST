@@ -39,6 +39,15 @@ class DireccionController extends Controller
      */
     public function dashboard()
     {
+        if (!auth()->check()) {
+            return redirect()->route('login', ['redirect' => route('direccion.dashboard')]);
+        }
+
+        $user = auth()->user();
+        if (!$user->hasRole('direccion.admin') && !$user->hasSuperAdmin()) {
+            return redirect()->route('direccion.welcome')->with('error', 'Acceso denegado: Tu usuario no tiene permisos de Dirección Estratégica.');
+        }
+
         $totalPoliticas = Politica::count();
         $activas = Politica::where('estado', 'Activa')->count();
         $enRevision = Politica::where('estado', 'En Revisión')->count();

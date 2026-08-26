@@ -104,7 +104,7 @@
                     </a>
                 </nav>
 
-                <!-- Action Area -->
+                                <!-- Action Area -->
                 <div class="flex items-center gap-3">
                     
                     <!-- Botón Volver al ERP General -->
@@ -113,11 +113,22 @@
                         <span>Portal ERP</span>
                     </a>
 
-                    <!-- Botón Iniciar Sesión (Redirección a Página de Login) -->
-                    <a href="{{ route('login', ['redirect' => route('SST.welcome')]) }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0">
-                        <i class="fas fa-right-to-bracket"></i>
-                        <span>Iniciar Sesión</span>
-                    </a>
+                    @auth
+                        <!-- Si el usuario YA inició sesión -->
+                        <a href="{{ route('SST.dashboard') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0">
+                            <i class="fas fa-gauge-high"></i>
+                            <span>Ir a mi Panel</span>
+                        </a>
+                        <a href="{{ route('logout', ['redirect' => route('SST.welcome')]) }}" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition" title="Cerrar Sesión">
+                            <i class="fas fa-power-off"></i>
+                        </a>
+                    @else
+                        <!-- Si el usuario NO ha iniciado sesión -->
+                        <a href="{{ route('login', ['redirect' => route('SST.dashboard')]) }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0">
+                            <i class="fas fa-right-to-bracket"></i>
+                            <span>Iniciar Sesión</span>
+                        </a>
+                    @endauth
 
                     <!-- Mobile Menu Trigger -->
                     <button id="mobileMenuBtn" class="md:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
@@ -125,6 +136,7 @@
                     </button>
 
                 </div>
+
             </div>
         </div>
 
