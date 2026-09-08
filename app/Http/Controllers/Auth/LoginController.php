@@ -16,7 +16,7 @@ class LoginController extends Controller
     public function showLoginForm(Request $request)
     {
         if (Auth::check()) {
-            $redirect = $request->query('redirect', route('direccion.welcome'));
+            $redirect = $request->query('redirect', route('home'));
             return redirect($redirect)->with('info', 'Ya has iniciado sesión como ' . Auth::user()->full_name);
         }
 
@@ -55,7 +55,7 @@ class LoginController extends Controller
                 return redirect($redirectUrl)->with('success', '¡Bienvenido(a) a SENA Empresa, ' . $user->full_name . '!');
             }
 
-            return redirect()->intended(route('direccion.welcome'))->with('success', '¡Bienvenido(a) a SENA Empresa, ' . $user->full_name . '!');
+            return redirect()->intended(route('home'))->with('success', '¡Bienvenido(a) a SENA Empresa, ' . $user->full_name . '!');
         }
 
         return back()
@@ -81,6 +81,6 @@ class LoginController extends Controller
             return redirect($redirectUrl)->with('info', 'Has cerrado sesión exitosamente.');
         }
 
-        return redirect()->route('direccion.welcome')->with('info', 'Has cerrado sesión exitosamente. ¡Hasta pronto, ' . $userName . '!');
+        return redirect()->route('home')->with('info', 'Has cerrado sesión exitosamente. ¡Hasta pronto, ' . $userName . '!');
     }
 }

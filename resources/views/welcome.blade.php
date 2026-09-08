@@ -545,7 +545,13 @@
           </div>
           <div class="dropdown d-lg-none">
               @auth
-                  <a href="{{ route('direccion.welcome') }}"><i class="fas fa-user-circle me-1"></i> {{ Auth::user()->full_name }} ({{ Auth::user()->primary_role }})</a>
+                  @php
+                      $user = Auth::user();
+                      $hasDir = $user->nickname === 'damendez' || $user->hasRole('direccion.admin') || $user->hasSuperAdmin();
+                      $hasSst = $user->roles->contains('slug', 'sst.admin') || $user->roles->contains('slug', 'sst.funcionario');
+                      $targetUrl = $hasDir ? route('direccion.dashboard') : ($hasSst ? route('SST.dashboard') : '#');
+                  @endphp
+                  <a href="{{ $targetUrl }}"><i class="fas fa-user-circle me-1"></i> {{ Auth::user()->full_name }} ({{ Auth::user()->primary_role }})</a>
               @else
                   <a href="{{ route('login') }}">Log in</a>
               @endauth
@@ -596,8 +602,10 @@
                   <i class="bi bi-chevron-down"></i>
               </a>
               <ul>
-                  <li><a href="{{ route('direccion.welcome') }}"><i class="fas fa-compass me-1 text-success"></i> Módulo Dirección</a></li>
-                  <li><a href="{{ route('direccion.dashboard') }}"><i class="fas fa-chart-pie me-1 text-primary"></i> Dashboard</a></li>
+                  @if(Auth::user()->nickname === 'damendez' || Auth::user()->hasRole('direccion.admin') || Auth::user()->hasSuperAdmin())
+                      <li><a href="{{ route('direccion.welcome') }}"><i class="fas fa-compass me-1 text-success"></i> Módulo Dirección</a></li>
+                      <li><a href="{{ route('direccion.dashboard') }}"><i class="fas fa-chart-pie me-1 text-primary"></i> Dashboard Dirección</a></li>
+                  @endif
                   <li><a href="{{ route('logout') }}" class="text-danger"><i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión</a></li>
               </ul>
           </li>

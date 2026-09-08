@@ -123,7 +123,7 @@ class BloqueAppSeeder extends Seeder
             'bloque_id' => $apoyo->id,
             'url' => '/Sst',
             'color' => '#ff9800',
-            'icon' => 'fas fa-users-cog',
+            'icon' => 'fas fa-hard-hat',
             'description' =>  'Gestión de la seguridad laboral, prevención de riesgos y seguimiento de las condiciones de Seguridad y Salud en el Trabajo.',
             'description_english' => 'Management of apprentices, instructors, operational shifts and attendance control.'
         ]);

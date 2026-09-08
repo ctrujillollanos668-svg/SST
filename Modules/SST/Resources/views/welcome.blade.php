@@ -49,89 +49,132 @@
     </script>
 </head>
 <body class="font-sans bg-slate-50 text-slate-800 flex flex-col min-h-screen antialiased selection:bg-sst-600 selection:text-white">
-
-    <!-- Top Navigation Bar (Blanco con Bordes Sutiles y Toque Naranja Elegante) -->
-    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-sm transition-all duration-200">
+    <!-- Top Navigation Bar (Limpio, Elegante y Espacioso) -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-xs transition-all duration-200">
         
-        <!-- Fina línea superior de acento -->
-        <div class="h-1 w-full bg-sst-600"></div>
+        <!-- Fina línea superior de acento naranja -->
+        <div class="h-1 w-full bg-gradient-to-r from-orange-600 via-amber-500 to-orange-600"></div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-4">
 
                 <!-- Logo & Marca -->
-                <a href="#inicio" class="flex items-center gap-3.5 group select-none">
-                    <!-- Icono Casco SST en contenedor limpio -->
-                    <div class="relative w-11 h-11 rounded-xl bg-orange-50 border border-orange-200/80 p-2 flex items-center justify-center shadow-sm group-hover:bg-sst-600 group-hover:border-sst-600 transition-all duration-300">
-                        <svg class="w-6 h-6 text-sst-600 group-hover:text-white transition-colors duration-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M4 14.5C4 9.8 7.58 6 12 6C16.42 6 20 9.8 20 14.5H4Z" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-                            <path d="M12 6V11.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M2.5 14.5C2.5 13.95 2.95 13.5 3.5 13.5H20.5C21.05 13.5 21.5 13.95 21.5 14.5C21.5 15.05 21.05 15.5 20.5 15.5H3.5C2.95 15.5 2.5 15.05 2.5 14.5Z" fill="currentColor"/>
-                            <path d="M7 15.5L9.5 18.5H14.5L17 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 2"/>
-                        </svg>
+                <a href="#inicio" class="flex items-center gap-3 group select-none shrink-0">
+                    <div class="w-11 h-11 rounded-xl bg-white border border-slate-200/80 p-1 flex items-center justify-center shadow-xs group-hover:border-orange-300 transition-all duration-300 overflow-hidden">
+                        <img src="{{ asset('img/logodesst.jpeg') }}" alt="Logo SST" class="max-w-full max-h-full object-contain rounded-lg">
                     </div>
 
                     <!-- Textos Marca -->
-                    <div class="flex flex-col">
-                        <div class="flex items-center gap-2">
-                            <span class="text-slate-900 font-display font-extrabold text-lg tracking-tight leading-none group-hover:text-sst-600 transition">
+                    <div class="flex flex-col whitespace-nowrap">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-slate-900 font-display font-extrabold text-base lg:text-lg tracking-tight leading-none group-hover:text-sst-600 transition">
                                 SENA <span class="text-sst-600">EMPRESA</span>
                             </span>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700 uppercase tracking-wider leading-none border border-slate-200">
+                            <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-slate-100 text-slate-600 uppercase tracking-wider leading-none border border-slate-200">
                                 ERP
                             </span>
                         </div>
-                        <p class="text-xs text-slate-500 font-medium tracking-normal mt-1 leading-none flex items-center gap-1.5">
+                        <p class="text-[11px] text-slate-500 font-medium tracking-normal mt-1 leading-none flex items-center gap-1.5">
                             <span class="w-1.5 h-1.5 rounded-full bg-sst-600"></span>
-                            Gestión Integral • <span class="text-slate-700 font-semibold">SG-SST</span>
+                            Gestión Integral • <span class="text-slate-700 font-bold">SG-SST</span>
                         </p>
                     </div>
                 </a>
 
                 <!-- Desktop Navigation Links -->
-                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
-                    <a href="#inicio" class="px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:text-sst-600 hover:bg-slate-100 transition">
-                        <i class="fas fa-home me-1.5 text-sst-600"></i> Inicio
+                <nav class="hidden xl:flex items-center space-x-1 lg:space-x-2 shrink-0">
+                    <a href="#inicio" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-slate-700 hover:text-sst-600 hover:bg-slate-100/80 transition whitespace-nowrap">
+                        <i class="fas fa-home me-1 text-sst-600"></i> Inicio
                     </a>
-                    <a href="#pilares" class="px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:text-sst-600 hover:bg-slate-100 transition">
-                        <i class="fas fa-shield-heart me-1.5 text-sst-600"></i> Ejes SST
+                    <a href="#pilares" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-slate-700 hover:text-sst-600 hover:bg-slate-100/80 transition whitespace-nowrap">
+                        <i class="fas fa-shield-heart me-1 text-sst-600"></i> Ejes SST
                     </a>
-                    <a href="#matrices" class="px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:text-sst-600 hover:bg-slate-100 transition">
-                        <i class="fas fa-clipboard-list me-1.5 text-sst-600"></i> Matrices & Protocolos
+                    <a href="#matrices" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-slate-700 hover:text-sst-600 hover:bg-slate-100/80 transition whitespace-nowrap">
+                        <i class="fas fa-clipboard-list me-1 text-sst-600"></i> Matrices & Protocolos
                     </a>
-                    <a href="#brigadas" class="px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:text-sst-600 hover:bg-slate-100 transition">
-                        <i class="fas fa-fire-extinguisher me-1.5 text-sst-600"></i> Brigadas & Emergencias
+                    <a href="#brigadas" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-slate-700 hover:text-sst-600 hover:bg-slate-100/80 transition whitespace-nowrap">
+                        <i class="fas fa-fire-extinguisher me-1 text-sst-600"></i> Brigadas & Emergencias
                     </a>
                 </nav>
 
-                                <!-- Action Area -->
-                <div class="flex items-center gap-3">
+                <!-- Action Area -->
+                <div class="flex items-center gap-2.5 sm:gap-3 shrink-0">
                     
                     <!-- Botón Volver al ERP General -->
-                    <a href="{{ route('home') }}" class="hidden lg:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 border border-slate-300 hover:border-slate-400 hover:text-slate-900 hover:bg-slate-100 transition">
-                        <i class="fas fa-arrow-left text-slate-500"></i>
+                    <a href="{{ route('home') }}" class="hidden lg:inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all duration-200 whitespace-nowrap" title="Volver al Portal ERP Principal">
+                        <i class="fas fa-arrow-left text-slate-400 text-xs"></i>
                         <span>Portal ERP</span>
                     </a>
 
-                    @auth
-                        <!-- Si el usuario YA inició sesión -->
-                        <a href="{{ route('SST.dashboard') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0">
-                            <i class="fas fa-gauge-high"></i>
-                            <span>Ir a mi Panel</span>
-                        </a>
-                        <a href="{{ route('logout', ['redirect' => route('SST.welcome')]) }}" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition" title="Cerrar Sesión">
-                            <i class="fas fa-power-off"></i>
-                        </a>
-                    @else
+                    @guest
                         <!-- Si el usuario NO ha iniciado sesión -->
-                        <a href="{{ route('login', ['redirect' => route('SST.dashboard')]) }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0">
+                        <a href="{{ route('login', ['redirect' => route('SST.dashboard')]) }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 shadow-md shadow-orange-500/25 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer whitespace-nowrap">
                             <i class="fas fa-right-to-bracket"></i>
                             <span>Iniciar Sesión</span>
                         </a>
-                    @endauth
+                    @else
+                        <!-- Si el usuario YA inició sesión: Cápsula de Usuario Estilizada -->
+                        <div class="relative">
+                            <button id="sstUserMenuBtn" type="button" class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200/90 shadow-xs hover:border-orange-300 transition-all duration-200 focus:outline-none cursor-pointer">
+                                <!-- Avatar con iniciales -->
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-600 to-amber-500 text-white flex items-center justify-center text-xs font-black shadow-xs shrink-0">
+                                    {{ Auth::user()->initials ?? 'US' }}
+                                </div>
+                                <!-- Nombre y Rol -->
+                                <div class="text-left hidden sm:block leading-tight">
+                                    <span class="text-xs font-bold text-slate-800 block truncate max-w-[150px]">
+                                        {{ Auth::user()->full_name }}
+                                    </span>
+                                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-orange-700 bg-orange-50 border border-orange-200/70 px-2 py-0.5 rounded-full mt-0.5 whitespace-nowrap">
+                                        <i class="fas fa-user-shield text-[8px] text-orange-600"></i> {{ Auth::user()->primary_role }}
+                                    </span>
+                                </div>
+                                <i class="fas fa-chevron-down text-[9px] text-slate-400 ml-1 transition-transform duration-200" id="sstUserChevron"></i>
+                            </button>
+
+                            <!-- Dropdown flotante -->
+                            <div id="sstUserDropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                                <!-- Header -->
+                                <div class="px-4 py-3 border-b border-slate-100 bg-slate-50/70 rounded-t-2xl">
+                                    <p class="text-xs font-bold text-slate-800 truncate">{{ Auth::user()->full_name }}</p>
+                                    <p class="text-[11px] text-slate-500 truncate">{{ Auth::user()->email }}</p>
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-orange-100 text-orange-700 border border-orange-200/80 mt-1.5">
+                                        <i class="fas fa-id-badge text-[8px]"></i> {{ Auth::user()->primary_role }}
+                                    </span>
+                                </div>
+
+                                <!-- Links -->
+                                <div class="py-1">
+                                    <a href="{{ route('SST.dashboard') }}" class="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-600 transition">
+                                        <i class="fas fa-gauge-high text-orange-500 w-4 text-center"></i>
+                                        <span>Mi Dashboard SST</span>
+                                    </a>
+
+                                    <a href="{{ route('home') }}" class="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-600 transition">
+                                        <i class="fas fa-grid-horizontal text-slate-400 w-4 text-center"></i>
+                                        <span>Portal General ERP</span>
+                                    </a>
+                                </div>
+
+                                <!-- Cerrar Sesión -->
+                                <div class="pt-1 border-t border-slate-100">
+                                    <a href="{{ route('logout', ['redirect' => route('SST.welcome')]) }}" class="flex items-center gap-2.5 px-4 py-2.5 text-xs font-bold text-red-600 hover:bg-red-50 transition">
+                                        <i class="fas fa-power-off text-red-500 w-4 text-center"></i>
+                                        <span>Cerrar Sesión</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botón Panel de Gestión Horizontal & Estilizado -->
+                        <a href="{{ route('SST.dashboard') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 shadow-md shadow-orange-500/25 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer whitespace-nowrap">
+                            <i class="fas fa-sliders text-xs"></i>
+                            <span>Panel de Gestión</span>
+                        </a>
+                    @endguest
 
                     <!-- Mobile Menu Trigger -->
-                    <button id="mobileMenuBtn" class="md:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
+                    <button id="mobileMenuBtn" class="xl:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer">
                         <i class="fas fa-bars text-lg"></i>
                     </button>
 
@@ -346,9 +389,15 @@
                         </h2>
                     </div>
                     <div>
-                        <button type="button" data-open-modal="loginModal" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition cursor-pointer">
-                            <i class="fas fa-arrow-right"></i> Ver Todas las Matrices
-                        </button>
+                        @auth
+                            <a href="{{ route('SST.dashboard') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition cursor-pointer">
+                                <i class="fas fa-arrow-right"></i> Ver Todas las Matrices
+                            </a>
+                        @else
+                            <a href="{{ route('login', ['redirect' => route('SST.dashboard')]) }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition cursor-pointer">
+                                <i class="fas fa-arrow-right"></i> Ver Todas las Matrices
+                            </a>
+                        @endauth
                     </div>
                 </div>
 
@@ -484,9 +533,15 @@
                         </div>
                         
                         <div class="lg:col-span-4 lg:text-right">
-                            <button type="button" data-open-modal="loginModal" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition-all duration-200 hover:-translate-y-0.5 cursor-pointer">
-                                <i class="fas fa-gauge-high"></i> Entrar al Dashboard
-                            </button>
+                            @auth
+                                <a href="{{ route('SST.dashboard') }}" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition-all duration-200 hover:-translate-y-0.5 cursor-pointer">
+                                    <i class="fas fa-gauge-high"></i> Entrar al Dashboard
+                                </a>
+                            @else
+                                <a href="{{ route('login', ['redirect' => route('SST.dashboard')]) }}" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition-all duration-200 hover:-translate-y-0.5 cursor-pointer">
+                                    <i class="fas fa-right-to-bracket"></i> Iniciar Sesión / Dashboard
+                                </a>
+                            @endauth
                         </div>
                     </div>
                 </div>
@@ -521,6 +576,28 @@
             const menu = document.getElementById('mobileMenu');
             menu.classList.toggle('hidden');
         });
+
+        // Dropdown de Usuario en Navbar
+        const sstUserBtn = document.getElementById('sstUserMenuBtn');
+        const sstUserDropdown = document.getElementById('sstUserDropdown');
+        const sstUserChevron = document.getElementById('sstUserChevron');
+
+        if (sstUserBtn && sstUserDropdown) {
+            sstUserBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isHidden = sstUserDropdown.classList.toggle('hidden');
+                if (sstUserChevron) {
+                    sstUserChevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!sstUserBtn.contains(e.target) && !sstUserDropdown.contains(e.target)) {
+                    sstUserDropdown.classList.add('hidden');
+                    if (sstUserChevron) sstUserChevron.style.transform = 'rotate(0deg)';
+                }
+            });
+        }
     </script>
 </body>
 </html>

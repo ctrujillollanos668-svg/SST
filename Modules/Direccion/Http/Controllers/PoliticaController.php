@@ -9,17 +9,20 @@ use Modules\Direccion\Entities\Politica;
 class PoliticaController extends Controller
 {
     /**
-     * Validar permisos de acceso a la gestión de políticas
+     * Validar permisos de acceso a la gestión de políticas (abort 404 si no autorizado)
      */
     private function checkAccess()
     {
         if (!auth()->check()) {
-            return redirect()->route('login');
+            abort(404);
         }
 
         $user = auth()->user();
-        if (!$user->hasRole('direccion.admin') && !$user->hasSuperAdmin()) {
-            return redirect()->route('direccion.welcome')->with('error', 'Acceso denegado: No tienes permisos para gestionar políticas directivas.');
+        $isDamendez = strtolower($user->nickname) === 'damendez' || strtolower($user->email) === 'ing.diego.mendez@gmail.com';
+        $hasDireccionRole = $user->hasRole('direccion.admin') || $user->hasSuperAdmin();
+
+        if (!$isDamendez && !$hasDireccionRole) {
+            abort(404);
         }
 
         return null;

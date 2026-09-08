@@ -30,8 +30,8 @@
     
     <!-- Logo & Header -->
     <div class="flex flex-col items-center pt-6 pb-5 px-5 border-b border-slate-100">
-        <div class="w-16 h-16 bg-slate-50 rounded-2xl p-2 border border-slate-200/70 flex items-center justify-center mb-2.5 shadow-sm">
-            <img src="{{ asset('logosena.png') }}" alt="Logo SENA SST" class="max-w-full max-h-full object-contain">
+        <div class="w-16 h-16 bg-slate-50 rounded-2xl p-2 border border-slate-200/70 flex items-center justify-center mb-2.5 shadow-sm overflow-hidden">
+            <img src="{{ asset('img/logodesst.jpeg') }}" alt="Logo SENA SST" class="max-w-full max-h-full object-contain rounded-xl">
         </div>
         <div class="text-[11px] text-center font-extrabold uppercase tracking-widest text-slate-800 leading-tight">
             Sistema de Gestión <span class="text-orange-600">SST</span>
@@ -108,6 +108,25 @@
                 <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Respuesta de Eventos</a></li>
                 <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Lugar de Información</a></li>
                 <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Contacto de Emergencia</a></li>
+            </ul>
+        </div>
+
+        <!-- INSPECCIONES -->
+        <div class="flex flex-col menu-wrapper" id="inspeccionesWrapper">
+            <div class="flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleInspecciones">
+                <div class="flex items-center gap-3">
+                    <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </span>
+                    <span class="font-bold text-[13px]">Inspecciones</span>
+                </div>
+                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 transition-transform duration-200" id="arrowInspecciones">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </span>
+            </div>
+            <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
+                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Realizar Inspección</a></li>
+                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Historial</a></li>
             </ul>
         </div>
 
@@ -193,6 +212,7 @@
         toggleMenu('btnToggleDefiniciones', 'definicionesWrapper', 'arrowDefiniciones');
         toggleMenu('btnToggleTiposEventos', 'tiposEventosWrapper', 'arrowTiposEventos');
         toggleMenu('btnToggleInformacionBasica', 'informacionBasicaWrapper', 'arrowInformacionBasica');
+        toggleMenu('btnToggleInspecciones', 'inspeccionesWrapper', 'arrowInspecciones');
         toggleMenu('btnTogglePausas', 'pausasWrapper', 'arrowPausas');
         toggleMenu('btnToggleCronograma', 'cronogramaWrapper', 'arrowCronograma');
         toggleMenu('btnToggleIndicadores', 'indicadoresWrapper', 'arrowIndicadores');

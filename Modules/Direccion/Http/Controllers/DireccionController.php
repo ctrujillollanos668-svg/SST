@@ -11,11 +11,37 @@ use Modules\SICA\Entities\ProductiveUnit;
 class DireccionController extends Controller
 {
     /**
+     * Validar autorización:
+     * - Si no hay nadie logueado (invitado), puede ver la landing de Dirección.
+     * - Si está logueado damendez o tiene rol de Dirección / SuperAdmin, tiene acceso.
+     * - Si está logueado otro usuario (como olga o DiegoT), arroja 404 Not Found.
+     */
+    private function authorizeDireccion($allowGuest = false)
+    {
+        if (!auth()->check()) {
+            if ($allowGuest) {
+                return;
+            }
+            abort(404);
+        }
+
+        $user = auth()->user();
+        $isDamendez = strtolower($user->nickname) === 'damendez' || strtolower($user->email) === 'ing.diego.mendez@gmail.com';
+        $hasDireccionRole = $user->hasRole('direccion.admin') || $user->hasSuperAdmin();
+
+        if (!$isDamendez && !$hasDireccionRole) {
+            abort(404);
+        }
+    }
+
+    /**
      * Página de Bienvenida / Landing Institucional del Módulo de Dirección.
-     * Vista pública con información estratégica, métricas e inicio de sesión.
+     * Disponible para invitados públicos y para damendez. Si entra olga/DiegoT, da 404.
      */
     public function welcome()
     {
+        $this->authorizeDireccion(true);
+
         $totalPoliticas = Politica::count();
         $activas = Politica::where('estado', 'Activa')->count();
         $enRevision = Politica::where('estado', 'En Revisión')->count();
@@ -35,18 +61,10 @@ class DireccionController extends Controller
 
     /**
      * Dashboard / Tablero de Control Ejecutivo de Dirección.
-     * Panel privado con métricas de gestión, desglose por tipo y accesos rápidos.
      */
     public function dashboard()
     {
-        if (!auth()->check()) {
-            return redirect()->route('login', ['redirect' => route('direccion.dashboard')]);
-        }
-
-        $user = auth()->user();
-        if (!$user->hasRole('direccion.admin') && !$user->hasSuperAdmin()) {
-            return redirect()->route('direccion.welcome')->with('error', 'Acceso denegado: Tu usuario no tiene permisos de Dirección Estratégica.');
-        }
+        $this->authorizeDireccion();
 
         $totalPoliticas = Politica::count();
         $activas = Politica::where('estado', 'Activa')->count();
