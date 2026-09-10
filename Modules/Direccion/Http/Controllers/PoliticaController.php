@@ -9,20 +9,26 @@ use Modules\Direccion\Entities\Politica;
 class PoliticaController extends Controller
 {
     /**
-     * Validar permisos de acceso a la gestión de políticas (abort 404 si no autorizado)
+     * Validar permisos de acceso a la gestión de políticas
      */
     private function checkAccess()
     {
         if (!auth()->check()) {
-            abort(404);
+            return redirect()->route('login', ['redirect' => route('direccion.politicas.index')]);
         }
 
         $user = auth()->user();
-        $isDamendez = strtolower($user->nickname) === 'damendez' || strtolower($user->email) === 'ing.diego.mendez@gmail.com';
+        $isDamendez = strtolower($user->nickname ?? '') === 'damendez' || strtolower($user->email ?? '') === 'ing.diego.mendez@gmail.com';
         $hasDireccionRole = $user->hasRole('direccion.admin') || $user->hasSuperAdmin();
 
         if (!$isDamendez && !$hasDireccionRole) {
-            abort(404);
+            auth()->logout();
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+
+            return redirect()->route('login')->withErrors([
+                'email' => 'Las credenciales ingresadas no coinciden con nuestros registros.'
+            ]);
         }
 
         return null;

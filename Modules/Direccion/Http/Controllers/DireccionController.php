@@ -12,35 +12,44 @@ class DireccionController extends Controller
 {
     /**
      * Validar autorización:
-     * - Si no hay nadie logueado (invitado), puede ver la landing de Dirección.
+     * - Si no hay nadie logueado (invitado), puede ver la landing de Dirección si allowGuest es true.
      * - Si está logueado damendez o tiene rol de Dirección / SuperAdmin, tiene acceso.
-     * - Si está logueado otro usuario (como olga o DiegoT), arroja 404 Not Found.
+     * - Si está logueado otro usuario sin permisos, cierra sesión y redirige al login con error.
      */
     private function authorizeDireccion($allowGuest = false)
     {
         if (!auth()->check()) {
             if ($allowGuest) {
-                return;
+                return null;
             }
-            abort(404);
+            return redirect()->route('login', ['redirect' => route('direccion.dashboard')]);
         }
 
         $user = auth()->user();
-        $isDamendez = strtolower($user->nickname) === 'damendez' || strtolower($user->email) === 'ing.diego.mendez@gmail.com';
+        $isDamendez = strtolower($user->nickname ?? '') === 'damendez' || strtolower($user->email ?? '') === 'ing.diego.mendez@gmail.com';
         $hasDireccionRole = $user->hasRole('direccion.admin') || $user->hasSuperAdmin();
 
         if (!$isDamendez && !$hasDireccionRole) {
-            abort(404);
+            auth()->logout();
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+
+            return redirect()->route('login')->withErrors([
+                'email' => 'Las credenciales ingresadas no coinciden con nuestros registros.'
+            ]);
         }
+
+        return null;
     }
 
     /**
      * Página de Bienvenida / Landing Institucional del Módulo de Dirección.
-     * Disponible para invitados públicos y para damendez. Si entra olga/DiegoT, da 404.
      */
     public function welcome()
     {
-        $this->authorizeDireccion(true);
+        if ($redirect = $this->authorizeDireccion(true)) {
+            return $redirect;
+        }
 
         $totalPoliticas = Politica::count();
         $activas = Politica::where('estado', 'Activa')->count();
@@ -64,7 +73,9 @@ class DireccionController extends Controller
      */
     public function dashboard()
     {
-        $this->authorizeDireccion();
+        if ($redirect = $this->authorizeDireccion()) {
+            return $redirect;
+        }
 
         $totalPoliticas = Politica::count();
         $activas = Politica::where('estado', 'Activa')->count();
