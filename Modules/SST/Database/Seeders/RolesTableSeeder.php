@@ -54,7 +54,7 @@ class RolesTableSeeder extends Seeder
 
         // 3. ASIGNAR ROL AL ADMINISTRADOR
         // Desvincular a damendez de SST si lo tenía asignado
-        $user_damendez = User::where('nickname', 'damendez')->orWhere('email', 'ing.diego.mendez@gmail.com')->first();
+        $user_damendez = User::where('nickname', 'Yuliana')->orWhere('email', 'ing.yulianacarolina@gmail.com')->first();
         if ($user_damendez) {
             $user_damendez->roles()->detach($role_admin->id);
         }

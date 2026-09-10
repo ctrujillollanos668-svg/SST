@@ -246,62 +246,14 @@
 
                     </div>
 
-                    <!-- Right Hero: Live Metrics Grid (Tarjetas Blancas Limpias con Bordes Sutiles) -->
-                    <div class="lg:col-span-5">
-                        <div class="grid grid-cols-2 gap-4">
-                            
-                            <!-- Card 1: Matrices -->
-                            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-card-clean hover:shadow-card-hover transition-all duration-300 text-center">
-                                <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-orange-50 text-sst-600 flex items-center justify-center text-lg">
-                                    <i class="fas fa-table-list"></i>
-                                </div>
-                                <div class="text-3xl font-display font-extrabold text-slate-900 mb-1">
-                                    18
-                                </div>
-                                <div class="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                    Matrices GTC 45
-                                </div>
-                            </div>
+                    <!-- Right Hero: SST Image Showcase -->
+                    <div class="lg:col-span-5 relative group">
+                        <!-- Resplandor sutil naranja detrás de la imagen -->
+                        <div class="absolute -inset-2 bg-gradient-to-tr from-sst-600/25 via-orange-400/15 to-transparent rounded-[2.5rem] blur-xl opacity-70 group-hover:opacity-100 transition duration-500 pointer-events-none"></div>
 
-                            <!-- Card 2: Inspecciones Activas -->
-                            <div class="bg-white rounded-2xl p-6 border-2 border-sst-600 shadow-card-clean hover:shadow-card-hover transition-all duration-300 text-center relative">
-                                <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-sst-600 text-white flex items-center justify-center text-lg shadow-sm">
-                                    <i class="fas fa-clipboard-check"></i>
-                                </div>
-                                <div class="text-3xl font-display font-extrabold text-sst-600 mb-1">
-                                    42
-                                </div>
-                                <div class="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                                    Inspecciones OK
-                                </div>
-                            </div>
-
-                            <!-- Card 3: Días Sin Accidentes -->
-                            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-card-clean hover:shadow-card-hover transition-all duration-300 text-center">
-                                <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
-                                    <i class="fas fa-triangle-exclamation"></i>
-                                </div>
-                                <div class="text-3xl font-display font-extrabold text-amber-600 mb-1">
-                                    0
-                                </div>
-                                <div class="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                    Días Sin Accidentes
-                                </div>
-                            </div>
-
-                            <!-- Card 4: Cumplimiento SG-SST -->
-                            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-card-clean hover:shadow-card-hover transition-all duration-300 text-center">
-                                <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center text-lg">
-                                    <i class="fas fa-shield-virus"></i>
-                                </div>
-                                <div class="text-3xl font-display font-extrabold text-sky-600 mb-1">
-                                    98.4%
-                                </div>
-                                <div class="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                    Estándares 0312
-                                </div>
-                            </div>
-
+                        <!-- Contenedor con borde naranja institucional -->
+                        <div class="relative rounded-3xl overflow-hidden shadow-xl border-2 border-orange-400/40 bg-white p-2 shadow-orange-500/10">
+                            <img src="{{ asset('img/mg de sst.jpg') }}" alt="Seguridad y Salud en el Trabajo" class="w-full h-auto max-h-[380px] object-cover rounded-2xl transition-transform duration-500 group-hover:scale-[1.02]">
                         </div>
                     </div>
 
