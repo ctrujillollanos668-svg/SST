@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Funcionario SST • SENA Empresa')</title>
+    <title>@yield('title', 'Aprendiz SST • SENA Empresa')</title>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -81,13 +81,13 @@
     <!-- Backdrop oscuro para móviles cuando el sidebar esté abierto -->
     <div id="sidebarBackdrop" class="fixed inset-0 bg-slate-900/40 z-30 hidden lg:hidden backdrop-blur-xs transition-opacity"></div>
 
-    <!-- 1. Sidebar Funcionario -->
-    @include('sst::components.layouts.funcionariosidebar')
+    <!-- 1. Sidebar Aprendiz -->
+    @include('sst::components.layouts.aprendizsidebar')
 
     <!-- 2. Contenedor Principal -->
     <div id="mainContentWrapper" class="flex-1 ml-[270px] min-h-screen flex flex-col w-full">
         
-        <!-- Top Navbar del Funcionario -->
+        <!-- Top Navbar del Aprendiz -->
         <header class="h-16 bg-white border-b border-slate-200/80 sticky top-0 z-20 px-4 sm:px-6 flex items-center justify-between shadow-xs">
             
             <!-- Botón Hamburguesa y Título -->
@@ -97,7 +97,7 @@
                 </button>
 
                 <h2 class="font-bold text-slate-800 text-sm sm:text-base tracking-tight">
-                    @yield('title', 'Panel Funcionario - SST')
+                    @yield('title', 'Panel Aprendiz - SST')
                 </h2>
             </div>
             
@@ -118,16 +118,16 @@
                         
                         <!-- Avatar con Iniciales -->
                         <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 text-white flex items-center justify-center text-xs font-extrabold shadow-sm">
-                            {{ Auth::user()->initials ?? 'FU' }}
+                            {{ Auth::user()->initials ?? 'AP' }}
                         </div>
 
                         <!-- Datos del Usuario -->
                         <div class="text-left hidden sm:block leading-tight">
                             <div class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                                {{ Auth::user()->full_name ?? Auth::user()->name ?? 'Funcionario SST' }}
+                                {{ Auth::user()->full_name ?? Auth::user()->name ?? 'Aprendiz SST' }}
                                 <i class="fa-solid fa-chevron-down text-[9px] text-slate-400 transition-transform duration-200" id="userMenuChevron"></i>
                             </div>
-                            <span class="inline-block text-[10px] text-orange-600 font-semibold">Funcionario SST</span>
+                            <span class="inline-block text-[10px] text-orange-600 font-semibold">Aprendiz SST</span>
                         </div>
                     </button>
 
@@ -136,10 +136,10 @@
                         
                         <!-- Encabezado del Dropdown -->
                         <div class="px-4 py-3 border-b border-slate-100 bg-slate-50/50 rounded-t-2xl">
-                            <p class="text-xs font-bold text-slate-800 truncate">{{ Auth::user()->full_name ?? 'Funcionario SST' }}</p>
-                            <p class="text-[11px] text-slate-500 truncate">{{ Auth::user()->email ?? 'funcionario.sst@sena.edu.co' }}</p>
+                            <p class="text-xs font-bold text-slate-800 truncate">{{ Auth::user()->full_name ?? 'Aprendiz SST' }}</p>
+                            <p class="text-[11px] text-slate-500 truncate">{{ Auth::user()->email ?? 'aprendiz.sst@sena.edu.co' }}</p>
                             <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-orange-100 text-orange-700 mt-1.5">
-                                <i class="fa-solid fa-user-check text-[8px]"></i> Funcionario SST
+                                <i class="fa-solid fa-user-check text-[8px]"></i> Aprendiz SST
                             </span>
                         </div>
 

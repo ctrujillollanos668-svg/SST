@@ -25,7 +25,7 @@
     }
 </style>
 
-<!-- SIDEBAR FUNCIONARIO SG-SST -->
+<!-- SIDEBAR APRENDIZ SG-SST -->
 <aside id="sidebarMenu" class="w-[270px] bg-white text-slate-600 flex flex-col h-screen fixed left-0 top-0 z-40 shadow-sm border-r border-slate-200/80 select-none">
     
     <!-- Logo & Header -->
@@ -149,12 +149,31 @@
             </ul>
         </div>
 
+        <!-- USUARIO -->
+        <div class="flex flex-col menu-wrapper" id="usuarioWrapper">
+            <div class="flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleUsuario">
+                <div class="flex items-center gap-3">
+                    <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition">
+                        <i class="fa-solid fa-user text-xs"></i>
+                    </span>
+                    <span class="font-bold text-[13px]">Usuario</span>
+                </div>
+                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 transition-transform duration-200" id="arrowUsuario">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </span>
+            </div>
+            <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
+                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Mi Perfil</a></li>
+                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Datos Personales</a></li>
+            </ul>
+        </div>
+
     </nav>
 
     <!-- Footer Sidebar -->
     <div class="p-3.5 border-t border-slate-100 bg-slate-50/50 text-center">
         <div class="text-[11px] font-bold text-slate-600">SG-SST v2.5</div>
-        <div class="text-[10px] text-slate-400">Ambiente Funcionario Seguro</div>
+        <div class="text-[10px] text-slate-400">Ambiente Aprendiz Seguro</div>
     </div>
 </aside>
 
@@ -179,5 +198,6 @@
         toggleMenu('btnToggleTiposRiesgos', 'tiposRiesgosWrapper', 'arrowTiposRiesgos');
         toggleMenu('btnTogglePausas', 'pausasWrapper', 'arrowPausas');
         toggleMenu('btnToggleAsistencia', 'asistenciaWrapper', 'arrowAsistencia');
+        toggleMenu('btnToggleUsuario', 'usuarioWrapper', 'arrowUsuario');
     });
 </script>

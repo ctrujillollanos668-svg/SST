@@ -14,6 +14,8 @@ Route::prefix('Sst')->name('SST.')->group(function () {
     // 3. Ruta para el Administrador
     Route::get('/admin/dashboard', [SSTController::class, 'adminDashboard'])->name('admin.dashboard');
 
-    // 4. Ruta para el Funcionario
-    Route::get('/funcionario/dashboard', [SSTController::class, 'funcionarioDashboard'])->name('funcionario.dashboard');
+    // 4. Ruta para el Aprendiz SST
+    Route::get('/aprendiz/dashboard', [SSTController::class, 'aprendizDashboard'])->name('aprendiz.dashboard');
+    // Compatibilidad
+    Route::get('/funcionario/dashboard', [SSTController::class, 'aprendizDashboard'])->name('funcionario.dashboard');
 });

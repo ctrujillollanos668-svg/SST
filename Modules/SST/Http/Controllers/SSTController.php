@@ -29,9 +29,9 @@ class SSTController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        // 2. Si tiene el rol de Funcionario (Prioridad para ver su panel de funcionario)
-        if ($user->roles->contains('slug', 'sst.funcionario')) {
-            return redirect()->route('SST.funcionario.dashboard');
+        // 2. Si tiene el rol de Aprendiz (o Funcionario por compatibilidad)
+        if ($user->roles->contains('slug', 'sst.aprendiz') || $user->roles->contains('slug', 'sst.funcionario')) {
+            return redirect()->route('SST.aprendiz.dashboard');
         }
 
         // 3. Si tiene el rol de Administrador o es Superadmin
@@ -59,17 +59,17 @@ class SSTController extends Controller
     }
 
     /**
-     * Dashboard / Panel del Funcionario SST
+     * Dashboard / Panel del Aprendiz SST
      */
-    public function funcionarioDashboard()
+    public function aprendizDashboard()
     {
         /** @var User|null $user */
         $user = Auth::user();
 
-        if ($user && ($user->roles->contains('slug', 'sst.funcionario') || $user->roles->contains('slug', 'sst.admin') || $user->hasSuperAdmin())) {
-            return view('sst::funcionario.dashboard');
+        if ($user && ($user->roles->contains('slug', 'sst.aprendiz') || $user->roles->contains('slug', 'sst.funcionario') || $user->roles->contains('slug', 'sst.admin') || $user->hasSuperAdmin())) {
+            return view('sst::aprendiz.dashboard');
         }
 
-        return redirect()->route('SST.welcome')->with('error', 'No tienes permisos de Funcionario en SST.');
+        return redirect()->route('SST.welcome')->with('error', 'No tienes permisos de Aprendiz en SST.');
     }
 }

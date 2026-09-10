@@ -44,10 +44,10 @@ class RolesTableSeeder extends Seeder
             'app_id' => $app->id
         ]);
 
-        $role_funcionario = Role::updateOrCreate(['slug' => 'sst.funcionario'], [
-            'name' => 'Funcionario SST',
-            'description' => 'Rol Funcionario del módulo SST',
-            'description_english' => 'SST Module Official Role',
+        $role_aprendiz = Role::updateOrCreate(['slug' => 'sst.aprendiz'], [
+            'name' => 'Aprendiz SST',
+            'description' => 'Rol Aprendiz del módulo SST',
+            'description_english' => 'SST Module Apprentice Role',
             'full_access' => 'No',
             'app_id' => $app->id
         ]);
@@ -79,17 +79,17 @@ class RolesTableSeeder extends Seeder
         // sync() asegura que NADIE MÁS tenga el rol de Administrador SST excepto Olga
         $role_admin->users()->sync([$user_admin->id]);
 
-        // 4. FUNCIONARIO SST (Únicamente Yuliana Carolina)
+        // 4. APRENDIZ SST (Únicamente Yuliana Carolina)
         $person_yuliana = Person::firstOrCreate(['document_number' => 1098765432], [
             'document_type' => 'Cédula de ciudadanía',
             'first_name' => 'YULIANA CAROLINA',
-            'first_last_name' => 'FUNCIONARIA',
+            'first_last_name' => 'APRENDIZ',
             'eps_id' => $eps->id,
             'population_group_id' => $population->id,
             'pension_entity_id' => $pension->id
         ]);
 
-        $user_funcionario = User::updateOrCreate(
+        $user_aprendiz = User::updateOrCreate(
             ['person_id' => $person_yuliana->id],
             [
                 'nickname' => 'Yuliana',
@@ -98,7 +98,7 @@ class RolesTableSeeder extends Seeder
             ]
         );
 
-        // sync() asegura que NADIE MÁS tenga el rol de Funcionario SST excepto Yuliana
-        $role_funcionario->users()->sync([$user_funcionario->id]);
+        // sync() asegura que NADIE MÁS tenga el rol de Aprendiz SST excepto Yuliana
+        $role_aprendiz->users()->sync([$user_aprendiz->id]);
     }
 }
