@@ -52,18 +52,12 @@ class RolesTableSeeder extends Seeder
             'app_id' => $app->id
         ]);
 
-        // 3. ASIGNAR ROL AL ADMINISTRADOR
-        // Desvincular a damendez de SST si lo tenía asignado
-        $user_damendez = User::where('nickname', 'Yuliana')->orWhere('email', 'ing.yulianacarolina@gmail.com')->first();
-        if ($user_damendez) {
-            $user_damendez->roles()->detach($role_admin->id);
-        }
-
-        // Consultar o crear la Persona vinculada a Olga (obligatorio en la BD del SENA)
+        // Entidades base para vincular personas
         $eps = EPS::firstOrCreate(['name' => 'NO REGISTRA']);
         $pension = PensionEntity::firstOrCreate(['name' => 'NO REGISTRA']);
         $population = PopulationGroup::firstOrCreate(['name' => 'NINGUNA']);
 
+        // 3. ADMINISTRADOR SST (Únicamente Olga Lucía)
         $person_olga = Person::firstOrCreate(['document_number' => 1234567890], [
             'document_type' => 'Cédula de ciudadanía',
             'first_name' => 'OLGA LUCIA',
@@ -73,7 +67,6 @@ class RolesTableSeeder extends Seeder
             'pension_entity_id' => $pension->id
         ]);
 
-        // Crear o actualizar a Olga con su contraseña y asignarle el rol de Administrador SST
         $user_admin = User::updateOrCreate(
             ['person_id' => $person_olga->id],
             [
@@ -82,12 +75,30 @@ class RolesTableSeeder extends Seeder
                 'password' => Hash::make('12345678')
             ]
         );
-        $user_admin->roles()->syncWithoutDetaching([$role_admin->id]);
 
-        // 4. ASIGNAR ROL AL FUNCIONARIO
-        $user_funcionario = User::where('nickname', 'DiegoT')->orWhere('email', 'jdguevara01@soy.sena.edu.co')->first();
-        if ($user_funcionario) {
-            $user_funcionario->roles()->syncWithoutDetaching([$role_funcionario->id]);
-        }
+        // sync() asegura que NADIE MÁS tenga el rol de Administrador SST excepto Olga
+        $role_admin->users()->sync([$user_admin->id]);
+
+        // 4. FUNCIONARIO SST (Únicamente Yuliana Carolina)
+        $person_yuliana = Person::firstOrCreate(['document_number' => 1098765432], [
+            'document_type' => 'Cédula de ciudadanía',
+            'first_name' => 'YULIANA CAROLINA',
+            'first_last_name' => 'FUNCIONARIA',
+            'eps_id' => $eps->id,
+            'population_group_id' => $population->id,
+            'pension_entity_id' => $pension->id
+        ]);
+
+        $user_funcionario = User::updateOrCreate(
+            ['person_id' => $person_yuliana->id],
+            [
+                'nickname' => 'Yuliana',
+                'email' => 'apr.yulianacarolina@gmail.com',
+                'password' => Hash::make('12345678')
+            ]
+        );
+
+        // sync() asegura que NADIE MÁS tenga el rol de Funcionario SST excepto Yuliana
+        $role_funcionario->users()->sync([$user_funcionario->id]);
     }
 }
