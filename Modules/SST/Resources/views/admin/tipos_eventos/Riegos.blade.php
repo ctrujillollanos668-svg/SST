@@ -27,9 +27,9 @@
         </div>
 
         <div class="flex items-center gap-3">
-            <button onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white text-sm font-bold shadow-xs transition-all duration-200 cursor-pointer group border border-orange-500/80">
+            <button onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 text-sm font-bold shadow-xs transition-all duration-200 cursor-pointer group border border-orange-200/90 hover:border-orange-300">
                 <i class="fa-solid fa-plus text-xs group-hover:rotate-90 transition-transform duration-300"></i>
-                <span>Registrar Tipo de Riesgos</span>
+                <span>Registrar Riesgo</span>
             </button>
         </div>
     </div>
@@ -215,7 +215,7 @@
             </div>
             <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex justify-end gap-2">
                 <button type="button" onclick="closeRegisterModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200/70 transition cursor-pointer">Cancelar</button>
-                <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-orange-600 hover:bg-orange-700 text-white shadow-xs transition cursor-pointer">Guardar Registro</button>
+                <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 shadow-xs transition cursor-pointer">Guardar Registro</button>
             </div>
         </form>
     </div>
@@ -253,7 +253,7 @@
             </div>
             <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex justify-end gap-2">
                 <button type="button" onclick="closeEditModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200/70 transition cursor-pointer">Cancelar</button>
-                <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-orange-600 hover:bg-orange-700 text-white shadow-xs transition cursor-pointer">Actualizar Registro</button>
+                <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 shadow-xs transition cursor-pointer">Actualizar Registro</button>
             </div>
         </form>
     </div>

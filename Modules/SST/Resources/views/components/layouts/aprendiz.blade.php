@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="notranslate" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
     <title>@yield('title', 'Aprendiz SST • SENA Empresa')</title>
 
     <!-- Tailwind CSS CDN -->
@@ -14,41 +15,14 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        sst: {
-                            orange: '#ea580c',
-                            orangeHover: '#c2410c',
-                            orangeLight: '#fff7ed',
-                            orangeBorder: '#ffedd5',
-                            dark: '#0f172a',
-                            lightBg: '#f8fafc',
-                            border: '#e2e8f0',
-                            textMuted: '#64748b',
-                            accent: '#ea580c',
-                            accentHover: '#c2410c',
-                            accentLight: '#fff7ed',
-                            alertRed: '#ef4444',
-                            alertAmber: '#f59e0b',
-                            alertGreen: '#10b981',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         
         #mainContentWrapper {
             transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #mainContentWrapper.mini-content {
+            margin-left: 76px !important;
         }
         #mainContentWrapper.full-width {
             margin-left: 0 !important;
@@ -180,19 +154,31 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
-            // --- 1. Toggle Sidebar (Abrir / Cerrar menú lateral) ---
+            // --- 1. Toggle Sidebar (Abrir / Mini / Cerrar) ---
             const toggleBtn = document.getElementById('toggleSidebarBtn');
             const sidebar = document.getElementById('sidebarMenu');
             const mainContent = document.getElementById('mainContentWrapper');
             const backdrop = document.getElementById('sidebarBackdrop');
 
+            // Restaurar estado guardado
+            const savedMode = localStorage.getItem('sst_sidebar_mode');
+            if (savedMode === 'mini' && window.innerWidth >= 1024 && sidebar && mainContent) {
+                sidebar.classList.add('sidebar-mini');
+                mainContent.classList.add('mini-content');
+            }
+
             if (toggleBtn && sidebar && mainContent) {
                 toggleBtn.addEventListener('click', function () {
-                    const isHidden = sidebar.classList.toggle('sidebar-hidden');
-                    mainContent.classList.toggle('full-width', isHidden);
-
-                    if (window.innerWidth < 1024 && backdrop) {
-                        backdrop.classList.toggle('hidden', isHidden);
+                    if (window.innerWidth >= 1024) {
+                        const isMini = sidebar.classList.toggle('sidebar-mini');
+                        mainContent.classList.toggle('mini-content', isMini);
+                        localStorage.setItem('sst_sidebar_mode', isMini ? 'mini' : 'expanded');
+                    } else {
+                        const isHidden = sidebar.classList.toggle('sidebar-hidden');
+                        mainContent.classList.toggle('full-width', isHidden);
+                        if (backdrop) {
+                            backdrop.classList.toggle('hidden', isHidden);
+                        }
                     }
                 });
 
@@ -205,7 +191,7 @@
                 }
             }
 
-            // --- 2. Dropdown de Usuario (Abrir / Cerrar al hacer clic) ---
+            // --- 2. Dropdown de Usuario ---
             const userMenuBtn = document.getElementById('userMenuBtn');
             const userDropdown = document.getElementById('userDropdown');
             const userChevron = document.getElementById('userMenuChevron');
@@ -226,7 +212,6 @@
                     }
                 });
 
-                // Cerrar el dropdown si hace clic en cualquier otra parte de la pantalla
                 document.addEventListener('click', function (e) {
                     if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
                         userDropdown.classList.remove('show-dropdown');
