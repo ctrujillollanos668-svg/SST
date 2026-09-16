@@ -33,6 +33,11 @@
     /* MODO MINI APRENDIZ */
     #sidebarMenu.sidebar-mini {
         width: 76px !important;
+        overflow: visible !important;
+    }
+    #sidebarMenu.sidebar-mini nav {
+        overflow-y: visible !important;
+        overflow-x: visible !important;
     }
     #sidebarMenu.sidebar-mini .sidebar-text-full {
         display: none !important;
@@ -62,26 +67,27 @@
     #sidebarMenu.sidebar-mini .sidebar-flyout {
         display: block !important;
         position: absolute;
-        left: 68px;
+        left: 70px;
         top: 0;
-        width: 224px;
+        width: 230px;
         background: #ffffff;
         border-radius: 1rem;
         border: 1px solid rgba(226, 232, 240, 0.95);
-        box-shadow: 0 14px 30px -4px rgba(15, 23, 42, 0.12), 0 4px 10px -2px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.16), 0 4px 12px -2px rgba(0, 0, 0, 0.06);
         padding: 0.5rem;
-        z-index: 60;
+        z-index: 100;
         opacity: 0;
         visibility: hidden;
         transform: translateX(8px);
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         pointer-events: none;
     }
-    #sidebarMenu.sidebar-mini .menu-wrapper:hover .sidebar-flyout {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(0);
-        pointer-events: auto;
+    #sidebarMenu.sidebar-mini .menu-wrapper:hover .sidebar-flyout,
+    #sidebarMenu.sidebar-mini .menu-wrapper.flyout-open .sidebar-flyout {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateX(0) !important;
+        pointer-events: auto !important;
     }
 </style>
 
@@ -115,8 +121,8 @@
 
         <!-- DEFINICIONES -->
         <div class="flex flex-col menu-wrapper relative" id="defAprendizWrapper">
-            <a href="#" class="menu-btn-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition group">
-                <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition shrink-0">
+            <a href="{{ route('SST.aprendiz.definiciones') }}" class="menu-btn-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition group {{ request()->routeIs('SST.aprendiz.definiciones') ? 'bg-orange-50 text-orange-600 font-bold' : '' }}">
+                <span class="w-8 h-8 rounded-xl {{ request()->routeIs('SST.aprendiz.definiciones') ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500' }} flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition shrink-0">
                     <i class="fa-solid fa-book text-xs"></i>
                 </span>
                 <span class="font-bold text-[13px] sidebar-text-full">Definiciones</span>
@@ -126,7 +132,7 @@
                     <span class="font-extrabold text-xs text-slate-800">Definiciones SST</span>
                 </div>
                 <div class="py-1">
-                    <a href="#" class="flex items-center px-3 py-1.5 text-slate-600 hover:bg-slate-50 hover:text-orange-600 rounded-lg text-xs font-semibold transition">Ver Glosario y Conceptos</a>
+                    <a href="{{ route('SST.aprendiz.definiciones') }}" class="flex items-center px-3 py-1.5 text-slate-600 hover:bg-slate-50 hover:text-orange-600 rounded-lg text-xs font-semibold transition">Ver Glosario y Conceptos</a>
                 </div>
             </div>
         </div>
@@ -284,13 +290,21 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebarMenu');
+
         const toggleMenu = (btnId, wrapperId) => {
             const btn = document.getElementById(btnId);
             const wrapper = document.getElementById(wrapperId);
             if (btn && wrapper) {
-                btn.addEventListener('click', () => {
-                    const sidebar = document.getElementById('sidebarMenu');
-                    if (sidebar && !sidebar.classList.contains('sidebar-mini')) {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (sidebar && sidebar.classList.contains('sidebar-mini')) {
+                        const isOpen = wrapper.classList.contains('flyout-open');
+                        document.querySelectorAll('.menu-wrapper').forEach(w => w.classList.remove('flyout-open'));
+                        if (!isOpen) {
+                            wrapper.classList.add('flyout-open');
+                        }
+                    } else {
                         wrapper.classList.toggle('open');
                     }
                 });
@@ -302,5 +316,14 @@
         toggleMenu('btnToggleTiposRiesgos', 'tiposRiesgosWrapper');
         toggleMenu('btnTogglePausas', 'pausasWrapper');
         toggleMenu('btnToggleAsistencia', 'asistenciaWrapper');
+
+        // Cerrar menú flotante al hacer clic afuera
+        document.addEventListener('click', function(e) {
+            if (sidebar && sidebar.classList.contains('sidebar-mini')) {
+                if (!sidebar.contains(e.target)) {
+                    document.querySelectorAll('.menu-wrapper').forEach(w => w.classList.remove('flyout-open'));
+                }
+            }
+        });
     });
 </script>

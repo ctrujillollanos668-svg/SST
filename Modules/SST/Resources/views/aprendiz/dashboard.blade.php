@@ -138,7 +138,7 @@
                     </div>
                     <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
                         <span class="text-[11px] font-semibold text-indigo-600">Normativa</span>
-                        <a href="#" class="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                        <a href="{{ route('SST.aprendiz.definiciones') }}" class="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
                             Explorar <i class="fa-solid fa-arrow-right text-[10px]"></i>
                         </a>
                     </div>

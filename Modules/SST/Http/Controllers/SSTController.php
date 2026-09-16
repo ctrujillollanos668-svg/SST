@@ -31,7 +31,7 @@ class SSTController extends Controller
 
         // 2. Si tiene el rol de Aprendiz (o Funcionario por compatibilidad)
         if ($user->roles->contains('slug', 'sst.aprendiz') || $user->roles->contains('slug', 'sst.funcionario')) {
-            return redirect()->route('SST.aprendiz.dashboard');
+            return redirect()->route('SST.aprendiz.definiciones');
         }
 
         // 3. Si tiene el rol de Administrador o es Superadmin
@@ -40,36 +40,6 @@ class SSTController extends Controller
         }
 
         // 4. Si no tiene rol asignado en SST
-        return redirect()->route('SST.welcome')->with('error', 'Tu usuario no tiene roles asignados en el módulo SST.');
-    }
-
-    /**
-     * Dashboard / Panel del Administrador SST
-     */
-    public function adminDashboard()
-    {
-        /** @var User|null $user */
-        $user = Auth::user();
-
-        if ($user && ($user->roles->contains('slug', 'sst.admin') || $user->hasSuperAdmin())) {
-            return view('sst::admin.dashboard');
-        }
-
-        return redirect()->route('SST.welcome')->with('error', 'No tienes permisos de Administrador en SST.');
-    }
-
-    /**
-     * Dashboard / Panel del Aprendiz SST
-     */
-    public function aprendizDashboard()
-    {
-        /** @var User|null $user */
-        $user = Auth::user();
-
-        if ($user && ($user->roles->contains('slug', 'sst.aprendiz') || $user->roles->contains('slug', 'sst.funcionario') || $user->roles->contains('slug', 'sst.admin') || $user->hasSuperAdmin())) {
-            return view('sst::aprendiz.dashboard');
-        }
-
-        return redirect()->route('SST.welcome')->with('error', 'No tienes permisos de Aprendiz en SST.');
+        abort(403, 'Acceso denegado: Tu usuario no tiene roles asignados en el módulo SST.');
     }
 }

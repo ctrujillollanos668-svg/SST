@@ -14,6 +14,21 @@
 
 <div class="space-y-6 max-w-7xl mx-auto">
 
+    <!-- Mensaje Flash de Éxito -->
+    @if(session('success'))
+        <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200/80 text-emerald-800 flex items-center justify-between shadow-xs animate-in fade-in duration-200">
+            <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-check text-sm"></i>
+                </span>
+                <span class="text-xs sm:text-sm font-semibold">{{ session('success') }}</span>
+            </div>
+            <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 p-1 cursor-pointer">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+    @endif
+
     <!-- 1. Encabezado de la Sección -->
     <div class="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
         <div class="flex items-center gap-3.5">
@@ -22,14 +37,14 @@
             </div>
             <div>
                 <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Tipos de Lesiones</h1>
-                <p class="text-sm text-slate-500 font-medium mt-0.5">Configuración y administración de catálogos y registros generales.</p>
+                <p class="text-sm text-slate-500 font-medium mt-0.5">Configuración y administración de catálogos en base de datos.</p>
             </div>
         </div>
 
         <div class="flex items-center gap-3">
             <button onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 text-sm font-bold shadow-xs transition-all duration-200 cursor-pointer group border border-orange-200/90 hover:border-orange-300">
                 <i class="fa-solid fa-plus text-xs group-hover:rotate-90 transition-transform duration-300"></i>
-                <span>Registrar Lesión</span>
+                <span>Registrar Tipo de Lesión</span>
             </button>
         </div>
     </div>
@@ -47,117 +62,55 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-slate-700 text-sm font-medium">
-                    <!-- Fila 1 -->
-                    <tr class="hover:bg-slate-50/60 transition-colors">
-                        <td class="py-4 px-6 font-bold text-slate-900 break-words">
-                            Herida cortante / Incisa
-                        </td>
-                        <td class="py-4 px-6 text-slate-600 max-w-md">
-                            <p class="line-clamp-2 cursor-pointer hover:text-orange-600 transition-colors" onclick="showFullDesc(event, 'Laceración o discontinuidad de la superficie epidérmica producida por objetos, virutas o herramientas con filos cortantes que requiere curación primaria o sutura médica.')" title="Haz clic para ver la descripción completa">
-                                Laceración o discontinuidad de la superficie epidérmica producida por objetos, virutas o herramientas con filos cortantes que requiere curación primaria o sutura médica.
-                            </p>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                Activo
-                            </span>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="openEditModal('Herida cortante / Incisa', 'Laceración o discontinuidad de la superficie epidérmica producida por objetos, virutas o herramientas con filos cortantes que requiere curación primaria o sutura médica.')" class="w-9 h-9 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Editar">
-                                    <i class="fa-regular fa-pen-to-square text-sm"></i>
-                                </button>
-                                <button onclick="openDeleteModal('Herida cortante / Incisa')" class="w-9 h-9 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Eliminar">
-                                    <i class="fa-regular fa-trash-can text-sm"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Fila 2 -->
-                    <tr class="hover:bg-slate-50/60 transition-colors">
-                        <td class="py-4 px-6 font-bold text-slate-900 break-words">
-                            Fractura ósea
-                        </td>
-                        <td class="py-4 px-6 text-slate-600 max-w-md">
-                            <p class="line-clamp-2 cursor-pointer hover:text-orange-600 transition-colors" onclick="showFullDesc(event, 'Ruptura parcial o total de la continuidad de estructuras óseas en extremidades o torso a causa de golpes severos, caídas a desnivel o atrapamientos mecánicos.')" title="Haz clic para ver la descripción completa">
-                                Ruptura parcial o total de la continuidad de estructuras óseas en extremidades o torso a causa de golpes severos, caídas a desnivel o atrapamientos mecánicos.
-                            </p>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                Activo
-                            </span>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="openEditModal('Fractura ósea', 'Ruptura parcial o total de la continuidad de estructuras óseas en extremidades o torso a causa de golpes severos, caídas a desnivel o atrapamientos mecánicos.')" class="w-9 h-9 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Editar">
-                                    <i class="fa-regular fa-pen-to-square text-sm"></i>
-                                </button>
-                                <button onclick="openDeleteModal('Fractura ósea')" class="w-9 h-9 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Eliminar">
-                                    <i class="fa-regular fa-trash-can text-sm"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Fila 3 -->
-                    <tr class="hover:bg-slate-50/60 transition-colors">
-                        <td class="py-4 px-6 font-bold text-slate-900 break-words">
-                            Quemadura térmica o química
-                        </td>
-                        <td class="py-4 px-6 text-slate-600 max-w-md">
-                            <p class="line-clamp-2 cursor-pointer hover:text-orange-600 transition-colors" onclick="showFullDesc(event, 'Lesión tisular epidérmica o profunda provocada por exposición accidental a superficies incandescentes, fuego directo, salpicaduras o vapores químicos corrosivos.')" title="Haz clic para ver la descripción completa">
-                                Lesión tisular epidérmica o profunda provocada por exposición accidental a superficies incandescentes, fuego directo, salpicaduras o vapores químicos corrosivos.
-                            </p>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                Activo
-                            </span>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="openEditModal('Quemadura térmica o química', 'Lesión tisular epidérmica o profunda provocada por exposición accidental a superficies incandescentes, fuego directo, salpicaduras o vapores químicos corrosivos.')" class="w-9 h-9 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Editar">
-                                    <i class="fa-regular fa-pen-to-square text-sm"></i>
-                                </button>
-                                <button onclick="openDeleteModal('Quemadura térmica o química')" class="w-9 h-9 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Eliminar">
-                                    <i class="fa-regular fa-trash-can text-sm"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Fila 4 -->
-                    <tr class="hover:bg-slate-50/60 transition-colors">
-                        <td class="py-4 px-6 font-bold text-slate-900 break-words">
-                            Esguince o luxación
-                        </td>
-                        <td class="py-4 px-6 text-slate-600 max-w-md">
-                            <p class="line-clamp-2 cursor-pointer hover:text-orange-600 transition-colors" onclick="showFullDesc(event, 'Distensión o estiramiento traumático excesivo de ligamentos articulares en tobillos, muñecas o rodillas por movimientos bruscos, tropezones o cargas pesadas.')" title="Haz clic para ver la descripción completa">
-                                Distensión o estiramiento traumático excesivo de ligamentos articulares en tobillos, muñecas o rodillas por movimientos bruscos, tropezones o cargas pesadas.
-                            </p>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                Activo
-                            </span>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="openEditModal('Esguince o luxación', 'Distensión o estiramiento traumático excesivo de ligamentos articulares en tobillos, muñecas o rodillas por movimientos bruscos, tropezones o cargas pesadas.')" class="w-9 h-9 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Editar">
-                                    <i class="fa-regular fa-pen-to-square text-sm"></i>
-                                </button>
-                                <button onclick="openDeleteModal('Esguince o luxación')" class="w-9 h-9 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Eliminar">
-                                    <i class="fa-regular fa-trash-can text-sm"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+                    @forelse($lesiones as $lesion)
+                        <tr class="hover:bg-slate-50/60 transition-colors">
+                            <td class="py-4 px-6 font-bold text-slate-900 break-words">
+                                {{ $lesion->nombre }}
+                            </td>
+                            <td class="py-4 px-6 text-slate-600 max-w-md">
+                                @if($lesion->descripcion)
+                                    <p class="line-clamp-2 cursor-pointer hover:text-orange-600 transition-colors" onclick="showFullDesc(event, {{ json_encode($lesion->descripcion) }})" title="Haz clic para ver la descripción completa">
+                                        {{ $lesion->descripcion }}
+                                    </p>
+                                @else
+                                    <span class="text-slate-400 italic text-xs">Sin descripción</span>
+                                @endif
+                            </td>
+                            <td class="py-4 px-6 text-center whitespace-nowrap">
+                                @if($lesion->estado === 'activo')
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        Activo
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                        Inactivo
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="py-4 px-6 text-center whitespace-nowrap">
+                                <div class="flex items-center justify-center gap-2">
+                                    <button onclick="openEditModal({{ $lesion->id_tipo_evento }}, {{ json_encode($lesion->nombre) }}, {{ json_encode($lesion->descripcion ?? '') }}, {{ json_encode($lesion->estado) }})" class="w-9 h-9 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Editar">
+                                        <i class="fa-regular fa-pen-to-square text-sm"></i>
+                                    </button>
+                                    <button onclick="openDeleteModal({{ $lesion->id_tipo_evento }}, {{ json_encode($lesion->nombre) }})" class="w-9 h-9 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Eliminar">
+                                        <i class="fa-regular fa-trash-can text-sm"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="py-12 px-6 text-center">
+                                <div class="flex flex-col items-center justify-center text-slate-400 space-y-2">
+                                    <i class="fa-solid fa-folder-open text-3xl text-slate-300"></i>
+                                    <p class="text-sm font-semibold text-slate-600">No hay tipos de lesiones registradas aún.</p>
+                                    <p class="text-xs text-slate-400">Haz clic en "Registrar Tipo de Lesión" para agregar la primera a la base de datos.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -180,7 +133,7 @@
 </div>
 
 <!-- ========================================== -->
-<!-- MODALES INTERACTIVOS                       -->
+<!-- MODALES INTERACTIVOS (CONEXIÓN BD)          -->
 <!-- ========================================== -->
 
 <!-- Modal: Registrar -->
@@ -195,20 +148,21 @@
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-        <form onsubmit="handleModalSubmit(event, 'Tipo de lesión registrado con éxito')">
+        <form action="{{ route('SST.admin.tipos_eventos.lesiones.store') }}" method="POST">
+            @csrf
             <div class="p-6 space-y-4 text-xs">
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Nombre de la Lesión *</label>
-                    <input type="text" required placeholder="Ej. Amputación traumática" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm">
+                    <input type="text" name="nombre" required placeholder="Ej. Laceración / Herida cortante" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm">
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1.5">Descripción *</label>
-                    <textarea rows="3" required placeholder="Describa las características de este tipo de lesión..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm"></textarea>
+                    <label class="block font-bold text-slate-700 mb-1.5">Descripción</label>
+                    <textarea name="descripcion" rows="3" placeholder="Describa el alcance de este tipo de lesión..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm"></textarea>
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Estado</label>
-                    <select class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm bg-white">
-                        <option value="activo">Activo</option>
+                    <select name="estado" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm bg-white">
+                        <option value="activo" selected>Activo</option>
                         <option value="inactivo">Inactivo</option>
                     </select>
                 </div>
@@ -233,20 +187,22 @@
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-        <form onsubmit="handleModalSubmit(event, 'Tipo de lesión actualizado con éxito')">
+        <form id="editLesionForm" action="" method="POST">
+            @csrf
+            @method('PUT')
             <div class="p-6 space-y-4 text-xs">
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Nombre de la Lesión *</label>
-                    <input type="text" id="editNombreInput" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm">
+                    <input type="text" id="editNombreInput" name="nombre" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm">
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1.5">Descripción *</label>
-                    <textarea id="editDescInput" rows="3" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm"></textarea>
+                    <label class="block font-bold text-slate-700 mb-1.5">Descripción</label>
+                    <textarea id="editDescInput" name="descripcion" rows="3" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm"></textarea>
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Estado</label>
-                    <select class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm bg-white">
-                        <option value="activo" selected>Activo</option>
+                    <select id="editEstadoSelect" name="estado" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm bg-white">
+                        <option value="activo">Activo</option>
                         <option value="inactivo">Inactivo</option>
                     </select>
                 </div>
@@ -270,14 +226,16 @@
             <p class="text-xs text-slate-500 mt-2 leading-relaxed">
                 Estás a punto de eliminar el registro <span id="deleteItemName" class="font-bold text-slate-800"></span>. Esta acción no se puede deshacer.
             </p>
-            <div class="mt-6 flex items-center justify-center gap-3">
-                <button onclick="closeDeleteModal()" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition cursor-pointer">
+            <form id="deleteLesionForm" action="" method="POST" class="mt-6 flex items-center justify-center gap-3">
+                @csrf
+                @method('DELETE')
+                <button type="button" onclick="closeDeleteModal()" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition cursor-pointer">
                     Cancelar
                 </button>
-                <button onclick="handleModalSubmit(event, 'Registro eliminado del catálogo')" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-xs transition cursor-pointer">
+                <button type="submit" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-xs transition cursor-pointer">
                     Sí, Eliminar
                 </button>
-            </div>
+            </form>
         </div>
     </div>
 </div>
@@ -325,29 +283,26 @@
         document.getElementById('modalRegister').classList.add('hidden');
     }
 
-    function openEditModal(nombre, descripcion) {
+    function openEditModal(id, nombre, descripcion, estado) {
+        const form = document.getElementById('editLesionForm');
+        form.action = "{{ url('Sst/admin/tipos-eventos/lesiones') }}/" + id;
         document.getElementById('editNombreInput').value = nombre;
         document.getElementById('editDescInput').value = descripcion;
+        document.getElementById('editEstadoSelect').value = estado || 'activo';
         document.getElementById('modalEdit').classList.remove('hidden');
     }
     function closeEditModal() {
         document.getElementById('modalEdit').classList.add('hidden');
     }
 
-    function openDeleteModal(nombre) {
+    function openDeleteModal(id, nombre) {
+        const form = document.getElementById('deleteLesionForm');
+        form.action = "{{ url('Sst/admin/tipos-eventos/lesiones') }}/" + id;
         document.getElementById('deleteItemName').innerText = `"${nombre}"`;
         document.getElementById('modalDelete').classList.remove('hidden');
     }
     function closeDeleteModal() {
         document.getElementById('modalDelete').classList.add('hidden');
-    }
-
-    function handleModalSubmit(event, message) {
-        event.preventDefault();
-        closeRegisterModal();
-        closeEditModal();
-        closeDeleteModal();
-        alert(message);
     }
 </script>
 @endsection

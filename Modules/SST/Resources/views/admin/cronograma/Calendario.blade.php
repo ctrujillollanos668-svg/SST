@@ -38,7 +38,7 @@
             </div>
             <div>
                 <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Cronograma SST</h1>
-                <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">Configuración y administración del calendario de actividades, capacitaciones y jornadas de SST.</p>
+                <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">Configuración y administración del calendario de actividades, capacitaciones, pausas activas y jornadas de SST.</p>
             </div>
         </div>
 
@@ -172,6 +172,37 @@
                     <!-- Formulario -->
                     <form id="activityForm" onsubmit="handleSaveActivity(event)" class="space-y-3.5">
                         
+                        <!-- TIPO DE ACTIVIDAD Y LUGAR -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                        TIPO ACTIVIDAD *
+                                    </label>
+                                    <button type="button" onclick="openQuickTipoActividadModal()" class="inline-flex items-center gap-1 text-[10px] font-extrabold text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 px-1.5 py-0.5 rounded-md border border-orange-200/80 transition cursor-pointer" title="Crear nuevo tipo de actividad">
+                                        <i class="fa-solid fa-plus text-[9px]"></i>
+                                        <span>Nuevo</span>
+                                    </button>
+                                </div>
+                                <select id="selectTipoActividad" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-white cursor-pointer">
+                                    @foreach($tiposActividades as $tipo)
+                                        <option value="{{ $tipo->nombre }}">{{ $tipo->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+                                    LUGAR / AMBIENTE
+                                </label>
+                                <select id="selectLugar" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-white cursor-pointer">
+                                    <option value="">-- General / Ninguno --</option>
+                                    @foreach($lugares as $lugar)
+                                        <option value="{{ $lugar->id_lugar }}">{{ $lugar->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
                         <!-- NOMBRE -->
                         <div>
                             <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
@@ -325,6 +356,26 @@
         <form onsubmit="handleUpdateActivity(event)" class="space-y-3.5">
             <input type="hidden" id="editEventId">
 
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tipo de Actividad *</label>
+                    <select id="editTipoActividad" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 bg-white cursor-pointer">
+                        @foreach($tiposActividades as $tipo)
+                            <option value="{{ $tipo->nombre }}">{{ $tipo->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Lugar / Ambiente</label>
+                    <select id="editLugar" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 bg-white cursor-pointer">
+                        <option value="">-- General / Ninguno --</option>
+                        @foreach($lugares as $lugar)
+                            <option value="{{ $lugar->id_lugar }}">{{ $lugar->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
             <div>
                 <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Nombre de la Actividad *</label>
                 <input type="text" id="editNombre" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
@@ -369,6 +420,96 @@
     </div>
 </div>
 
+<!-- MODAL RÁPIDO PARA GESTIONAR Y CREAR TIPOS DE ACTIVIDAD -->
+<div id="modalQuickTipoActividad" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in duration-200">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-layer-group text-sm"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-extrabold text-slate-900">Tipos de Actividades SST</h3>
+                    <p class="text-[11px] text-slate-500 font-medium">Crea nuevos tipos o elimina los que ya no utilices</p>
+                </div>
+            </div>
+            <button onclick="closeQuickTipoActividadModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
+                <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+        </div>
+
+        <!-- 1. Formulario de Creación Rápida -->
+        <form onsubmit="handleSaveQuickTipoActividad(event)" class="space-y-3 bg-slate-50/70 p-3.5 rounded-2xl border border-slate-200/70">
+            <div class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
+                <i class="fa-solid fa-plus text-orange-500 text-[10px]"></i>
+                <span>Crear Nuevo Tipo</span>
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Nombre del Tipo *</label>
+                <input type="text" id="quickTipoNombre" required placeholder="Ej: Auditoría Externa, Taller Ergonomía" 
+                    class="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 bg-white">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Color</label>
+                    <select id="quickTipoColor" class="w-full px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 bg-white cursor-pointer">
+                        <option value="blue">🔵 Azul</option>
+                        <option value="emerald">🟢 Verde</option>
+                        <option value="rose">🔴 Rojo</option>
+                        <option value="purple">🟣 Púrpura</option>
+                        <option value="amber">🟡 Ámbar</option>
+                        <option value="indigo">🟣 Índigo</option>
+                        <option value="teal">🟢 Teal</option>
+                        <option value="slate">⚪ Gris</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Icono</label>
+                    <select id="quickTipoIcono" class="w-full px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 bg-white cursor-pointer">
+                        <option value="fa-clipboard-list">📋 Lista</option>
+                        <option value="fa-graduation-cap">🎓 Capacitación</option>
+                        <option value="fa-shield-halved">🛡️ Seguridad</option>
+                        <option value="fa-heart-pulse">❤️ Salud</option>
+                        <option value="fa-triangle-exclamation">🚨 Alerta</option>
+                        <option value="fa-person-running">🏃 Dinámica</option>
+                        <option value="fa-bullhorn">📢 Charla</option>
+                        <option value="fa-users">👥 Reunión</option>
+                        <option value="fa-microscope">🔬 Laboratorio</option>
+                        <option value="fa-award">🏆 Reconocimiento</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="pt-1 flex items-center justify-end">
+                <button type="submit" class="px-3.5 py-1.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold shadow-xs transition cursor-pointer flex items-center gap-1.5">
+                    <i class="fa-solid fa-check text-xs"></i>
+                    <span>Guardar Tipo</span>
+                </button>
+            </div>
+        </form>
+
+        <!-- 2. Lista de Tipos Registrados con opción de eliminar -->
+        <div class="space-y-2 pt-1 border-t border-slate-100">
+            <div class="flex items-center justify-between">
+                <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-600">Tipos Registrados</span>
+                <span id="quickTiposCountBadge" class="text-[10px] font-bold text-slate-400">0 tipos</span>
+            </div>
+            
+            <div id="quickTiposListContainer" class="max-h-44 overflow-y-auto space-y-1.5 pr-1">
+                <!-- Se renderizan dinámicamente con botón eliminar -->
+            </div>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end border-t border-slate-100">
+            <button type="button" onclick="closeQuickTipoActividadModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- NOTIFICACIÓN TOAST FLOTANTE (MENSAJE DE ÉXITO) -->
 <div id="toastSuccessNotification" class="fixed top-5 right-5 z-50 transform translate-x-full opacity-0 transition-all duration-300 pointer-events-none">
     <div class="bg-white rounded-2xl p-4 shadow-xl border border-slate-100 border-l-4 border-l-emerald-500 flex items-center gap-3.5 max-w-md pointer-events-auto">
@@ -385,17 +526,57 @@
     </div>
 </div>
 
-<!-- SCRIPT DEL CALENDARIO E INTERACCIONES -->
+<!-- SCRIPT DEL CALENDARIO E INTERACCIONES CONECTADAS A LA BASE DE DATOS -->
 <script>
-    // Estado del Calendario
-    let currentDate = new Date(2026, 8, 12);
-    let selectedDate = new Date(2026, 8, 12);
+    const csrfToken = '{{ csrf_token() }}';
+    const baseUrl = '{{ url("Sst/admin/cronograma/calendario") }}';
+    const storeTipoUrl = '{{ url("Sst/admin/cronograma/calendario/tipo-actividad") }}';
+    const deleteTipoUrl = '{{ url("Sst/admin/cronograma/calendario/tipo-actividad") }}';
+
+    // Estado del Calendario (Fecha actual)
+    let currentDate = new Date();
+    let selectedDate = new Date();
     let currentView = 'month';
     let currentCategoryFilter = 'all';
     let currentStatusFilter = 'all';
 
-    // Base de Datos en Memoria de Actividades SST (Vacío por defecto)
-    let events = [];
+    // Tipos de actividades en memoria
+    let tiposActividadesList = @json($tiposActividades);
+
+    // Lugares disponibles mapeados
+    const lugaresMap = {
+        @foreach($lugares as $lugar)
+            {{ $lugar->id_lugar }}: {!! json_encode($lugar->nombre) !!},
+        @endforeach
+    };
+
+    // Tipos de actividades dinámicos mapeados con sus estilos
+    const tiposActividadesMap = {
+        @foreach($tiposActividades as $tipo)
+            {!! json_encode($tipo->nombre) !!}: {
+                icono: {!! json_encode($tipo->icono ?? 'fa-calendar-check') !!},
+                color: {!! json_encode($tipo->color ?? 'blue') !!}
+            },
+        @endforeach
+    };
+
+    // Datos cargados directamente desde la base de datos MySQL (cronograma_sst)
+    let events = [
+        @foreach($actividades as $act)
+        {
+            id: {{ $act->id_actividad }},
+            date: '{{ $act->fecha }}',
+            name: {!! json_encode($act->nombre) !!},
+            time: '{{ substr($act->hora, 0, 5) }}',
+            tipo_actividad: {!! json_encode($act->tipo_actividad ?? 'Capacitación') !!},
+            id_lugar: {{ $act->id_lugar ? $act->id_lugar : 'null' }},
+            lugar_nombre: {!! json_encode($act->lugar ? $act->lugar->nombre : null) !!},
+            responsable: {!! json_encode($act->responsable) !!},
+            estado: '{{ $act->estado }}',
+            descripcion: {!! json_encode($act->descripcion ?? '') !!}
+        },
+        @endforeach
+    ];
 
     const monthNames = [
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -591,229 +772,141 @@
     // ----------------------------------------------------
     // 2. RENDER VISTA SEMANA
     // ----------------------------------------------------
-    function getWeekDays(date) {
-        const curr = new Date(date);
-        const dayOfWeek = curr.getDay();
-        const distanceToMonday = (dayOfWeek + 6) % 7;
-        const monday = new Date(curr);
-        monday.setDate(curr.getDate() - distanceToMonday);
-
-        const week = [];
-        for (let i = 0; i < 7; i++) {
-            const nextDay = new Date(monday);
-            nextDay.setDate(monday.getDate() + i);
-            week.push(nextDay);
-        }
-        return week;
-    }
-
     function renderWeekView() {
-        const weekDays = getWeekDays(currentDate);
-        const startDay = weekDays[0];
-        const endDay = weekDays[6];
+        const curr = new Date(currentDate);
+        const day = curr.getDay();
+        const diff = curr.getDate() - day + (day === 0 ? -6 : 1);
+        const firstDayOfWeek = new Date(curr.setDate(diff));
 
-        const startMonthName = monthNames[startDay.getMonth()];
-        const endMonthName = monthNames[endDay.getMonth()];
+        const endOfWeek = new Date(firstDayOfWeek);
+        endOfWeek.setDate(firstDayOfWeek.getDate() + 6);
 
-        if (startDay.getMonth() === endDay.getMonth()) {
-            document.getElementById('calendarHeaderTitle').innerText = `${startDay.getDate()} al ${endDay.getDate()} de ${startMonthName} de ${startDay.getFullYear()}`;
-        } else {
-            document.getElementById('calendarHeaderTitle').innerText = `${startDay.getDate()} de ${startMonthName} - ${endDay.getDate()} de ${endMonthName} de ${startDay.getFullYear()}`;
-        }
+        document.getElementById('calendarHeaderTitle').innerText = 
+            `${firstDayOfWeek.getDate()} ${monthNames[firstDayOfWeek.getMonth()]} - ${endOfWeek.getDate()} ${monthNames[endOfWeek.getMonth()]} de ${endOfWeek.getFullYear()}`;
 
         const headersGrid = document.getElementById('weekHeadersGrid');
         const daysGrid = document.getElementById('weekDaysGrid');
-
         headersGrid.innerHTML = '';
         daysGrid.innerHTML = '';
 
-        weekDays.forEach((wDate, idx) => {
-            const dateStr = formatDateForInput(wDate);
-            const isSelected = isSameDate(wDate, selectedDate);
-            const isToday = isSameDate(wDate, new Date());
+        for (let i = 0; i < 7; i++) {
+            const dayDate = new Date(firstDayOfWeek);
+            dayDate.setDate(firstDayOfWeek.getDate() + i);
 
-            const hCell = document.createElement('div');
-            hCell.className = `p-2 text-center rounded-xl cursor-pointer transition ${
-                isSelected ? 'bg-blue-600 text-white font-extrabold shadow-xs' : (isToday ? 'bg-orange-500 text-white font-bold' : 'bg-slate-50 text-slate-700 hover:bg-slate-100')
+            const isSelected = isSameDate(dayDate, selectedDate);
+            const isToday = isSameDate(dayDate, new Date());
+            const formattedDate = formatDateForInput(dayDate);
+            const dayEvents = events.filter(e => e.date === formattedDate);
+
+            const headerCol = document.createElement('div');
+            headerCol.className = `p-2 rounded-xl text-center border transition cursor-pointer ${
+                isSelected ? 'bg-orange-50 border-orange-300 text-orange-700 font-extrabold' : 'border-transparent text-slate-600 hover:bg-slate-50'
             }`;
-            hCell.setAttribute('onclick', `selectDay('${dateStr}')`);
-            hCell.innerHTML = `
-                <div class="text-[10px] uppercase font-bold tracking-wider">${shortDayNames[idx]}</div>
-                <div class="text-sm font-extrabold mt-0.5">${wDate.getDate()}</div>
+            headerCol.setAttribute('onclick', `selectDay('${formattedDate}')`);
+            headerCol.innerHTML = `
+                <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">${shortDayNames[i]}</div>
+                <div class="text-base font-extrabold mt-0.5 ${isToday ? 'w-7 h-7 rounded-full bg-orange-500 text-white flex items-center justify-center mx-auto shadow-xs' : ''}">
+                    ${dayDate.getDate()}
+                </div>
             `;
-            headersGrid.appendChild(hCell);
+            headersGrid.appendChild(headerCol);
 
-            const bCell = document.createElement('div');
-            bCell.className = `border border-slate-200/80 rounded-xl p-2 bg-white flex flex-col space-y-2 cursor-pointer transition overflow-y-auto ${
-                isSelected ? 'ring-2 ring-blue-500 bg-blue-50/20' : 'hover:bg-slate-50/70'
-            }`;
-            bCell.setAttribute('onclick', `selectDay('${dateStr}')`);
+            const dayCol = document.createElement('div');
+            dayCol.className = `min-h-[380px] p-2 rounded-2xl border border-slate-100 flex flex-col gap-2 ${isSelected ? 'bg-orange-50/20 border-orange-200/60' : 'bg-slate-50/40'}`;
 
-            const dayEvts = events.filter(e => e.date === dateStr);
-
-            if (dayEvts.length === 0) {
-                bCell.innerHTML = `<div class="text-[10px] text-slate-300 font-medium text-center py-6">Sin actividades</div>`;
-            } else {
-                dayEvts.forEach(evt => {
-                    let cardClass = 'bg-orange-50 border-orange-200 text-orange-900';
-
-                    bCell.innerHTML += `
-                        <div class="p-2 rounded-lg border text-[11px] font-semibold space-y-1 ${cardClass}" title="${evt.name}">
-                            <div class="text-[10px] font-extrabold flex items-center justify-between">
-                                <span><i class="fa-regular fa-clock mr-0.5"></i> ${evt.time}</span>
-                            </div>
-                            <div class="font-bold leading-tight line-clamp-2">${evt.name}</div>
-                            <div class="text-[9px] opacity-80 truncate"><i class="fa-solid fa-user text-[8px] mr-1"></i>${evt.responsable}</div>
-                        </div>
-                    `;
-                });
-            }
-            daysGrid.appendChild(bCell);
-        });
-    }
-
-    // ----------------------------------------------------
-    // 3. RENDER VISTA DÍA PROFESIONAL
-    // ----------------------------------------------------
-    function renderDayView() {
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const day = currentDate.getDate();
-        const dayOfWeekIndex = currentDate.getDay();
-
-        const formattedTitle = `${dayNamesNames[dayOfWeekIndex]}, ${day} de ${monthNames[month]} de ${year}`;
-        document.getElementById('calendarHeaderTitle').innerText = formattedTitle;
-        document.getElementById('dayViewSubTitle').innerText = `Cronograma Horario • ${formattedTitle}`;
-
-        const dateStr = formatDateForInput(currentDate);
-        const dayEvts = events.filter(e => e.date === dateStr);
-        const timeline = document.getElementById('dayHoursTimeline');
-
-        const badge = document.getElementById('dayEventsCountBadge');
-        if (badge) {
-            badge.innerText = `${dayEvts.length} Evento${dayEvts.length !== 1 ? 's' : ''} hoy`;
-        }
-
-        timeline.innerHTML = '';
-
-        const hours = [
-            '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
-            '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00',
-            '20:00', '21:00', '22:00'
-        ];
-
-        // Añadir horas personalizadas si el usuario agendó un evento en una hora fuera del rango estándar
-        dayEvts.forEach(e => {
-            if (e.time) {
-                const hourStr = `${e.time.split(':')[0].padStart(2, '0')}:00`;
-                if (!hours.includes(hourStr)) {
-                    hours.push(hourStr);
-                }
-            }
-        });
-
-        // Ordenar las horas cronológicamente
-        hours.sort((a, b) => parseInt(a.split(':')[0]) - parseInt(b.split(':')[0]));
-
-        hours.forEach(hr => {
-            const hrEvents = dayEvts.filter(e => {
-                if (!e.time) return false;
-                const eHour = parseInt(e.time.split(':')[0], 10);
-                const slotHour = parseInt(hr.split(':')[0], 10);
-                return eHour === slotHour;
-            });
-
-            const row = document.createElement('div');
-            row.className = 'flex items-start gap-3 group';
-
-            let eventsContent = '';
-            if (hrEvents.length === 0) {
-                eventsContent = `
-                    <div class="flex-1 flex items-center justify-between p-3 rounded-2xl border border-dashed border-slate-200/90 bg-slate-50/40 text-slate-400 hover:bg-orange-50/40 hover:border-orange-300 hover:text-orange-600 transition cursor-pointer group/slot shadow-2xs" onclick="setFormTime('${hr}')">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-slate-300 group-hover/slot:bg-orange-500 transition"></span>
-                            <span class="text-xs font-semibold text-slate-500 group-hover/slot:text-orange-700">Horario libre (${hr} hs)</span>
-                        </div>
-                        <span class="text-[11px] font-extrabold opacity-0 group-hover/slot:opacity-100 transition bg-orange-100 text-orange-700 px-2.5 py-1 rounded-xl flex items-center gap-1">
-                            <i class="fa-solid fa-plus text-[10px]"></i> Agendar a las ${hr}
-                        </span>
+            if (dayEvents.length === 0) {
+                dayCol.innerHTML = `
+                    <div onclick="selectDay('${formattedDate}')" class="h-full flex flex-col items-center justify-center text-center p-2 text-slate-300 hover:text-slate-400 cursor-pointer">
+                        <i class="fa-solid fa-plus text-xs mb-1"></i>
+                        <span class="text-[10px] font-semibold">Sin eventos</span>
                     </div>
                 `;
             } else {
-                eventsContent = `<div class="flex-1 space-y-2">`;
-                hrEvents.forEach(evt => {
-                    let borderAccent = 'border-l-4 border-l-orange-500';
-                    let statusStyle = 'bg-orange-100 text-orange-700 border-orange-200';
-
-                    if (evt.estado === 'Completada') {
-                        borderAccent = 'border-l-4 border-l-emerald-500';
-                        statusStyle = 'bg-emerald-100 text-emerald-700 border-emerald-200';
-                    } else if (evt.estado === 'En Ejecución') {
-                        borderAccent = 'border-l-4 border-l-blue-500';
-                        statusStyle = 'bg-blue-100 text-blue-700 border-blue-200';
-                    } else if (evt.estado === 'Cancelada') {
-                        borderAccent = 'border-l-4 border-l-rose-500';
-                        statusStyle = 'bg-rose-100 text-rose-700 border-rose-200';
-                    }
-
-                    eventsContent += `
-                        <div class="bg-white p-4 rounded-2xl border border-slate-200/90 ${borderAccent} shadow-xs hover:shadow-md transition flex flex-col md:flex-row md:items-center justify-between gap-3">
-                            <div class="space-y-1 flex-1">
-                                <div class="flex items-center gap-2">
-                                    <h5 class="font-extrabold text-sm text-slate-900">${evt.name}</h5>
-                                    
-                                    <!-- Selector Rápido de Estado en Timeline -->
-                                    <div class="relative">
-                                        <select onchange="changeEventStatus(${evt.id}, this.value)" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border cursor-pointer ${statusStyle} focus:outline-none transition appearance-none pr-4">
-                                            <option value="Programada" ${evt.estado === 'Programada' ? 'selected' : ''}>Programada</option>
-                                            <option value="En Ejecución" ${evt.estado === 'En Ejecución' ? 'selected' : ''}>En Ejecución</option>
-                                            <option value="Completada" ${evt.estado === 'Completada' ? 'selected' : ''}>Completada</option>
-                                            <option value="Cancelada" ${evt.estado === 'Cancelada' ? 'selected' : ''}>Cancelada</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center gap-3 text-xs text-slate-500 font-medium">
-                                    <span><i class="fa-solid fa-user-gear text-slate-400 mr-1 text-[10px]"></i> ${evt.responsable}</span>
-                                    <span><i class="fa-regular fa-clock text-orange-500 mr-1 text-[10px]"></i> ${evt.time} hs</span>
-                                </div>
-
-                                ${evt.descripcion ? `<p class="text-[11px] text-slate-500 italic bg-slate-50 p-2 rounded-xl border border-slate-100 mt-1">"${evt.descripcion}"</p>` : ''}
-                            </div>
-
-                            <div class="flex items-center gap-2 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
-                                <button onclick="openEditModal(${evt.id})" class="px-2.5 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-blue-600 font-extrabold text-xs transition cursor-pointer flex items-center gap-1">
-                                    <i class="fa-solid fa-pen-to-square"></i> Editar
-                                </button>
-                                <button onclick="deleteEvent(${evt.id})" class="px-2.5 py-1.5 rounded-xl border border-slate-200 hover:bg-rose-50 text-rose-600 font-extrabold text-xs transition cursor-pointer flex items-center gap-1">
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </button>
-                            </div>
+                dayCol.innerHTML = dayEvents.map(evt => `
+                    <div onclick="selectDay('${formattedDate}')" class="p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs hover:shadow-xs transition cursor-pointer space-y-1">
+                        <div class="flex items-center justify-between text-[10px] font-extrabold text-orange-600">
+                            <span><i class="fa-regular fa-clock"></i> ${evt.time}</span>
+                            <span class="w-2 h-2 rounded-full ${evt.estado === 'Completada' ? 'bg-emerald-500' : 'bg-orange-500'}"></span>
                         </div>
-                    `;
-                });
-                eventsContent += `</div>`;
+                        <h5 class="text-xs font-bold text-slate-800 line-clamp-2 leading-tight">${evt.name}</h5>
+                        <div class="text-[10px] text-slate-400 font-medium truncate">${evt.tipo_actividad || 'Actividad'}</div>
+                    </div>
+                `).join('');
             }
 
-            row.innerHTML = `
-                <div class="w-14 pt-3.5 text-xs font-extrabold text-slate-500 text-right shrink-0">
-                    ${hr}
-                </div>
-                ${eventsContent}
-            `;
+            daysGrid.appendChild(dayCol);
+        }
+    }
 
-            timeline.appendChild(row);
+    // ----------------------------------------------------
+    // 3. RENDER VISTA DÍA
+    // ----------------------------------------------------
+    function renderDayView() {
+        const dayName = dayNamesNames[selectedDate.getDay()];
+        const dayNum = selectedDate.getDate();
+        const monthName = monthNames[selectedDate.getMonth()];
+        const year = selectedDate.getFullYear();
+
+        document.getElementById('calendarHeaderTitle').innerText = `${dayName}, ${dayNum} de ${monthName} de ${year}`;
+        document.getElementById('dayViewSubTitle').innerText = `Cronograma Horario - ${dayName} ${dayNum}`;
+
+        const formattedSelected = formatDateForInput(selectedDate);
+        const dayEvents = events.filter(e => e.date === formattedSelected);
+        document.getElementById('dayEventsCountBadge').innerText = `${dayEvents.length} Evento${dayEvents.length !== 1 ? 's' : ''} hoy`;
+
+        const timeline = document.getElementById('dayHoursTimeline');
+        timeline.innerHTML = '';
+
+        const hours = [
+            '07:00', '08:00', '09:00', '10:00', '11:00',
+            '12:00', '13:00', '14:00', '15:00', '16:00',
+            '17:00', '18:00'
+        ];
+
+        hours.forEach(hr => {
+            const hrEvents = dayEvents.filter(e => e.time.startsWith(hr.substring(0, 2)));
+
+            const slot = document.createElement('div');
+            slot.className = 'time-slot flex items-start gap-3 p-2 rounded-xl transition border-b border-slate-100 last:border-0';
+
+            let eventsInSlotHTML = '';
+            if (hrEvents.length > 0) {
+                eventsInSlotHTML = hrEvents.map(evt => `
+                    <div class="flex-1 p-3 rounded-xl bg-orange-50/70 border border-orange-200/90 flex items-center justify-between shadow-2xs">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-extrabold text-orange-700">${evt.name}</span>
+                                <span class="px-2 py-0.5 text-[9px] font-bold rounded-md bg-orange-200/70 text-orange-800">${evt.tipo_actividad || 'Actividad'}</span>
+                            </div>
+                            <p class="text-xs text-slate-500 font-medium mt-0.5">Resp: ${evt.responsable} ${evt.lugar_nombre ? '• Lugar: ' + evt.lugar_nombre : ''}</p>
+                        </div>
+                        <button onclick="openEditModal(${evt.id})" class="px-2.5 py-1 text-xs font-bold text-orange-600 bg-white rounded-lg border border-orange-200 hover:bg-orange-50 transition cursor-pointer">
+                            Ver
+                        </button>
+                    </div>
+                `).join('');
+            } else {
+                eventsInSlotHTML = `
+                    <div onclick="openCreateAtTime('${hr}')" class="flex-1 py-2 px-3 text-xs text-slate-400 border border-dashed border-slate-200 rounded-xl hover:border-orange-300 hover:text-orange-600 transition cursor-pointer flex items-center justify-between">
+                        <span>Horario libre - Haz clic para agendar</span>
+                        <i class="fa-solid fa-plus text-[10px]"></i>
+                    </div>
+                `;
+            }
+
+            slot.innerHTML = `
+                <div class="w-14 text-xs font-extrabold text-slate-400 pt-1 shrink-0 text-right">${hr}</div>
+                ${eventsInSlotHTML}
+            `;
+            timeline.appendChild(slot);
         });
     }
 
-    function setFormTime(hr) {
-        document.getElementById('inputHora').value = hr;
+    function openCreateAtTime(timeStr) {
+        document.getElementById('inputHora').value = timeStr;
         document.getElementById('inputNombre').focus();
     }
 
-    // ----------------------------------------------------
-    // FUNCIONES AUXILIARES DE SELECCIÓN Y FORMULARIO
-    // ----------------------------------------------------
     function selectDay(dateStr) {
         if (!dateStr) return;
         const parts = dateStr.split('-');
@@ -824,27 +917,51 @@
     }
 
     function updateSelectedDateUI() {
+        const dayName = dayNamesNames[selectedDate.getDay()];
+        const dayNum = selectedDate.getDate();
+        const monthName = monthNames[selectedDate.getMonth()];
         const year = selectedDate.getFullYear();
-        const month = selectedDate.getMonth();
-        const day = selectedDate.getDate();
-        const dayOfWeekIndex = selectedDate.getDay();
 
-        const formattedTitle = `${dayNamesNames[dayOfWeekIndex]}, ${day} de ${monthNames[month].toLowerCase()} de ${year}`;
-        document.getElementById('selectedDateTitle').innerText = formattedTitle;
-        document.getElementById('selectedDateSubtitleEvents').innerText = `Mostrando registros para: ${formattedTitle}`;
-
-        const formattedInputDate = `${String(day).padStart(2, '0')}/${String(month + 1).padStart(2, '0')}/${year}`;
-        document.getElementById('inputFecha').value = formattedInputDate;
+        document.getElementById('selectedDateTitle').innerText = `${dayName}, ${dayNum} de ${monthName} de ${year}`;
+        document.getElementById('selectedDateSubtitleEvents').innerText = `Mostrando registros para: ${dayName}, ${dayNum} de ${monthName} de ${year}`;
+        document.getElementById('inputFecha').value = formatDateForInput(selectedDate);
 
         renderDayEventsGrid();
     }
 
-    // ----------------------------------------------------
-    // 4. RENDER MULTICOLUMNA PROFESIONAL DE ACTIVIDADES (FILTRADO POR ESTADO)
-    // ----------------------------------------------------
+    function getActivityTypeBadge(tipo) {
+        const info = tiposActividadesMap[tipo];
+        if (info) {
+            const color = info.color || 'blue';
+            return {
+                bg: `bg-${color}-50 text-${color}-700 border-${color}-200`,
+                icon: info.icono || 'fa-calendar-check'
+            };
+        }
+
+        // Fallbacks inteligentes
+        switch(tipo) {
+            case 'Simulacro':
+                return { bg: 'bg-rose-50 text-rose-700 border-rose-200', icon: 'fa-triangle-exclamation' };
+            case 'Pausa Activa':
+                return { bg: 'bg-teal-50 text-teal-700 border-teal-200', icon: 'fa-person-running' };
+            case 'Inspección':
+                return { bg: 'bg-purple-50 text-purple-700 border-purple-200', icon: 'fa-clipboard-check' };
+            case 'Charla 5 Min':
+                return { bg: 'bg-amber-50 text-amber-700 border-amber-200', icon: 'fa-bullhorn' };
+            case 'Reunión COPASST':
+                return { bg: 'bg-indigo-50 text-indigo-700 border-indigo-200', icon: 'fa-users' };
+            case 'Jornada de Salud':
+                return { bg: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: 'fa-heart-pulse' };
+            case 'Capacitación':
+            default:
+                return { bg: 'bg-blue-50 text-blue-700 border-blue-200', icon: 'fa-graduation-cap' };
+        }
+    }
+
     function renderDayEventsGrid() {
-        const dateStr = formatDateForInput(selectedDate);
-        let dayEvents = events.filter(e => e.date === dateStr);
+        const formattedSelected = formatDateForInput(selectedDate);
+        let dayEvents = events.filter(e => e.date === formattedSelected);
 
         if (currentStatusFilter !== 'all') {
             dayEvents = dayEvents.filter(e => e.estado === currentStatusFilter);
@@ -871,30 +988,26 @@
         grid.innerHTML = dayEvents.map(evt => {
             let topBorder = 'border-t-4 border-t-orange-500';
             let statusStyle = 'bg-orange-100 text-orange-700 border-orange-200';
-            let dotColor = 'bg-orange-500';
 
             if (evt.estado === 'Completada') {
                 statusStyle = 'bg-emerald-100 text-emerald-700 border-emerald-200';
-                dotColor = 'bg-emerald-500';
             } else if (evt.estado === 'En Ejecución') {
                 statusStyle = 'bg-blue-100 text-blue-700 border-blue-200';
-                dotColor = 'bg-blue-500';
             } else if (evt.estado === 'Cancelada') {
                 statusStyle = 'bg-rose-100 text-rose-700 border-rose-200';
-                dotColor = 'bg-rose-500';
             }
+
+            const typeInfo = getActivityTypeBadge(evt.tipo_actividad);
 
             return `
                 <div class="bg-white rounded-2xl border border-slate-200/80 ${topBorder} p-4 shadow-xs hover:shadow-sm transition flex flex-col justify-between space-y-3">
-                    
                     <div class="space-y-2">
-                        <!-- Top Badges y Cambiador de Estado Interactivo -->
                         <div class="flex items-center justify-between gap-2">
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-orange-50 text-orange-700 border border-orange-200">
-                                <i class="fa-solid fa-calendar-check text-[9px]"></i> Actividad SST
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${typeInfo.bg} border">
+                                <i class="fa-solid ${typeInfo.icon} text-[9px]"></i>
+                                <span>${evt.tipo_actividad || 'Capacitación'}</span>
                             </span>
                             
-                            <!-- Selector Rápido de Estado -->
                             <div class="relative">
                                 <select onchange="changeEventStatus(${evt.id}, this.value)" class="text-[10px] font-extrabold px-2.5 py-1 rounded-full border cursor-pointer ${statusStyle} focus:outline-none transition appearance-none pr-5">
                                     <option value="Programada" ${evt.estado === 'Programada' ? 'selected' : ''}>● Programada</option>
@@ -908,21 +1021,25 @@
                             </div>
                         </div>
 
-                        <!-- Título Actividad -->
                         <h4 class="text-sm font-extrabold text-slate-900 leading-snug">
                             ${evt.name}
                         </h4>
 
-                        <!-- Metadata: Hora y Responsable -->
-                        <div class="text-xs text-slate-600 space-y-1 pt-1 border-t border-slate-100">
+                        <div class="text-xs text-slate-600 space-y-1.5 pt-1 border-t border-slate-100">
                             <div class="flex items-center gap-1.5 font-semibold text-slate-700">
                                 <i class="fa-regular fa-clock text-orange-500"></i>
                                 <span>Hora: ${evt.time} hs</span>
                             </div>
-                            <div class="flex items-center gap-1.5 font-medium text-slate-500">
-                                <i class="fa-solid fa-user-gear text-slate-400"></i>
-                                <span class="truncate">Resp: ${evt.responsable}</span>
+                            <div class="flex items-center gap-1.5 font-medium text-slate-600">
+                                <i class="fa-solid fa-user-gear text-slate-400 text-xs"></i>
+                                <span class="truncate">Resp: <strong>${evt.responsable}</strong></span>
                             </div>
+                            ${evt.lugar_nombre ? `
+                                <div class="flex items-center gap-1.5 text-[11px] font-medium text-slate-500">
+                                    <i class="fa-solid fa-location-dot text-emerald-500 text-xs"></i>
+                                    <span class="truncate">Lugar: <span class="text-slate-700 font-semibold">${evt.lugar_nombre}</span></span>
+                                </div>
+                            ` : ''}
                         </div>
 
                         ${evt.descripcion ? `
@@ -932,7 +1049,6 @@
                         ` : ''}
                     </div>
 
-                    <!-- Botones de Acción: Editar y Eliminar -->
                     <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
                         <button onclick="openEditModal(${evt.id})" class="text-[11px] font-extrabold text-blue-600 hover:text-blue-700 transition cursor-pointer flex items-center gap-1">
                             <i class="fa-solid fa-pen-to-square"></i>
@@ -943,7 +1059,6 @@
                             <span>Eliminar</span>
                         </button>
                     </div>
-
                 </div>
             `;
         }).join('');
@@ -974,13 +1089,328 @@
         renderDayEventsGrid();
     }
 
-    function changeEventStatus(id, newStatus) {
+    // ----------------------------------------------------
+    // CONEXIONES CON LA BASE DE DATOS (CRUD VIA AJAX / FETCH)
+    // ----------------------------------------------------
+
+    async function handleSaveQuickTipoActividad(e) {
+        e.preventDefault();
+        const nombreInput = document.getElementById('quickTipoNombre').value.trim();
+        const colorInput = document.getElementById('quickTipoColor').value;
+        const iconoInput = document.getElementById('quickTipoIcono').value;
+
+        if (!nombreInput) return;
+
+        try {
+            const response = await fetch(storeTipoUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    nombre: nombreInput,
+                    color: colorInput,
+                    icono: iconoInput
+                })
+            });
+
+            const res = await response.json();
+            if (res.success) {
+                tiposActividadesList.push(res.data);
+                tiposActividadesMap[res.data.nombre] = {
+                    icono: res.data.icono,
+                    color: res.data.color
+                };
+
+                // Agregar a los selects
+                const selectMain = document.getElementById('selectTipoActividad');
+                const selectEdit = document.getElementById('editTipoActividad');
+
+                const opt1 = new Option(res.data.nombre, res.data.nombre, true, true);
+                const opt2 = new Option(res.data.nombre, res.data.nombre);
+
+                selectMain.add(opt1);
+                selectEdit.add(opt2);
+
+                selectMain.value = res.data.nombre;
+
+                document.getElementById('quickTipoNombre').value = '';
+                renderQuickTiposList();
+                showToastNotification(`Tipo "${res.data.nombre}" creado exitosamente.`);
+            } else {
+                alert(res.message || 'Error al guardar el tipo de actividad.');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error al conectar con la base de datos.');
+        }
+    }
+
+    async function deleteQuickTipoActividad(id, nombre) {
+        if (!confirm(`¿Estás seguro de eliminar el tipo de actividad "${nombre}"?`)) return;
+
+        try {
+            const response = await fetch(`${deleteTipoUrl}/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                }
+            });
+
+            const res = await response.json();
+            if (res.success) {
+                // Eliminar de memoria
+                tiposActividadesList = tiposActividadesList.filter(t => t.id_tipo_actividad !== id);
+                delete tiposActividadesMap[nombre];
+
+                // Eliminar de selects
+                const selectMain = document.getElementById('selectTipoActividad');
+                const selectEdit = document.getElementById('editTipoActividad');
+
+                for (let i = 0; i < selectMain.options.length; i++) {
+                    if (selectMain.options[i].value === nombre) {
+                        selectMain.remove(i);
+                        break;
+                    }
+                }
+                for (let i = 0; i < selectEdit.options.length; i++) {
+                    if (selectEdit.options[i].value === nombre) {
+                        selectEdit.remove(i);
+                        break;
+                    }
+                }
+
+                renderQuickTiposList();
+                showToastNotification(`Tipo "${nombre}" eliminado correctamente.`);
+            } else {
+                alert(res.message || 'Error al eliminar el tipo de actividad.');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error al conectar con el servidor.');
+        }
+    }
+
+    function renderQuickTiposList() {
+        const container = document.getElementById('quickTiposListContainer');
+        const countBadge = document.getElementById('quickTiposCountBadge');
+        if (!container) return;
+
+        countBadge.innerText = `${tiposActividadesList.length} tipos`;
+
+        if (tiposActividadesList.length === 0) {
+            container.innerHTML = `<div class="text-xs text-slate-400 italic text-center py-3">No hay tipos registrados</div>`;
+            return;
+        }
+
+        container.innerHTML = tiposActividadesList.map(t => {
+            const color = t.color || 'blue';
+            return `
+                <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200/70 hover:bg-slate-100/60 transition">
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-lg bg-${color}-100 text-${color}-700 flex items-center justify-center text-xs">
+                            <i class="fa-solid ${t.icono || 'fa-tag'}"></i>
+                        </span>
+                        <span class="text-xs font-extrabold text-slate-800">${t.nombre}</span>
+                    </div>
+                    <button type="button" onclick="deleteQuickTipoActividad(${t.id_tipo_actividad}, '${t.nombre.replace(/'/g, "\\'")}')" 
+                        class="w-7 h-7 rounded-lg bg-white hover:bg-rose-50 text-rose-500 hover:text-rose-700 border border-slate-200 flex items-center justify-center transition cursor-pointer shadow-2xs" 
+                        title="Eliminar este tipo">
+                        <i class="fa-regular fa-trash-can text-xs"></i>
+                    </button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function openQuickTipoActividadModal() {
+        document.getElementById('quickTipoNombre').value = '';
+        renderQuickTiposList();
+        document.getElementById('modalQuickTipoActividad').classList.remove('hidden');
+        document.getElementById('quickTipoNombre').focus();
+    }
+
+    function closeQuickTipoActividadModal() {
+        document.getElementById('modalQuickTipoActividad').classList.add('hidden');
+    }
+
+    async function handleSaveActivity(e) {
+        e.preventDefault();
+        const dateStr = formatDateForInput(selectedDate);
+        const lugarVal = document.getElementById('selectLugar').value;
+
+        const payload = {
+            nombre: document.getElementById('inputNombre').value,
+            fecha: dateStr,
+            hora: document.getElementById('inputHora').value,
+            tipo_actividad: document.getElementById('selectTipoActividad').value,
+            id_lugar: lugarVal ? parseInt(lugarVal) : null,
+            responsable: document.getElementById('inputResponsable').value,
+            estado: document.getElementById('selectEstado').value,
+            descripcion: document.getElementById('inputDescripcion').value
+        };
+
+        try {
+            const response = await fetch(baseUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const res = await response.json();
+            if (res.success) {
+                events.push({
+                    id: res.data.id_actividad,
+                    date: res.data.fecha,
+                    name: res.data.nombre,
+                    time: res.data.hora.substring(0, 5),
+                    tipo_actividad: res.data.tipo_actividad,
+                    id_lugar: res.data.id_lugar,
+                    lugar_nombre: res.data.lugar ? res.data.lugar.nombre : (lugaresMap[res.data.id_lugar] || null),
+                    responsable: res.data.responsable,
+                    estado: res.data.estado,
+                    descripcion: res.data.descripcion
+                });
+
+                filterEventsStatus('all');
+                renderCurrentView();
+                updateSelectedDateUI();
+                clearForm();
+
+                showToastNotification(`Actividad "${payload.nombre}" guardada en la base de datos.`);
+            } else {
+                alert('Error al guardar la actividad.');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error al conectar con la base de datos.');
+        }
+    }
+
+    async function handleUpdateActivity(e) {
+        e.preventDefault();
+        const id = parseInt(document.getElementById('editEventId').value);
         const evt = events.find(e => e.id === id);
-        if (evt) {
-            evt.estado = newStatus;
-            renderCurrentView();
-            updateSelectedDateUI();
-            showToastNotification(`Estado de "${evt.name}" cambiado a ${evt.estado}.`);
+        if (!evt) return;
+
+        const lugarVal = document.getElementById('editLugar').value;
+
+        const payload = {
+            nombre: document.getElementById('editNombre').value,
+            fecha: evt.date,
+            hora: document.getElementById('editHora').value,
+            tipo_actividad: document.getElementById('editTipoActividad').value,
+            id_lugar: lugarVal ? parseInt(lugarVal) : null,
+            estado: document.getElementById('editEstado').value,
+            responsable: document.getElementById('editResponsable').value,
+            descripcion: document.getElementById('editDescripcion').value
+        };
+
+        try {
+            const response = await fetch(`${baseUrl}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const res = await response.json();
+            if (res.success) {
+                evt.name = payload.nombre;
+                evt.time = payload.hora;
+                evt.tipo_actividad = payload.tipo_actividad;
+                evt.id_lugar = payload.id_lugar;
+                evt.lugar_nombre = res.data.lugar ? res.data.lugar.nombre : (lugaresMap[payload.id_lugar] || null);
+                evt.estado = payload.estado;
+                evt.responsable = payload.responsable;
+                evt.descripcion = payload.descripcion;
+
+                renderCurrentView();
+                updateSelectedDateUI();
+                closeEditModal();
+                showToastNotification(`Actividad "${evt.name}" actualizada en la base de datos.`);
+            } else {
+                alert('Error al actualizar la actividad.');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error al conectar con la base de datos.');
+        }
+    }
+
+    async function changeEventStatus(id, newStatus) {
+        const evt = events.find(e => e.id === id);
+        if (!evt) return;
+
+        const payload = {
+            nombre: evt.name,
+            fecha: evt.date,
+            hora: evt.time,
+            tipo_actividad: evt.tipo_actividad,
+            id_lugar: evt.id_lugar,
+            responsable: evt.responsable,
+            estado: newStatus,
+            descripcion: evt.descripcion
+        };
+
+        try {
+            const response = await fetch(`${baseUrl}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const res = await response.json();
+            if (res.success) {
+                evt.estado = newStatus;
+                renderCurrentView();
+                updateSelectedDateUI();
+                showToastNotification(`Estado cambiado a ${evt.estado}.`);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function deleteEvent(id) {
+        if (!confirm('¿Estás seguro de eliminar esta actividad del cronograma?')) return;
+        const evt = events.find(e => e.id === id);
+
+        try {
+            const response = await fetch(`${baseUrl}/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                }
+            });
+
+            const res = await response.json();
+            if (res.success) {
+                events = events.filter(e => e.id !== id);
+                renderCurrentView();
+                updateSelectedDateUI();
+                if (evt) {
+                    showToastNotification(`Actividad "${evt.name}" eliminada de la base de datos.`);
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error al eliminar la actividad.');
         }
     }
 
@@ -988,6 +1418,8 @@
         const evt = events.find(e => e.id === id);
         if (!evt) return;
         document.getElementById('editEventId').value = evt.id;
+        document.getElementById('editTipoActividad').value = evt.tipo_actividad || 'Capacitación';
+        document.getElementById('editLugar').value = evt.id_lugar || '';
         document.getElementById('editNombre').value = evt.name;
         document.getElementById('editHora').value = evt.time;
         document.getElementById('editEstado').value = evt.estado;
@@ -998,49 +1430,6 @@
 
     function closeEditModal() {
         document.getElementById('modalEditEvent').classList.add('hidden');
-    }
-
-    function handleUpdateActivity(e) {
-        e.preventDefault();
-        const id = parseInt(document.getElementById('editEventId').value);
-        const evt = events.find(e => e.id === id);
-        if (evt) {
-            evt.name = document.getElementById('editNombre').value;
-            evt.time = document.getElementById('editHora').value;
-            evt.estado = document.getElementById('editEstado').value;
-            evt.responsable = document.getElementById('editResponsable').value;
-            evt.descripcion = document.getElementById('editDescripcion').value;
-
-            renderCurrentView();
-            updateSelectedDateUI();
-            closeEditModal();
-            showToastNotification(`Actividad "${evt.name}" actualizada con éxito.`);
-        }
-    }
-
-    function handleSaveActivity(e) {
-        e.preventDefault();
-        const dateStr = formatDateForInput(selectedDate);
-
-        const newEvt = {
-            id: Date.now(),
-            date: dateStr,
-            name: document.getElementById('inputNombre').value,
-            time: document.getElementById('inputHora').value,
-            responsable: document.getElementById('inputResponsable').value,
-            estado: document.getElementById('selectEstado').value,
-            descripcion: document.getElementById('inputDescripcion').value
-        };
-
-        events.push(newEvt);
-
-        // Cambiar automáticamente el filtro a 'Todas' para mostrar el nuevo registro
-        filterEventsStatus('all');
-        renderCurrentView();
-        updateSelectedDateUI();
-        clearForm();
-
-        showToastNotification(`Actividad "${newEvt.name}" registrada con éxito.`);
     }
 
     let toastTimeout;
@@ -1066,21 +1455,13 @@
     }
 
     function clearForm() {
+        document.getElementById('selectTipoActividad').selectedIndex = 0;
+        document.getElementById('selectLugar').selectedIndex = 0;
         document.getElementById('inputNombre').value = '';
         document.getElementById('inputHora').value = '09:00';
         document.getElementById('inputResponsable').value = '';
         document.getElementById('inputDescripcion').value = '';
         document.getElementById('selectEstado').selectedIndex = 0;
-    }
-
-    function deleteEvent(id) {
-        const evt = events.find(e => e.id === id);
-        events = events.filter(e => e.id !== id);
-        renderCurrentView();
-        updateSelectedDateUI();
-        if (evt) {
-            showToastNotification(`Actividad "${evt.name}" eliminada.`);
-        }
     }
 
     function updateEventsCount() {

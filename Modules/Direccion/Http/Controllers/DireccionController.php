@@ -30,13 +30,7 @@ class DireccionController extends Controller
         $hasDireccionRole = $user->hasRole('direccion.admin') || $user->hasSuperAdmin();
 
         if (!$isDamendez && !$hasDireccionRole) {
-            auth()->logout();
-            request()->session()->invalidate();
-            request()->session()->regenerateToken();
-
-            return redirect()->route('login')->withErrors([
-                'email' => 'Las credenciales ingresadas no coinciden con nuestros registros.'
-            ]);
+            abort(404);
         }
 
         return null;

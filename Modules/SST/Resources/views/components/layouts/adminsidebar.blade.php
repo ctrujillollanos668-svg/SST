@@ -36,6 +36,11 @@
     /* MODO MINI SIDEBAR (COMPACTO) */
     #sidebarMenu.sidebar-mini {
         width: 76px !important;
+        overflow: visible !important;
+    }
+    #sidebarMenu.sidebar-mini nav {
+        overflow-y: visible !important;
+        overflow-x: visible !important;
     }
     #sidebarMenu.sidebar-mini .sidebar-text-full {
         display: none !important;
@@ -60,31 +65,32 @@
 
     /* MENÚ FLOTANTE FLYOUT (EN MODO MINI) */
     .sidebar-flyout {
-        display: none !important;
+        display: none;
     }
     #sidebarMenu.sidebar-mini .sidebar-flyout {
-        display: block !important;
+        display: block;
         position: absolute;
-        left: 68px;
+        left: 70px;
         top: 0;
-        width: 224px;
+        width: 230px;
         background: #ffffff;
         border-radius: 1rem;
         border: 1px solid rgba(226, 232, 240, 0.95);
-        box-shadow: 0 14px 30px -4px rgba(15, 23, 42, 0.12), 0 4px 10px -2px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.16), 0 4px 12px -2px rgba(0, 0, 0, 0.06);
         padding: 0.5rem;
-        z-index: 60;
+        z-index: 100;
         opacity: 0;
         visibility: hidden;
         transform: translateX(8px);
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         pointer-events: none;
     }
-    #sidebarMenu.sidebar-mini .menu-wrapper:hover .sidebar-flyout {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(0);
-        pointer-events: auto;
+    #sidebarMenu.sidebar-mini .menu-wrapper:hover .sidebar-flyout,
+    #sidebarMenu.sidebar-mini .menu-wrapper.flyout-open .sidebar-flyout {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateX(0) !important;
+        pointer-events: auto !important;
     }
 </style>
 
@@ -92,7 +98,7 @@
 <aside id="sidebarMenu" class="w-[270px] bg-white text-slate-600 flex flex-col h-screen fixed left-0 top-0 z-40 shadow-sm border-r border-slate-200/80 select-none">
     
     <!-- Logo & Header -->
-    <div class="flex flex-col items-center pt-5 pb-4 px-3 border-b border-slate-100">
+    <div class="flex flex-col items-center pt-5 pb-4 px-3 border-b border-slate-100 shrink-0">
         <!-- Logo Grande -->
         <div class="logo-full flex flex-col items-center">
             <div class="w-14 h-14 bg-slate-50 rounded-2xl p-1.5 border border-slate-200/70 flex items-center justify-center mb-2 shadow-xs overflow-hidden">
@@ -108,7 +114,7 @@
         </div>
 
         <!-- Logo Mini (Modo Compacto) -->
-        <div class="logo-mini hidden w-11 h-11 bg-slate-50 rounded-xl p-1 border border-slate-200/80 items-center justify-center shadow-xs overflow-hidden" title="SG-SST • La Angostura">
+        <div class="logo-mini hidden w-11 h-11 bg-slate-50 rounded-xl p-1 border border-slate-200/80 items-center justify-center shadow-xs overflow-hidden cursor-pointer" title="SG-SST • La Angostura">
             <img src="{{ asset('img/logodesst.jpeg') }}" alt="Logo SST" class="max-w-full max-h-full object-contain rounded-lg">
         </div>
     </div>
@@ -266,7 +272,7 @@
         <div class="flex flex-col menu-wrapper relative {{ $isInfoBasica ? 'open' : '' }}" id="informacionBasicaWrapper">
             <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isInfoBasica ? 'text-orange-600 bg-orange-50/70 font-bold' : 'text-slate-700 hover:text-orange-600 hover:bg-slate-50' }} transition cursor-pointer group" id="btnToggleInformacionBasica">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl {{ $isInfoBasica ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
+                    <span class="w-8 h-8 rounded-xl {{ $isInfoBasica ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-info-circle text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Información Básica</span>
@@ -383,21 +389,30 @@
         </div>
 
         <!-- 5. PAUSAS ACTIVAS -->
-        <div class="flex flex-col menu-wrapper relative" id="pausasWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnTogglePausas">
+        @php
+            $isPausas = request()->routeIs('SST.admin.pausas_activas.*');
+        @endphp
+        <div class="flex flex-col menu-wrapper relative {{ $isPausas ? 'open' : '' }}" id="pausasWrapper">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isPausas ? 'text-orange-600 bg-orange-50/70 font-bold' : 'text-slate-700 hover:text-orange-600 hover:bg-slate-50' }} transition cursor-pointer group" id="btnTogglePausas">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition shrink-0">
+                    <span class="w-8 h-8 rounded-xl {{ $isPausas ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-spa text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Pausas Activas</span>
                 </div>
-                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowPausas">
+                <span class="text-[10px] {{ $isPausas ? 'text-orange-600' : 'text-slate-400 group-hover:text-orange-600' }} arrow-icon" id="arrowPausas">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
             <!-- Acordeón Normal -->
             <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100">
-                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Programadas</a></li>
+                @php $actPausas = request()->routeIs('SST.admin.pausas_activas.index'); @endphp
+                <li>
+                    <a href="{{ route('SST.admin.pausas_activas.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actPausas ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
+                        <span class="text-[6px] mr-2.5 {{ $actPausas ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
+                        Programadas
+                    </a>
+                </li>
             </ul>
             <!-- Tarjeta Flotante (Flyout Mini) -->
             <div class="sidebar-flyout">
@@ -408,7 +423,10 @@
                     </span>
                 </div>
                 <div class="py-1">
-                    <a href="#" class="flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">Programadas</a>
+                    <a href="{{ route('SST.admin.pausas_activas.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actPausas ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
+                        <span>Programadas</span>
+                        @if($actPausas)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
+                    </a>
                 </div>
             </div>
         </div>
@@ -457,21 +475,30 @@
         </div>
 
         <!-- 7. INDICADORES SST -->
-        <div class="flex flex-col menu-wrapper relative" id="indicadoresWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleIndicadores">
+        @php
+            $isIndicadores = request()->routeIs('SST.admin.indicadores.*');
+        @endphp
+        <div class="flex flex-col menu-wrapper relative {{ $isIndicadores ? 'open' : '' }}" id="indicadoresWrapper">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isIndicadores ? 'text-orange-600 bg-orange-50/70 font-bold' : 'text-slate-700 hover:text-orange-600 hover:bg-slate-50' }} transition cursor-pointer group" id="btnToggleIndicadores">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition shrink-0">
+                    <span class="w-8 h-8 rounded-xl {{ $isIndicadores ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-chart-line text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Indicadores SST</span>
                 </div>
-                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowIndicadores">
+                <span class="text-[10px] {{ $isIndicadores ? 'text-orange-600' : 'text-slate-400 group-hover:text-orange-600' }} arrow-icon" id="arrowIndicadores">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
             <!-- Acordeón Normal -->
             <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100">
-                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Ver Indicadores</a></li>
+                @php $actInd = request()->routeIs('SST.admin.indicadores.index'); @endphp
+                <li>
+                    <a href="{{ route('SST.admin.indicadores.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actInd ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
+                        <span class="text-[6px] mr-2.5 {{ $actInd ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
+                        Ver Indicadores
+                    </a>
+                </li>
             </ul>
             <!-- Tarjeta Flotante (Flyout Mini) -->
             <div class="sidebar-flyout">
@@ -482,27 +509,39 @@
                     </span>
                 </div>
                 <div class="py-1">
-                    <a href="#" class="flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">Ver Indicadores</a>
+                    <a href="{{ route('SST.admin.indicadores.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInd ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
+                        <span>Ver Indicadores</span>
+                        @if($actInd)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
+                    </a>
                 </div>
             </div>
         </div>
 
         <!-- 8. USUARIOS -->
-        <div class="flex flex-col menu-wrapper relative" id="usuariosWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleUsuarios">
+        @php
+            $isUsuarios = request()->routeIs('SST.admin.usuarios.*');
+        @endphp
+        <div class="flex flex-col menu-wrapper relative {{ $isUsuarios ? 'open' : '' }}" id="usuariosWrapper">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isUsuarios ? 'text-orange-600 bg-orange-50/70 font-bold' : 'text-slate-700 hover:text-orange-600 hover:bg-slate-50' }} transition cursor-pointer group" id="btnToggleUsuarios">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition shrink-0">
+                    <span class="w-8 h-8 rounded-xl {{ $isUsuarios ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-users text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Usuarios</span>
                 </div>
-                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowUsuarios">
+                <span class="text-[10px] {{ $isUsuarios ? 'text-orange-600' : 'text-slate-400 group-hover:text-orange-600' }} arrow-icon" id="arrowUsuarios">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
             <!-- Acordeón Normal -->
             <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
-                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Registrar Usuario</a></li>
+                @php $actUserReg = request()->routeIs('SST.admin.usuarios.index'); @endphp
+                <li>
+                    <a href="{{ route('SST.admin.usuarios.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actUserReg ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
+                        <span class="text-[6px] mr-2.5 {{ $actUserReg ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
+                        Registrar Usuario
+                    </a>
+                </li>
             </ul>
             <!-- Tarjeta Flotante (Flyout Mini) -->
             <div class="sidebar-flyout">
@@ -513,7 +552,10 @@
                     </span>
                 </div>
                 <div class="py-1">
-                    <a href="#" class="flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">Registrar Usuario</a>
+                    <a href="{{ route('SST.admin.usuarios.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actUserReg ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
+                        <span>Registrar Usuario</span>
+                        @if($actUserReg)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
+                    </a>
                 </div>
             </div>
         </div>
@@ -521,7 +563,7 @@
     </nav>
 
     <!-- Footer Sidebar -->
-    <div class="p-3.5 border-t border-slate-100 bg-slate-50/50 text-center sidebar-text-full">
+    <div class="p-3.5 border-t border-slate-100 bg-slate-50/50 text-center sidebar-text-full shrink-0">
         <div class="text-[11px] font-bold text-slate-600">SG-SST v2.5</div>
         <div class="text-[10px] text-slate-400">Ambiente Administrativo Seguro</div>
     </div>
@@ -529,14 +571,23 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebarMenu');
+
         const toggleMenu = (btnId, wrapperId) => {
             const btn = document.getElementById(btnId);
             const wrapper = document.getElementById(wrapperId);
             if (btn && wrapper) {
-                btn.addEventListener('click', () => {
-                    const sidebar = document.getElementById('sidebarMenu');
-                    // Solo activar acordeón normal si NO está en modo mini
-                    if (sidebar && !sidebar.classList.contains('sidebar-mini')) {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (sidebar && sidebar.classList.contains('sidebar-mini')) {
+                        // En modo mini: abrir/cerrar tarjeta flotante por clic
+                        const isOpen = wrapper.classList.contains('flyout-open');
+                        document.querySelectorAll('.menu-wrapper').forEach(w => w.classList.remove('flyout-open'));
+                        if (!isOpen) {
+                            wrapper.classList.add('flyout-open');
+                        }
+                    } else {
+                        // En modo expandido: abrir/cerrar acordeón hacia abajo
                         wrapper.classList.toggle('open');
                     }
                 });
@@ -551,5 +602,14 @@
         toggleMenu('btnToggleCronograma', 'cronogramaWrapper');
         toggleMenu('btnToggleIndicadores', 'indicadoresWrapper');
         toggleMenu('btnToggleUsuarios', 'usuariosWrapper');
+
+        // Cerrar menú flotante al hacer clic afuera
+        document.addEventListener('click', function(e) {
+            if (sidebar && sidebar.classList.contains('sidebar-mini')) {
+                if (!sidebar.contains(e.target)) {
+                    document.querySelectorAll('.menu-wrapper').forEach(w => w.classList.remove('flyout-open'));
+                }
+            }
+        });
     });
 </script>

@@ -134,7 +134,10 @@
         </main>
     </div>
 
-    <!-- Scripts de Interacción -->
+    <!-- Barra de progreso para carga dinámica SPA -->
+    <div id="spaProgressBar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 z-50 transition-all duration-300 w-0 opacity-0 pointer-events-none"></div>
+
+    <!-- Scripts de Interacción y SPA -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
@@ -206,6 +209,167 @@
                     }
                 });
             }
+
+            // --- 3. NAVEGACIÓN DINÁMICA SPA (SIN RECARGAR LA PÁGINA) ---
+            const progressBar = document.getElementById('spaProgressBar');
+            const mainEl = document.querySelector('main');
+            const headerTitle = document.querySelector('header h2');
+
+            function startProgress() {
+                if (!progressBar) return;
+                progressBar.style.width = '0%';
+                progressBar.style.opacity = '1';
+                setTimeout(() => { progressBar.style.width = '45%'; }, 50);
+                setTimeout(() => { progressBar.style.width = '75%'; }, 180);
+            }
+
+            function finishProgress() {
+                if (!progressBar) return;
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    progressBar.style.opacity = '0';
+                    setTimeout(() => { progressBar.style.width = '0%'; }, 300);
+                }, 150);
+            }
+
+            function executeScripts(container) {
+                const scripts = container.querySelectorAll('script');
+                scripts.forEach(oldScript => {
+                    const newScript = document.createElement('script');
+                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
+            }
+
+            function updateSidebarActive(targetUrl) {
+                const urlPath = new URL(targetUrl, window.location.origin).pathname.toLowerCase().replace(/\/+$/, '');
+                
+                // Cerrar flyouts abiertos
+                document.querySelectorAll('.menu-wrapper').forEach(w => w.classList.remove('flyout-open'));
+
+                document.querySelectorAll('#sidebarMenu a').forEach(a => {
+                    const href = a.getAttribute('href');
+                    if (!href || href === '#' || href.startsWith('javascript:')) return;
+                    
+                    const linkPath = new URL(href, window.location.origin).pathname.toLowerCase().replace(/\/+$/, '');
+                    const isMatch = (urlPath === linkPath) || (urlPath.startsWith(linkPath) && linkPath !== '/sst' && linkPath !== '/sst/admin/dashboard');
+
+                    if (a.closest('.sidebar-flyout')) {
+                        // Elemento dentro de tarjeta flotante
+                        if (isMatch) {
+                            a.classList.add('bg-orange-50', 'text-orange-600', 'font-bold');
+                            a.classList.remove('text-slate-600');
+                        } else {
+                            a.classList.remove('bg-orange-50', 'text-orange-600', 'font-bold');
+                            a.classList.add('text-slate-600');
+                        }
+                    } else {
+                        // Elemento de lista en menú normal
+                        if (isMatch) {
+                            a.classList.add('text-orange-600', 'bg-white', 'shadow-xs', 'font-bold');
+                            a.classList.remove('text-slate-600');
+                            const dot = a.querySelector('.fa-circle');
+                            if (dot && dot.parentElement) {
+                                dot.parentElement.classList.add('text-orange-500', 'scale-125');
+                                dot.parentElement.classList.remove('text-slate-400');
+                            }
+                        } else {
+                            a.classList.remove('text-orange-600', 'bg-white', 'shadow-xs', 'font-bold');
+                            a.classList.add('text-slate-600');
+                            const dot = a.querySelector('.fa-circle');
+                            if (dot && dot.parentElement) {
+                                dot.parentElement.classList.remove('text-orange-500', 'scale-125');
+                                dot.parentElement.classList.add('text-slate-400');
+                            }
+                        }
+                    }
+                });
+            }
+
+            async function loadSpaPage(url, push = true) {
+                try {
+                    startProgress();
+                    const response = await fetch(url, {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+
+                    if (!response.ok) {
+                        window.location.href = url; // Fallback a navegación normal si hay error
+                        return;
+                    }
+
+                    const htmlText = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(htmlText, 'text/html');
+
+                    // 1. Actualizar título de pestaña
+                    if (doc.title) {
+                        document.title = doc.title;
+                    }
+
+                    // 2. Actualizar título de cabecera si existe
+                    const newHeaderTitle = doc.querySelector('header h2');
+                    if (headerTitle && newHeaderTitle) {
+                        headerTitle.innerHTML = newHeaderTitle.innerHTML;
+                    }
+
+                    // 3. Reemplazar contenido del main
+                    const newMain = doc.querySelector('main');
+                    if (mainEl && newMain) {
+                        mainEl.style.opacity = '0.3';
+                        mainEl.style.transition = 'opacity 0.15s ease';
+                        
+                        setTimeout(() => {
+                            mainEl.innerHTML = newMain.innerHTML;
+                            executeScripts(mainEl);
+                            mainEl.style.opacity = '1';
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }, 100);
+                    } else {
+                        window.location.href = url;
+                        return;
+                    }
+
+                    // 4. Actualizar Sidebar
+                    updateSidebarActive(url);
+
+                    // 5. Historial de navegador (Back/Forward)
+                    if (push) {
+                        window.history.pushState({ spa: true, url }, '', url);
+                    }
+
+                    finishProgress();
+
+                } catch (error) {
+                    console.error('Error cargando página SPA:', error);
+                    window.location.href = url;
+                }
+            }
+
+            // Interceptar clics en enlaces del sidebar
+            document.addEventListener('click', function(e) {
+                const link = e.target.closest('#sidebarMenu a, header a.spa-link');
+                if (!link) return;
+
+                const href = link.getAttribute('href');
+                if (!href || href === '#' || href.startsWith('javascript:') || link.target === '_blank') {
+                    return;
+                }
+
+                // Asegurarse de que sea una ruta interna del módulo SST Admin
+                if (href.includes('/Sst/admin') || href.includes('/sst/admin')) {
+                    e.preventDefault();
+                    loadSpaPage(href, true);
+                }
+            });
+
+            // Soporte para botones Atrás/Adelante del navegador
+            window.addEventListener('popstate', function(e) {
+                if (window.location.pathname.includes('/Sst/admin') || window.location.pathname.includes('/sst/admin')) {
+                    loadSpaPage(window.location.href, false);
+                }
+            });
 
         });
     </script>

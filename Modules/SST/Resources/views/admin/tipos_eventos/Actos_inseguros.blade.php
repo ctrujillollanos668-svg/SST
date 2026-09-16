@@ -14,6 +14,21 @@
 
 <div class="space-y-6 max-w-7xl mx-auto">
 
+    <!-- Mensaje Flash de Éxito -->
+    @if(session('success'))
+        <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200/80 text-emerald-800 flex items-center justify-between shadow-xs animate-in fade-in duration-200">
+            <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-check text-sm"></i>
+                </span>
+                <span class="text-xs sm:text-sm font-semibold">{{ session('success') }}</span>
+            </div>
+            <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 p-1 cursor-pointer">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+    @endif
+
     <!-- 1. Encabezado de la Sección -->
     <div class="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
         <div class="flex items-center gap-3.5">
@@ -22,7 +37,7 @@
             </div>
             <div>
                 <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Tipos de Actos Inseguros</h1>
-                <p class="text-sm text-slate-500 font-medium mt-0.5">Configuración y administración de catálogos y registros generales.</p>
+                <p class="text-sm text-slate-500 font-medium mt-0.5">Configuración y administración de catálogos en base de datos.</p>
             </div>
         </div>
 
@@ -47,117 +62,55 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-slate-700 text-sm font-medium">
-                    <!-- Fila 1 -->
-                    <tr class="hover:bg-slate-50/60 transition-colors">
-                        <td class="py-4 px-6 font-bold text-slate-900 break-words">
-                            No uso de Elementos de Protección Personal (EPP)
-                        </td>
-                        <td class="py-4 px-6 text-slate-600 max-w-md">
-                            <p class="line-clamp-2 cursor-pointer hover:text-orange-600 transition-colors" onclick="showFullDesc(event, 'Realizar labores operativas, manipulación de herramientas o tránsito en zonas de riesgo omitiendo deliberadamente el uso obligatorio de casco, guantes, gafas de protección, chaleco reflectivo o botas dieléctricas.')" title="Haz clic para ver la descripción completa">
-                                Realizar labores operativas, manipulación de herramientas o tránsito en zonas de riesgo omitiendo deliberadamente el uso obligatorio de casco, guantes, gafas de protección, chaleco reflectivo o botas dieléctricas.
-                            </p>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                Activo
-                            </span>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="openEditModal('No uso de Elementos de Protección Personal (EPP)', 'Realizar labores operativas, manipulación de herramientas o tránsito en zonas de riesgo omitiendo deliberadamente el uso obligatorio de casco, guantes, gafas de protección, chaleco reflectivo o botas dieléctricas.')" class="w-9 h-9 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Editar">
-                                    <i class="fa-regular fa-pen-to-square text-sm"></i>
-                                </button>
-                                <button onclick="openDeleteModal('No uso de Elementos de Protección Personal (EPP)')" class="w-9 h-9 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Eliminar">
-                                    <i class="fa-regular fa-trash-can text-sm"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Fila 2 -->
-                    <tr class="hover:bg-slate-50/60 transition-colors">
-                        <td class="py-4 px-6 font-bold text-slate-900 break-words">
-                            Operación de equipos sin autorización
-                        </td>
-                        <td class="py-4 px-6 text-slate-600 max-w-md">
-                            <p class="line-clamp-2 cursor-pointer hover:text-orange-600 transition-colors" onclick="showFullDesc(event, 'Intervención, manipulación o encendido de maquinarias industriales, montacargas, vehículos o tableros de potencia por parte de personal no calificado, capacitado ni autorizado por SST.')" title="Haz clic para ver la descripción completa">
-                                Intervención, manipulación o encendido de maquinarias industriales, montacargas, vehículos o tableros de potencia por parte de personal no calificado, capacitado ni autorizado por SST.
-                            </p>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                Activo
-                            </span>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="openEditModal('Operación de equipos sin autorización', 'Intervención, manipulación o encendido de maquinarias industriales, montacargas, vehículos o tableros de potencia por parte de personal no calificado, capacitado ni autorizado por SST.')" class="w-9 h-9 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Editar">
-                                    <i class="fa-regular fa-pen-to-square text-sm"></i>
-                                </button>
-                                <button onclick="openDeleteModal('Operación de equipos sin autorización')" class="w-9 h-9 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Eliminar">
-                                    <i class="fa-regular fa-trash-can text-sm"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Fila 3 -->
-                    <tr class="hover:bg-slate-50/60 transition-colors">
-                        <td class="py-4 px-6 font-bold text-slate-900 break-words">
-                            Bloqueo u omisión de guardas de seguridad
-                        </td>
-                        <td class="py-4 px-6 text-slate-600 max-w-md">
-                            <p class="line-clamp-2 cursor-pointer hover:text-orange-600 transition-colors" onclick="showFullDesc(event, 'Anulación arbitraria de fotoceldas, remoción de tapas o coberturas de protección, o deshabilitación de paradas de emergencia en líneas de trabajo activas.')" title="Haz clic para ver la descripción completa">
-                                Anulación arbitraria de fotoceldas, remoción de tapas o coberturas de protección, o deshabilitación de paradas de emergencia en líneas de trabajo activas.
-                            </p>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                Activo
-                            </span>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="openEditModal('Bloqueo u omisión de guardas de seguridad', 'Anulación arbitraria de fotoceldas, remoción de tapas o coberturas de protección, o deshabilitación de paradas de emergencia en líneas de trabajo activas.')" class="w-9 h-9 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Editar">
-                                    <i class="fa-regular fa-pen-to-square text-sm"></i>
-                                </button>
-                                <button onclick="openDeleteModal('Bloqueo u omisión de guardas de seguridad')" class="w-9 h-9 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Eliminar">
-                                    <i class="fa-regular fa-trash-can text-sm"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Fila 4 -->
-                    <tr class="hover:bg-slate-50/60 transition-colors">
-                        <td class="py-4 px-6 font-bold text-slate-900 break-words">
-                            Adopción de posturas peligrosas
-                        </td>
-                        <td class="py-4 px-6 text-slate-600 max-w-md">
-                            <p class="line-clamp-2 cursor-pointer hover:text-orange-600 transition-colors" onclick="showFullDesc(event, 'Ubicarse debajo de cargas pesadas suspendidas, escalar estructuras no aptas para trabajo en alturas o inclinarse en bordes descubiertos sin línea de vida enganchada.')" title="Haz clic para ver la descripción completa">
-                                Ubicarse debajo de cargas pesadas suspendidas, escalar estructuras no aptas para trabajo en alturas o inclinarse en bordes descubiertos sin línea de vida enganchada.
-                            </p>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                Activo
-                            </span>
-                        </td>
-                        <td class="py-4 px-6 text-center whitespace-nowrap">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="openEditModal('Adopción de posturas peligrosas', 'Ubicarse debajo de cargas pesadas suspendidas, escalar estructuras no aptas para trabajo en alturas o inclinarse en bordes descubiertos sin línea de vida enganchada.')" class="w-9 h-9 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Editar">
-                                    <i class="fa-regular fa-pen-to-square text-sm"></i>
-                                </button>
-                                <button onclick="openDeleteModal('Adopción de posturas peligrosas')" class="w-9 h-9 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Eliminar">
-                                    <i class="fa-regular fa-trash-can text-sm"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+                    @forelse($actos as $acto)
+                        <tr class="hover:bg-slate-50/60 transition-colors">
+                            <td class="py-4 px-6 font-bold text-slate-900 break-words">
+                                {{ $acto->nombre }}
+                            </td>
+                            <td class="py-4 px-6 text-slate-600 max-w-md">
+                                @if($acto->descripcion)
+                                    <p class="line-clamp-2 cursor-pointer hover:text-orange-600 transition-colors" onclick="showFullDesc(event, {{ json_encode($acto->descripcion) }})" title="Haz clic para ver la descripción completa">
+                                        {{ $acto->descripcion }}
+                                    </p>
+                                @else
+                                    <span class="text-slate-400 italic text-xs">Sin descripción</span>
+                                @endif
+                            </td>
+                            <td class="py-4 px-6 text-center whitespace-nowrap">
+                                @if($acto->estado === 'activo')
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        Activo
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                        Inactivo
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="py-4 px-6 text-center whitespace-nowrap">
+                                <div class="flex items-center justify-center gap-2">
+                                    <button onclick="openEditModal({{ $acto->id_tipo_evento }}, {{ json_encode($acto->nombre) }}, {{ json_encode($acto->descripcion ?? '') }}, {{ json_encode($acto->estado) }})" class="w-9 h-9 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Editar">
+                                        <i class="fa-regular fa-pen-to-square text-sm"></i>
+                                    </button>
+                                    <button onclick="openDeleteModal({{ $acto->id_tipo_evento }}, {{ json_encode($acto->nombre) }})" class="w-9 h-9 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-xs hover:scale-105" title="Eliminar">
+                                        <i class="fa-regular fa-trash-can text-sm"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="py-12 px-6 text-center">
+                                <div class="flex flex-col items-center justify-center text-slate-400 space-y-2">
+                                    <i class="fa-solid fa-folder-open text-3xl text-slate-300"></i>
+                                    <p class="text-sm font-semibold text-slate-600">No hay actos inseguros registrados aún.</p>
+                                    <p class="text-xs text-slate-400">Haz clic en "Registrar Acto Inseguro" para agregar el primero a la base de datos.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -180,7 +133,7 @@
 </div>
 
 <!-- ========================================== -->
-<!-- MODALES INTERACTIVOS                       -->
+<!-- MODALES INTERACTIVOS (CONEXIÓN BD)          -->
 <!-- ========================================== -->
 
 <!-- Modal: Registrar -->
@@ -195,20 +148,21 @@
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-        <form onsubmit="handleModalSubmit(event, 'Tipo de acto inseguro registrado con éxito')">
+        <form action="{{ route('SST.admin.tipos_eventos.actos_inseguros.store') }}" method="POST">
+            @csrf
             <div class="p-6 space-y-4 text-xs">
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Nombre del Acto Inseguro *</label>
-                    <input type="text" required placeholder="Ej. Distracción por uso de celular en área de producción" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm">
+                    <input type="text" name="nombre" required placeholder="Ej. Distracción por uso de celular en área de producción" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm">
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1.5">Descripción *</label>
-                    <textarea rows="3" required placeholder="Describa la conducta o práctica insegura..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm"></textarea>
+                    <label class="block font-bold text-slate-700 mb-1.5">Descripción</label>
+                    <textarea name="descripcion" rows="3" placeholder="Describa la conducta o práctica insegura..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm"></textarea>
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Estado</label>
-                    <select class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm bg-white">
-                        <option value="activo">Activo</option>
+                    <select name="estado" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm bg-white">
+                        <option value="activo" selected>Activo</option>
                         <option value="inactivo">Inactivo</option>
                     </select>
                 </div>
@@ -233,20 +187,22 @@
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-        <form onsubmit="handleModalSubmit(event, 'Tipo de acto inseguro actualizado con éxito')">
+        <form id="editActoForm" action="" method="POST">
+            @csrf
+            @method('PUT')
             <div class="p-6 space-y-4 text-xs">
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Nombre del Acto Inseguro *</label>
-                    <input type="text" id="editNombreInput" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm">
+                    <input type="text" id="editNombreInput" name="nombre" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm">
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1.5">Descripción *</label>
-                    <textarea id="editDescInput" rows="3" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm"></textarea>
+                    <label class="block font-bold text-slate-700 mb-1.5">Descripción</label>
+                    <textarea id="editDescInput" name="descripcion" rows="3" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm"></textarea>
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Estado</label>
-                    <select class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm bg-white">
-                        <option value="activo" selected>Activo</option>
+                    <select id="editEstadoSelect" name="estado" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm bg-white">
+                        <option value="activo">Activo</option>
                         <option value="inactivo">Inactivo</option>
                     </select>
                 </div>
@@ -270,14 +226,16 @@
             <p class="text-xs text-slate-500 mt-2 leading-relaxed">
                 Estás a punto de eliminar el registro <span id="deleteItemName" class="font-bold text-slate-800"></span>. Esta acción no se puede deshacer.
             </p>
-            <div class="mt-6 flex items-center justify-center gap-3">
-                <button onclick="closeDeleteModal()" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition cursor-pointer">
+            <form id="deleteActoForm" action="" method="POST" class="mt-6 flex items-center justify-center gap-3">
+                @csrf
+                @method('DELETE')
+                <button type="button" onclick="closeDeleteModal()" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition cursor-pointer">
                     Cancelar
                 </button>
-                <button onclick="handleModalSubmit(event, 'Registro eliminado del catálogo')" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-xs transition cursor-pointer">
+                <button type="submit" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-xs transition cursor-pointer">
                     Sí, Eliminar
                 </button>
-            </div>
+            </form>
         </div>
     </div>
 </div>
@@ -325,29 +283,26 @@
         document.getElementById('modalRegister').classList.add('hidden');
     }
 
-    function openEditModal(nombre, descripcion) {
+    function openEditModal(id, nombre, descripcion, estado) {
+        const form = document.getElementById('editActoForm');
+        form.action = "{{ url('Sst/admin/tipos-eventos/actos-inseguros') }}/" + id;
         document.getElementById('editNombreInput').value = nombre;
         document.getElementById('editDescInput').value = descripcion;
+        document.getElementById('editEstadoSelect').value = estado || 'activo';
         document.getElementById('modalEdit').classList.remove('hidden');
     }
     function closeEditModal() {
         document.getElementById('modalEdit').classList.add('hidden');
     }
 
-    function openDeleteModal(nombre) {
+    function openDeleteModal(id, nombre) {
+        const form = document.getElementById('deleteActoForm');
+        form.action = "{{ url('Sst/admin/tipos-eventos/actos-inseguros') }}/" + id;
         document.getElementById('deleteItemName').innerText = `"${nombre}"`;
         document.getElementById('modalDelete').classList.remove('hidden');
     }
     function closeDeleteModal() {
         document.getElementById('modalDelete').classList.add('hidden');
-    }
-
-    function handleModalSubmit(event, message) {
-        event.preventDefault();
-        closeRegisterModal();
-        closeEditModal();
-        closeDeleteModal();
-        alert(message);
     }
 </script>
 @endsection
