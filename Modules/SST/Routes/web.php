@@ -15,6 +15,12 @@ use Modules\SST\Http\Controllers\Admin\Informacion_basica\ContactoEmergenciaCont
 use Modules\SST\Http\Controllers\Admin\AdminController;
 use Modules\SST\Http\Controllers\Aprendiz\AprendizController;
 use Modules\SST\Http\Controllers\Aprendiz\Definiciones\DefinicionesController as AprendizDefinicionesController;
+use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\AccidentesController as AprendizAccidentesController;
+use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\IncidentesController as AprendizIncidentesController;
+use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\RiesgosController as AprendizRiesgosController;
+use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\ActosInsegurosController as AprendizActosInsegurosController;
+use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\LesionesController as AprendizLesionesController;
+use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\TiposEmergenciasController as AprendizTiposEmergenciasController;
 
 Route::prefix('Sst')->name('SST.')->group(function () {
     // 1. Landing pública / Bienvenida
@@ -88,6 +94,29 @@ Route::prefix('Sst')->name('SST.')->group(function () {
     Route::prefix('aprendiz')->name('aprendiz.')->group(function () {
         Route::get('/dashboard', [AprendizController::class, 'dashboard'])->name('dashboard');
         Route::get('/definiciones', [AprendizDefinicionesController::class, 'index'])->name('definiciones');
+
+        // Tipos de Eventos para Aprendiz
+        Route::prefix('tipos-eventos')->name('tipos_eventos.')->group(function () {
+            Route::get('/accidentes', [AprendizAccidentesController::class, 'index'])->name('accidentes.index');
+            Route::post('/accidentes', [AprendizAccidentesController::class, 'store'])->name('accidentes.store');
+            Route::put('/accidentes/{id}', [AprendizAccidentesController::class, 'update'])->name('accidentes.update');
+            Route::delete('/accidentes/{id}', [AprendizAccidentesController::class, 'destroy'])->name('accidentes.destroy');
+
+            Route::get('/incidentes', [AprendizIncidentesController::class, 'index'])->name('incidentes.index');
+            Route::post('/incidentes', [AprendizIncidentesController::class, 'store'])->name('incidentes.store');
+
+            Route::get('/riesgos', [AprendizRiesgosController::class, 'index'])->name('riesgos.index');
+            Route::post('/riesgos', [AprendizRiesgosController::class, 'store'])->name('riesgos.store');
+
+            Route::get('/actos-inseguros', [AprendizActosInsegurosController::class, 'index'])->name('actos_inseguros.index');
+            Route::post('/actos-inseguros', [AprendizActosInsegurosController::class, 'store'])->name('actos_inseguros.store');
+
+            Route::get('/lesiones', [AprendizLesionesController::class, 'index'])->name('lesiones.index');
+            Route::post('/lesiones', [AprendizLesionesController::class, 'store'])->name('lesiones.store');
+
+            Route::get('/tipos-emergencias', [AprendizTiposEmergenciasController::class, 'index'])->name('tipos_emergencias.index');
+            Route::post('/tipos-emergencias', [AprendizTiposEmergenciasController::class, 'store'])->name('tipos_emergencias.store');
+        });
     });
 
     // Compatibilidad

@@ -14,7 +14,21 @@ class RespuestaEventoController extends Controller
     public function index()
     {
         $respuestas = RespuestaEvento::orderBy('id_respuesta', 'desc')->get();
-        return view('sst::admin.informacion_basica.Respuesta_evento', compact('respuestas'));
+
+        $accidentes = $respuestas->filter(function($r) {
+            return stripos($r->nombre, 'accidente') !== false;
+        });
+
+        $incidentes = $respuestas->filter(function($r) {
+            return stripos($r->nombre, 'incidente') !== false;
+        });
+
+        // Si hay respuestas que no tienen la palabra explícita, agruparlas en accidentes por defecto
+        if ($accidentes->isEmpty() && !$respuestas->isEmpty() && $incidentes->isEmpty()) {
+            $accidentes = $respuestas;
+        }
+
+        return view('sst::admin.informacion_basica.Respuesta_evento', compact('respuestas', 'accidentes', 'incidentes'));
     }
 
     /**
