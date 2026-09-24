@@ -207,16 +207,26 @@
 
                             <!-- 9. Estado -->
                             <td class="py-3 px-2 text-center whitespace-nowrap">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold {{ $acc->estado == 'activo' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-600' }}">
-                                    {{ ucfirst($acc->estado) }}
-                                </span>
+                                @php
+                                    $estadoAcc = strtolower($acc->estado ?? 'activo');
+                                    $tieneRespuesta = !empty($data['respuesta_admin']);
+                                @endphp
+                                @if($estadoAcc === 'atendido' || $tieneRespuesta)
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                        <i class="fa-solid fa-check-double text-[9px]"></i> Atendido
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-700 border border-amber-200">
+                                        <i class="fa-regular fa-clock text-[9px]"></i> Pendiente
+                                    </span>
+                                @endif
                             </td>
 
                             <!-- 10. Gestionar / Responder -->
                             <td class="py-3 px-2.5 text-center whitespace-nowrap">
-                                <button onclick="openResponseModal('{{ addslashes($data['tipo_accidente'] ?? $acc->nombre) }}', '{{ addslashes($data['personas_involucradas'] ?? 'Aprendiz') }}', '{{ addslashes(json_encode($data, JSON_UNESCAPED_UNICODE)) }}')" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-bold border border-rose-200 shadow-2xs transition cursor-pointer">
+                                <button onclick="openResponseModal({{ $acc->id_respuesta }}, '{{ addslashes($data['tipo_accidente'] ?? $acc->nombre) }}', '{{ addslashes($data['personas_involucradas'] ?? 'Aprendiz') }}', '{{ addslashes(json_encode($data, JSON_UNESCAPED_UNICODE)) }}', '{{ $acc->estado }}')" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-bold border border-rose-200 shadow-2xs transition cursor-pointer">
                                     <i class="fa-solid fa-reply text-[9px]"></i>
-                                    <span>Responder</span>
+                                    <span>{{ !empty($data['respuesta_admin']) ? 'Ver / Editar Respuesta' : 'Responder' }}</span>
                                 </button>
                             </td>
                         </tr>
@@ -288,14 +298,25 @@
                                 <p class="line-clamp-2 text-[11px] leading-relaxed">{{ $inc->descripcion ?? 'Sin descripción.' }}</p>
                             </td>
                             <td class="py-4 px-3 text-center">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold {{ $inc->estado == 'activo' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-600' }}">
-                                    {{ ucfirst($inc->estado) }}
-                                </span>
+                                @php
+                                    $incData = json_decode($inc->descripcion, true);
+                                    $estadoInc = strtolower($inc->estado ?? 'activo');
+                                    $tieneRespuestaInc = is_array($incData) && !empty($incData['respuesta_admin']);
+                                @endphp
+                                @if($estadoInc === 'atendido' || $tieneRespuestaInc)
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                        <i class="fa-solid fa-check-double text-[9px]"></i> Atendido
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-700 border border-amber-200">
+                                        <i class="fa-regular fa-clock text-[9px]"></i> Pendiente
+                                    </span>
+                                @endif
                             </td>
                             <td class="py-4 px-3 text-center whitespace-nowrap">
-                                <button onclick="openResponseModal('{{ addslashes($inc->nombre) }}', 'Aprendiz', '{{ addslashes($inc->descripcion) }}')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold border border-amber-200 shadow-2xs transition cursor-pointer">
+                                <button onclick="openResponseModal({{ $inc->id_respuesta }}, '{{ addslashes($inc->nombre) }}', 'Aprendiz', '{{ addslashes($inc->descripcion) }}', '{{ $inc->estado }}')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold border border-amber-200 shadow-2xs transition cursor-pointer">
                                     <i class="fa-solid fa-reply text-[10px]"></i>
-                                    <span>Responder</span>
+                                    <span>{{ $tieneRespuestaInc ? 'Ver / Editar' : 'Responder' }}</span>
                                 </button>
                             </td>
                         </tr>
@@ -341,54 +362,93 @@
 <!-- MODAL: RESPUESTA / ATENCIÓN DEL ADMINISTRADOR SST AL EVENTO                -->
 <!-- ========================================================================= -->
 <div id="modalResponse" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4" onclick="closeResponseModal()">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 animate-modal-pop max-h-[90vh] flex flex-col overflow-hidden" onclick="event.stopPropagation()">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 animate-modal-pop max-h-[90vh] flex flex-col overflow-hidden" onclick="event.stopPropagation()">
+        
+        <!-- Header del Modal -->
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-3 shrink-0">
-            <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-                <i class="fa-solid fa-comment-dots text-orange-600"></i>
-                <span id="modalResponseTitle">Respuesta y Medidas Tomadas</span>
-            </h3>
+            <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-2xs">
+                    <i class="fa-solid fa-clipboard-check text-base"></i>
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-slate-900 text-base">Atención y Retroalimentación SST</h3>
+                    <p class="text-xs text-slate-400 font-medium" id="modalResponseTitle">Respuesta al reporte</p>
+                </div>
+            </div>
             <button onclick="closeResponseModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
                 <i class="fa-solid fa-xmark text-xs"></i>
             </button>
         </div>
 
-        <div class="space-y-3.5 overflow-y-auto pr-1 flex-1">
+        <!-- Formulario Real -->
+        <form id="formAdminResponse" action="" method="POST" class="space-y-4 overflow-y-auto pr-1 flex-1">
+            @csrf
+
+            <!-- Banner si ya tiene respuesta previa -->
+            <div id="modalPreviousResponseAlert" class="hidden rounded-2xl bg-emerald-50 border border-emerald-200 p-3.5 space-y-1">
+                <div class="flex items-center gap-2 text-emerald-800 font-extrabold text-xs">
+                    <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                    <span>Este reporte ya tiene una atención registrada</span>
+                </div>
+                <p class="text-[11px] text-emerald-700 font-medium" id="modalPreviousResponseInfo"></p>
+            </div>
+
             <!-- Galería de fotos en el modal de respuesta si existen -->
-            <div id="modalResponseImgContainer" class="hidden rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 p-2 space-y-1.5">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Evidencias Adjuntas</span>
+            <div id="modalResponseImgContainer" class="hidden rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 p-2.5 space-y-1.5">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Evidencias Adjuntas del Reporte</span>
                 <div id="modalResponseGalleryGrid" class="grid gap-2"></div>
             </div>
 
+            <!-- Detalle original del reporte -->
             <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Detalle del Reporte:</label>
-                <div id="modalReportDetail" class="w-full p-3.5 text-xs rounded-xl bg-slate-50 border border-slate-200 font-medium text-slate-700 max-h-40 overflow-y-auto whitespace-pre-line"></div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Detalle del Reporte del Aprendiz:</label>
+                <div id="modalReportDetail" class="w-full p-3.5 text-xs rounded-xl bg-slate-50 border border-slate-200 font-medium text-slate-700 max-h-36 overflow-y-auto whitespace-pre-line"></div>
             </div>
 
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Protocolo de Atención:</label>
-                <select id="modalSelectProtocol" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-orange-500 font-semibold cursor-pointer">
-                    <option>Primeros Auxilios Básicos y Remisión</option>
-                    <option>Acción Correctiva Locativa / Mantenimiento</option>
-                    <option>Capacitación y Refuerzo de Seguridad</option>
-                    <option>Investigación Formal COPASST</option>
+            <!-- Selector de Protocolo de Atención -->
+            <div class="space-y-1">
+                <label class="block text-xs font-bold text-slate-700">
+                    Protocolo de Atención Aplicado <span class="text-rose-500">*</span>
+                </label>
+                <select id="modalSelectProtocol" name="protocolo" required class="w-full px-3.5 py-2.5 text-xs rounded-xl bg-white border border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 font-semibold cursor-pointer shadow-2xs transition">
+                    <option value="Primeros Auxilios Básicos y Remisión">Primeros Auxilios Básicos y Remisión</option>
+                    <option value="Acción Correctiva Locativa / Mantenimiento">Acción Correctiva Locativa / Mantenimiento</option>
+                    <option value="Capacitación y Refuerzo de Seguridad">Capacitación y Refuerzo de Seguridad</option>
+                    <option value="Investigación Formal COPASST">Investigación Formal COPASST</option>
+                    <option value="Aislamiento preventivo del área">Aislamiento preventivo del área</option>
+                    <option value="Evaluación Médica / EPS">Evaluación Médica / EPS</option>
                 </select>
             </div>
 
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Observaciones / Medidas Tomadas:</label>
-                <textarea id="modalResponseText" rows="3" placeholder="Describe las medidas ejecutadas..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium"></textarea>
+            <!-- Estado del Caso -->
+            <div class="space-y-1">
+                <label class="block text-xs font-bold text-slate-700">
+                    Estado del Caso <span class="text-rose-500">*</span>
+                </label>
+                <select id="modalSelectEstado" name="estado" required class="w-full px-3.5 py-2.5 text-xs rounded-xl bg-white border border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 font-semibold cursor-pointer shadow-2xs transition">
+                    <option value="atendido">Atendido / Resuelto (Visible para Aprendiz)</option>
+                    <option value="en_proceso">En Proceso / Seguimiento</option>
+                </select>
             </div>
 
-            <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
-                <button type="button" onclick="closeResponseModal()" class="px-4 py-2 text-xs font-bold text-slate-600 rounded-xl hover:bg-slate-100 transition cursor-pointer">
-                    Cerrar
+            <!-- Observaciones / Medidas Tomadas -->
+            <div class="space-y-1">
+                <label class="block text-xs font-bold text-slate-700">
+                    Observaciones y Medidas Tomadas <span class="text-rose-500">*</span>
+                </label>
+                <textarea id="modalResponseText" name="medidas_tomadas" required rows="3" placeholder="Describe claramente el procedimiento realizado, remitente o medidas preventivas que verá el aprendiz..." class="w-full px-3.5 py-2.5 text-xs rounded-xl bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 font-medium text-slate-800 shadow-2xs transition resize-none"></textarea>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                <button type="button" onclick="closeResponseModal()" class="px-4 py-2.5 text-xs font-bold text-slate-600 rounded-xl hover:bg-slate-100 transition cursor-pointer">
+                    Cancelar
                 </button>
-                <button type="button" onclick="saveAdminResponse()" class="px-5 py-2 text-xs font-bold text-white bg-[#ea580c] hover:bg-[#c2410c] rounded-xl shadow-xs transition cursor-pointer flex items-center gap-1.5">
-                    <i class="fa-solid fa-check text-xs"></i>
-                    <span>Registrar Atención</span>
+                <button type="submit" class="px-5 py-2.5 text-xs font-bold text-white bg-[#ea580c] hover:bg-[#c2410c] rounded-xl shadow-xs transition cursor-pointer flex items-center gap-1.5">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                    <span>Guardar y Enviar Respuesta</span>
                 </button>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -441,24 +501,35 @@
         document.getElementById('modalEvidenciaPhoto').classList.add('hidden');
     }
 
-    function openResponseModal(title, reporter, rawData) {
+    function openResponseModal(id, title, reporter, rawData, currentStatus) {
         document.getElementById('modalResponseTitle').innerText = title;
         
+        // Configurar ruta en formulario
+        const baseUrl = "{{ url('Sst/admin/informacion-basica/respuesta-eventos') }}";
+        document.getElementById('formAdminResponse').action = `${baseUrl}/${id}/atender`;
+
         let textContent = '';
         let evidenciasUrls = [];
+        let respuestaAdmin = null;
+
         try {
-            const parsed = JSON.parse(rawData);
+            const parsed = typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
             textContent = `📍 Lugar: ${parsed.lugar_formacion || 'N/A'}\n`
                         + `💼 Tipo: ${parsed.tipo_accidente || title}\n`
                         + `🩺 Gravedad: ${parsed.gravedad || 'N/A'}\n`
                         + `👥 Personas: ${parsed.personas_involucradas || reporter}\n`
                         + (parsed.instructor_responsable ? `👨‍🏫 Instructor: ${parsed.instructor_responsable}\n` : '')
                         + `📅 Fecha: ${parsed.fecha_hora || 'N/A'}\n\n`
-                        + `📝 Descripción: ${parsed.descripcion || 'Sin descripción'}`;
+                        + `📝 Descripción: ${parsed.descripcion || parsed.descripcion_original || 'Sin descripción'}`;
+            
             if (parsed.evidencias && Array.isArray(parsed.evidencias)) {
                 evidenciasUrls = parsed.evidencias;
             } else if (parsed.evidencia) {
                 evidenciasUrls = [parsed.evidencia];
+            }
+
+            if (parsed.respuesta_admin) {
+                respuestaAdmin = parsed.respuesta_admin;
             }
         } catch(e) {
             textContent = rawData;
@@ -487,17 +558,34 @@
         }
 
         document.getElementById('modalReportDetail').innerText = textContent;
-        document.getElementById('modalResponseText').value = '';
+
+        // Comprobar si ya existe respuesta previa
+        const prevAlert = document.getElementById('modalPreviousResponseAlert');
+        const prevInfo = document.getElementById('modalPreviousResponseInfo');
+        if (respuestaAdmin) {
+            prevAlert.classList.remove('hidden');
+            prevInfo.innerText = `Atendido por ${respuestaAdmin.atendido_por || 'SST'} el ${respuestaAdmin.fecha_atencion || 'Reciente'}. Puedes modificar las medidas a continuación.`;
+            
+            if (respuestaAdmin.protocolo) {
+                document.getElementById('modalSelectProtocol').value = respuestaAdmin.protocolo;
+            }
+            if (respuestaAdmin.medidas_tomadas) {
+                document.getElementById('modalResponseText').value = respuestaAdmin.medidas_tomadas;
+            }
+            if (respuestaAdmin.estado) {
+                document.getElementById('modalSelectEstado').value = respuestaAdmin.estado;
+            }
+        } else {
+            prevAlert.classList.add('hidden');
+            document.getElementById('modalResponseText').value = '';
+            document.getElementById('modalSelectEstado').value = 'atendido';
+        }
+
         document.getElementById('modalResponse').classList.remove('hidden');
     }
 
     function closeResponseModal() {
         document.getElementById('modalResponse').classList.add('hidden');
-    }
-
-    function saveAdminResponse() {
-        alert('¡Respuesta y atención registrada correctamente!');
-        closeResponseModal();
     }
 </script>
 @endsection

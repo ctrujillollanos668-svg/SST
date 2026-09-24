@@ -45,6 +45,7 @@ Route::prefix('Sst')->name('SST.')->group(function () {
 
     // Rutas de Administración - Información Básica
     Route::prefix('admin/informacion-basica')->name('admin.informacion_basica.')->group(function () {
+        Route::post('respuesta-eventos/{id}/atender', [RespuestaEventoController::class, 'atender'])->name('respuesta_eventos.atender');
         Route::resource('respuesta-eventos', RespuestaEventoController::class)->names('respuesta_eventos');
         Route::resource('lugar-informacion', LugarInformacionController::class)->names('lugar_informacion');
         Route::resource('contacto-emergencia', ContactoEmergenciaController::class)->names('contacto_emergencia');

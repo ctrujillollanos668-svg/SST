@@ -138,6 +138,8 @@
                                 $evidencias = !empty($data['evidencias']) && is_array($data['evidencias']) ? $data['evidencias'] : (!empty($data['evidencia']) ? [$data['evidencia']] : []);
                                 $fotoPrincipal = !empty($evidencias) ? $evidencias[0] : null;
                                 $totalFotos = count($evidencias);
+                                $estadoItem = strtolower($item->estado ?? 'activo');
+                                $tieneRespuesta = !empty($data['respuesta_admin']);
                             @endphp
                             <div class="item-card bg-slate-50/70 hover:bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-orange-300 transition-all flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 cursor-pointer group"
                                  onclick="openDetailModal(this)"
@@ -149,6 +151,8 @@
                                  data-fecha="{{ $fechaFormateada }}"
                                  data-evidencia="{{ $fotoPrincipal ?? '' }}"
                                  data-evidencias="{{ json_encode($evidencias) }}"
+                                 data-respuesta-admin="{{ json_encode($data['respuesta_admin'] ?? null) }}"
+                                 data-estado="{{ $item->estado ?? 'activo' }}"
                                  data-desc="{{ $data['descripcion'] ?? 'Sin descripción adicional.' }}">
                                 
                                 <!-- Foto a la izquierda pequeña o Icono (Miniatura 60px con badge si hay varias fotos) -->
@@ -169,15 +173,26 @@
 
                                 <!-- Cuerpo estructurado -->
                                 <div class="flex-1 flex flex-col justify-between space-y-2.5 w-full">
-                                    <!-- Fila 1: Título y Gravedad -->
+                                    <!-- Fila 1: Título, Estado SST y Gravedad -->
                                     <div class="flex flex-wrap items-center justify-between gap-2">
                                         <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
                                             <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0"></span>
                                             <span class="group-hover:text-orange-600 transition-colors">{{ $data['tipo_accidente'] ?? $item->nombre }}</span>
                                         </h3>
-                                        <span class="inline-flex items-center px-3 py-0.5 rounded-full text-[11px] font-extrabold border {{ $badgeGrav }} shrink-0">
-                                            {{ ucfirst($data['gravedad'] ?? 'Leve') }}
-                                        </span>
+                                        <div class="flex items-center gap-1.5 shrink-0">
+                                            @if($estadoItem === 'atendido' || $tieneRespuesta)
+                                                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs">
+                                                    <i class="fa-solid fa-check-double text-[9px] text-emerald-600"></i> Atendido por SST
+                                                </span>
+                                            @else
+                                                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-700 border border-amber-200 shadow-2xs">
+                                                    <i class="fa-regular fa-clock text-[9px] text-amber-500"></i> Pendiente
+                                                </span>
+                                            @endif
+                                            <span class="inline-flex items-center px-3 py-0.5 rounded-full text-[11px] font-extrabold border {{ $badgeGrav }}">
+                                                {{ ucfirst($data['gravedad'] ?? 'Leve') }}
+                                            </span>
+                                        </div>
                                     </div>
 
                                     <!-- Fila 2: Etiquetas de Lugar, Fecha, Afectado e Instructor -->
@@ -212,10 +227,6 @@
                                         </p>
 
                                         <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
-                                            <span class="text-orange-600 font-bold group-hover:translate-x-0.5 transition-transform flex items-center gap-1 text-xs mr-2">
-                                                Ver detalle <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                                            </span>
-
                                             <!-- Botón Editar -->
                                             <button type="button" onclick="event.stopPropagation(); openEditModal({{ $item->id_respuesta }}, '{{ addslashes(json_encode($data, JSON_UNESCAPED_UNICODE)) }}')" class="w-8 h-8 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold border border-amber-200 shadow-2xs transition cursor-pointer" title="Editar reporte">
                                                 <i class="fa-solid fa-pen-to-square"></i>
@@ -320,20 +331,12 @@
                     </label>
                     <select name="tipo_accidente" required 
                         class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
-                        <option value="">Seleccione el tipo...</option>
+                        <option value="">Seleccione el tipo de accidente...</option>
                         @if(isset($catalogoAccidentes) && $catalogoAccidentes->count() > 0)
                             @foreach($catalogoAccidentes as $acc)
                                 <option value="{{ $acc->nombre }}">{{ $acc->nombre }}</option>
                             @endforeach
                         @endif
-                        <option value="Caída a distinto nivel">Caída a distinto nivel</option>
-                        <option value="Caída a mismo nivel">Caída a mismo nivel</option>
-                        <option value="Golpe por objeto">Golpe por objeto</option>
-                        <option value="Corte con herramienta">Corte con herramienta</option>
-                        <option value="Atrapamiento">Atrapamiento</option>
-                        <option value="Quemadura">Quemadura</option>
-                        <option value="Contacto eléctrico">Contacto eléctrico</option>
-                        <option value="Otro tipo de accidente">Otro tipo de accidente</option>
                     </select>
                 </div>
 
@@ -493,20 +496,12 @@
                     </label>
                     <select id="edit_tipo_accidente" name="tipo_accidente" required 
                         class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
-                        <option value="">Seleccione el tipo...</option>
+                        <option value="">Seleccione el tipo de accidente...</option>
                         @if(isset($catalogoAccidentes) && $catalogoAccidentes->count() > 0)
                             @foreach($catalogoAccidentes as $acc)
                                 <option value="{{ $acc->nombre }}">{{ $acc->nombre }}</option>
                             @endforeach
                         @endif
-                        <option value="Caída a distinto nivel">Caída a distinto nivel</option>
-                        <option value="Caída a mismo nivel">Caída a mismo nivel</option>
-                        <option value="Golpe por objeto">Golpe por objeto</option>
-                        <option value="Corte con herramienta">Corte con herramienta</option>
-                        <option value="Atrapamiento">Atrapamiento</option>
-                        <option value="Quemadura">Quemadura</option>
-                        <option value="Contacto eléctrico">Contacto eléctrico</option>
-                        <option value="Otro tipo de accidente">Otro tipo de accidente</option>
                     </select>
                 </div>
 
@@ -703,6 +698,47 @@
             <div>
                 <span class="text-slate-400 font-bold block text-[10px] uppercase mb-1">Descripción del Accidente</span>
                 <p id="modalDetalleTexto" class="text-xs text-slate-700 leading-relaxed whitespace-pre-line bg-white p-3 rounded-xl border border-slate-200/60"></p>
+            </div>
+
+            <!-- Bloque de Respuesta y Atención del Administrador SST -->
+            <div id="modalDetalleRespuestaContainer" class="hidden rounded-2xl bg-gradient-to-br from-emerald-50/90 to-teal-50/70 border border-emerald-200 p-4 space-y-2.5 shadow-2xs">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-emerald-900 font-extrabold text-xs">
+                        <span class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-[11px] shadow-2xs">
+                            <i class="fa-solid fa-clipboard-check"></i>
+                        </span>
+                        <span>Respuesta y Medidas Tomadas por SST</span>
+                    </div>
+                    <span id="modalDetalleRespuestaFecha" class="text-[10px] font-bold text-emerald-700 bg-emerald-100/90 px-2.5 py-0.5 rounded-lg border border-emerald-200"></span>
+                </div>
+
+                <div class="space-y-2 text-xs">
+                    <div>
+                        <span class="text-[10px] uppercase font-bold text-emerald-800/80 block">Protocolo de Atención Aplicado:</span>
+                        <p id="modalDetalleRespuestaProtocolo" class="font-extrabold text-emerald-950 text-xs"></p>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase font-bold text-emerald-800/80 block">Medidas y Procedimientos Ejecutados:</span>
+                        <p id="modalDetalleRespuestaMedidas" class="text-slate-700 whitespace-pre-line bg-white/95 p-3 rounded-xl border border-emerald-200/80 leading-relaxed font-medium shadow-2xs"></p>
+                    </div>
+                    <div class="flex items-center justify-between pt-1.5 border-t border-emerald-200/60 text-[10px] text-emerald-800">
+                        <span class="font-medium">Atendido por: <strong id="modalDetalleRespuestaAdmin" class="font-bold text-emerald-950"></strong></span>
+                        <span class="inline-flex items-center gap-1 font-extrabold text-emerald-700 bg-emerald-100/60 px-2 py-0.5 rounded-md">
+                            <i class="fa-solid fa-circle-check"></i> Reporte Atendido
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloque informativo cuando aún está pendiente de atención -->
+            <div id="modalDetalleSinRespuestaContainer" class="rounded-2xl bg-amber-50/80 border border-amber-200/80 p-3.5 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xs shrink-0 font-bold border border-amber-200/60">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-amber-900">Reporte en Proceso de Revisión por SST</p>
+                    <p class="text-[11px] text-amber-700 font-medium">El equipo de SST revisará este reporte y documentará el protocolo y medidas correspondientes.</p>
+                </div>
             </div>
         </div>
 
@@ -1121,6 +1157,33 @@
             galeriaContainer.classList.remove('hidden');
         } else {
             galeriaContainer.classList.add('hidden');
+        }
+
+        // Gestión de Respuesta del Administrador SST
+        const respuestaRaw = cardElement.getAttribute('data-respuesta-admin');
+        const respContainer = document.getElementById('modalDetalleRespuestaContainer');
+        const sinRespContainer = document.getElementById('modalDetalleSinRespuestaContainer');
+
+        let respuestaAdmin = null;
+        if (respuestaRaw && respuestaRaw !== 'null' && respuestaRaw !== '') {
+            try {
+                respuestaAdmin = JSON.parse(respuestaRaw);
+            } catch(e) {
+                respuestaAdmin = null;
+            }
+        }
+
+        if (respuestaAdmin) {
+            document.getElementById('modalDetalleRespuestaProtocolo').textContent = respuestaAdmin.protocolo || 'Primeros Auxilios Básicos y Remisión';
+            document.getElementById('modalDetalleRespuestaMedidas').textContent = respuestaAdmin.medidas_tomadas || 'Sin observaciones adicionales.';
+            document.getElementById('modalDetalleRespuestaFecha').textContent = respuestaAdmin.fecha_atencion || 'Atendido recientemente';
+            document.getElementById('modalDetalleRespuestaAdmin').textContent = respuestaAdmin.atendido_por || 'Equipo SST';
+            
+            respContainer.classList.remove('hidden');
+            sinRespContainer.classList.add('hidden');
+        } else {
+            respContainer.classList.add('hidden');
+            sinRespContainer.classList.remove('hidden');
         }
 
         const overlay = document.getElementById('modalDetalleOverlay');

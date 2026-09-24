@@ -82,4 +82,45 @@ class RespuestaEventoController extends Controller
         return redirect()->route('SST.admin.informacion_basica.respuesta_eventos.index')
             ->with('success', 'Tipo de Respuesta eliminado correctamente.');
     }
+
+    /**
+     * Registrar la atención y respuesta del Administrador SST al reporte.
+     */
+    public function atender(Request $request, $id)
+    {
+        $respuesta = RespuestaEvento::findOrFail($id);
+
+        $validated = $request->validate([
+            'protocolo' => 'required|string',
+            'medidas_tomadas' => 'required|string',
+            'estado' => 'nullable|string',
+        ]);
+
+        $data = json_decode($respuesta->descripcion, true);
+        if (!is_array($data)) {
+            $data = [
+                'descripcion_original' => $respuesta->descripcion,
+            ];
+        }
+
+        $adminName = 'Administrador SST';
+        if (auth()->check()) {
+            $adminName = auth()->user()->name ?? (auth()->user()->nombres ?? 'Administrador SST');
+        }
+
+        $data['respuesta_admin'] = [
+            'atendido_por' => $adminName,
+            'protocolo' => $validated['protocolo'],
+            'medidas_tomadas' => $validated['medidas_tomadas'],
+            'fecha_atencion' => now()->format('d/m/Y - h:i A'),
+            'estado' => $validated['estado'] ?? 'atendido',
+        ];
+
+        $respuesta->descripcion = json_encode($data, JSON_UNESCAPED_UNICODE);
+        $respuesta->estado = $validated['estado'] ?? 'atendido';
+        $respuesta->save();
+
+        return redirect()->route('SST.admin.informacion_basica.respuesta_eventos.index')
+            ->with('success', '¡Atención y respuesta registrada exitosamente! El aprendiz ya puede visualizar las medidas tomadas.');
+    }
 }

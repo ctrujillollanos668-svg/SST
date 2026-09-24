@@ -42,7 +42,11 @@ class AccidentesController extends Controller
                 ->orderBy('nombre', 'asc')
                 ->get();
 
-            $catalogoAccidentes = TipoEvento::where('tipo_categoria', 'accidente')
+            $catalogoAccidentes = TipoEvento::where(function($q) {
+                    $q->where('tipo_categoria', 'accidente')
+                      ->orWhere('tipo_categoria', 'Accidente')
+                      ->orWhereRaw('LOWER(tipo_categoria) = ?', ['accidente']);
+                })
                 ->where('estado', 'activo')
                 ->orderBy('nombre', 'asc')
                 ->get();
