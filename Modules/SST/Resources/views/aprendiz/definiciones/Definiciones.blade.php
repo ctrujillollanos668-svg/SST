@@ -88,7 +88,7 @@
 
                     <!-- Lado Derecho: Botón de Acción y Flecha Desplegable -->
                     <div class="flex items-center gap-2">
-                        <button type="button" class="w-9 h-9 rounded-xl bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center shadow-xs transition active:scale-95 text-xs" title="Ver detalles">
+                        <button type="button" class="w-9 h-9 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200/90 hover:border-orange-300 flex items-center justify-center shadow-xs transition active:scale-95 text-xs" title="Ver detalles">
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         </button>
                         <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center text-xs accordion-chevron">

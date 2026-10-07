@@ -166,7 +166,7 @@
                 @php $actInc = request()->routeIs('SST.aprendiz.tipos_eventos.incidentes.*'); @endphp
                 <li>
                     <a href="{{ route('SST.aprendiz.tipos_eventos.incidentes.index') }}" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium {{ $actInc ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="mr-2.5 text-xs text-amber-500 w-4 text-center"><i class="fa-solid fa-triangle-exclamation"></i></span> 
+                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-triangle-exclamation"></i></span> 
                         Incidentes
                     </a>
                 </li>
@@ -174,7 +174,7 @@
                 @php $actRiesg = request()->routeIs('SST.aprendiz.tipos_eventos.riesgos.*'); @endphp
                 <li>
                     <a href="{{ route('SST.aprendiz.tipos_eventos.riesgos.index') }}" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium {{ $actRiesg ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="mr-2.5 text-xs text-blue-500 w-4 text-center"><i class="fa-solid fa-biohazard"></i></span> 
+                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-biohazard"></i></span> 
                         Riesgos
                     </a>
                 </li>
@@ -182,7 +182,7 @@
                 @php $actActos = request()->routeIs('SST.aprendiz.tipos_eventos.actos_inseguros.*'); @endphp
                 <li>
                     <a href="{{ route('SST.aprendiz.tipos_eventos.actos_inseguros.index') }}" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium {{ $actActos ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="mr-2.5 text-xs text-yellow-500 w-4 text-center"><i class="fa-solid fa-lightbulb"></i></span> 
+                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-lightbulb"></i></span> 
                         Actos Inseguros
                     </a>
                 </li>
@@ -190,7 +190,7 @@
                 @php $actLes = request()->routeIs('SST.aprendiz.tipos_eventos.lesiones.*'); @endphp
                 <li>
                     <a href="{{ route('SST.aprendiz.tipos_eventos.lesiones.index') }}" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium {{ $actLes ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="mr-2.5 text-xs text-purple-500 w-4 text-center"><i class="fa-solid fa-crutch"></i></span> 
+                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-crutch"></i></span> 
                         Lesiones
                     </a>
                 </li>
@@ -198,7 +198,7 @@
                 @php $actEmerg = request()->routeIs('SST.aprendiz.tipos_eventos.tipos_emergencias.*'); @endphp
                 <li>
                     <a href="{{ route('SST.aprendiz.tipos_eventos.tipos_emergencias.index') }}" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium {{ $actEmerg ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="mr-2.5 text-xs text-rose-500 w-4 text-center"><i class="fa-solid fa-hospital"></i></span> 
+                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-hospital"></i></span> 
                         Tipos de Emergencias
                     </a>
                 </li>
@@ -255,14 +255,14 @@
                 </span>
             </div>
             <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
-                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Contactos</a></li>
+                <li><a href="{{ route('SST.aprendiz.emergencias.contactos') }}" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Contactos</a></li>
             </ul>
             <div class="sidebar-flyout">
                 <div class="px-3 py-2 border-b border-slate-100">
                     <span class="font-extrabold text-xs text-slate-800">Emergencias</span>
                 </div>
                 <div class="py-1">
-                    <a href="#" class="flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">Contactos de Emergencia</a>
+                    <a href="{{ route('SST.aprendiz.emergencias.contactos') }}" class="flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">Contactos de Emergencia</a>
                 </div>
             </div>
         </div>

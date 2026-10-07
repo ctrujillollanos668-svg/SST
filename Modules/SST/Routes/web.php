@@ -21,6 +21,7 @@ use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\RiesgosController as Apre
 use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\ActosInsegurosController as AprendizActosInsegurosController;
 use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\LesionesController as AprendizLesionesController;
 use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\TiposEmergenciasController as AprendizTiposEmergenciasController;
+use Modules\SST\Http\Controllers\Aprendiz\Emergencias\ContactoEmergenciaController as AprendizContactoEmergenciaController;
 
 Route::prefix('Sst')->name('SST.')->group(function () {
     // 1. Landing pública / Bienvenida
@@ -118,6 +119,9 @@ Route::prefix('Sst')->name('SST.')->group(function () {
             Route::get('/tipos-emergencias', [AprendizTiposEmergenciasController::class, 'index'])->name('tipos_emergencias.index');
             Route::post('/tipos-emergencias', [AprendizTiposEmergenciasController::class, 'store'])->name('tipos_emergencias.store');
         });
+
+        // Contactos de Emergencia para Aprendiz
+        Route::get('/emergencias/contactos', [AprendizContactoEmergenciaController::class, 'index'])->name('emergencias.contactos');
     });
 
     // Compatibilidad

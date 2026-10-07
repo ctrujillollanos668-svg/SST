@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="flex items-center gap-3 self-start sm:self-auto">
-                    <button type="button" onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-2xl bg-[#ea580c] hover:bg-[#c2410c] active:scale-95 text-white text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
+                    <button type="button" onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-2xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
                         <i class="fa-solid fa-plus text-xs"></i>
                         <span>Registrar</span>
                     </button>
@@ -228,7 +228,7 @@
 
                                         <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
                                             <!-- Botón Editar -->
-                                            <button type="button" onclick="event.stopPropagation(); openEditModal({{ $item->id_respuesta }}, '{{ addslashes(json_encode($data, JSON_UNESCAPED_UNICODE)) }}')" class="w-8 h-8 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold border border-amber-200 shadow-2xs transition cursor-pointer" title="Editar reporte">
+                                            <button type="button" onclick="event.stopPropagation(); openEditModal({{ $item->id_respuesta }}, '{{ addslashes(json_encode($data, JSON_UNESCAPED_UNICODE)) }}')" class="w-8 h-8 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 flex items-center justify-center text-xs font-bold shadow-2xs transition cursor-pointer" title="Editar reporte">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
 
@@ -415,7 +415,7 @@
 
             <!-- Botones de Acción Inferiores -->
             <div class="flex items-center gap-3 pt-3 border-t border-slate-100">
-                <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl bg-[#ea580c] hover:bg-[#c2410c] text-white text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
+                <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
                     <i class="fa-solid fa-paper-plane text-xs"></i>
                     <span>Enviar Reporte</span>
                 </button>
@@ -437,7 +437,7 @@
         <!-- Header del Modal -->
         <div class="p-5 sm:p-6 pb-4 border-b border-slate-100 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-3.5">
-                <div class="w-11 h-11 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg border border-amber-100/80 shadow-2xs shrink-0">
+                <div class="w-11 h-11 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center text-lg border border-orange-200/80 shadow-2xs shrink-0">
                     <i class="fa-solid fa-pen-to-square"></i>
                 </div>
                 <div>
@@ -593,7 +593,7 @@
 
             <!-- Botones de Acción Inferiores -->
             <div class="flex items-center gap-3 pt-3 border-t border-slate-100">
-                <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl bg-[#ea580c] hover:bg-[#c2410c] text-white text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
+                <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
                     <i class="fa-solid fa-check text-xs"></i>
                     <span>Guardar Cambios</span>
                 </button>

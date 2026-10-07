@@ -36,7 +36,7 @@
             <!-- Encabezado Superior -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
                 <div class="flex items-center gap-3.5">
-                    <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center text-xl border border-purple-100/80 shadow-2xs shrink-0">
+                    <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-500 flex items-center justify-center text-xl border border-orange-100/80 shadow-2xs shrink-0">
                         <i class="fa-solid fa-crutch"></i>
                     </div>
                     <div>
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="flex items-center gap-3 self-start sm:self-auto">
-                    <button type="button" onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-2xl bg-[#ea580c] hover:bg-[#c2410c] active:scale-95 text-white text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
+                    <button type="button" onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-2xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
                         <i class="fa-solid fa-plus text-xs"></i>
                         <span>Registrar</span>
                     </button>
@@ -63,7 +63,7 @@
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </div>
                             <input type="text" id="inputBuscarEvento" placeholder="Buscar lesión..." 
-                                class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition">
+                                class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
                         </div>
                         <span class="text-xs font-bold text-slate-400 self-end sm:self-auto">
                             <span id="conteoEventos" class="text-slate-700">{{ $lesiones->count() }}</span> {{ $lesiones->count() == 1 ? 'lesión registrada' : 'lesiones registradas' }}
@@ -73,7 +73,7 @@
                     <!-- Listado en Cuadrícula -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="contenedorEventos">
                         @foreach($lesiones as $item)
-                            <div class="item-card bg-slate-50/50 hover:bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-purple-300 transition-all space-y-2 cursor-pointer relative group"
+                            <div class="item-card bg-slate-50/50 hover:bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-orange-300 transition-all space-y-2 cursor-pointer relative group"
                                  onclick="openDetailModal(this)"
                                  data-title="{{ $item->nombre }}"
                                  data-modulo="{{ $item->modulo_pertenece ?? 'General' }}"
@@ -81,8 +81,8 @@
                                 
                                 <div class="flex items-start justify-between gap-3">
                                     <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-purple-500 shrink-0"></span>
-                                        <span class="group-hover:text-purple-600 transition-colors">{{ $item->nombre }}</span>
+                                        <span class="w-2 h-2 rounded-full bg-orange-500 shrink-0"></span>
+                                        <span class="group-hover:text-orange-600 transition-colors">{{ $item->nombre }}</span>
                                     </h3>
                                     @if($item->modulo_pertenece)
                                         <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-[10px] font-bold bg-white text-slate-600 border border-slate-200 shrink-0">
@@ -125,7 +125,7 @@
         
         <div class="flex items-center justify-between pb-4 border-b border-slate-100">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-sm">
+                <div class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center text-sm">
                     <i class="fa-solid fa-plus"></i>
                 </div>
                 <div>
@@ -145,26 +145,26 @@
             <div class="space-y-1">
                 <label class="block text-xs font-bold text-slate-700">Nombre de la Lesión <span class="text-rose-500">*</span></label>
                 <input type="text" name="nombre" required placeholder="Ej: Quemadura, Fractura, Esguince, Corte..." 
-                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition">
+                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
             </div>
 
             <div class="space-y-1">
                 <label class="block text-xs font-bold text-slate-700">Área o Módulo al que Pertenece</label>
                 <input type="text" name="modulo_pertenece" placeholder="Ej: Laboratorios, Campo, General..." 
-                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition">
+                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
             </div>
 
             <div class="space-y-1">
                 <label class="block text-xs font-bold text-slate-700">Descripción Técnica</label>
                 <textarea name="descripcion" rows="3" placeholder="Describe brevemente las características de esta lesión..." 
-                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition resize-none"></textarea>
+                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition resize-none"></textarea>
             </div>
 
             <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
                 <button type="button" onclick="closeRegisterModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold transition">
                     Cancelar
                 </button>
-                <button type="submit" class="px-5 py-2 rounded-xl bg-[#ea580c] hover:bg-[#c2410c] text-white text-xs font-bold shadow-xs transition">
+                <button type="submit" class="px-5 py-2 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs font-bold shadow-xs transition">
                     Guardar Lesión
                 </button>
             </div>
@@ -179,7 +179,7 @@
         
         <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
             <div class="flex items-center gap-2.5 text-slate-800">
-                <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xs">
+                <div class="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center text-xs">
                     <i class="fa-solid fa-crutch"></i>
                 </div>
                 <h3 class="font-bold text-sm tracking-tight">Detalle de la Lesión</h3>
@@ -193,7 +193,7 @@
         <div class="pt-4 space-y-3">
             <div class="flex items-center justify-between gap-2">
                 <h4 id="modalDetalleTitulo" class="font-extrabold text-slate-900 text-sm sm:text-base"></h4>
-                <span id="modalDetalleModulo" class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200 shrink-0"></span>
+                <span id="modalDetalleModulo" class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-orange-50 text-orange-700 border border-orange-200 shrink-0"></span>
             </div>
             
             <div class="max-h-72 overflow-y-auto pr-1">
