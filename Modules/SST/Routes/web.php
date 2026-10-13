@@ -6,6 +6,7 @@ use Modules\SST\Http\Controllers\Admin\TiposEventos\AccidentesController;
 use Modules\SST\Http\Controllers\Admin\TiposEventos\IncidentesController;
 use Modules\SST\Http\Controllers\Admin\TiposEventos\RiegosController;
 use Modules\SST\Http\Controllers\Admin\TiposEventos\ActosInsegurosController;
+use Modules\SST\Http\Controllers\Admin\TiposEventos\CondicionesInsegurasController;
 use Modules\SST\Http\Controllers\Admin\TiposEventos\LesionesController;
 use Modules\SST\Http\Controllers\Admin\TiposEventos\TiposEmergenciasController;
 use Modules\SST\Http\Controllers\Admin\Inspecciones\InspeccionesController;
@@ -22,6 +23,7 @@ use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\ActosInsegurosController 
 use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\LesionesController as AprendizLesionesController;
 use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\TiposEmergenciasController as AprendizTiposEmergenciasController;
 use Modules\SST\Http\Controllers\Aprendiz\Emergencias\ContactoEmergenciaController as AprendizContactoEmergenciaController;
+use Modules\SST\Http\Controllers\Aprendiz\Inspecciones\InspeccionesController as AprendizInspeccionesController;
 
 Route::prefix('Sst')->name('SST.')->group(function () {
     // 1. Landing pública / Bienvenida
@@ -40,6 +42,7 @@ Route::prefix('Sst')->name('SST.')->group(function () {
         Route::resource('incidentes', IncidentesController::class)->names('incidentes');
         Route::resource('riesgos', RiegosController::class)->names('riesgos');
         Route::resource('actos-inseguros', ActosInsegurosController::class)->names('actos_inseguros');
+        Route::resource('condiciones-inseguras', CondicionesInsegurasController::class)->names('condiciones_inseguras');
         Route::resource('lesiones', LesionesController::class)->names('lesiones');
         Route::resource('tipos-emergencias', TiposEmergenciasController::class)->names('tipos_emergencias');
     });
@@ -122,6 +125,15 @@ Route::prefix('Sst')->name('SST.')->group(function () {
 
         // Contactos de Emergencia para Aprendiz
         Route::get('/emergencias/contactos', [AprendizContactoEmergenciaController::class, 'index'])->name('emergencias.contactos');
+
+        // Inspecciones para Aprendiz
+        Route::prefix('inspecciones')->name('inspecciones.')->group(function () {
+            Route::get('/realizar', [AprendizInspeccionesController::class, 'realizar'])->name('realizar');
+            Route::post('/realizar', [AprendizInspeccionesController::class, 'store'])->name('store');
+            Route::put('/actualizar/{id}', [AprendizInspeccionesController::class, 'update'])->name('update');
+            Route::get('/historial', [AprendizInspeccionesController::class, 'historial'])->name('historial');
+            Route::delete('/eliminar/{id}', [AprendizInspeccionesController::class, 'destroy'])->name('destroy');
+        });
     });
 
     // Compatibilidad

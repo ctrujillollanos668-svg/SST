@@ -211,6 +211,14 @@
                     </a>
                 </li>
 
+                @php $actCond = request()->routeIs('SST.admin.tipos_eventos.condiciones_inseguras.*'); @endphp
+                <li>
+                    <a href="{{ route('SST.admin.tipos_eventos.condiciones_inseguras.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actCond ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
+                        <span class="text-[6px] mr-2.5 {{ $actCond ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
+                        Condiciones Inseguras
+                    </a>
+                </li>
+
                 @php $actLes = request()->routeIs('SST.admin.tipos_eventos.lesiones.*'); @endphp
                 <li>
                     <a href="{{ route('SST.admin.tipos_eventos.lesiones.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actLes ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
@@ -223,7 +231,7 @@
                 <li>
                     <a href="{{ route('SST.admin.tipos_eventos.tipos_emergencias.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actEmerg ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
                         <span class="text-[6px] mr-2.5 {{ $actEmerg ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Tipos de Emergencias
+                        Condiciones de Emergencias
                     </a>
                 </li>
             </ul>
@@ -234,7 +242,7 @@
                         <span class="w-2 h-2 rounded-full bg-orange-500"></span>
                         <span>Tipos de Eventos</span>
                     </span>
-                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-100 text-orange-700">6</span>
+                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-100 text-orange-700">7</span>
                 </div>
                 <div class="py-1 space-y-0.5">
                     <a href="{{ route('SST.admin.tipos_eventos.accidentes.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actAcc ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
@@ -253,12 +261,16 @@
                         <span>Actos Inseguros</span>
                         @if($actActos)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
                     </a>
+                    <a href="{{ route('SST.admin.tipos_eventos.condiciones_inseguras.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actCond ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
+                        <span>Condiciones Inseguras</span>
+                        @if($actCond)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
+                    </a>
                     <a href="{{ route('SST.admin.tipos_eventos.lesiones.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actLes ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
                         <span>Lesiones</span>
                         @if($actLes)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
                     </a>
                     <a href="{{ route('SST.admin.tipos_eventos.tipos_emergencias.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actEmerg ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Tipos de Emergencias</span>
+                        <span>Condiciones de Emergencias</span>
                         @if($actEmerg)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
                     </a>
                 </div>
