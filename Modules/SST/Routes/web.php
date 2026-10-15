@@ -57,9 +57,9 @@ Route::prefix('Sst')->name('SST.')->group(function () {
 
     // Rutas de Administración - Inspecciones
     Route::prefix('admin/inspecciones')->name('admin.inspecciones.')->group(function () {
-        Route::get('/realizar', [InspeccionesController::class, 'realizar'])->name('realizar');
-        Route::post('/realizar', [InspeccionesController::class, 'store'])->name('store');
         Route::get('/historial', [InspeccionesController::class, 'historial'])->name('historial');
+        Route::post('/historial/{id}/atender', [InspeccionesController::class, 'atender'])->name('atender');
+        Route::redirect('/realizar', '/Sst/admin/inspecciones/historial')->name('realizar');
     });
 
     // Rutas de Administración - Cronograma SST

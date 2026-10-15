@@ -11,51 +11,55 @@ use Illuminate\Support\Facades\Auth;
 class InspeccionesController extends Controller
 {
     /**
-     * Muestra el formulario para realizar una nueva inspección SST.
+     * Muestra el formulario para realizar una nueva inspección SST (redirige a historial para el admin).
      */
     public function realizar()
     {
-        $lugares = LugarFormacion::orderBy('nombre', 'asc')->get();
-        return view('sst::admin.inspecciones.Realizar_inspeccion', compact('lugares'));
+        return redirect()->route('SST.admin.inspecciones.historial');
     }
 
     /**
-     * Guarda una nueva inspección en la base de datos.
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'lugar_id' => 'nullable|exists:lugares_formacion,id_lugar',
-            'tipo_inspeccion' => 'required|string|max:100',
-            'fecha_inspeccion' => 'required|date',
-            'hora_inspeccion' => 'nullable',
-            'estado' => 'nullable|in:pendiente,en_proceso,completada,con_hallazgos',
-            'observaciones' => 'nullable|string'
-        ]);
-
-        $validated['user_id'] = Auth::id() ?? 1;
-        $validated['estado'] = $validated['estado'] ?? 'completada';
-
-        $inspeccion = InspeccionSST::create($validated);
-
-        if ($request->wantsJson() || $request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Inspección registrada exitosamente.',
-                'data' => $inspeccion
-            ]);
-        }
-
-        return redirect()->route('SST.admin.inspecciones.historial')
-            ->with('success', 'Inspección registrada exitosamente.');
-    }
-
-    /**
-     * Muestra el historial y listado de inspecciones de seguridad registradas.
+     * Muestra el historial y listado de inspecciones de seguridad registradas por aprendices.
      */
     public function historial()
     {
-        $inspecciones = InspeccionSST::with(['lugar', 'user'])->orderBy('fecha_inspeccion', 'desc')->paginate(15);
+        $inspecciones = InspeccionSST::with(['lugar', 'user'])->orderBy('id_inspeccion', 'desc')->get();
         return view('sst::admin.inspecciones.Historial', compact('inspecciones'));
+    }
+
+    /**
+     * Permite al Administrador SST atender o gestionar una inspección reportada.
+     */
+    public function atender(Request $request, $id)
+    {
+        $inspeccion = InspeccionSST::findOrFail($id);
+
+        $validated = $request->validate([
+            'estado' => 'required|in:pendiente,en_proceso,completada,con_hallazgos',
+            'observacion_admin' => 'nullable|string',
+        ]);
+
+        $meta = json_decode($inspeccion->observaciones, true);
+        if (!is_array($meta)) {
+            $meta = ['descripcion' => $inspeccion->observaciones];
+        }
+
+        $adminName = 'Administrador SST';
+        if (Auth::check()) {
+            $adminName = Auth::user()->name ?? (Auth::user()->nombres ?? 'Administrador SST');
+        }
+
+        $meta['revision_admin'] = [
+            'revisado_por' => $adminName,
+            'fecha_revision' => now()->format('d/m/Y - h:i A'),
+            'observacion' => $validated['observacion_admin'] ?? '',
+        ];
+
+        $inspeccion->estado = $validated['estado'];
+        $inspeccion->observaciones = json_encode($meta, JSON_UNESCAPED_UNICODE);
+        $inspeccion->save();
+
+        return redirect()->route('SST.admin.inspecciones.historial')
+            ->with('success', '¡Inspección gestionada exitosamente! Se actualizó el estado y el seguimiento.');
     }
 }

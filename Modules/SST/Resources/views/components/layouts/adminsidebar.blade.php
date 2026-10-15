@@ -363,14 +363,6 @@
             </div>
             <!-- Acordeón Normal -->
             <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
-                @php $actInspRealizar = request()->routeIs('SST.admin.inspecciones.realizar'); @endphp
-                <li>
-                    <a href="{{ route('SST.admin.inspecciones.realizar') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actInspRealizar ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actInspRealizar ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Realizar Inspección
-                    </a>
-                </li>
-
                 @php $actInspHistorial = request()->routeIs('SST.admin.inspecciones.historial'); @endphp
                 <li>
                     <a href="{{ route('SST.admin.inspecciones.historial') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actInspHistorial ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
@@ -388,10 +380,6 @@
                     </span>
                 </div>
                 <div class="py-1 space-y-0.5">
-                    <a href="{{ route('SST.admin.inspecciones.realizar') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInspRealizar ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Realizar Inspección</span>
-                        @if($actInspRealizar)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
                     <a href="{{ route('SST.admin.inspecciones.historial') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInspHistorial ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
                         <span>Historial</span>
                         @if($actInspHistorial)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
@@ -400,7 +388,7 @@
             </div>
         </div>
 
-        <!-- 5. PAUSAS ACTIVAS -->
+        <!-- 5. ACTIVIDADES SST -->
         @php
             $isPausas = request()->routeIs('SST.admin.pausas_activas.*');
         @endphp
@@ -410,7 +398,7 @@
                     <span class="w-8 h-8 rounded-xl {{ $isPausas ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-spa text-xs"></i>
                     </span>
-                    <span class="font-bold text-[13px] sidebar-text-full">Pausas Activas</span>
+                    <span class="font-bold text-[13px] sidebar-text-full">Actividades SST</span>
                 </div>
                 <span class="text-[10px] {{ $isPausas ? 'text-orange-600' : 'text-slate-400 group-hover:text-orange-600' }} arrow-icon" id="arrowPausas">
                     <i class="fa-solid fa-chevron-down"></i>
@@ -422,7 +410,7 @@
                 <li>
                     <a href="{{ route('SST.admin.pausas_activas.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actPausas ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
                         <span class="text-[6px] mr-2.5 {{ $actPausas ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Programadas
+                        Pausas Activas
                     </a>
                 </li>
             </ul>
@@ -431,12 +419,12 @@
                 <div class="px-3 py-2 border-b border-slate-100">
                     <span class="font-extrabold text-xs text-slate-800 flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                        <span>Pausas Activas</span>
+                        <span>Actividades SST</span>
                     </span>
                 </div>
                 <div class="py-1">
                     <a href="{{ route('SST.admin.pausas_activas.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actPausas ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Programadas</span>
+                        <span>Pausas Activas</span>
                         @if($actPausas)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
                     </a>
                 </div>
