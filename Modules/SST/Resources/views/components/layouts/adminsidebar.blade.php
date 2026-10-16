@@ -166,14 +166,14 @@
             $isTiposEventos = request()->routeIs('SST.admin.tipos_eventos.*');
         @endphp
         <div class="flex flex-col menu-wrapper relative {{ $isTiposEventos ? 'open' : '' }}" id="tiposEventosWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isTiposEventos ? 'text-orange-600 bg-orange-50/70 font-bold' : 'text-slate-700 hover:text-orange-600 hover:bg-slate-50' }} transition cursor-pointer group" id="btnToggleTiposEventos">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleTiposEventos">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl {{ $isTiposEventos ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
+                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600 flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-list-check text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Tipos de Eventos</span>
                 </div>
-                <span class="text-[10px] {{ $isTiposEventos ? 'text-orange-600' : 'text-slate-400 group-hover:text-orange-600' }} arrow-icon" id="arrowTiposEventos">
+                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowTiposEventos">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
@@ -282,14 +282,14 @@
             $isInfoBasica = request()->routeIs('SST.admin.informacion_basica.*');
         @endphp
         <div class="flex flex-col menu-wrapper relative {{ $isInfoBasica ? 'open' : '' }}" id="informacionBasicaWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isInfoBasica ? 'text-orange-600 bg-orange-50/70 font-bold' : 'text-slate-700 hover:text-orange-600 hover:bg-slate-50' }} transition cursor-pointer group" id="btnToggleInformacionBasica">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleInformacionBasica">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl {{ $isInfoBasica ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
+                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600 flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-info-circle text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Información Básica</span>
                 </div>
-                <span class="text-[10px] {{ $isInfoBasica ? 'text-orange-600' : 'text-slate-400 group-hover:text-orange-600' }} arrow-icon" id="arrowInformacionBasica">
+                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowInformacionBasica">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
@@ -350,14 +350,14 @@
             $isInspecciones = request()->routeIs('SST.admin.inspecciones.*');
         @endphp
         <div class="flex flex-col menu-wrapper relative {{ $isInspecciones ? 'open' : '' }}" id="inspeccionesWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isInspecciones ? 'text-orange-600 bg-orange-50/70 font-bold' : 'text-slate-700 hover:text-orange-600 hover:bg-slate-50' }} transition cursor-pointer group" id="btnToggleInspecciones">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleInspecciones">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl {{ $isInspecciones ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
+                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600 flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-magnifying-glass text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Inspecciones</span>
                 </div>
-                <span class="text-[10px] {{ $isInspecciones ? 'text-orange-600' : 'text-slate-400 group-hover:text-orange-600' }} arrow-icon" id="arrowInspecciones">
+                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowInspecciones">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
@@ -390,27 +390,43 @@
 
         <!-- 5. ACTIVIDADES SST -->
         @php
-            $isPausas = request()->routeIs('SST.admin.pausas_activas.*');
+            $isPausas = request()->routeIs('SST.admin.pausas_activas.*') || request()->routeIs('SST.admin.charlas.*') || request()->routeIs('SST.admin.sensibilizacion.*');
         @endphp
         <div class="flex flex-col menu-wrapper relative {{ $isPausas ? 'open' : '' }}" id="pausasWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isPausas ? 'text-orange-600 bg-orange-50/70 font-bold' : 'text-slate-700 hover:text-orange-600 hover:bg-slate-50' }} transition cursor-pointer group" id="btnTogglePausas">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnTogglePausas">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl {{ $isPausas ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
-                        <i class="fa-solid fa-spa text-xs"></i>
+                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600 flex items-center justify-center transition shrink-0">
+                        <i class="fa-solid fa-person-chalkboard text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Actividades SST</span>
                 </div>
-                <span class="text-[10px] {{ $isPausas ? 'text-orange-600' : 'text-slate-400 group-hover:text-orange-600' }} arrow-icon" id="arrowPausas">
+                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowPausas">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
             <!-- Acordeón Normal -->
             <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100">
-                @php $actPausas = request()->routeIs('SST.admin.pausas_activas.index'); @endphp
+                @php 
+                    $actPausas = request()->routeIs('SST.admin.pausas_activas.*'); 
+                    $actCharlas = request()->routeIs('SST.admin.charlas.*');
+                    $actSensibilizacion = request()->routeIs('SST.admin.sensibilizacion.*');
+                @endphp
                 <li>
                     <a href="{{ route('SST.admin.pausas_activas.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actPausas ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
                         <span class="text-[6px] mr-2.5 {{ $actPausas ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
                         Pausas Activas
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('SST.admin.charlas.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actCharlas ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
+                        <span class="text-[6px] mr-2.5 {{ $actCharlas ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
+                        Charlas
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('SST.admin.sensibilizacion.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actSensibilizacion ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
+                        <span class="text-[6px] mr-2.5 {{ $actSensibilizacion ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
+                        Sensibilización
                     </a>
                 </li>
             </ul>
@@ -427,6 +443,14 @@
                         <span>Pausas Activas</span>
                         @if($actPausas)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
                     </a>
+                    <a href="{{ route('SST.admin.charlas.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actCharlas ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
+                        <span>Charlas</span>
+                        @if($actCharlas)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
+                    </a>
+                    <a href="{{ route('SST.admin.sensibilizacion.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actSensibilizacion ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
+                        <span>Sensibilización</span>
+                        @if($actSensibilizacion)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
+                    </a>
                 </div>
             </div>
         </div>
@@ -436,14 +460,14 @@
             $isCronograma = request()->routeIs('SST.admin.cronograma.*');
         @endphp
         <div class="flex flex-col menu-wrapper relative {{ $isCronograma ? 'open' : '' }}" id="cronogramaWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isCronograma ? 'text-orange-600 bg-orange-50/70 font-bold' : 'text-slate-700 hover:text-orange-600 hover:bg-slate-50' }} transition cursor-pointer group" id="btnToggleCronograma">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleCronograma">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl {{ $isCronograma ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
+                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600 flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-calendar-days text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Cronograma SST</span>
                 </div>
-                <span class="text-[10px] {{ $isCronograma ? 'text-orange-600' : 'text-slate-400 group-hover:text-orange-600' }} arrow-icon" id="arrowCronograma">
+                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowCronograma">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
@@ -479,14 +503,14 @@
             $isIndicadores = request()->routeIs('SST.admin.indicadores.*');
         @endphp
         <div class="flex flex-col menu-wrapper relative {{ $isIndicadores ? 'open' : '' }}" id="indicadoresWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isIndicadores ? 'text-orange-600 bg-orange-50/70 font-bold' : 'text-slate-700 hover:text-orange-600 hover:bg-slate-50' }} transition cursor-pointer group" id="btnToggleIndicadores">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleIndicadores">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl {{ $isIndicadores ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
+                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600 flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-chart-line text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Indicadores SST</span>
                 </div>
-                <span class="text-[10px] {{ $isIndicadores ? 'text-orange-600' : 'text-slate-400 group-hover:text-orange-600' }} arrow-icon" id="arrowIndicadores">
+                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowIndicadores">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
@@ -522,14 +546,14 @@
             $isUsuarios = request()->routeIs('SST.admin.usuarios.*');
         @endphp
         <div class="flex flex-col menu-wrapper relative {{ $isUsuarios ? 'open' : '' }}" id="usuariosWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isUsuarios ? 'text-orange-600 bg-orange-50/70 font-bold' : 'text-slate-700 hover:text-orange-600 hover:bg-slate-50' }} transition cursor-pointer group" id="btnToggleUsuarios">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleUsuarios">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl {{ $isUsuarios ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
+                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600 flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-users text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Usuarios</span>
                 </div>
-                <span class="text-[10px] {{ $isUsuarios ? 'text-orange-600' : 'text-slate-400 group-hover:text-orange-600' }} arrow-icon" id="arrowUsuarios">
+                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowUsuarios">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>

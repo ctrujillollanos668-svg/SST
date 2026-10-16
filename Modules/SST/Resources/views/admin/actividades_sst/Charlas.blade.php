@@ -1,0 +1,597 @@
+@extends('sst::components.layouts.admin')
+
+@section('title', 'Charlas de Seguridad • SST')
+
+@section('content')
+<style>
+    @keyframes modalPopIn {
+        0% { opacity: 0; transform: scale(0.95) translateY(8px); }
+        100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .animate-modal-pop {
+        animation: modalPopIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+</style>
+
+<div class="space-y-6 max-w-7xl mx-auto">
+
+    <!-- Mensaje Flash de éxito -->
+    @if(session('success'))
+        <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200/80 text-emerald-800 flex items-center justify-between shadow-xs animate-in fade-in duration-200">
+            <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-check text-sm"></i>
+                </span>
+                <span class="text-xs sm:text-sm font-semibold">{{ session('success') }}</span>
+            </div>
+            <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 p-1 cursor-pointer">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+    @endif
+
+    <!-- 1. Encabezado de la Sección -->
+    <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
+        <div>
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-xs">
+                    <i class="fa-solid fa-person-chalkboard text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Charlas de Seguridad SST</h1>
+                    <p class="text-sm text-slate-500 font-medium mt-0.5">Programación y seguimiento de charlas de 5 minutos, inducciones operativas y cultura de prevención laboral.</p>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 text-sm font-bold shadow-xs transition-all duration-200 cursor-pointer group border border-orange-200/90 hover:border-orange-300">
+            <i class="fa-solid fa-plus text-xs group-hover:rotate-90 transition-transform duration-300"></i>
+            <span>Programar Nueva Charla</span>
+        </button>
+    </div>
+
+    <!-- 2. Resumen de Estado -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold text-lg shrink-0">
+                <i class="fa-solid fa-bullhorn"></i>
+            </div>
+            <div>
+                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Programadas</p>
+                <h4 class="text-xl font-extrabold text-slate-800">{{ $stats['total'] }}</h4>
+            </div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-lg shrink-0">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+            <div>
+                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Pendientes / En Espera</p>
+                <h4 class="text-xl font-extrabold text-slate-800">{{ $stats['programadas'] }}</h4>
+            </div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-lg shrink-0">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Charlas Realizadas</p>
+                <h4 class="text-xl font-extrabold text-slate-800">{{ $stats['realizadas'] }}</h4>
+            </div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-lg shrink-0">
+                <i class="fa-solid fa-ban"></i>
+            </div>
+            <div>
+                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Canceladas</p>
+                <h4 class="text-xl font-extrabold text-slate-800">{{ $stats['canceladas'] }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Barra de Filtros -->
+    <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+        <form method="GET" action="{{ route('SST.admin.charlas.index') }}" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="relative sm:col-span-2">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                </span>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por título, lugar, instructor o ficha..." class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+            </div>
+
+            <div class="flex items-center gap-2">
+                <select name="estado" onchange="this.form.submit()" class="w-full px-3 py-2 text-xs font-bold rounded-xl bg-slate-50 border border-slate-200 text-slate-600 focus:outline-none focus:border-orange-500 cursor-pointer">
+                    <option value="todos">Todos los estados</option>
+                    <option value="Programada" {{ request('estado') == 'Programada' ? 'selected' : '' }}>Programadas</option>
+                    <option value="Realizada" {{ request('estado') == 'Realizada' ? 'selected' : '' }}>Realizadas</option>
+                    <option value="Cancelada" {{ request('estado') == 'Cancelada' ? 'selected' : '' }}>Canceladas</option>
+                </select>
+
+                <button type="submit" class="px-4 py-2 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl shadow-xs transition cursor-pointer">
+                    <i class="fa-solid fa-filter"></i>
+                </button>
+                @if(request()->hasAny(['search', 'estado']))
+                    <a href="{{ route('SST.admin.charlas.index') }}" class="px-3 py-2 text-xs font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition" title="Limpiar filtros">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </a>
+                @endif
+            </div>
+        </form>
+    </div>
+
+    <!-- 4. Tabla Principal de Charlas -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/90 border-b border-slate-200/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider">
+                        <th class="py-3.5 px-4">TÍTULO / ACTIVIDAD</th>
+                        <th class="py-3.5 px-4">INSTRUCTOR / RESPONSABLE</th>
+                        <th class="py-3.5 px-4">FICHA O PROGRAMA</th>
+                        <th class="py-3.5 px-4">FECHA Y HORARIO</th>
+                        <th class="py-3.5 px-4">AMBIENTE / UNIDAD</th>
+                        <th class="py-3.5 px-4 text-center">ESTADO</th>
+                        <th class="py-3.5 px-4 text-right">ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-slate-700 text-xs font-medium">
+                    @forelse($actividades as $item)
+                        <tr class="hover:bg-slate-50/60 transition-colors">
+                            <td class="py-3.5 px-4">
+                                <div class="font-bold text-slate-900 flex items-center gap-2">
+                                    <span class="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center text-xs shrink-0">
+                                        <i class="fa-solid fa-person-chalkboard"></i>
+                                    </span>
+                                    <div>
+                                        <p class="font-bold text-slate-900">{{ $item->titulo }}</p>
+                                        @if($item->actividad_a_realizar && $item->actividad_a_realizar !== $item->titulo)
+                                            <p class="text-[10px] text-slate-500 truncate max-w-xs font-normal mt-0.5"><i class="fa-solid fa-circle-play text-[8px] text-orange-500 mr-1"></i>{{ $item->actividad_a_realizar }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="py-3.5 px-4">
+                                <div class="font-semibold text-slate-800">{{ $item->instructor ?? 'Sin asignar' }}</div>
+                                @if($item->responsable)
+                                    <div class="text-[10px] text-slate-400 mt-0.5">{{ $item->responsable }}</div>
+                                @endif
+                            </td>
+
+                            <td class="py-3.5 px-4">
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold bg-slate-100 text-slate-700">
+                                    <i class="fa-solid fa-id-card text-[9px] text-slate-400"></i>
+                                    {{ $item->ficha_programa ?? 'General' }}
+                                </span>
+                            </td>
+
+                            <td class="py-3.5 px-4">
+                                <div class="font-semibold text-slate-900">
+                                    <i class="fa-regular fa-calendar text-slate-400 mr-1"></i>
+                                    {{ \Carbon\Carbon::parse($item->fecha)->format('d/m/Y') }}
+                                </div>
+                                <div class="text-[11px] text-slate-500 mt-0.5">
+                                    <i class="fa-regular fa-clock text-slate-400 mr-1"></i>
+                                    {{ substr($item->hora_inicio, 0, 5) }} 
+                                    @if($item->hora_fin) - {{ substr($item->hora_fin, 0, 5) }} @endif
+                                </div>
+                            </td>
+
+                            <td class="py-3.5 px-4 text-slate-700">
+                                <i class="fa-solid fa-location-dot text-orange-500 mr-1 text-[11px]"></i>
+                                {{ $item->lugar }}
+                            </td>
+
+                            <td class="py-3.5 px-4 text-center">
+                                @if($item->estado === 'Realizada')
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Realizada
+                                    </span>
+                                @elseif($item->estado === 'Programada')
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Programada
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Cancelada
+                                    </span>
+                                @endif
+                            </td>
+
+                            <td class="py-3.5 px-4 text-right">
+                                <div class="flex items-center justify-end gap-1.5">
+                                    <button type="button" onclick='openDetailModal(@json($item))' class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition cursor-pointer" title="Ver Detalle">
+                                        <i class="fa-solid fa-eye text-xs"></i>
+                                    </button>
+                                    <button type="button" onclick='openEditModal(@json($item))' class="w-8 h-8 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-600 flex items-center justify-center transition cursor-pointer" title="Editar">
+                                        <i class="fa-solid fa-pen text-xs"></i>
+                                    </button>
+                                    <form action="{{ route('SST.admin.charlas.destroy', $item->id_actividad) }}" method="POST" onsubmit="return confirm('¿Deseas eliminar esta charla de seguridad?')" class="inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="w-8 h-8 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 flex items-center justify-center transition cursor-pointer" title="Eliminar">
+                                            <i class="fa-solid fa-trash text-xs"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center py-12 text-slate-400">
+                                <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-2">
+                                    <i class="fa-solid fa-person-chalkboard text-lg"></i>
+                                </div>
+                                <p class="text-sm font-semibold">No se encontraron charlas programadas.</p>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        @if($actividades->hasPages())
+            <div class="p-4 border-t border-slate-100">
+                {{ $actividades->links() }}
+            </div>
+        @endif
+    </div>
+
+</div>
+
+<!-- Modal 1: Programar Nueva Charla (Formulario Idéntico al diseño unificado) -->
+<div id="modalRegister" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 animate-modal-pop max-h-[92vh] overflow-y-auto">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+            <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+                <i class="fa-solid fa-person-chalkboard text-orange-600"></i>
+                <span>Programar Nueva Charla</span>
+            </h3>
+            <button onclick="closeRegisterModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
+                <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+        </div>
+
+        <form action="{{ route('SST.admin.charlas.store') }}" method="POST" class="space-y-4">
+            @csrf
+
+            <!-- Actividad en Realizar / Tema -->
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Actividad en Realizar / Tema *</label>
+                <input type="text" name="titulo" required placeholder="Ej: Demostración práctica de inspección y uso adecuado de EPP" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+            </div>
+
+            <!-- Descripción de la Actividad -->
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Descripción de la Actividad</label>
+                <textarea name="descripcion" rows="2" placeholder="Ej: Inducción operativa y concientización sobre autocuidado laboral..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium"></textarea>
+            </div>
+
+            <!-- Fecha, Hora Inicio, Hora Fin (En 3 Columnas) -->
+            <div class="grid grid-cols-3 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Fecha *</label>
+                    <input type="date" name="fecha" value="{{ date('Y-m-d') }}" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Hora Inicio *</label>
+                    <input type="time" name="hora_inicio" value="08:00" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Hora Fin</label>
+                    <input type="time" name="hora_fin" value="08:20" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                </div>
+            </div>
+
+            <!-- Ambiente / Unidad -->
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Ambiente / Unidad *</label>
+                <select name="lugar" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold cursor-pointer">
+                    <option value="" disabled selected>Selecciona un ambiente o unidad...</option>
+                    @foreach($lugares as $lug)
+                        <option value="{{ $lug->nombre }}">{{ $lug->nombre }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Instructor o Instructora / Responsable -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Instructor o Instructora</label>
+                    <input type="text" name="instructor" placeholder="Ej: Ing. Pedro Alvear" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Responsable SST</label>
+                    <input type="text" name="responsable" placeholder="Ej: Instructor Técnico SST" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                </div>
+            </div>
+
+            <!-- Ficha o Programa y Estado -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Ficha o Programa</label>
+                    <input type="text" name="ficha_programa" placeholder="Ej: 2541290 - Mecánica Industrial" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Estado *</label>
+                    <select name="estado" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold cursor-pointer">
+                        <option value="Programada" selected>Programada</option>
+                        <option value="Realizada">Realizada</option>
+                        <option value="Cancelada">Cancelada</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Observación -->
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Observación</label>
+                <textarea name="observaciones" rows="2" placeholder="Notas adicionales o compromisos de seguridad acordados..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium"></textarea>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+                <button type="button" onclick="closeRegisterModal()" class="px-4 py-2.5 text-xs font-bold text-slate-600 rounded-xl hover:bg-slate-100 transition cursor-pointer">
+                    Cancelar
+                </button>
+                <button type="submit" class="px-5 py-2.5 text-xs font-bold bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 rounded-xl shadow-xs transition cursor-pointer flex items-center gap-2">
+                    <i class="fa-solid fa-check text-xs"></i>
+                    <span>Programar Charla</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal 2: Editar Charla -->
+<div id="modalEdit" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 animate-modal-pop max-h-[92vh] overflow-y-auto">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+            <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+                <i class="fa-solid fa-pen text-orange-600"></i>
+                <span>Editar Charla de Seguridad</span>
+            </h3>
+            <button onclick="closeEditModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
+                <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+        </div>
+
+        <form id="formEdit" method="POST" class="space-y-4">
+            @csrf
+            @method('PUT')
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Actividad en Realizar / Tema *</label>
+                <input type="text" name="titulo" id="edit_titulo" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Descripción de la Actividad</label>
+                <textarea name="descripcion" id="edit_descripcion" rows="2" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium"></textarea>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Fecha *</label>
+                    <input type="date" name="fecha" id="edit_fecha" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Hora Inicio *</label>
+                    <input type="time" name="hora_inicio" id="edit_hora_inicio" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Hora Fin</label>
+                    <input type="time" name="hora_fin" id="edit_hora_fin" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Ambiente / Unidad *</label>
+                <select name="lugar" id="edit_lugar" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold cursor-pointer">
+                    <option value="" disabled>Selecciona un ambiente o unidad...</option>
+                    @foreach($lugares as $lug)
+                        <option value="{{ $lug->nombre }}">{{ $lug->nombre }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Instructor o Instructora</label>
+                    <input type="text" name="instructor" id="edit_instructor" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Responsable SST</label>
+                    <input type="text" name="responsable" id="edit_responsable" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Ficha o Programa</label>
+                    <input type="text" name="ficha_programa" id="edit_ficha_programa" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Estado *</label>
+                    <select name="estado" id="edit_estado" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold cursor-pointer">
+                        <option value="Programada">Programada</option>
+                        <option value="Realizada">Realizada</option>
+                        <option value="Cancelada">Cancelada</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Observación</label>
+                <textarea name="observaciones" id="edit_observaciones" rows="2" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium"></textarea>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+                <button type="button" onclick="closeEditModal()" class="px-4 py-2 text-xs font-bold text-slate-600 rounded-xl hover:bg-slate-100 transition cursor-pointer">
+                    Cancelar
+                </button>
+                <button type="submit" class="px-5 py-2 text-xs font-bold bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 rounded-xl shadow-xs transition cursor-pointer flex items-center gap-1.5">
+                    <i class="fa-solid fa-floppy-disk text-xs"></i>
+                    <span>Guardar Cambios</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal 3: Ver Detalle Completo -->
+<div id="modalDetail" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 animate-modal-pop">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+            <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+                <i class="fa-solid fa-circle-info text-orange-600"></i>
+                <span>Detalle de la Charla de Seguridad</span>
+            </h3>
+            <button onclick="closeDetailModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
+                <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+        </div>
+
+        <div class="space-y-3.5 text-xs">
+            <div>
+                <span class="text-orange-600 font-bold uppercase tracking-wider text-[10px] block">Actividad en Realizar / Tema</span>
+                <p id="detail_titulo" class="text-base font-extrabold text-slate-900 mt-0.5"></p>
+            </div>
+
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px] block mb-1">Descripción</span>
+                <p id="detail_descripcion" class="text-slate-700 font-medium"></p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                    <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px] block">Fecha y Horario</span>
+                    <p id="detail_fecha_hora" class="font-bold text-slate-800 mt-0.5"></p>
+                </div>
+                <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                    <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px] block">Ambiente / Unidad</span>
+                    <p id="detail_lugar" class="font-bold text-slate-800 mt-0.5"></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                    <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px] block">Instructor o Instructora</span>
+                    <p id="detail_instructor" class="font-bold text-slate-800 mt-0.5"></p>
+                </div>
+                <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                    <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px] block">Responsable SST</span>
+                    <p id="detail_responsable" class="font-bold text-slate-800 mt-0.5"></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                    <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px] block">Ficha o Programa</span>
+                    <p id="detail_ficha_programa" class="font-bold text-slate-800 mt-0.5"></p>
+                </div>
+                <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                    <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px] block">Estado</span>
+                    <p id="detail_estado" class="font-bold mt-0.5"></p>
+                </div>
+            </div>
+
+            <div id="detail_observaciones_box" class="p-3 bg-slate-50 rounded-xl border border-slate-100 hidden">
+                <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px] block mb-1">Observación</span>
+                <p id="detail_observaciones" class="text-slate-700 font-medium"></p>
+            </div>
+        </div>
+
+        <div class="flex justify-end pt-4 border-t border-slate-100 mt-4">
+            <button type="button" onclick="closeDetailModal()" class="px-5 py-2 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition cursor-pointer">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openRegisterModal() {
+        document.getElementById('modalRegister').classList.remove('hidden');
+    }
+
+    function closeRegisterModal() {
+        document.getElementById('modalRegister').classList.add('hidden');
+    }
+
+    function openEditModal(item) {
+        const form = document.getElementById('formEdit');
+        form.action = "{{ url('SST/admin/charlas') }}/" + item.id_actividad;
+
+        document.getElementById('edit_titulo').value = item.titulo || '';
+        document.getElementById('edit_descripcion').value = item.descripcion || '';
+        document.getElementById('edit_fecha').value = item.fecha || '';
+        document.getElementById('edit_hora_inicio').value = item.hora_inicio ? item.hora_inicio.substring(0, 5) : '';
+        document.getElementById('edit_hora_fin').value = item.hora_fin ? item.hora_fin.substring(0, 5) : '';
+        const editLugar = document.getElementById('edit_lugar');
+        if (editLugar) {
+            editLugar.value = item.lugar || '';
+            if (item.lugar && editLugar.value !== item.lugar) {
+                const opt = document.createElement('option');
+                opt.value = item.lugar;
+                opt.textContent = item.lugar;
+                opt.selected = true;
+                editLugar.appendChild(opt);
+            }
+        }
+        document.getElementById('edit_instructor').value = item.instructor || '';
+        document.getElementById('edit_responsable').value = item.responsable || '';
+        document.getElementById('edit_ficha_programa').value = item.ficha_programa || '';
+        document.getElementById('edit_estado').value = item.estado || 'Programada';
+        document.getElementById('edit_observaciones').value = item.observaciones || '';
+
+        document.getElementById('modalEdit').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+        document.getElementById('modalEdit').classList.add('hidden');
+    }
+
+    function openDetailModal(item) {
+        document.getElementById('detail_titulo').textContent = item.titulo || 'Sin título';
+        document.getElementById('detail_descripcion').textContent = item.descripcion || 'Sin descripción registrada.';
+        document.getElementById('detail_instructor').textContent = item.instructor || 'No especificado';
+        document.getElementById('detail_responsable').textContent = item.responsable || 'No especificado';
+        document.getElementById('detail_ficha_programa').textContent = item.ficha_programa || 'General';
+        document.getElementById('detail_fecha_hora').textContent = `${item.fecha} (${(item.hora_inicio || '').substring(0, 5)} - ${(item.hora_fin || '').substring(0, 5)})`;
+        document.getElementById('detail_lugar').textContent = item.lugar || 'No especificado';
+
+        const estadoElem = document.getElementById('detail_estado');
+        estadoElem.textContent = item.estado;
+        if (item.estado === 'Realizada') {
+            estadoElem.className = 'font-bold mt-0.5 text-emerald-600';
+        } else if (item.estado === 'Programada') {
+            estadoElem.className = 'font-bold mt-0.5 text-amber-600';
+        } else {
+            estadoElem.className = 'font-bold mt-0.5 text-rose-600';
+        }
+
+        const obsBox = document.getElementById('detail_observaciones_box');
+        if (item.observaciones) {
+            document.getElementById('detail_observaciones').textContent = item.observaciones;
+            obsBox.classList.remove('hidden');
+        } else {
+            obsBox.classList.add('hidden');
+        }
+
+        document.getElementById('modalDetail').classList.remove('hidden');
+    }
+
+    function closeDetailModal() {
+        document.getElementById('modalDetail').classList.add('hidden');
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeRegisterModal();
+            closeEditModal();
+            closeDetailModal();
+        }
+    });
+</script>
+@endsection

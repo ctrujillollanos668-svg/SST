@@ -72,11 +72,27 @@ Route::prefix('Sst')->name('SST.')->group(function () {
         Route::delete('/calendario/{id}', [\Modules\SST\Http\Controllers\Admin\Cronograma\CalendarioController::class, 'destroy'])->name('calendario.destroy');
     });
 
-    // Rutas de Administración - Pausas Activas
+    // Rutas de Administración - Actividades SST
     Route::prefix('admin/pausas-activas')->name('admin.pausas_activas.')->group(function () {
-        Route::get('/programadas', [\Modules\SST\Http\Controllers\Admin\PausasActivas\PausasActivasController::class, 'index'])->name('index');
-        Route::post('/programadas', [\Modules\SST\Http\Controllers\Admin\PausasActivas\PausasActivasController::class, 'store'])->name('store');
-        Route::post('/asistencia', [\Modules\SST\Http\Controllers\Admin\PausasActivas\PausasActivasController::class, 'storeAsistencia'])->name('asistencia');
+        Route::get('/programadas', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\PausasActivasController::class, 'index'])->name('index');
+        Route::post('/programadas', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\PausasActivasController::class, 'store'])->name('store');
+        Route::put('/{id}', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\PausasActivasController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\PausasActivasController::class, 'destroy'])->name('destroy');
+        Route::post('/asistencia', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\PausasActivasController::class, 'storeAsistencia'])->name('asistencia');
+    });
+
+    Route::prefix('admin/charlas')->name('admin.charlas.')->group(function () {
+        Route::get('/', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\CharlasController::class, 'index'])->name('index');
+        Route::post('/', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\CharlasController::class, 'store'])->name('store');
+        Route::put('/{id}', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\CharlasController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\CharlasController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('admin/sensibilizacion')->name('admin.sensibilizacion.')->group(function () {
+        Route::get('/', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\SensibilizacionController::class, 'index'])->name('index');
+        Route::post('/', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\SensibilizacionController::class, 'store'])->name('store');
+        Route::put('/{id}', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\SensibilizacionController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\SensibilizacionController::class, 'destroy'])->name('destroy');
     });
 
     // Rutas de Administración - Indicadores SST

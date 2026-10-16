@@ -4,6 +4,7 @@ namespace Modules\SST\Http\Controllers\Admin\Cronograma;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\SST\Entities\ActividadSST;
 use Modules\SST\Entities\CronogramaActividad;
 use Modules\SST\Entities\LugarFormacion;
 use Modules\SST\Entities\TipoActividad;
@@ -15,12 +16,61 @@ class CalendarioController extends Controller
      */
     public function index(Request $request)
     {
-        $actividades = CronogramaActividad::with('lugar')
+        // 1. Obtener todas las actividades registradas en Actividades SST (Pausas Activas, Charlas, Sensibilización, etc.)
+        $actividadesSst = ActividadSST::orderBy('fecha', 'asc')
+            ->orderBy('hora_inicio', 'asc')
+            ->get();
+
+        // 2. Mapear a una estructura uniforme
+        $actividades = $actividadesSst->map(function ($act) {
+            return (object) [
+                'id_actividad' => $act->id_actividad,
+                'source' => 'actividad_sst',
+                'nombre' => $act->titulo ?? $act->actividad_a_realizar ?? 'Actividad SST',
+                'fecha' => $act->fecha,
+                'hora' => $act->hora_inicio ? substr($act->hora_inicio, 0, 5) : '08:00',
+                'hora_fin' => $act->hora_fin ? substr($act->hora_fin, 0, 5) : null,
+                'tipo_actividad' => $act->tipo_actividad ?? 'Pausa Activa',
+                'id_lugar' => null,
+                'lugar_nombre' => $act->lugar ?? 'No especificado',
+                'responsable' => $act->responsable ?? $act->instructor ?? 'No asignado',
+                'estado' => $act->estado ?? 'Programada',
+                'descripcion' => $act->descripcion ?? $act->observaciones ?? '',
+                'ficha_programa' => $act->ficha_programa ?? null
+            ];
+        });
+
+        // 3. Incluir también las de CronogramaActividad si existieran
+        $cronogramaActividades = CronogramaActividad::with('lugar')
             ->orderBy('fecha', 'asc')
             ->orderBy('hora', 'asc')
             ->get();
 
-        $lugares = LugarFormacion::where('estado', 'activo')->get();
+        foreach ($cronogramaActividades as $cAct) {
+            $actividades->push((object) [
+                'id_actividad' => $cAct->id_actividad,
+                'source' => 'cronograma',
+                'nombre' => $cAct->nombre,
+                'fecha' => $cAct->fecha,
+                'hora' => $cAct->hora ? substr($cAct->hora, 0, 5) : '08:00',
+                'hora_fin' => null,
+                'tipo_actividad' => $cAct->tipo_actividad ?? 'Capacitación',
+                'id_lugar' => $cAct->id_lugar,
+                'lugar_nombre' => $cAct->lugar ? $cAct->lugar->nombre : null,
+                'responsable' => $cAct->responsable ?? 'No asignado',
+                'estado' => $cAct->estado ?? 'Programada',
+                'descripcion' => $cAct->descripcion ?? '',
+                'ficha_programa' => null
+            ]);
+        }
+
+        // Ordenar actividades por fecha y hora
+        $actividades = $actividades->sortBy([
+            ['fecha', 'asc'],
+            ['hora', 'asc']
+        ])->values();
+
+        $lugares = LugarFormacion::where('estado', 'activo')->orderBy('nombre', 'asc')->get();
         $tiposActividades = TipoActividad::where('estado', 'activo')->orderBy('nombre', 'asc')->get();
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -80,7 +130,7 @@ class CalendarioController extends Controller
     }
 
     /**
-     * Store a newly created calendar activity.
+     * Store a newly created calendar activity (crea en ActividadSST).
      */
     public function store(Request $request)
     {
@@ -91,23 +141,48 @@ class CalendarioController extends Controller
             'responsable' => 'required|string|max:100',
             'tipo_actividad' => 'nullable|string|max:100',
             'id_lugar' => 'nullable|integer',
-            'estado' => 'nullable|in:Programada,En Ejecución,Completada,Cancelada',
+            'lugar' => 'nullable|string|max:150',
+            'estado' => 'nullable|in:Programada,Realizada,Completada,Cancelada,En Ejecución',
             'descripcion' => 'nullable|string',
-            'id_fase' => 'nullable|integer'
         ]);
 
-        $validated['hora'] = $validated['hora'] ? date('H:i:s', strtotime($validated['hora'])) : '09:00:00';
-        $validated['tipo_actividad'] = $validated['tipo_actividad'] ?? 'Capacitación';
-        $validated['estado'] = $validated['estado'] ?? 'Programada';
+        $horaInicio = !empty($validated['hora']) ? date('H:i:s', strtotime($validated['hora'])) : '09:00:00';
+        $lugarNombre = $validated['lugar'] ?? null;
+        if (!$lugarNombre && !empty($validated['id_lugar'])) {
+            $lug = LugarFormacion::find($validated['id_lugar']);
+            if ($lug) $lugarNombre = $lug->nombre;
+        }
 
-        $actividad = CronogramaActividad::create($validated);
-        $actividad->load('lugar');
+        $estado = $validated['estado'] ?? 'Programada';
+        if ($estado === 'Completada') $estado = 'Realizada';
+
+        $actividad = ActividadSST::create([
+            'tipo_actividad' => $validated['tipo_actividad'] ?? 'Pausa Activa',
+            'titulo' => $validated['nombre'],
+            'actividad_a_realizar' => $validated['nombre'],
+            'fecha' => $validated['fecha'],
+            'hora_inicio' => $horaInicio,
+            'responsable' => $validated['responsable'],
+            'lugar' => $lugarNombre ?? 'No especificado',
+            'estado' => $estado,
+            'descripcion' => $validated['descripcion'] ?? null,
+        ]);
 
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Actividad agendada con éxito en el cronograma.',
-                'data' => $actividad
+                'message' => 'Actividad guardada con éxito.',
+                'data' => [
+                    'id_actividad' => $actividad->id_actividad,
+                    'nombre' => $actividad->titulo,
+                    'fecha' => $actividad->fecha,
+                    'hora' => substr($actividad->hora_inicio, 0, 5),
+                    'tipo_actividad' => $actividad->tipo_actividad,
+                    'lugar_nombre' => $actividad->lugar,
+                    'responsable' => $actividad->responsable,
+                    'estado' => $actividad->estado,
+                    'descripcion' => $actividad->descripcion
+                ]
             ]);
         }
 
@@ -116,41 +191,110 @@ class CalendarioController extends Controller
     }
 
     /**
-     * Update the specified calendar activity.
+     * Update the specified calendar activity (actualiza en ActividadSST o CronogramaActividad).
      */
     public function update(Request $request, $id)
     {
-        $actividad = CronogramaActividad::findOrFail($id);
-
         $validated = $request->validate([
-            'nombre' => 'required|string|max:150',
-            'fecha' => 'required|date',
+            'nombre' => 'nullable|string|max:150',
+            'fecha' => 'nullable|date',
             'hora' => 'nullable|string',
-            'responsable' => 'required|string|max:100',
+            'responsable' => 'nullable|string|max:100',
             'tipo_actividad' => 'nullable|string|max:100',
-            'id_lugar' => 'nullable|integer',
-            'estado' => 'nullable|in:Programada,En Ejecución,Completada,Cancelada',
+            'id_lugar' => 'nullable',
+            'lugar' => 'nullable|string|max:150',
+            'estado' => 'nullable|string',
             'descripcion' => 'nullable|string',
-            'id_fase' => 'nullable|integer'
+            'source' => 'nullable|string'
         ]);
 
-        if (!empty($validated['hora'])) {
-            $validated['hora'] = date('H:i:s', strtotime($validated['hora']));
+        $actSST = ActividadSST::find($id);
+        if ($actSST && ($request->get('source') !== 'cronograma')) {
+            if (!empty($validated['nombre'])) {
+                $actSST->titulo = $validated['nombre'];
+                $actSST->actividad_a_realizar = $validated['nombre'];
+            }
+            if (!empty($validated['fecha'])) {
+                $actSST->fecha = $validated['fecha'];
+            }
+            if (!empty($validated['hora'])) {
+                $actSST->hora_inicio = date('H:i:s', strtotime($validated['hora']));
+            }
+            if (!empty($validated['responsable'])) {
+                $actSST->responsable = $validated['responsable'];
+            }
+            if (!empty($validated['tipo_actividad'])) {
+                $actSST->tipo_actividad = $validated['tipo_actividad'];
+            }
+            if (!empty($validated['estado'])) {
+                $st = $validated['estado'];
+                if ($st === 'Completada') $st = 'Realizada';
+                $actSST->estado = $st;
+            }
+            if (isset($validated['descripcion'])) {
+                $actSST->descripcion = $validated['descripcion'];
+            }
+            if (!empty($validated['lugar'])) {
+                $actSST->lugar = $validated['lugar'];
+            } elseif (!empty($validated['id_lugar'])) {
+                $lugarObj = LugarFormacion::find($validated['id_lugar']);
+                if ($lugarObj) {
+                    $actSST->lugar = $lugarObj->nombre;
+                }
+            }
+
+            $actSST->save();
+
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Actividad de SST actualizada con éxito.',
+                    'data' => [
+                        'id_actividad' => $actSST->id_actividad,
+                        'nombre' => $actSST->titulo,
+                        'fecha' => $actSST->fecha,
+                        'hora' => substr($actSST->hora_inicio, 0, 5),
+                        'tipo_actividad' => $actSST->tipo_actividad,
+                        'lugar_nombre' => $actSST->lugar,
+                        'responsable' => $actSST->responsable,
+                        'estado' => $actSST->estado,
+                        'descripcion' => $actSST->descripcion
+                    ]
+                ]);
+            }
+
+            return redirect()->route('SST.admin.cronograma.calendario')
+                ->with('success', 'Actividad actualizada con éxito.');
         }
 
-        $actividad->update($validated);
-        $actividad->load('lugar');
+        // Fallback a CronogramaActividad si correspondía a ese modelo
+        $cronAct = CronogramaActividad::find($id);
+        if ($cronAct) {
+            if (!empty($validated['nombre'])) $cronAct->nombre = $validated['nombre'];
+            if (!empty($validated['fecha'])) $cronAct->fecha = $validated['fecha'];
+            if (!empty($validated['hora'])) $cronAct->hora = date('H:i:s', strtotime($validated['hora']));
+            if (!empty($validated['responsable'])) $cronAct->responsable = $validated['responsable'];
+            if (!empty($validated['tipo_actividad'])) $cronAct->tipo_actividad = $validated['tipo_actividad'];
+            if (!empty($validated['id_lugar'])) $cronAct->id_lugar = $validated['id_lugar'];
+            if (!empty($validated['estado'])) $cronAct->estado = $validated['estado'];
+            if (isset($validated['descripcion'])) $cronAct->descripcion = $validated['descripcion'];
 
-        if ($request->wantsJson() || $request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Actividad actualizada con éxito en el cronograma.',
-                'data' => $actividad
-            ]);
+            $cronAct->save();
+            $cronAct->load('lugar');
+
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Actividad actualizada con éxito.',
+                    'data' => $cronAct
+                ]);
+            }
+
+            return redirect()->route('SST.admin.cronograma.calendario')
+                ->with('success', 'Actividad actualizada con éxito.');
         }
 
-        return redirect()->route('SST.admin.cronograma.calendario')
-            ->with('success', 'Actividad actualizada con éxito.');
+        return response()->json(['success' => false, 'message' => 'Actividad no encontrada'], 404);
     }
 
     /**
@@ -158,17 +302,33 @@ class CalendarioController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $actividad = CronogramaActividad::findOrFail($id);
-        $actividad->delete();
-
-        if ($request->wantsJson() || $request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Actividad eliminada del cronograma con éxito.'
-            ]);
+        $actSST = ActividadSST::find($id);
+        if ($actSST && ($request->get('source') !== 'cronograma')) {
+            $actSST->delete();
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Actividad de SST eliminada con éxito.'
+                ]);
+            }
+            return redirect()->route('SST.admin.cronograma.calendario')
+                ->with('success', 'Actividad eliminada con éxito.');
         }
 
-        return redirect()->route('SST.admin.cronograma.calendario')
-            ->with('success', 'Actividad eliminada con éxito.');
+        $cronAct = CronogramaActividad::find($id);
+        if ($cronAct) {
+            $cronAct->delete();
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Actividad eliminada con éxito.'
+                ]);
+            }
+            return redirect()->route('SST.admin.cronograma.calendario')
+                ->with('success', 'Actividad eliminada con éxito.');
+        }
+
+        return response()->json(['success' => false, 'message' => 'Actividad no encontrada'], 404);
     }
 }
+

@@ -80,6 +80,12 @@
                     <span>Escoger fecha</span>
                 </button>
             </div>
+
+            <!-- Indicador informativo de regla de selección -->
+            <div class="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] font-semibold text-slate-500" title="Selección disponible desde 3 días antes de hoy">
+                <i class="fa-solid fa-clock-rotate-left text-orange-500 text-xs"></i>
+                <span>Disponible: <strong>desde hace 3 días</strong> en adelante</span>
+            </div>
         </div>
 
         <!-- Título del Rango o Mes -->
@@ -95,202 +101,88 @@
         </div>
     </div>
 
-    <!-- 3. Layout Principal: Calendario (Izquierda) + Formulario (Derecha) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-
-        <!-- LADO IZQUIERDO: Calendario (Grid Mes / Semana / Día) -->
-        <div class="lg:col-span-7 xl:col-span-8 bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden p-4 sm:p-5 flex flex-col justify-between">
+    <!-- 3. Calendario Principal (Mes / Semana / Día) a Ancho Completo -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden p-4 sm:p-6 flex flex-col justify-between">
+        
+        <!-- Leyenda Informativa de Colores por Tipo de Actividad SST -->
+        <div class="flex items-center gap-2 pb-3.5 mb-2 border-b border-slate-100 flex-wrap text-xs">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mr-1">
+                <i class="fa-solid fa-palette text-slate-400 mr-1"></i> Tipos de Actividades:
+            </span>
             
-            <!-- VISTA: MES -->
-            <div id="containerMonthView" class="flex-1 flex flex-col space-y-2">
-                <div class="grid grid-cols-7 mb-1 text-center text-[11px] font-extrabold uppercase tracking-wider text-slate-400 border-b border-slate-100 pb-2.5">
-                    <div>LUN</div>
-                    <div>MAR</div>
-                    <div>MIÉ</div>
-                    <div>JUE</div>
-                    <div>VIE</div>
-                    <div>SÁB</div>
-                    <div>DOM</div>
-                </div>
-
-                <div id="calendarGridMonth" class="grid grid-cols-7 gap-1 flex-1">
-                    <!-- Se renderiza dinámicamente -->
-                </div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-teal-50 border border-teal-200/90 text-teal-800 text-[11px] font-extrabold shadow-2xs">
+                <span class="w-2.5 h-2.5 rounded-full bg-teal-500 ring-2 ring-teal-200"></span>
+                <i class="fa-solid fa-person-running text-teal-600 text-[10px]"></i>
+                <span>Pausas Activas</span>
             </div>
 
-            <!-- VISTA: SEMANA -->
-            <div id="containerWeekView" class="hidden flex-1 flex flex-col space-y-3">
-                <div class="grid grid-cols-7 gap-2 border-b border-slate-100 pb-3" id="weekHeadersGrid">
-                    <!-- Encabezados de días -->
-                </div>
-                <div class="grid grid-cols-7 gap-2 h-[440px] overflow-y-auto" id="weekDaysGrid">
-                    <!-- Contenido de días de la semana -->
-                </div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200/90 text-amber-800 text-[11px] font-extrabold shadow-2xs">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 ring-2 ring-amber-200"></span>
+                <i class="fa-solid fa-bullhorn text-amber-600 text-[10px]"></i>
+                <span>Charlas de Seguridad</span>
             </div>
 
-            <!-- VISTA: DÍA -->
-            <div id="containerDayView" class="hidden flex-1 flex flex-col space-y-3">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 font-extrabold text-base flex items-center justify-center border border-orange-200/60 shrink-0">
-                            <i class="fa-regular fa-clock"></i>
-                        </div>
-                        <div>
-                            <h4 id="dayViewSubTitle" class="text-sm font-extrabold text-slate-900 tracking-tight">Cronograma Horario del Día</h4>
-                            <p class="text-xs text-slate-500 font-medium mt-0.5">Haz clic en cualquier horario libre para agendar directamente.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2 shrink-0">
-                        <span id="dayEventsCountBadge" class="px-3 py-1 rounded-xl bg-orange-100/70 text-orange-800 border border-orange-200 text-xs font-extrabold">
-                            0 Eventos hoy
-                        </span>
-                    </div>
-                </div>
-
-                <div class="space-y-3 h-[440px] overflow-y-auto pr-1.5 scroll-smooth" id="dayHoursTimeline">
-                    <!-- Se renderiza timeline dinámicamente -->
-                </div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-200/90 text-indigo-800 text-[11px] font-extrabold shadow-2xs">
+                <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 ring-2 ring-indigo-200"></span>
+                <i class="fa-solid fa-hand-holding-heart text-indigo-600 text-[10px]"></i>
+                <span>Sensibilización</span>
             </div>
 
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200/90 text-blue-800 text-[11px] font-extrabold shadow-2xs">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-500 ring-2 ring-blue-200"></span>
+                <i class="fa-solid fa-graduation-cap text-blue-600 text-[10px]"></i>
+                <span>Capacitaciones / Otras</span>
+            </div>
         </div>
 
-        <!-- LADO DERECHO: Tarjeta de Registro (Formulario) -->
-        <div class="lg:col-span-5 xl:col-span-4 flex flex-col">
-            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sm:p-6 flex-1 flex flex-col justify-between">
-                
-                <div>
-                    <!-- Encabezado del Formulario -->
-                    <div class="mb-4 pb-3 border-b border-slate-100">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-orange-50 text-orange-600 border border-orange-200/70 mb-1.5">
-                            <i class="fa-solid fa-plus-circle"></i> REGISTRAR ACTIVIDAD SST
-                        </span>
-                        <h3 id="selectedDateTitle" class="text-base font-extrabold text-slate-900 tracking-tight">
-                            Sábado, 12 de septiembre de 2026
-                        </h3>
+        <!-- VISTA: MES -->
+        <div id="containerMonthView" class="flex-1 flex flex-col space-y-2">
+            <div class="grid grid-cols-7 mb-1 text-center text-[11px] font-extrabold uppercase tracking-wider text-slate-400 border-b border-slate-100 pb-2.5">
+                <div>LUN</div>
+                <div>MAR</div>
+                <div>MIÉ</div>
+                <div>JUE</div>
+                <div>VIE</div>
+                <div>SÁB</div>
+                <div>DOM</div>
+            </div>
+
+            <div id="calendarGridMonth" class="grid grid-cols-7 gap-1.5 flex-1">
+                <!-- Se renderiza dinámicamente -->
+            </div>
+        </div>
+
+        <!-- VISTA: SEMANA -->
+        <div id="containerWeekView" class="hidden flex-1 flex flex-col space-y-3">
+            <div class="grid grid-cols-7 gap-2 border-b border-slate-100 pb-3" id="weekHeadersGrid">
+                <!-- Encabezados de días -->
+            </div>
+            <div class="grid grid-cols-7 gap-2 h-[440px] overflow-y-auto" id="weekDaysGrid">
+                <!-- Contenido de días de la semana -->
+            </div>
+        </div>
+
+        <!-- VISTA: DÍA -->
+        <div id="containerDayView" class="hidden flex-1 flex flex-col space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 font-extrabold text-base flex items-center justify-center border border-orange-200/60 shrink-0">
+                        <i class="fa-regular fa-clock"></i>
                     </div>
-
-                    <!-- Formulario -->
-                    <form id="activityForm" onsubmit="handleSaveActivity(event)" class="space-y-3.5">
-                        
-                        <!-- TIPO DE ACTIVIDAD Y LUGAR -->
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <div class="flex items-center justify-between mb-1">
-                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                                        TIPO ACTIVIDAD *
-                                    </label>
-                                    <button type="button" onclick="openQuickTipoActividadModal()" class="inline-flex items-center gap-1 text-[10px] font-extrabold text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 px-1.5 py-0.5 rounded-md border border-orange-200/80 transition cursor-pointer" title="Crear nuevo tipo de actividad">
-                                        <i class="fa-solid fa-plus text-[9px]"></i>
-                                        <span>Nuevo</span>
-                                    </button>
-                                </div>
-                                <select id="selectTipoActividad" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-white cursor-pointer">
-                                    @foreach($tiposActividades as $tipo)
-                                        <option value="{{ $tipo->nombre }}">{{ $tipo->nombre }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                                    LUGAR / AMBIENTE
-                                </label>
-                                <select id="selectLugar" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-white cursor-pointer">
-                                    <option value="">-- General / Ninguno --</option>
-                                    @foreach($lugares as $lugar)
-                                        <option value="{{ $lugar->id_lugar }}">{{ $lugar->nombre }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- NOMBRE -->
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                                NOMBRE DE LA ACTIVIDAD *
-                            </label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-xs">
-                                    <i class="fa-solid fa-file-pen"></i>
-                                </span>
-                                <input type="text" id="inputNombre" required placeholder="Ej: Capacitación en Prevención de Riesgos" 
-                                    class="w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-slate-50/30">
-                            </div>
-                        </div>
-
-                        <!-- FECHA Y HORA -->
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                                    FECHA
-                                </label>
-                                <div class="relative">
-                                    <input type="text" id="inputFecha" readonly 
-                                        class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 bg-slate-100 cursor-not-allowed">
-                                    <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400 text-xs">
-                                        <i class="fa-regular fa-calendar"></i>
-                                    </span>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                                    HORA
-                                </label>
-                                <div class="relative">
-                                    <input type="time" id="inputHora" value="09:00" required
-                                        class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-slate-50/30">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- RESPONSABLE -->
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                                RESPONSABLE *
-                            </label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-xs">
-                                    <i class="fa-solid fa-user-gear"></i>
-                                </span>
-                                <input type="text" id="inputResponsable" required placeholder="Nombre del responsable (Ej: Ing. Carlos)" 
-                                    class="w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-slate-50/30">
-                            </div>
-                        </div>
-
-                        <!-- ESTADO -->
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                                ESTADO DE LA ACTIVIDAD
-                            </label>
-                            <select id="selectEstado" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-white cursor-pointer">
-                                <option value="Programada">Programada</option>
-                                <option value="En Ejecución">En Ejecución</option>
-                                <option value="Completada">Completada</option>
-                                <option value="Cancelada">Cancelada</option>
-                            </select>
-                        </div>
-
-                        <!-- DESCRIPCIÓN -->
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                                DESCRIPCIÓN Y NOTAS
-                            </label>
-                            <textarea id="inputDescripcion" rows="2.5" placeholder="Detalles de la actividad, sala, personal convocado..." 
-                                class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-slate-50/30 resize-none"></textarea>
-                        </div>
-
-                        <!-- BOTONES DE ACCIÓN -->
-                        <div class="pt-2.5 flex items-center gap-2.5 border-t border-slate-100">
-                            <button type="button" onclick="clearForm()" class="flex-1 py-2 px-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 transition cursor-pointer text-center">
-                                Limpiar
-                            </button>
-                            <button type="submit" class="flex-1 py-2 px-3 rounded-xl bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white text-xs font-bold shadow-xs hover:shadow transition cursor-pointer text-center flex items-center justify-center gap-1.5">
-                                <i class="fa-solid fa-check text-xs"></i>
-                                <span>Registrar</span>
-                            </button>
-                        </div>
-                    </form>
+                    <div>
+                        <h4 id="dayViewSubTitle" class="text-sm font-extrabold text-slate-900 tracking-tight">Cronograma Horario del Día</h4>
+                        <p class="text-xs text-slate-500 font-medium mt-0.5">Visualización del cronograma horario del día seleccionado.</p>
+                    </div>
                 </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <span id="dayEventsCountBadge" class="px-3 py-1 rounded-xl bg-orange-100/70 text-orange-800 border border-orange-200 text-xs font-extrabold">
+                        0 Eventos hoy
+                    </span>
+                </div>
+            </div>
 
+            <div class="space-y-3 h-[440px] overflow-y-auto pr-1.5 scroll-smooth" id="dayHoursTimeline">
+                <!-- Se renderiza timeline dinámicamente -->
             </div>
         </div>
 
@@ -320,8 +212,7 @@
             <div class="flex items-center gap-1.5 flex-wrap">
                 <button onclick="filterEventsStatus('all')" id="statusFilterAll" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-slate-900 text-white shadow-xs transition cursor-pointer">Todas</button>
                 <button onclick="filterEventsStatus('Programada')" id="statusFilterProgramada" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition cursor-pointer">Programadas</button>
-                <button onclick="filterEventsStatus('En Ejecución')" id="statusFilterEnEjecucion" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition cursor-pointer">En Ejecución</button>
-                <button onclick="filterEventsStatus('Completada')" id="statusFilterCompletada" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition cursor-pointer">Completadas</button>
+                <button onclick="filterEventsStatus('Realizada')" id="statusFilterRealizada" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition cursor-pointer">Realizadas</button>
                 <button onclick="filterEventsStatus('Cancelada')" id="statusFilterCancelada" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition cursor-pointer">Canceladas</button>
             </div>
         </div>
@@ -390,8 +281,7 @@
                     <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Estado de la Actividad</label>
                     <select id="editEstado" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 bg-white cursor-pointer">
                         <option value="Programada">Programada</option>
-                        <option value="En Ejecución">En Ejecución</option>
-                        <option value="Completada">Completada</option>
+                        <option value="Realizada">Realizada</option>
                         <option value="Cancelada">Cancelada</option>
                     </select>
                 </div>
@@ -510,14 +400,14 @@
     </div>
 </div>
 
-<!-- NOTIFICACIÓN TOAST FLOTANTE (MENSAJE DE ÉXITO) -->
+<!-- NOTIFICACIÓN TOAST FLOTANTE (ADAPTABLE: ÉXITO / ADVERTENCIA / ERROR) -->
 <div id="toastSuccessNotification" class="fixed top-5 right-5 z-50 transform translate-x-full opacity-0 transition-all duration-300 pointer-events-none">
-    <div class="bg-white rounded-2xl p-4 shadow-xl border border-slate-100 border-l-4 border-l-emerald-500 flex items-center gap-3.5 max-w-md pointer-events-auto">
-        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shrink-0 border border-emerald-100">
-            <i class="fa-solid fa-circle-check text-lg"></i>
+    <div id="toastContainerBox" class="bg-white rounded-2xl p-4 shadow-xl border border-slate-100 border-l-4 border-l-emerald-500 flex items-center gap-3.5 max-w-md pointer-events-auto">
+        <div id="toastIconBox" class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shrink-0 border border-emerald-100">
+            <i id="toastIcon" class="fa-solid fa-circle-check text-lg"></i>
         </div>
         <div class="flex-1 pr-2">
-            <h4 class="text-xs font-extrabold text-slate-900">¡Registro Éxitoso!</h4>
+            <h4 id="toastTitleText" class="text-xs font-extrabold text-slate-900">¡Operación Exitosa!</h4>
             <p id="toastMessageText" class="text-xs text-slate-500 font-medium mt-0.5 leading-snug">Operación realizada correctamente.</p>
         </div>
         <button onclick="hideToastNotification()" class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-600 flex items-center justify-center transition cursor-pointer">
@@ -560,17 +450,18 @@
         @endforeach
     };
 
-    // Datos cargados directamente desde la base de datos MySQL (cronograma_sst)
+    // Datos cargados directamente desde la base de datos MySQL (actividades_sst)
     let events = [
         @foreach($actividades as $act)
         {
             id: {{ $act->id_actividad }},
+            source: '{{ $act->source ?? "actividad_sst" }}',
             date: '{{ $act->fecha }}',
             name: {!! json_encode($act->nombre) !!},
             time: '{{ substr($act->hora, 0, 5) }}',
-            tipo_actividad: {!! json_encode($act->tipo_actividad ?? 'Capacitación') !!},
-            id_lugar: {{ $act->id_lugar ? $act->id_lugar : 'null' }},
-            lugar_nombre: {!! json_encode($act->lugar ? $act->lugar->nombre : null) !!},
+            tipo_actividad: {!! json_encode($act->tipo_actividad ?? 'Pausa Activa') !!},
+            id_lugar: {{ !empty($act->id_lugar) ? $act->id_lugar : 'null' }},
+            lugar_nombre: {!! json_encode($act->lugar_nombre ?? (is_object($act->lugar ?? null) ? $act->lugar->nombre : ($act->lugar ?? null))) !!},
             responsable: {!! json_encode($act->responsable) !!},
             estado: '{{ $act->estado }}',
             descripcion: {!! json_encode($act->descripcion ?? '') !!}
@@ -589,6 +480,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         renderCurrentView();
         updateSelectedDateUI();
+        updateEventsCount();
     });
 
     function switchView(view) {
@@ -631,6 +523,124 @@
         renderCurrentView();
     }
 
+    // Regla de negocio: Permitir seleccionar solo desde 3 días antes de hoy en adelante (ej: si hoy es 15, desde el 12)
+    function getMinSelectableDate() {
+        const d = new Date();
+        d.setHours(0, 0, 0, 0);
+        d.setDate(d.getDate() - 3);
+        return d;
+    }
+
+    function isDateDisabled(d) {
+        if (!d) return false;
+        const check = new Date(d);
+        check.setHours(0, 0, 0, 0);
+        return check < getMinSelectableDate();
+    }
+
+    function showDisabledDateNotice() {
+        const minD = getMinSelectableDate();
+        const formattedMin = `${minD.getDate()} de ${monthNames[minD.getMonth()]}`;
+        showToastNotification(`Solo se pueden seleccionar fechas a partir del ${formattedMin} (máximo 3 días anteriores a hoy).`, 'warning', 'Fecha no permitida');
+    }
+
+    // Paleta de colores e iconos específicos y profesionales para cada tipo de actividad SST
+    function getActivityTheme(tipo, name = '') {
+        const textToMatch = `${tipo || ''} ${name || ''}`.trim().toLowerCase();
+        
+        if (textToMatch.includes('pausa')) {
+            return {
+                name: 'Pausa Activa',
+                badgeClass: 'bg-teal-600 text-white shadow-2xs border-teal-700/30',
+                badgeLight: 'bg-teal-50 text-teal-800 border-teal-200',
+                dot: 'bg-teal-500 ring-teal-200',
+                cellBg: 'bg-teal-50/40 border-teal-200/90 shadow-2xs hover:bg-teal-100/40',
+                textColor: 'text-teal-700',
+                topBorder: 'border-t-4 border-t-teal-500',
+                icon: 'fa-person-running',
+                pillColor: 'teal'
+            };
+        }
+        if (textToMatch.includes('charla')) {
+            return {
+                name: 'Charla',
+                badgeClass: 'bg-amber-500 text-white shadow-2xs border-amber-600/30',
+                badgeLight: 'bg-amber-50 text-amber-800 border-amber-200',
+                dot: 'bg-amber-500 ring-amber-200',
+                cellBg: 'bg-amber-50/40 border-amber-200/90 shadow-2xs hover:bg-amber-100/40',
+                textColor: 'text-amber-700',
+                topBorder: 'border-t-4 border-t-amber-500',
+                icon: 'fa-bullhorn',
+                pillColor: 'amber'
+            };
+        }
+        if (textToMatch.includes('sensibiliz')) {
+            return {
+                name: 'Sensibilización',
+                badgeClass: 'bg-indigo-600 text-white shadow-2xs border-indigo-700/30',
+                badgeLight: 'bg-indigo-50 text-indigo-800 border-indigo-200',
+                dot: 'bg-indigo-500 ring-indigo-200',
+                cellBg: 'bg-indigo-50/40 border-indigo-200/90 shadow-2xs hover:bg-indigo-100/40',
+                textColor: 'text-indigo-700',
+                topBorder: 'border-t-4 border-t-indigo-500',
+                icon: 'fa-hand-holding-heart',
+                pillColor: 'indigo'
+            };
+        }
+        if (textToMatch.includes('simulacro')) {
+            return {
+                name: 'Simulacro',
+                badgeClass: 'bg-rose-600 text-white shadow-2xs border-rose-700/30',
+                badgeLight: 'bg-rose-50 text-rose-800 border-rose-200',
+                dot: 'bg-rose-500 ring-rose-200',
+                cellBg: 'bg-rose-50/40 border-rose-200/90 shadow-2xs hover:bg-rose-100/40',
+                textColor: 'text-rose-700',
+                topBorder: 'border-t-4 border-t-rose-500',
+                icon: 'fa-triangle-exclamation',
+                pillColor: 'rose'
+            };
+        }
+        if (textToMatch.includes('inspecc')) {
+            return {
+                name: 'Inspección',
+                badgeClass: 'bg-purple-600 text-white shadow-2xs border-purple-700/30',
+                badgeLight: 'bg-purple-50 text-purple-800 border-purple-200',
+                dot: 'bg-purple-500 ring-purple-200',
+                cellBg: 'bg-purple-50/40 border-purple-200/90 shadow-2xs hover:bg-purple-100/40',
+                textColor: 'text-purple-700',
+                topBorder: 'border-t-4 border-t-purple-500',
+                icon: 'fa-clipboard-check',
+                pillColor: 'purple'
+            };
+        }
+        if (textToMatch.includes('salud')) {
+            return {
+                name: 'Jornada de Salud',
+                badgeClass: 'bg-emerald-600 text-white shadow-2xs border-emerald-700/30',
+                badgeLight: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+                dot: 'bg-emerald-500 ring-emerald-200',
+                cellBg: 'bg-emerald-50/40 border-emerald-200/90 shadow-2xs hover:bg-emerald-100/40',
+                textColor: 'text-emerald-700',
+                topBorder: 'border-t-4 border-t-emerald-500',
+                icon: 'fa-heart-pulse',
+                pillColor: 'emerald'
+            };
+        }
+
+        // Tipo estándar o Capacitación
+        return {
+            name: tipo || 'Capacitación',
+            badgeClass: 'bg-blue-600 text-white shadow-2xs border-blue-700/30',
+            badgeLight: 'bg-blue-50 text-blue-800 border-blue-200',
+            dot: 'bg-blue-500 ring-blue-200',
+            cellBg: 'bg-blue-50/40 border-blue-200/90 shadow-2xs hover:bg-blue-100/40',
+            textColor: 'text-blue-700',
+            topBorder: 'border-t-4 border-t-blue-500',
+            icon: 'fa-graduation-cap',
+            pillColor: 'blue'
+        };
+    }
+
     function goToToday() {
         currentDate = new Date();
         selectedDate = new Date();
@@ -641,6 +651,7 @@
     function triggerDatePicker() {
         const picker = document.getElementById('datePickerHeader');
         if (picker) {
+            picker.min = formatDateForInput(getMinSelectableDate());
             picker.value = formatDateForInput(selectedDate);
             if (typeof picker.showPicker === 'function') {
                 picker.showPicker();
@@ -654,6 +665,10 @@
         if (!val) return;
         const parts = val.split('-');
         const chosen = new Date(parts[0], parseInt(parts[1]) - 1, parts[2]);
+        if (isDateDisabled(chosen)) {
+            showDisabledDateNotice();
+            return;
+        }
         currentDate = chosen;
         selectedDate = new Date(chosen);
         renderCurrentView();
@@ -720,40 +735,57 @@
             return cell;
         }
 
+        const parts = fullDateStr.split('-');
+        const cellDate = new Date(parts[0], parseInt(parts[1]) - 1, parts[2]);
+        const isDisabled = isDateDisabled(cellDate);
         const hasEvents = dayEvents.length > 0;
+        const primaryTheme = hasEvents ? getActivityTheme(dayEvents[0].tipo_actividad, dayEvents[0].name) : null;
 
         let bgClass = 'bg-white';
-        if (isSelected) {
-            bgClass = 'calendar-day-selected';
+        if (isDisabled) {
+            bgClass = 'bg-slate-50/70 border-slate-200/50 opacity-40 cursor-not-allowed select-none';
+        } else if (isSelected) {
+            bgClass = 'calendar-day-selected cursor-pointer transition';
         } else if (isToday) {
-            bgClass = 'calendar-day-today';
+            bgClass = 'calendar-day-today cursor-pointer transition';
         } else if (hasEvents) {
-            bgClass = 'bg-orange-50/50 border-orange-200/90 shadow-2xs hover:bg-orange-100/50';
+            bgClass = `${primaryTheme.cellBg} cursor-pointer transition`;
+        } else {
+            bgClass = 'bg-white hover:bg-slate-50/80 cursor-pointer transition';
         }
 
-        cell.className = `calendar-grid-day border border-slate-200/70 p-1.5 rounded-xl flex flex-col justify-between cursor-pointer transition ${bgClass}`;
-        cell.setAttribute('onclick', `selectDay('${fullDateStr}')`);
+        cell.className = `calendar-grid-day border border-slate-200/70 p-1.5 rounded-xl flex flex-col justify-between ${bgClass}`;
+        
+        if (!isDisabled) {
+            cell.setAttribute('onclick', `selectDay('${fullDateStr}')`);
+        } else {
+            cell.setAttribute('title', 'Fecha no disponible (solo desde 3 días antes de hoy en adelante)');
+            cell.setAttribute('onclick', `showDisabledDateNotice()`);
+        }
 
         let numberBadgeHTML = '';
-        if (isSelected) {
+        if (isDisabled) {
+            numberBadgeHTML = `<span class="text-xs font-semibold text-slate-400 pl-1">${dayNum}</span>`;
+        } else if (isSelected) {
             numberBadgeHTML = `<span class="w-5 h-5 rounded-md bg-blue-600 text-white text-[11px] font-extrabold flex items-center justify-center shadow-xs">${dayNum}</span>`;
         } else if (isToday) {
             numberBadgeHTML = `<span class="w-5 h-5 rounded-md bg-orange-500 text-white text-[11px] font-extrabold flex items-center justify-center shadow-xs">${dayNum}</span>`;
         } else {
-            numberBadgeHTML = `<span class="text-xs font-extrabold ${hasEvents ? 'text-orange-950' : 'text-slate-700'} pl-1">${dayNum}</span>`;
+            numberBadgeHTML = `<span class="text-xs font-extrabold ${hasEvents ? primaryTheme.textColor : 'text-slate-700'} pl-1">${dayNum}</span>`;
         }
 
         let eventsHTML = '';
         if (hasEvents) {
             const firstEvt = dayEvents[0];
+            const evtTheme = getActivityTheme(firstEvt.tipo_actividad, firstEvt.name);
 
             eventsHTML = `
-                <div class="mt-1 space-y-0.5 overflow-hidden">
-                    <div class="px-2 py-0.5 rounded-lg text-[9.5px] font-extrabold bg-orange-500 text-white shadow-2xs truncate flex items-center gap-1 border border-orange-600/30" title="${firstEvt.name}">
-                        <span class="w-1.5 h-1.5 rounded-full bg-white shrink-0"></span>
+                <div class="mt-1 space-y-0.5 overflow-hidden ${isDisabled ? 'opacity-60' : ''}">
+                    <div class="px-2 py-0.5 rounded-lg text-[9.5px] font-extrabold ${isDisabled ? 'bg-slate-400 text-white border-slate-500/20' : `${evtTheme.badgeClass} border`} truncate flex items-center gap-1.5" title="[${evtTheme.name}] ${firstEvt.name}">
+                        <i class="fa-solid ${evtTheme.icon} text-[8.5px] shrink-0 opacity-90"></i>
                         <span class="truncate">${firstEvt.name}</span>
                     </div>
-                    ${dayEvents.length > 1 ? `<div class="text-[8px] font-black text-orange-700 pl-0.5 tracking-tight">+${dayEvents.length - 1} más</div>` : ''}
+                    ${dayEvents.length > 1 ? `<div class="text-[8px] font-black ${isDisabled ? 'text-slate-500' : evtTheme.textColor} pl-0.5 tracking-tight">+${dayEvents.length - 1} más</div>` : ''}
                 </div>
             `;
         }
@@ -761,7 +793,7 @@
         cell.innerHTML = `
             <div class="flex items-center justify-between">
                 ${numberBadgeHTML}
-                ${hasEvents ? `<span class="w-2 h-2 rounded-full bg-orange-500 ring-2 ring-orange-200 shrink-0"></span>` : ''}
+                ${hasEvents ? `<span class="w-2.5 h-2.5 rounded-full ${isDisabled ? 'bg-slate-300' : `${primaryTheme.dot} ring-2`} shrink-0"></span>` : ''}
             </div>
             ${eventsHTML}
         `;
@@ -793,18 +825,25 @@
             const dayDate = new Date(firstDayOfWeek);
             dayDate.setDate(firstDayOfWeek.getDate() + i);
 
+            const isDisabled = isDateDisabled(dayDate);
             const isSelected = isSameDate(dayDate, selectedDate);
             const isToday = isSameDate(dayDate, new Date());
             const formattedDate = formatDateForInput(dayDate);
             const dayEvents = events.filter(e => e.date === formattedDate);
 
             const headerCol = document.createElement('div');
-            headerCol.className = `p-2 rounded-xl text-center border transition cursor-pointer ${
-                isSelected ? 'bg-orange-50 border-orange-300 text-orange-700 font-extrabold' : 'border-transparent text-slate-600 hover:bg-slate-50'
-            }`;
-            headerCol.setAttribute('onclick', `selectDay('${formattedDate}')`);
+            if (isDisabled) {
+                headerCol.className = 'p-2 rounded-xl text-center border border-transparent text-slate-300 opacity-40 cursor-not-allowed select-none';
+                headerCol.setAttribute('title', 'Fecha no disponible (máximo 3 días antes de hoy)');
+                headerCol.setAttribute('onclick', 'showDisabledDateNotice()');
+            } else {
+                headerCol.className = `p-2 rounded-xl text-center border transition cursor-pointer ${
+                    isSelected ? 'bg-orange-50 border-orange-300 text-orange-700 font-extrabold' : 'border-transparent text-slate-600 hover:bg-slate-50'
+                }`;
+                headerCol.setAttribute('onclick', `selectDay('${formattedDate}')`);
+            }
             headerCol.innerHTML = `
-                <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">${shortDayNames[i]}</div>
+                <div class="text-[11px] font-bold uppercase tracking-wider ${isDisabled ? 'text-slate-300' : 'text-slate-400'}">${shortDayNames[i]}</div>
                 <div class="text-base font-extrabold mt-0.5 ${isToday ? 'w-7 h-7 rounded-full bg-orange-500 text-white flex items-center justify-center mx-auto shadow-xs' : ''}">
                     ${dayDate.getDate()}
                 </div>
@@ -812,26 +851,37 @@
             headersGrid.appendChild(headerCol);
 
             const dayCol = document.createElement('div');
-            dayCol.className = `min-h-[380px] p-2 rounded-2xl border border-slate-100 flex flex-col gap-2 ${isSelected ? 'bg-orange-50/20 border-orange-200/60' : 'bg-slate-50/40'}`;
+            if (isDisabled) {
+                dayCol.className = 'min-h-[380px] p-2 rounded-2xl border border-slate-100 flex flex-col gap-2 bg-slate-100/40 opacity-40 cursor-not-allowed select-none';
+                dayCol.setAttribute('onclick', 'showDisabledDateNotice()');
+            } else {
+                dayCol.className = `min-h-[380px] p-2 rounded-2xl border border-slate-100 flex flex-col gap-2 ${isSelected ? 'bg-orange-50/20 border-orange-200/60' : 'bg-slate-50/40'}`;
+            }
 
             if (dayEvents.length === 0) {
                 dayCol.innerHTML = `
-                    <div onclick="selectDay('${formattedDate}')" class="h-full flex flex-col items-center justify-center text-center p-2 text-slate-300 hover:text-slate-400 cursor-pointer">
-                        <i class="fa-solid fa-plus text-xs mb-1"></i>
-                        <span class="text-[10px] font-semibold">Sin eventos</span>
+                    <div ${!isDisabled ? `onclick="selectDay('${formattedDate}')"` : ''} class="h-full flex flex-col items-center justify-center text-center p-2 text-slate-300 ${!isDisabled ? 'hover:text-slate-400 cursor-pointer' : ''}">
+                        <i class="fa-solid ${isDisabled ? 'fa-ban' : 'fa-plus'} text-xs mb-1"></i>
+                        <span class="text-[10px] font-semibold">${isDisabled ? 'No disponible' : 'Sin eventos'}</span>
                     </div>
                 `;
             } else {
-                dayCol.innerHTML = dayEvents.map(evt => `
-                    <div onclick="selectDay('${formattedDate}')" class="p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs hover:shadow-xs transition cursor-pointer space-y-1">
-                        <div class="flex items-center justify-between text-[10px] font-extrabold text-orange-600">
+                dayCol.innerHTML = dayEvents.map(evt => {
+                    const evtTheme = getActivityTheme(evt.tipo_actividad, evt.name);
+                    return `
+                    <div ${!isDisabled ? `onclick="selectDay('${formattedDate}')"` : ''} class="p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs ${!isDisabled ? 'hover:shadow-xs transition cursor-pointer' : 'opacity-70'} space-y-1.5 border-l-4 ${evtTheme.topBorder.replace('border-t-4', '')}">
+                        <div class="flex items-center justify-between text-[10px] font-extrabold ${isDisabled ? 'text-slate-400' : evtTheme.textColor}">
                             <span><i class="fa-regular fa-clock"></i> ${evt.time}</span>
-                            <span class="w-2 h-2 rounded-full ${evt.estado === 'Completada' ? 'bg-emerald-500' : 'bg-orange-500'}"></span>
+                            <span class="w-2 h-2 rounded-full ${isDisabled ? 'bg-slate-300' : (evt.estado === 'Completada' || evt.estado === 'Realizada' ? 'bg-emerald-500' : evtTheme.dot)}"></span>
                         </div>
                         <h5 class="text-xs font-bold text-slate-800 line-clamp-2 leading-tight">${evt.name}</h5>
-                        <div class="text-[10px] text-slate-400 font-medium truncate">${evt.tipo_actividad || 'Actividad'}</div>
+                        <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-bold ${evtTheme.badgeLight} truncate">
+                            <i class="fa-solid ${evtTheme.icon} text-[8px]"></i>
+                            <span>${evtTheme.name}</span>
+                        </div>
                     </div>
-                `).join('');
+                    `;
+                }).join('');
             }
 
             daysGrid.appendChild(dayCol);
@@ -871,25 +921,30 @@
 
             let eventsInSlotHTML = '';
             if (hrEvents.length > 0) {
-                eventsInSlotHTML = hrEvents.map(evt => `
-                    <div class="flex-1 p-3 rounded-xl bg-orange-50/70 border border-orange-200/90 flex items-center justify-between shadow-2xs">
+                eventsInSlotHTML = hrEvents.map(evt => {
+                    const evtTheme = getActivityTheme(evt.tipo_actividad, evt.name);
+                    return `
+                    <div class="flex-1 p-3 rounded-xl ${evtTheme.cellBg} border flex items-center justify-between shadow-2xs">
                         <div>
                             <div class="flex items-center gap-2">
-                                <span class="text-xs font-extrabold text-orange-700">${evt.name}</span>
-                                <span class="px-2 py-0.5 text-[9px] font-bold rounded-md bg-orange-200/70 text-orange-800">${evt.tipo_actividad || 'Actividad'}</span>
+                                <span class="text-xs font-extrabold ${evtTheme.textColor}">${evt.name}</span>
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 text-[9px] font-bold rounded-md ${evtTheme.badgeLight} border">
+                                    <i class="fa-solid ${evtTheme.icon} text-[8px]"></i>
+                                    <span>${evt.tipo_actividad || evtTheme.name}</span>
+                                </span>
                             </div>
                             <p class="text-xs text-slate-500 font-medium mt-0.5">Resp: ${evt.responsable} ${evt.lugar_nombre ? '• Lugar: ' + evt.lugar_nombre : ''}</p>
                         </div>
-                        <button onclick="openEditModal(${evt.id})" class="px-2.5 py-1 text-xs font-bold text-orange-600 bg-white rounded-lg border border-orange-200 hover:bg-orange-50 transition cursor-pointer">
+                        <button onclick="openEditModal(${evt.id})" class="px-2.5 py-1 text-xs font-bold text-slate-700 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition cursor-pointer">
                             Ver
                         </button>
                     </div>
-                `).join('');
+                    `;
+                }).join('');
             } else {
                 eventsInSlotHTML = `
-                    <div onclick="openCreateAtTime('${hr}')" class="flex-1 py-2 px-3 text-xs text-slate-400 border border-dashed border-slate-200 rounded-xl hover:border-orange-300 hover:text-orange-600 transition cursor-pointer flex items-center justify-between">
-                        <span>Horario libre - Haz clic para agendar</span>
-                        <i class="fa-solid fa-plus text-[10px]"></i>
+                    <div class="flex-1 py-2 px-3 text-xs text-slate-400 border border-dashed border-slate-200 rounded-xl flex items-center justify-between">
+                        <span>Horario disponible</span>
                     </div>
                 `;
             }
@@ -903,14 +958,19 @@
     }
 
     function openCreateAtTime(timeStr) {
-        document.getElementById('inputHora').value = timeStr;
-        document.getElementById('inputNombre').focus();
+        if (document.getElementById('inputHora')) document.getElementById('inputHora').value = timeStr;
+        if (document.getElementById('inputNombre')) document.getElementById('inputNombre').focus();
     }
 
     function selectDay(dateStr) {
         if (!dateStr) return;
         const parts = dateStr.split('-');
-        selectedDate = new Date(parts[0], parseInt(parts[1]) - 1, parts[2]);
+        const chosen = new Date(parts[0], parseInt(parts[1]) - 1, parts[2]);
+        if (isDateDisabled(chosen)) {
+            showDisabledDateNotice();
+            return;
+        }
+        selectedDate = chosen;
         currentDate = new Date(selectedDate);
         renderCurrentView();
         updateSelectedDateUI();
@@ -922,41 +982,33 @@
         const monthName = monthNames[selectedDate.getMonth()];
         const year = selectedDate.getFullYear();
 
-        document.getElementById('selectedDateTitle').innerText = `${dayName}, ${dayNum} de ${monthName} de ${year}`;
-        document.getElementById('selectedDateSubtitleEvents').innerText = `Mostrando registros para: ${dayName}, ${dayNum} de ${monthName} de ${year}`;
-        document.getElementById('inputFecha').value = formatDateForInput(selectedDate);
+        const selectedDateTitle = document.getElementById('selectedDateTitle');
+        if (selectedDateTitle) {
+            selectedDateTitle.innerText = `${dayName}, ${dayNum} de ${monthName} de ${year}`;
+        }
+        const selectedDateSubtitleEvents = document.getElementById('selectedDateSubtitleEvents');
+        if (selectedDateSubtitleEvents) {
+            selectedDateSubtitleEvents.innerText = `Mostrando registros para: ${dayName}, ${dayNum} de ${monthName} de ${year}`;
+        }
+        const inputFecha = document.getElementById('inputFecha');
+        if (inputFecha) {
+            inputFecha.value = formatDateForInput(selectedDate);
+        }
 
         renderDayEventsGrid();
     }
 
-    function getActivityTypeBadge(tipo) {
-        const info = tiposActividadesMap[tipo];
-        if (info) {
-            const color = info.color || 'blue';
-            return {
-                bg: `bg-${color}-50 text-${color}-700 border-${color}-200`,
-                icon: info.icono || 'fa-calendar-check'
-            };
-        }
-
-        // Fallbacks inteligentes
-        switch(tipo) {
-            case 'Simulacro':
-                return { bg: 'bg-rose-50 text-rose-700 border-rose-200', icon: 'fa-triangle-exclamation' };
-            case 'Pausa Activa':
-                return { bg: 'bg-teal-50 text-teal-700 border-teal-200', icon: 'fa-person-running' };
-            case 'Inspección':
-                return { bg: 'bg-purple-50 text-purple-700 border-purple-200', icon: 'fa-clipboard-check' };
-            case 'Charla 5 Min':
-                return { bg: 'bg-amber-50 text-amber-700 border-amber-200', icon: 'fa-bullhorn' };
-            case 'Reunión COPASST':
-                return { bg: 'bg-indigo-50 text-indigo-700 border-indigo-200', icon: 'fa-users' };
-            case 'Jornada de Salud':
-                return { bg: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: 'fa-heart-pulse' };
-            case 'Capacitación':
-            default:
-                return { bg: 'bg-blue-50 text-blue-700 border-blue-200', icon: 'fa-graduation-cap' };
-        }
+    function getActivityTypeBadge(tipo, name = '') {
+        const theme = getActivityTheme(tipo, name);
+        return {
+            bg: theme.badgeLight,
+            badgeClass: theme.badgeClass,
+            icon: theme.icon,
+            textColor: theme.textColor,
+            topBorder: theme.topBorder,
+            dot: theme.dot,
+            name: theme.name
+        };
     }
 
     function renderDayEventsGrid() {
@@ -964,12 +1016,16 @@
         let dayEvents = events.filter(e => e.date === formattedSelected);
 
         if (currentStatusFilter !== 'all') {
-            dayEvents = dayEvents.filter(e => e.estado === currentStatusFilter);
+            dayEvents = dayEvents.filter(e => {
+                if (currentStatusFilter === 'Realizada' || currentStatusFilter === 'Completada') {
+                    return e.estado === 'Realizada' || e.estado === 'Completada';
+                }
+                return e.estado === currentStatusFilter;
+            });
         }
 
         const grid = document.getElementById('dayEventsGrid');
         const badge = document.getElementById('selectedDayEventsBadge');
-
         badge.innerText = `${dayEvents.length} Evento${dayEvents.length !== 1 ? 's' : ''}`;
 
         if (dayEvents.length === 0) {
@@ -979,17 +1035,17 @@
                         <i class="fa-regular fa-calendar-xmark text-xl"></i>
                     </div>
                     <h4 class="text-sm font-bold text-slate-800">Sin actividades registradas</h4>
-                    <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto leading-relaxed">No hay eventos agendados para este día o estado. Puedes programar uno usando el formulario superior.</p>
+                    <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto leading-relaxed">No hay eventos agendados para este día o estado en Actividades SST.</p>
                 </div>
             `;
             return;
         }
 
         grid.innerHTML = dayEvents.map(evt => {
-            let topBorder = 'border-t-4 border-t-orange-500';
-            let statusStyle = 'bg-orange-100 text-orange-700 border-orange-200';
+            const typeInfo = getActivityTypeBadge(evt.tipo_actividad, evt.name);
 
-            if (evt.estado === 'Completada') {
+            let statusStyle = 'bg-orange-100 text-orange-700 border-orange-200';
+            if (evt.estado === 'Completada' || evt.estado === 'Realizada') {
                 statusStyle = 'bg-emerald-100 text-emerald-700 border-emerald-200';
             } else if (evt.estado === 'En Ejecución') {
                 statusStyle = 'bg-blue-100 text-blue-700 border-blue-200';
@@ -997,22 +1053,19 @@
                 statusStyle = 'bg-rose-100 text-rose-700 border-rose-200';
             }
 
-            const typeInfo = getActivityTypeBadge(evt.tipo_actividad);
-
             return `
-                <div class="bg-white rounded-2xl border border-slate-200/80 ${topBorder} p-4 shadow-xs hover:shadow-sm transition flex flex-col justify-between space-y-3">
+                <div class="bg-white rounded-2xl border border-slate-200/80 ${typeInfo.topBorder} p-4 shadow-xs hover:shadow-sm transition flex flex-col justify-between space-y-3">
                     <div class="space-y-2">
                         <div class="flex items-center justify-between gap-2">
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${typeInfo.bg} border">
                                 <i class="fa-solid ${typeInfo.icon} text-[9px]"></i>
-                                <span>${evt.tipo_actividad || 'Capacitación'}</span>
+                                <span>${evt.tipo_actividad || typeInfo.name}</span>
                             </span>
                             
                             <div class="relative">
                                 <select onchange="changeEventStatus(${evt.id}, this.value)" class="text-[10px] font-extrabold px-2.5 py-1 rounded-full border cursor-pointer ${statusStyle} focus:outline-none transition appearance-none pr-5">
                                     <option value="Programada" ${evt.estado === 'Programada' ? 'selected' : ''}>● Programada</option>
-                                    <option value="En Ejecución" ${evt.estado === 'En Ejecución' ? 'selected' : ''}>● En Ejecución</option>
-                                    <option value="Completada" ${evt.estado === 'Completada' ? 'selected' : ''}>● Completada</option>
+                                    <option value="Realizada" ${(evt.estado === 'Realizada' || evt.estado === 'Completada') ? 'selected' : ''}>● Realizada</option>
                                     <option value="Cancelada" ${evt.estado === 'Cancelada' ? 'selected' : ''}>● Cancelada</option>
                                 </select>
                                 <span class="absolute inset-y-0 right-1.5 flex items-center pointer-events-none text-[8px] opacity-70">
@@ -1037,7 +1090,7 @@
                             ${evt.lugar_nombre ? `
                                 <div class="flex items-center gap-1.5 text-[11px] font-medium text-slate-500">
                                     <i class="fa-solid fa-location-dot text-emerald-500 text-xs"></i>
-                                    <span class="truncate">Lugar: <span class="text-slate-700 font-semibold">${evt.lugar_nombre}</span></span>
+                                    <span class="truncate">Lugar / Ambiente: <span class="text-slate-700 font-semibold">${evt.lugar_nombre}</span></span>
                                 </div>
                             ` : ''}
                         </div>
@@ -1070,8 +1123,7 @@
         const statuses = [
             { id: 'statusFilterAll', key: 'all' },
             { id: 'statusFilterProgramada', key: 'Programada' },
-            { id: 'statusFilterEnEjecucion', key: 'En Ejecución' },
-            { id: 'statusFilterCompletada', key: 'Completada' },
+            { id: 'statusFilterRealizada', key: 'Realizada' },
             { id: 'statusFilterCancelada', key: 'Cancelada' }
         ];
 
@@ -1128,13 +1180,15 @@
                 const selectMain = document.getElementById('selectTipoActividad');
                 const selectEdit = document.getElementById('editTipoActividad');
 
-                const opt1 = new Option(res.data.nombre, res.data.nombre, true, true);
-                const opt2 = new Option(res.data.nombre, res.data.nombre);
-
-                selectMain.add(opt1);
-                selectEdit.add(opt2);
-
-                selectMain.value = res.data.nombre;
+                if (selectMain) {
+                    const opt1 = new Option(res.data.nombre, res.data.nombre, true, true);
+                    selectMain.add(opt1);
+                    selectMain.value = res.data.nombre;
+                }
+                if (selectEdit) {
+                    const opt2 = new Option(res.data.nombre, res.data.nombre);
+                    selectEdit.add(opt2);
+                }
 
                 document.getElementById('quickTipoNombre').value = '';
                 renderQuickTiposList();
@@ -1170,16 +1224,20 @@
                 const selectMain = document.getElementById('selectTipoActividad');
                 const selectEdit = document.getElementById('editTipoActividad');
 
-                for (let i = 0; i < selectMain.options.length; i++) {
-                    if (selectMain.options[i].value === nombre) {
-                        selectMain.remove(i);
-                        break;
+                if (selectMain) {
+                    for (let i = 0; i < selectMain.options.length; i++) {
+                        if (selectMain.options[i].value === nombre) {
+                            selectMain.remove(i);
+                            break;
+                        }
                     }
                 }
-                for (let i = 0; i < selectEdit.options.length; i++) {
-                    if (selectEdit.options[i].value === nombre) {
-                        selectEdit.remove(i);
-                        break;
+                if (selectEdit) {
+                    for (let i = 0; i < selectEdit.options.length; i++) {
+                        if (selectEdit.options[i].value === nombre) {
+                            selectEdit.remove(i);
+                            break;
+                        }
                     }
                 }
 
@@ -1300,14 +1358,18 @@
         const evt = events.find(e => e.id === id);
         if (!evt) return;
 
-        const lugarVal = document.getElementById('editLugar').value;
+        const selectLugar = document.getElementById('editLugar');
+        const lugarVal = selectLugar.value;
+        const lugarText = selectLugar.options[selectLugar.selectedIndex] ? (lugarVal ? selectLugar.options[selectLugar.selectedIndex].text : '') : '';
 
         const payload = {
+            source: evt.source || 'actividad_sst',
             nombre: document.getElementById('editNombre').value,
             fecha: evt.date,
             hora: document.getElementById('editHora').value,
             tipo_actividad: document.getElementById('editTipoActividad').value,
             id_lugar: lugarVal ? parseInt(lugarVal) : null,
+            lugar: lugarText,
             estado: document.getElementById('editEstado').value,
             responsable: document.getElementById('editResponsable').value,
             descripcion: document.getElementById('editDescripcion').value
@@ -1330,8 +1392,8 @@
                 evt.time = payload.hora;
                 evt.tipo_actividad = payload.tipo_actividad;
                 evt.id_lugar = payload.id_lugar;
-                evt.lugar_nombre = res.data.lugar ? res.data.lugar.nombre : (lugaresMap[payload.id_lugar] || null);
-                evt.estado = payload.estado;
+                evt.lugar_nombre = res.data.lugar_nombre || (res.data.lugar ? res.data.lugar.nombre : (lugarText || null));
+                evt.estado = res.data.estado || payload.estado;
                 evt.responsable = payload.responsable;
                 evt.descripcion = payload.descripcion;
 
@@ -1353,11 +1415,13 @@
         if (!evt) return;
 
         const payload = {
+            source: evt.source || 'actividad_sst',
             nombre: evt.name,
             fecha: evt.date,
             hora: evt.time,
             tipo_actividad: evt.tipo_actividad,
             id_lugar: evt.id_lugar,
+            lugar: evt.lugar_nombre,
             responsable: evt.responsable,
             estado: newStatus,
             descripcion: evt.descripcion
@@ -1376,7 +1440,7 @@
 
             const res = await response.json();
             if (res.success) {
-                evt.estado = newStatus;
+                evt.estado = res.data && res.data.estado ? res.data.estado : newStatus;
                 renderCurrentView();
                 updateSelectedDateUI();
                 showToastNotification(`Estado cambiado a ${evt.estado}.`);
@@ -1391,7 +1455,7 @@
         const evt = events.find(e => e.id === id);
 
         try {
-            const response = await fetch(`${baseUrl}/${id}`, {
+            const response = await fetch(`${baseUrl}/${id}?source=${encodeURIComponent(evt ? evt.source : 'actividad_sst')}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
@@ -1404,6 +1468,7 @@
                 events = events.filter(e => e.id !== id);
                 renderCurrentView();
                 updateSelectedDateUI();
+                updateEventsCount();
                 if (evt) {
                     showToastNotification(`Actividad "${evt.name}" eliminada de la base de datos.`);
                 }
@@ -1418,11 +1483,28 @@
         const evt = events.find(e => e.id === id);
         if (!evt) return;
         document.getElementById('editEventId').value = evt.id;
-        document.getElementById('editTipoActividad').value = evt.tipo_actividad || 'Capacitación';
-        document.getElementById('editLugar').value = evt.id_lugar || '';
+        document.getElementById('editTipoActividad').value = evt.tipo_actividad || 'Pausa Activa';
+        
+        const selectLugar = document.getElementById('editLugar');
+        let matched = false;
+        if (evt.id_lugar) {
+            selectLugar.value = evt.id_lugar;
+            matched = (selectLugar.value == evt.id_lugar);
+        }
+        if (!matched && evt.lugar_nombre) {
+            for (let opt of selectLugar.options) {
+                if (opt.text.trim().toLowerCase() === evt.lugar_nombre.trim().toLowerCase()) {
+                    selectLugar.value = opt.value;
+                    matched = true;
+                    break;
+                }
+            }
+        }
+        if (!matched) selectLugar.value = '';
+
         document.getElementById('editNombre').value = evt.name;
         document.getElementById('editHora').value = evt.time;
-        document.getElementById('editEstado').value = evt.estado;
+        document.getElementById('editEstado').value = (evt.estado === 'Completada') ? 'Realizada' : evt.estado;
         document.getElementById('editResponsable').value = evt.responsable;
         document.getElementById('editDescripcion').value = evt.descripcion || '';
         document.getElementById('modalEditEvent').classList.remove('hidden');
@@ -1433,10 +1515,35 @@
     }
 
     let toastTimeout;
-    function showToastNotification(message) {
+    function showToastNotification(message, type = 'success', title = null) {
         const toast = document.getElementById('toastSuccessNotification');
-        document.getElementById('toastMessageText').innerText = message;
-        
+        const container = document.getElementById('toastContainerBox');
+        const iconBox = document.getElementById('toastIconBox');
+        const icon = document.getElementById('toastIcon');
+        const titleEl = document.getElementById('toastTitleText');
+        const msgEl = document.getElementById('toastMessageText');
+
+        if (!toast || !msgEl) return;
+
+        msgEl.innerText = message;
+
+        if (type === 'warning') {
+            if (titleEl) titleEl.innerText = title || 'Fecha no permitida';
+            if (container) container.className = 'bg-white rounded-2xl p-4 shadow-xl border border-slate-100 border-l-4 border-l-amber-500 flex items-center gap-3.5 max-w-md pointer-events-auto';
+            if (iconBox) iconBox.className = 'w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold shrink-0 border border-amber-200';
+            if (icon) icon.className = 'fa-solid fa-triangle-exclamation text-lg';
+        } else if (type === 'error') {
+            if (titleEl) titleEl.innerText = title || 'Error';
+            if (container) container.className = 'bg-white rounded-2xl p-4 shadow-xl border border-slate-100 border-l-4 border-l-rose-500 flex items-center gap-3.5 max-w-md pointer-events-auto';
+            if (iconBox) iconBox.className = 'w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold shrink-0 border border-rose-200';
+            if (icon) icon.className = 'fa-solid fa-circle-xmark text-lg';
+        } else {
+            if (titleEl) titleEl.innerText = title || '¡Operación Exitosa!';
+            if (container) container.className = 'bg-white rounded-2xl p-4 shadow-xl border border-slate-100 border-l-4 border-l-emerald-500 flex items-center gap-3.5 max-w-md pointer-events-auto';
+            if (iconBox) iconBox.className = 'w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shrink-0 border border-emerald-100';
+            if (icon) icon.className = 'fa-solid fa-circle-check text-lg';
+        }
+
         toast.classList.remove('translate-x-full', 'opacity-0', 'pointer-events-none');
         toast.classList.add('translate-x-0', 'opacity-100');
 
@@ -1455,13 +1562,13 @@
     }
 
     function clearForm() {
-        document.getElementById('selectTipoActividad').selectedIndex = 0;
-        document.getElementById('selectLugar').selectedIndex = 0;
-        document.getElementById('inputNombre').value = '';
-        document.getElementById('inputHora').value = '09:00';
-        document.getElementById('inputResponsable').value = '';
-        document.getElementById('inputDescripcion').value = '';
-        document.getElementById('selectEstado').selectedIndex = 0;
+        if (document.getElementById('selectTipoActividad')) document.getElementById('selectTipoActividad').selectedIndex = 0;
+        if (document.getElementById('selectLugar')) document.getElementById('selectLugar').selectedIndex = 0;
+        if (document.getElementById('inputNombre')) document.getElementById('inputNombre').value = '';
+        if (document.getElementById('inputHora')) document.getElementById('inputHora').value = '09:00';
+        if (document.getElementById('inputResponsable')) document.getElementById('inputResponsable').value = '';
+        if (document.getElementById('inputDescripcion')) document.getElementById('inputDescripcion').value = '';
+        if (document.getElementById('selectEstado')) document.getElementById('selectEstado').selectedIndex = 0;
     }
 
     function updateEventsCount() {
