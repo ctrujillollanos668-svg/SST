@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Modules\SST\Entities\TipoEvento;
+use Modules\SST\Entities\LugarFormacion;
+use Modules\SST\Entities\RespuestaEvento;
 
 class LesionesController extends Controller
 {
     /**
-     * Muestra el catálogo de Lesiones para el Aprendiz SST
+     * Muestra el catálogo y reportes de Lesiones para el Aprendiz SST
      */
     public function index()
     {
@@ -23,35 +25,240 @@ class LesionesController extends Controller
         $user = Auth::user();
 
         if ($user->roles->contains('slug', 'sst.aprendiz') || $user->roles->contains('slug', 'sst.funcionario') || $user->roles->contains('slug', 'sst.admin') || $user->hasSuperAdmin()) {
-            $lesiones = TipoEvento::where('tipo_categoria', 'lesion')
+            
+            // Consultar reportes de lesiones registrados
+            $lesiones = RespuestaEvento::where(function($q) {
+                    $q->where('nombre', 'LIKE', '%Lesion%')
+                      ->orWhere('nombre', 'LIKE', '%lesion%')
+                      ->orWhere('nombre', 'LIKE', '%Lesión%')
+                      ->orWhere('nombre', 'LIKE', '%lesión%');
+                })
+                ->orderBy('id_respuesta', 'desc')
+                ->get();
+
+            $lugares = LugarFormacion::where('estado', 'activo')
+                ->orderBy('nombre', 'asc')
+                ->get();
+
+            $catalogoLesiones = TipoEvento::where(function($q) {
+                    $q->where('tipo_categoria', 'lesion')
+                      ->orWhere('tipo_categoria', 'Lesion')
+                      ->orWhere('tipo_categoria', 'lesión')
+                      ->orWhereRaw('LOWER(tipo_categoria) = ?', ['lesion']);
+                })
                 ->where('estado', 'activo')
                 ->orderBy('nombre', 'asc')
                 ->get();
 
-            return view('sst::aprendiz.tipos_eventos.Lesiones', compact('lesiones'));
+            return view('sst::aprendiz.tipos_eventos.Lesiones', compact('lesiones', 'lugares', 'catalogoLesiones'));
         }
 
         abort(403, 'Acceso denegado: No tienes permisos para consultar este recurso en el módulo SST.');
     }
 
     /**
-     * Registra una nueva lesión desde el panel de Aprendiz
+     * Registra un nuevo reporte de lesión y guarda hasta 3 evidencias fotográficas
      */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:100',
+            'tipo_lesion' => 'nullable|string|max:150',
+            'fecha_hora' => 'nullable',
+            'lugar_formacion' => 'nullable|string|max:150',
+            'gravedad' => 'nullable|string|max:50',
+            'persona_afectada' => 'nullable|string|max:255',
+            'personas_involucradas' => 'nullable|string|max:255',
+            'instructor_responsable' => 'nullable|string|max:255',
             'descripcion' => 'nullable|string',
-            'modulo_pertenece' => 'nullable|string|max:150',
+            'evidencias' => 'nullable|array|max:3',
+            'evidencias.*' => 'nullable|file|max:10240',
+            'evidencia' => 'nullable|file|max:10240',
         ]);
 
-        $validated['tipo_categoria'] = 'lesion';
-        $validated['estado'] = 'activo';
-        $validated['notificaciones'] = true;
+        $tipoLesion = !empty($validated['tipo_lesion']) ? $validated['tipo_lesion'] : 'Lesión Laboral';
+        $personaAfectada = !empty($validated['persona_afectada']) ? $validated['persona_afectada'] : (!empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : 'Persona Afectada');
+        $personas = !empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : '';
+        $lugar = !empty($validated['lugar_formacion']) ? $validated['lugar_formacion'] : 'Instalaciones del Centro';
+        $gravedad = !empty($validated['gravedad']) ? $validated['gravedad'] : 'Leve';
+        $fecha = !empty($validated['fecha_hora']) ? $validated['fecha_hora'] : now()->format('Y-m-d H:i');
+        $desc = !empty($validated['descripcion']) ? $validated['descripcion'] : 'Sin observaciones adicionales.';
 
-        TipoEvento::create($validated);
+        // Manejo de hasta 3 Evidencias Fotográficas
+        $evidenciasUrls = [];
+        $destination = public_path('uploads/evidencias_sst');
+        if (!file_exists($destination)) {
+            mkdir($destination, 0777, true);
+        }
+
+        if ($request->hasFile('evidencias')) {
+            $files = array_slice($request->file('evidencias'), 0, 3);
+            foreach ($files as $file) {
+                if ($file && $file->isValid()) {
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $file->move($destination, $filename);
+                    $evidenciasUrls[] = asset('uploads/evidencias_sst/' . $filename);
+                }
+            }
+        } elseif ($request->hasFile('evidencia')) {
+            $file = $request->file('evidencia');
+            if ($file && $file->isValid()) {
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move($destination, $filename);
+                $evidenciasUrls[] = asset('uploads/evidencias_sst/' . $filename);
+            }
+        }
+
+        $evidenciaPrincipal = !empty($evidenciasUrls) ? $evidenciasUrls[0] : null;
+
+        $reportData = [
+            'tipo_lesion' => $tipoLesion,
+            'fecha_hora' => $fecha,
+            'lugar_formacion' => $lugar,
+            'gravedad' => $gravedad,
+            'persona_afectada' => $personaAfectada,
+            'personas_involucradas' => $personas,
+            'instructor_responsable' => $validated['instructor_responsable'] ?? '',
+            'descripcion' => $desc,
+            'evidencia' => $evidenciaPrincipal,
+            'evidencias' => $evidenciasUrls,
+        ];
+
+        RespuestaEvento::create([
+            'nombre' => "Lesión: {$tipoLesion} ({$personaAfectada})",
+            'descripcion' => json_encode($reportData, JSON_UNESCAPED_UNICODE),
+            'estado' => 'activo'
+        ]);
 
         return redirect()->route('SST.aprendiz.tipos_eventos.lesiones.index')
-            ->with('success', 'Lesión registrada correctamente.');
+            ->with('success', '¡Reporte de lesión registrado con éxito! Se guardaron ' . count($evidenciasUrls) . ' imagen(es) de evidencia.');
+    }
+
+    /**
+     * Actualiza un reporte de lesión existente (admite hasta 3 imágenes)
+     */
+    public function update(Request $request, $id)
+    {
+        $evento = RespuestaEvento::findOrFail($id);
+
+        $validated = $request->validate([
+            'tipo_lesion' => 'nullable|string|max:150',
+            'fecha_hora' => 'nullable',
+            'lugar_formacion' => 'nullable|string|max:150',
+            'gravedad' => 'nullable|string|max:50',
+            'persona_afectada' => 'nullable|string|max:255',
+            'personas_involucradas' => 'nullable|string|max:255',
+            'instructor_responsable' => 'nullable|string|max:255',
+            'descripcion' => 'nullable|string',
+            'evidencias' => 'nullable|array|max:3',
+            'evidencias.*' => 'nullable|file|max:10240',
+            'evidencia' => 'nullable|file|max:10240',
+        ]);
+
+        $existingData = json_decode($evento->descripcion, true);
+        $existingEvidencias = [];
+        if (is_array($existingData)) {
+            if (!empty($existingData['evidencias']) && is_array($existingData['evidencias'])) {
+                $existingEvidencias = $existingData['evidencias'];
+            } elseif (!empty($existingData['evidencia'])) {
+                $existingEvidencias = [$existingData['evidencia']];
+            }
+        }
+
+        $fotosConservadas = $request->input('fotos_conservadas', null);
+        
+        if ($fotosConservadas !== null) {
+            $evidenciasUrls = is_array($fotosConservadas) ? $fotosConservadas : [];
+        } else {
+            $evidenciasUrls = $existingEvidencias;
+        }
+
+        $destination = public_path('uploads/evidencias_sst');
+        if (!file_exists($destination)) {
+            mkdir($destination, 0777, true);
+        }
+
+        if ($request->hasFile('evidencias')) {
+            $newFiles = $request->file('evidencias');
+            $cuposDisponibles = max(0, 3 - count($evidenciasUrls));
+            $filesToAdd = array_slice($newFiles, 0, $cuposDisponibles);
+
+            foreach ($filesToAdd as $file) {
+                if ($file && $file->isValid()) {
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $file->move($destination, $filename);
+                    $evidenciasUrls[] = asset('uploads/evidencias_sst/' . $filename);
+                }
+            }
+        } elseif ($request->hasFile('evidencia')) {
+            $file = $request->file('evidencia');
+            if ($file && $file->isValid() && count($evidenciasUrls) < 3) {
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move($destination, $filename);
+                $evidenciasUrls[] = asset('uploads/evidencias_sst/' . $filename);
+            }
+        }
+
+        $evidenciasUrls = array_slice($evidenciasUrls, 0, 3);
+
+        $tipoLesion = !empty($validated['tipo_lesion']) ? $validated['tipo_lesion'] : 'Lesión Laboral';
+        $personaAfectada = !empty($validated['persona_afectada']) ? $validated['persona_afectada'] : (!empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : 'Persona Afectada');
+        $personas = !empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : '';
+        $lugar = !empty($validated['lugar_formacion']) ? $validated['lugar_formacion'] : 'Instalaciones del Centro';
+        $gravedad = !empty($validated['gravedad']) ? $validated['gravedad'] : 'Leve';
+        $fecha = !empty($validated['fecha_hora']) ? $validated['fecha_hora'] : now()->format('Y-m-d H:i');
+        $desc = !empty($validated['descripcion']) ? $validated['descripcion'] : 'Sin observaciones adicionales.';
+
+        $evidenciaPrincipal = !empty($evidenciasUrls) ? $evidenciasUrls[0] : null;
+
+        $reportData = [
+            'tipo_lesion' => $tipoLesion,
+            'fecha_hora' => $fecha,
+            'lugar_formacion' => $lugar,
+            'gravedad' => $gravedad,
+            'persona_afectada' => $personaAfectada,
+            'personas_involucradas' => $personas,
+            'instructor_responsable' => $validated['instructor_responsable'] ?? '',
+            'descripcion' => $desc,
+            'evidencia' => $evidenciaPrincipal,
+            'evidencias' => $evidenciasUrls,
+        ];
+
+        $evento->update([
+            'nombre' => "Lesión: {$tipoLesion} ({$personaAfectada})",
+            'descripcion' => json_encode($reportData, JSON_UNESCAPED_UNICODE),
+        ]);
+
+        return redirect()->route('SST.aprendiz.tipos_eventos.lesiones.index')
+            ->with('success', '¡Reporte de lesión actualizado correctamente!');
+    }
+
+    /**
+     * Elimina un reporte de lesión y sus evidencias fotográficas
+     */
+    public function destroy($id)
+    {
+        $evento = RespuestaEvento::findOrFail($id);
+
+        $data = json_decode($evento->descripcion, true);
+        if (is_array($data)) {
+            $filesToDelete = [];
+            if (!empty($data['evidencias']) && is_array($data['evidencias'])) {
+                $filesToDelete = $data['evidencias'];
+            } elseif (!empty($data['evidencia'])) {
+                $filesToDelete = [$data['evidencia']];
+            }
+
+            foreach ($filesToDelete as $url) {
+                $path = str_replace(asset(''), public_path(''), $url);
+                if (file_exists($path)) {
+                    @unlink($path);
+                }
+            }
+        }
+
+        $evento->delete();
+
+        return redirect()->route('SST.aprendiz.tipos_eventos.lesiones.index')
+            ->with('success', '¡Reporte de lesión eliminado correctamente!');
     }
 }

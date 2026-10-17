@@ -49,11 +49,14 @@ class PausasActivasController extends Controller
      */
     public function store(Request $request)
     {
+        $minFecha = now('America/Bogota')->subDays(3)->format('Y-m-d');
+        $minFechaFormat = now('America/Bogota')->subDays(3)->format('d/m/Y');
+
         $validated = $request->validate([
             'titulo' => 'required|string|max:150',
             'descripcion' => 'nullable|string',
             'actividad_a_realizar' => 'nullable|string',
-            'fecha' => 'required|date',
+            'fecha' => 'required|date|after_or_equal:' . $minFecha,
             'hora_inicio' => 'required',
             'hora_fin' => 'nullable',
             'lugar' => 'required|string|max:150',
@@ -64,6 +67,8 @@ class PausasActivasController extends Controller
             'numero_asistentes' => 'nullable|integer|min:0',
             'observaciones' => 'nullable|string',
             'estado' => 'required|in:Programada,Realizada,Cancelada'
+        ], [
+            'fecha.after_or_equal' => 'Solo se pueden programar actividades a partir de 3 días anteriores a hoy (' . $minFechaFormat . ').'
         ]);
 
         $validated['tipo_actividad'] = 'Pausa Activa';
@@ -83,11 +88,14 @@ class PausasActivasController extends Controller
     {
         $actividad = ActividadSST::where('tipo_actividad', 'Pausa Activa')->findOrFail($id);
 
+        $minFecha = now('America/Bogota')->subDays(3)->format('Y-m-d');
+        $minFechaFormat = now('America/Bogota')->subDays(3)->format('d/m/Y');
+
         $validated = $request->validate([
             'titulo' => 'required|string|max:150',
             'descripcion' => 'nullable|string',
             'actividad_a_realizar' => 'nullable|string',
-            'fecha' => 'required|date',
+            'fecha' => 'required|date|after_or_equal:' . $minFecha,
             'hora_inicio' => 'required',
             'hora_fin' => 'nullable',
             'lugar' => 'required|string|max:150',
@@ -98,6 +106,8 @@ class PausasActivasController extends Controller
             'numero_asistentes' => 'nullable|integer|min:0',
             'observaciones' => 'nullable|string',
             'estado' => 'required|in:Programada,Realizada,Cancelada'
+        ], [
+            'fecha.after_or_equal' => 'Solo se pueden seleccionar fechas a partir de 3 días anteriores a hoy (' . $minFechaFormat . ').'
         ]);
 
         if (empty($validated['actividad_a_realizar']) && !empty($validated['titulo'])) {

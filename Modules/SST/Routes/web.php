@@ -14,6 +14,7 @@ use Modules\SST\Http\Controllers\Admin\Informacion_basica\LugarInformacionContro
 use Modules\SST\Http\Controllers\Admin\Informacion_basica\RespuestaEventoController;
 use Modules\SST\Http\Controllers\Admin\Informacion_basica\ContactoEmergenciaController;
 use Modules\SST\Http\Controllers\Admin\AdminController;
+use Modules\SST\Http\Controllers\Admin\Definiciones\DefinicionesController as AdminDefinicionesController;
 use Modules\SST\Http\Controllers\Aprendiz\AprendizController;
 use Modules\SST\Http\Controllers\Aprendiz\Definiciones\DefinicionesController as AprendizDefinicionesController;
 use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\AccidentesController as AprendizAccidentesController;
@@ -35,6 +36,20 @@ Route::prefix('Sst')->name('SST.')->group(function () {
 
     // 3. Ruta para el Administrador
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+    // Rutas de Administración - Definiciones SST (Glosario para Aprendices)
+    Route::prefix('admin/definiciones')->name('admin.definiciones.')->group(function () {
+        Route::get('/accidentes', [AdminDefinicionesController::class, 'accidentes'])->name('accidentes');
+        Route::get('/incidentes', [AdminDefinicionesController::class, 'incidentes'])->name('incidentes');
+        Route::get('/riesgos', [AdminDefinicionesController::class, 'riesgos'])->name('riesgos');
+        Route::get('/actos-inseguros', [AdminDefinicionesController::class, 'actosInseguros'])->name('actos_inseguros');
+        Route::get('/lesiones', [AdminDefinicionesController::class, 'lesiones'])->name('lesiones');
+        Route::get('/tipos-emergencias', [AdminDefinicionesController::class, 'tiposEmergencias'])->name('tipos_emergencias');
+        Route::post('/store', [AdminDefinicionesController::class, 'store'])->name('store');
+        Route::put('/update/{id}', [AdminDefinicionesController::class, 'update'])->name('update');
+        Route::patch('/toggle-estado/{id}', [AdminDefinicionesController::class, 'toggleEstado'])->name('toggle_estado');
+        Route::delete('/destroy/{id}', [AdminDefinicionesController::class, 'destroy'])->name('destroy');
+    });
 
     // Rutas de Administración - Tipos de Eventos
     Route::prefix('admin/tipos-eventos')->name('admin.tipos_eventos.')->group(function () {
@@ -125,18 +140,28 @@ Route::prefix('Sst')->name('SST.')->group(function () {
 
             Route::get('/incidentes', [AprendizIncidentesController::class, 'index'])->name('incidentes.index');
             Route::post('/incidentes', [AprendizIncidentesController::class, 'store'])->name('incidentes.store');
+            Route::put('/incidentes/{id}', [AprendizIncidentesController::class, 'update'])->name('incidentes.update');
+            Route::delete('/incidentes/{id}', [AprendizIncidentesController::class, 'destroy'])->name('incidentes.destroy');
 
             Route::get('/riesgos', [AprendizRiesgosController::class, 'index'])->name('riesgos.index');
             Route::post('/riesgos', [AprendizRiesgosController::class, 'store'])->name('riesgos.store');
+            Route::put('/riesgos/{id}', [AprendizRiesgosController::class, 'update'])->name('riesgos.update');
+            Route::delete('/riesgos/{id}', [AprendizRiesgosController::class, 'destroy'])->name('riesgos.destroy');
 
             Route::get('/actos-inseguros', [AprendizActosInsegurosController::class, 'index'])->name('actos_inseguros.index');
             Route::post('/actos-inseguros', [AprendizActosInsegurosController::class, 'store'])->name('actos_inseguros.store');
+            Route::put('/actos-inseguros/{id}', [AprendizActosInsegurosController::class, 'update'])->name('actos_inseguros.update');
+            Route::delete('/actos-inseguros/{id}', [AprendizActosInsegurosController::class, 'destroy'])->name('actos_inseguros.destroy');
 
             Route::get('/lesiones', [AprendizLesionesController::class, 'index'])->name('lesiones.index');
             Route::post('/lesiones', [AprendizLesionesController::class, 'store'])->name('lesiones.store');
+            Route::put('/lesiones/{id}', [AprendizLesionesController::class, 'update'])->name('lesiones.update');
+            Route::delete('/lesiones/{id}', [AprendizLesionesController::class, 'destroy'])->name('lesiones.destroy');
 
             Route::get('/tipos-emergencias', [AprendizTiposEmergenciasController::class, 'index'])->name('tipos_emergencias.index');
             Route::post('/tipos-emergencias', [AprendizTiposEmergenciasController::class, 'store'])->name('tipos_emergencias.store');
+            Route::put('/tipos-emergencias/{id}', [AprendizTiposEmergenciasController::class, 'update'])->name('tipos_emergencias.update');
+            Route::delete('/tipos-emergencias/{id}', [AprendizTiposEmergenciasController::class, 'destroy'])->name('tipos_emergencias.destroy');
         });
 
         // Contactos de Emergencia para Aprendiz

@@ -67,6 +67,7 @@ class AccidentesController extends Controller
             'fecha_hora' => 'nullable',
             'lugar_formacion' => 'nullable|string|max:150',
             'gravedad' => 'nullable|string|max:50',
+            'persona_afectada' => 'nullable|string|max:255',
             'personas_involucradas' => 'nullable|string|max:255',
             'instructor_responsable' => 'nullable|string|max:255',
             'descripcion' => 'nullable|string',
@@ -75,8 +76,9 @@ class AccidentesController extends Controller
             'evidencia' => 'nullable|file|max:10240',
         ]);
 
-        $tipoAccidente = !empty($validated['tipo_accidente']) ? $validated['tipo_accidente'] : 'Accidente de Trabajo';
-        $personas = !empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : 'Aprendiz';
+        $tipoAccidente = !empty($validated['tipo_accidente']) ? $validated['tipo_accidente'] : 'Accidente Laboral';
+        $personaAfectada = !empty($validated['persona_afectada']) ? $validated['persona_afectada'] : (!empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : 'Aprendiz');
+        $personas = !empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : '';
         $lugar = !empty($validated['lugar_formacion']) ? $validated['lugar_formacion'] : 'Instalaciones del Centro';
         $gravedad = !empty($validated['gravedad']) ? $validated['gravedad'] : 'Leve';
         $fecha = !empty($validated['fecha_hora']) ? $validated['fecha_hora'] : now()->format('Y-m-d H:i');
@@ -115,6 +117,7 @@ class AccidentesController extends Controller
             'fecha_hora' => $fecha,
             'lugar_formacion' => $lugar,
             'gravedad' => $gravedad,
+            'persona_afectada' => $personaAfectada,
             'personas_involucradas' => $personas,
             'instructor_responsable' => $validated['instructor_responsable'] ?? '',
             'descripcion' => $desc,
@@ -123,7 +126,7 @@ class AccidentesController extends Controller
         ];
 
         RespuestaEvento::create([
-            'nombre' => "Accidente: {$tipoAccidente} ({$personas})",
+            'nombre' => "Accidente: {$tipoAccidente} ({$personaAfectada})",
             'descripcion' => json_encode($reportData, JSON_UNESCAPED_UNICODE),
             'estado' => 'activo'
         ]);
@@ -144,6 +147,7 @@ class AccidentesController extends Controller
             'fecha_hora' => 'nullable',
             'lugar_formacion' => 'nullable|string|max:150',
             'gravedad' => 'nullable|string|max:50',
+            'persona_afectada' => 'nullable|string|max:255',
             'personas_involucradas' => 'nullable|string|max:255',
             'instructor_responsable' => 'nullable|string|max:255',
             'descripcion' => 'nullable|string',
@@ -200,8 +204,9 @@ class AccidentesController extends Controller
 
         $evidenciasUrls = array_slice($evidenciasUrls, 0, 3);
 
-        $tipoAccidente = !empty($validated['tipo_accidente']) ? $validated['tipo_accidente'] : 'Accidente de Trabajo';
-        $personas = !empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : 'Aprendiz';
+        $tipoAccidente = !empty($validated['tipo_accidente']) ? $validated['tipo_accidente'] : 'Accidente Laboral';
+        $personaAfectada = !empty($validated['persona_afectada']) ? $validated['persona_afectada'] : (!empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : 'Aprendiz');
+        $personas = !empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : '';
         $lugar = !empty($validated['lugar_formacion']) ? $validated['lugar_formacion'] : 'Instalaciones del Centro';
         $gravedad = !empty($validated['gravedad']) ? $validated['gravedad'] : 'Leve';
         $fecha = !empty($validated['fecha_hora']) ? $validated['fecha_hora'] : now()->format('Y-m-d H:i');
@@ -214,6 +219,7 @@ class AccidentesController extends Controller
             'fecha_hora' => $fecha,
             'lugar_formacion' => $lugar,
             'gravedad' => $gravedad,
+            'persona_afectada' => $personaAfectada,
             'personas_involucradas' => $personas,
             'instructor_responsable' => $validated['instructor_responsable'] ?? '',
             'descripcion' => $desc,
@@ -222,7 +228,7 @@ class AccidentesController extends Controller
         ];
 
         $evento->update([
-            'nombre' => "Accidente: {$tipoAccidente} ({$personas})",
+            'nombre' => "Accidente: {$tipoAccidente} ({$personaAfectada})",
             'descripcion' => json_encode($reportData, JSON_UNESCAPED_UNICODE),
         ]);
 

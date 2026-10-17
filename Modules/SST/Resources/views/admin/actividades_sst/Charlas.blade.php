@@ -30,6 +30,28 @@
         </div>
     @endif
 
+    <!-- Mensajes Flash de error / validación -->
+    @if($errors->any() || session('error'))
+        <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200/80 text-amber-900 flex items-center justify-between shadow-xs animate-in fade-in duration-200">
+            <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold shrink-0">
+                    <i class="fa-solid fa-triangle-exclamation text-sm"></i>
+                </span>
+                <div class="space-y-0.5">
+                    @if(session('error'))
+                        <p class="text-xs sm:text-sm font-semibold">{{ session('error') }}</p>
+                    @endif
+                    @foreach($errors->all() as $error)
+                        <p class="text-xs sm:text-sm font-semibold">{{ $error }}</p>
+                    @endforeach
+                </div>
+            </div>
+            <button onclick="this.parentElement.remove()" class="text-amber-500 hover:text-amber-700 p-1 cursor-pointer">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+    @endif
+
     <!-- 1. Encabezado de la Sección -->
     <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
         <div>
@@ -272,7 +294,8 @@
             <div class="grid grid-cols-3 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Fecha *</label>
-                    <input type="date" name="fecha" value="{{ date('Y-m-d') }}" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                    <input type="date" name="fecha" id="register_fecha" min="{{ \Carbon\Carbon::now('America/Bogota')->subDays(3)->format('Y-m-d') }}" value="{{ \Carbon\Carbon::now('America/Bogota')->format('Y-m-d') }}" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                    <span class="text-[10px] text-orange-600 font-semibold block mt-1"><i class="fa-solid fa-clock-rotate-left mr-0.5"></i> Mínimo: {{ \Carbon\Carbon::now('America/Bogota')->subDays(3)->format('d/m/Y') }}</span>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Hora Inicio *</label>
@@ -373,7 +396,8 @@
             <div class="grid grid-cols-3 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Fecha *</label>
-                    <input type="date" name="fecha" id="edit_fecha" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                    <input type="date" name="fecha" id="edit_fecha" min="{{ \Carbon\Carbon::now('America/Bogota')->subDays(3)->format('Y-m-d') }}" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                    <span class="text-[10px] text-orange-600 font-semibold block mt-1"><i class="fa-solid fa-clock-rotate-left mr-0.5"></i> Mínimo: {{ \Carbon\Carbon::now('America/Bogota')->subDays(3)->format('d/m/Y') }}</span>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Hora Inicio *</label>
@@ -585,6 +609,51 @@
     function closeDetailModal() {
         document.getElementById('modalDetail').classList.add('hidden');
     }
+
+    const MIN_SELECTABLE_DATE_STR = "{{ \Carbon\Carbon::now('America/Bogota')->subDays(3)->format('Y-m-d') }}";
+    const MIN_SELECTABLE_DATE_FORMATTED = "{{ \Carbon\Carbon::now('America/Bogota')->subDays(3)->format('d/m/Y') }}";
+
+    function validateActivityDate(inputElem) {
+        if (!inputElem || !inputElem.value) return true;
+        if (inputElem.value < MIN_SELECTABLE_DATE_STR) {
+            alert(`⚠️ Fecha no permitida: Solo se pueden seleccionar o registrar actividades a partir del ${MIN_SELECTABLE_DATE_FORMATTED} (máximo 3 días anteriores a hoy).`);
+            inputElem.value = "{{ \Carbon\Carbon::now('America/Bogota')->format('Y-m-d') }}";
+            inputElem.focus();
+            return false;
+        }
+        return true;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const regFecha = document.getElementById('register_fecha');
+        if (regFecha) {
+            regFecha.min = MIN_SELECTABLE_DATE_STR;
+            regFecha.addEventListener('change', function() { validateActivityDate(this); });
+        }
+        const editFecha = document.getElementById('edit_fecha');
+        if (editFecha) {
+            editFecha.min = MIN_SELECTABLE_DATE_STR;
+            editFecha.addEventListener('change', function() { validateActivityDate(this); });
+        }
+
+        const formRegister = document.querySelector('form[action*="charlas"]');
+        if (formRegister) {
+            formRegister.addEventListener('submit', function(e) {
+                if (regFecha && !validateActivityDate(regFecha)) {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        const formEdit = document.getElementById('formEdit');
+        if (formEdit) {
+            formEdit.addEventListener('submit', function(e) {
+                if (editFecha && !validateActivityDate(editFecha)) {
+                    e.preventDefault();
+                }
+            });
+        }
+    });
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {

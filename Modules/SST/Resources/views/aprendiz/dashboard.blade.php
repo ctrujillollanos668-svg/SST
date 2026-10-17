@@ -87,24 +87,6 @@
                     </div>
                 </div>
 
-                <!-- Card 4: Tipos de Riesgos -->
-                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all hover:border-orange-300 group flex flex-col justify-between">
-                    <div>
-                        <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4 text-xl group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-800 text-base mb-1 group-hover:text-amber-600 transition">Tipos de Riesgos</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed">
-                            Identificación de matrices de riesgo por áreas de producción y recomendaciones técnicas.
-                        </p>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                        <span class="text-[11px] font-semibold text-amber-600">Prevención</span>
-                        <a href="#" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1">
-                            Consultar <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
 
                 <!-- Card 5: Tipos de Eventos -->
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all hover:border-orange-300 group flex flex-col justify-between">

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Modules\SST\Entities\TipoEvento;
+use Modules\SST\Entities\DefinicionSST;
 
 class DefinicionesController extends Controller
 {
@@ -24,8 +24,8 @@ class DefinicionesController extends Controller
 
         if ($user->roles->contains('slug', 'sst.aprendiz') || $user->roles->contains('slug', 'sst.funcionario') || $user->roles->contains('slug', 'sst.admin') || $user->hasSuperAdmin()) {
             
-            // Consultar definiciones agrupadas por categoría
-            $eventos = TipoEvento::where('estado', 'activo')
+            // Consultar definiciones agrupadas por categoría desde definiciones_sst
+            $eventos = DefinicionSST::where('estado', 'activo')
                 ->orderBy('nombre', 'asc')
                 ->get();
 

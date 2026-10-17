@@ -136,6 +136,12 @@
                                 }
 
                                 $evidencias = !empty($data['evidencias']) && is_array($data['evidencias']) ? $data['evidencias'] : (!empty($data['evidencia']) ? [$data['evidencia']] : []);
+                                $evidencias = array_map(function($url) {
+                                    if (is_string($url) && str_contains($url, 'uploads/evidencias_sst/')) {
+                                        return asset('uploads/evidencias_sst/' . basename($url));
+                                    }
+                                    return $url;
+                                }, $evidencias);
                                 $fotoPrincipal = !empty($evidencias) ? $evidencias[0] : null;
                                 $totalFotos = count($evidencias);
                                 $estadoItem = strtolower($item->estado ?? 'activo');
@@ -143,17 +149,12 @@
                             @endphp
                             <div class="item-card bg-slate-50/70 hover:bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-orange-300 transition-all flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 cursor-pointer group"
                                  onclick="openDetailModal(this)"
+                                 data-id="{{ $item->id_respuesta }}"
+                                 data-raw="{{ base64_encode(json_encode($data, JSON_UNESCAPED_UNICODE)) }}"
                                  data-title="{{ $data['tipo_accidente'] ?? $item->nombre }}"
+                                 data-desc="{{ $data['descripcion'] ?? 'Sin descripción adicional.' }}"
                                  data-modulo="{{ $data['lugar_formacion'] ?? 'General' }}"
-                                 data-gravedad="{{ $data['gravedad'] ?? 'Leve' }}"
-                                 data-personas="{{ $data['personas_involucradas'] ?? 'Aprendiz' }}"
-                                 data-instructor="{{ $data['instructor_responsable'] ?? '' }}"
-                                 data-fecha="{{ $fechaFormateada }}"
-                                 data-evidencia="{{ $fotoPrincipal ?? '' }}"
-                                 data-evidencias="{{ json_encode($evidencias) }}"
-                                 data-respuesta-admin="{{ json_encode($data['respuesta_admin'] ?? null) }}"
-                                 data-estado="{{ $item->estado ?? 'activo' }}"
-                                 data-desc="{{ $data['descripcion'] ?? 'Sin descripción adicional.' }}">
+                                 data-afectado="{{ $data['persona_afectada'] ?? $data['personas_involucradas'] ?? 'Aprendiz' }}">
                                 
                                 <!-- Foto a la izquierda pequeña o Icono (Miniatura 60px con badge si hay varias fotos) -->
                                 @if(!empty($fotoPrincipal))
@@ -207,9 +208,9 @@
                                             <span>{{ $fechaFormateada }}</span>
                                         </span>
 
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 text-slate-700 border border-slate-200/80">
-                                            <i class="fa-solid fa-user text-orange-500"></i>
-                                            <span>{{ $data['personas_involucradas'] ?? 'Aprendiz' }}</span>
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-orange-50 text-orange-700 border border-orange-200/80 font-bold">
+                                            <i class="fa-solid fa-user-injured text-orange-500"></i>
+                                            <span>Afectado: {{ $data['persona_afectada'] ?? $data['personas_involucradas'] ?? 'Aprendiz' }}</span>
                                         </span>
 
                                         @if(!empty($data['instructor_responsable']) && $data['instructor_responsable'] !== 'N/A')
@@ -228,12 +229,12 @@
 
                                         <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
                                             <!-- Botón Editar -->
-                                            <button type="button" onclick="event.stopPropagation(); openEditModal({{ $item->id_respuesta }}, '{{ addslashes(json_encode($data, JSON_UNESCAPED_UNICODE)) }}')" class="w-8 h-8 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 flex items-center justify-center text-xs font-bold shadow-2xs transition cursor-pointer" title="Editar reporte">
+                                            <button type="button" onclick="event.stopPropagation(); openEditModal(this)" class="w-8 h-8 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 flex items-center justify-center text-xs font-bold shadow-2xs transition cursor-pointer" title="Editar reporte">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
 
                                             <!-- Botón Eliminar -->
-                                            <button type="button" onclick="event.stopPropagation(); confirmDeleteAccidente({{ $item->id_respuesta }}, '{{ addslashes($data['tipo_accidente'] ?? 'Accidente') }}')" class="w-8 h-8 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 flex items-center justify-center text-xs font-bold border border-rose-200 shadow-2xs transition cursor-pointer" title="Eliminar reporte">
+                                            <button type="button" onclick="event.stopPropagation(); confirmDeleteAccidente(this)" class="w-8 h-8 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 flex items-center justify-center text-xs font-bold border border-rose-200 shadow-2xs transition cursor-pointer" title="Eliminar reporte">
                                                 <i class="fa-solid fa-trash-can"></i>
                                             </button>
                                         </div>
@@ -355,13 +356,23 @@
                 </div>
             </div>
 
-            <!-- Personas Involucradas -->
-            <div class="space-y-1">
-                <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
-                    PERSONAS INVOLUCRADAS <span class="text-rose-500">*</span>
-                </label>
-                <input type="text" name="personas_involucradas" required placeholder="Nombres de las personas afectadas..." 
-                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+            <!-- Fila 3: Persona Afectada y Personas Involucradas -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        PERSONA AFECTADA <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" name="persona_afectada" required placeholder="Nombre de la persona afectada..." 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        PERSONAS INVOLUCRADAS
+                    </label>
+                    <input type="text" name="personas_involucradas" placeholder="Otras personas involucradas o presentes..." 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                </div>
             </div>
 
             <!-- Instructor Responsable -->
@@ -519,13 +530,23 @@
                 </div>
             </div>
 
-            <!-- Personas Involucradas -->
-            <div class="space-y-1">
-                <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
-                    PERSONAS INVOLUCRADAS <span class="text-rose-500">*</span>
-                </label>
-                <input type="text" id="edit_personas_involucradas" name="personas_involucradas" required placeholder="Nombres de las personas afectadas..." 
-                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+            <!-- Fila 3: Persona Afectada y Personas Involucradas -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        PERSONA AFECTADA <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" id="edit_persona_afectada" name="persona_afectada" required placeholder="Nombre de la persona afectada..." 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        PERSONAS INVOLUCRADAS
+                    </label>
+                    <input type="text" id="edit_personas_involucradas" name="personas_involucradas" placeholder="Otras personas involucradas o presentes..." 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                </div>
             </div>
 
             <!-- Instructor Responsable -->
@@ -686,8 +707,8 @@
                     <span id="modalDetalleFecha" class="font-semibold text-slate-800"></span>
                 </div>
                 <div>
-                    <span class="text-slate-400 font-bold block text-[10px] uppercase">Afectados</span>
-                    <span id="modalDetallePersonas" class="font-semibold text-slate-800 truncate block"></span>
+                    <span class="text-slate-400 font-bold block text-[10px] uppercase">Persona Afectada</span>
+                    <span id="modalDetalleAfectado" class="font-bold text-orange-600 truncate block"></span>
                 </div>
                 <div>
                     <span class="text-slate-400 font-bold block text-[10px] uppercase">Instructor</span>
@@ -744,77 +765,81 @@
 
     </div>
 </div>
+@endsection
 
 @push('scripts')
 <script>
-    function openRegisterModal() {
-        const overlay = document.getElementById('modalRegistrarOverlay');
-        const modalBox = overlay.querySelector('div');
-        overlay.classList.remove('hidden');
-        setTimeout(() => {
-            overlay.classList.remove('opacity-0');
-            modalBox.classList.remove('scale-95');
-            modalBox.classList.add('scale-100');
-        }, 10);
+    const URL_BASE = "{{ url('Sst/aprendiz/tipos-eventos/accidentes') }}";
+
+    // Utilidad de Modales
+    function toggleModal(id, show) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const box = el.firstElementChild;
+        if (show) {
+            el.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                el.classList.remove('opacity-0');
+                if (box) { box.classList.remove('scale-95'); box.classList.add('scale-100'); }
+            });
+        } else {
+            el.classList.add('opacity-0');
+            if (box) { box.classList.remove('scale-100'); box.classList.add('scale-95'); }
+            setTimeout(() => el.classList.add('hidden'), 200);
+        }
     }
 
-    function closeRegisterModal() {
-        const overlay = document.getElementById('modalRegistrarOverlay');
-        const modalBox = overlay.querySelector('div');
-        overlay.classList.add('opacity-0');
-        modalBox.classList.remove('scale-100');
-        modalBox.classList.add('scale-95');
-        setTimeout(() => overlay.classList.add('hidden'), 200);
+    function openRegisterModal() { toggleModal('modalRegistrarOverlay', true); }
+    function closeRegisterModal() { toggleModal('modalRegistrarOverlay', false); }
+    function closeEditModal() { toggleModal('modalEditarOverlay', false); }
+    function closeDeleteModal() { toggleModal('modalEliminarOverlay', false); }
+    function closeDetailModal() { toggleModal('modalDetalleOverlay', false); }
+
+    function getCardData(el) {
+        const card = el.closest('.item-card');
+        if (!card) return null;
+        try {
+            return {
+                id: card.dataset.id,
+                ...JSON.parse(atob(card.dataset.raw))
+            };
+        } catch(e) {
+            return null;
+        }
     }
 
     // =========================================================================
-    // GESTOR DE ARCHIVOS: REGISTRAR ACCIDENTE (HASTA 3 IMÁGENES DE UNA VEZ)
+    // REGISTRAR: Gestor de Fotos
     // =========================================================================
-    let registrarFiles = [];
+    let regFiles = [];
 
     function handleRegistrarFiles(fileList) {
-        if (!fileList || fileList.length === 0) return;
-        const newFiles = Array.from(fileList);
-
-        for (let f of newFiles) {
-            if (registrarFiles.length < 3) {
-                // Evitar duplicar el mismo archivo
-                if (!registrarFiles.some(existing => existing.name === f.name && existing.size === f.size)) {
-                    registrarFiles.push(f);
-                }
+        if (!fileList) return;
+        for (const f of Array.from(fileList)) {
+            if (regFiles.length < 3 && !regFiles.some(e => e.name === f.name && e.size === f.size)) {
+                regFiles.push(f);
             }
         }
-
-        if (registrarFiles.length > 3) {
-            registrarFiles = registrarFiles.slice(0, 3);
-        }
-
-        syncRegistrarInput();
-        renderRegistrarPreview();
+        syncRegistrar();
     }
 
-    function removeRegistrarFile(index) {
-        registrarFiles.splice(index, 1);
-        syncRegistrarInput();
-        renderRegistrarPreview();
+    function removeRegistrarFile(idx) {
+        regFiles.splice(idx, 1);
+        syncRegistrar();
     }
 
-    function syncRegistrarInput() {
-        const input = document.getElementById('inputEvidenciaFile');
+    function syncRegistrar() {
         const dt = new DataTransfer();
-        registrarFiles.forEach(f => dt.items.add(f));
-        input.files = dt.files;
-    }
+        regFiles.forEach(f => dt.items.add(f));
+        document.getElementById('inputEvidenciaFile').files = dt.files;
 
-    function renderRegistrarPreview() {
         const grid = document.getElementById('previewRegistrarGrid');
         const label = document.getElementById('labelEvidenciaTexto');
         const conteo = document.getElementById('conteoFotosRegistrar');
         grid.innerHTML = '';
+        conteo.textContent = regFiles.length + ' / 3 seleccionadas';
 
-        conteo.textContent = `${registrarFiles.length} / 3 seleccionadas`;
-
-        if (registrarFiles.length === 0) {
+        if (regFiles.length === 0) {
             grid.classList.add('hidden');
             label.textContent = 'Selecciona hasta 3 fotos de una vez o arrástralas aquí';
             label.classList.remove('text-orange-600');
@@ -822,481 +847,265 @@
             return;
         }
 
-        label.textContent = `${registrarFiles.length} foto(s) lista(s) para enviar`;
+        label.textContent = regFiles.length + ' foto(s) lista(s) para enviar';
         label.classList.add('text-orange-600');
         conteo.classList.add('text-orange-600');
         grid.classList.remove('hidden');
 
-        registrarFiles.forEach((file, idx) => {
+        regFiles.forEach((file, idx) => {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                const card = document.createElement('div');
-                card.className = 'relative rounded-2xl overflow-hidden border-2 border-orange-400 aspect-square shadow-2xs group bg-slate-900';
-                card.innerHTML = `
-                    <img src="${e.target.result}" alt="Preview ${idx+1}" class="w-full h-full object-cover">
-                    <span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-slate-900/80 text-white text-[9px] font-extrabold backdrop-blur-xs">
-                        #${idx+1}
-                    </span>
-                    <button type="button" onclick="event.stopPropagation(); removeRegistrarFile(${idx})" class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-[11px] shadow-sm transition cursor-pointer" title="Quitar foto">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                `;
-                grid.appendChild(card);
+            reader.onload = (e) => {
+                const div = document.createElement('div');
+                div.className = 'relative rounded-2xl overflow-hidden border-2 border-orange-400 aspect-square shadow-2xs group bg-slate-900';
+                div.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">' +
+                    '<span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-slate-900/80 text-white text-[9px] font-extrabold">#' + (idx + 1) + '</span>' +
+                    '<button type="button" class="btn-del absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-[11px] shadow-sm cursor-pointer"><i class="fa-solid fa-xmark"></i></button>';
+                div.querySelector('.btn-del').onclick = (ev) => { ev.stopPropagation(); removeRegistrarFile(idx); };
+                grid.appendChild(div);
             };
             reader.readAsDataURL(file);
         });
     }
 
-    // =========================================================================
-    // GESTOR DE ARCHIVOS: EDITAR ACCIDENTE (FOTOS CONSERVADAS + NUEVAS FOTOS)
-    // =========================================================================
-    let fotosConservadas = [];
-    let editarFiles = [];
-
-    function renderFotosConservadas() {
-        const container = document.getElementById('edit_fotos_actuales_container');
-        const grid = document.getElementById('edit_fotos_actuales_grid');
-        const badge = document.getElementById('edit_fotos_actuales_badge');
-        const inputsContainer = document.getElementById('edit_fotos_conservadas_inputs');
-        
-        grid.innerHTML = '';
-        inputsContainer.innerHTML = '';
-
-        if (fotosConservadas.length > 0) {
-            badge.textContent = `${fotosConservadas.length} foto(s) guardada(s)`;
-            fotosConservadas.forEach((url, idx) => {
-                // Input oculto para que Laravel conserve esta foto
-                const hiddenInput = document.createElement('input');
-                hiddenInput.type = 'hidden';
-                hiddenInput.name = 'fotos_conservadas[]';
-                hiddenInput.value = url;
-                inputsContainer.appendChild(hiddenInput);
-
-                // Tarjeta miniatura con botón para eliminar la foto conservada
-                const item = document.createElement('div');
-                item.className = 'relative rounded-2xl overflow-hidden border-2 border-slate-300 aspect-square shadow-2xs group bg-slate-900';
-                item.innerHTML = `
-                    <img src="${url}" alt="Foto ${idx+1}" class="w-full h-full object-cover">
-                    <span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-slate-900/80 text-white text-[9px] font-bold backdrop-blur-xs">
-                        #${idx+1}
-                    </span>
-                    <a href="${url}" target="_blank" class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs">
-                        <i class="fa-solid fa-magnifying-glass-plus"></i>
-                    </a>
-                    <button type="button" onclick="event.stopPropagation(); removeConservadaFile(${idx})" class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-[11px] shadow-sm transition cursor-pointer z-10" title="Eliminar esta foto">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                `;
-                grid.appendChild(item);
+    const dropZoneReg = document.getElementById('dropZoneRegistrar');
+    if (dropZoneReg) {
+        ['dragenter', 'dragover'].forEach(evt => {
+            dropZoneReg.addEventListener(evt, e => {
+                e.preventDefault();
+                dropZoneReg.classList.add('border-orange-500', 'bg-orange-50/40');
             });
-            container.classList.remove('hidden');
-        } else {
-            container.classList.add('hidden');
-        }
-
-        updateEditarSummary();
-    }
-
-    function removeConservadaFile(index) {
-        fotosConservadas.splice(index, 1);
-        renderFotosConservadas();
-    }
-
-    function handleEditarFiles(fileList) {
-        if (!fileList || fileList.length === 0) return;
-        const newFiles = Array.from(fileList);
-        const maxNuevas = Math.max(0, 3 - fotosConservadas.length);
-
-        if (maxNuevas === 0) {
-            alert('Ya tienes 3 fotos guardadas. Por favor elimina alguna de las fotos actuales para poder subir nuevas.');
-            return;
-        }
-
-        for (let f of newFiles) {
-            if (editarFiles.length < maxNuevas) {
-                if (!editarFiles.some(existing => existing.name === f.name && existing.size === f.size)) {
-                    editarFiles.push(f);
-                }
-            }
-        }
-
-        if (editarFiles.length > maxNuevas) {
-            editarFiles = editarFiles.slice(0, maxNuevas);
-        }
-
-        syncEditarInput();
-        renderEditarPreview();
-    }
-
-    function removeEditarFile(index) {
-        editarFiles.splice(index, 1);
-        syncEditarInput();
-        renderEditarPreview();
-    }
-
-    function syncEditarInput() {
-        const input = document.getElementById('edit_evidencia_file');
-        const dt = new DataTransfer();
-        editarFiles.forEach(f => dt.items.add(f));
-        input.files = dt.files;
-    }
-
-    function renderEditarPreview() {
-        const grid = document.getElementById('previewEditarGrid');
-        grid.innerHTML = '';
-
-        if (editarFiles.length === 0) {
-            grid.classList.add('hidden');
-        } else {
-            grid.classList.remove('hidden');
-            editarFiles.forEach((file, idx) => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const card = document.createElement('div');
-                    card.className = 'relative rounded-2xl overflow-hidden border-2 border-orange-400 aspect-square shadow-2xs group bg-slate-900';
-                    card.innerHTML = `
-                        <img src="${e.target.result}" alt="Preview ${idx+1}" class="w-full h-full object-cover">
-                        <span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-slate-900/80 text-white text-[9px] font-extrabold backdrop-blur-xs">
-                            Nueva #${idx+1}
-                        </span>
-                        <button type="button" onclick="event.stopPropagation(); removeEditarFile(${idx})" class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-[11px] shadow-sm transition cursor-pointer" title="Quitar foto">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    `;
-                    grid.appendChild(card);
-                };
-                reader.readAsDataURL(file);
+        });
+        ['dragleave', 'drop'].forEach(evt => {
+            dropZoneReg.addEventListener(evt, e => {
+                e.preventDefault();
+                dropZoneReg.classList.remove('border-orange-500', 'bg-orange-50/40');
             });
-        }
-
-        updateEditarSummary();
+        });
+        dropZoneReg.addEventListener('drop', e => {
+            if (e.dataTransfer && e.dataTransfer.files) handleRegistrarFiles(e.dataTransfer.files);
+        });
     }
 
-    function updateEditarSummary() {
-        const total = fotosConservadas.length + editarFiles.length;
-        const conteo = document.getElementById('conteoFotosEditar');
-        const label = document.getElementById('labelEditEvidenciaTexto');
-        const cupoInfo = document.getElementById('labelEditCupoDisponibles');
-        const cuposLibres = Math.max(0, 3 - fotosConservadas.length);
+    // =========================================================================
+    // EDITAR: Cargar datos y Gestor de Fotos
+    // =========================================================================
+    let editExisting = [];
+    let editNew = [];
 
-        conteo.textContent = `${total} / 3 fotos en total (${fotosConservadas.length} guardadas + ${editarFiles.length} nuevas)`;
-        conteo.classList.toggle('text-orange-600', total > 0);
+    function openEditModal(btn) {
+        const data = getCardData(btn);
+        if (!data) return;
 
-        if (cuposLibres === 0) {
-            label.textContent = 'Límite de 3 fotos alcanzado (elimina alguna foto arriba para cambiarla o subir otra)';
-            label.classList.remove('text-orange-600');
-            if (cupoInfo) cupoInfo.textContent = 'No hay cupos disponibles. Quita una foto arriba con ✕ para subir otra.';
-        } else {
-            label.textContent = `Agregar hasta ${cuposLibres} foto(s) nueva(s) (puedes seleccionarlas o arrastrarlas)`;
-            label.classList.add('text-orange-600');
-            if (cupoInfo) cupoInfo.textContent = `Puedes agregar hasta ${cuposLibres} foto(s) más para completar 3.`;
-        }
-    }
+        document.getElementById('formEditAccidente').action = URL_BASE + '/' + data.id;
 
-    function openEditModal(id, rawData) {
-        let data = {};
-        try {
-            data = JSON.parse(rawData);
-        } catch(e) {
-            data = {};
-        }
-
-        const form = document.getElementById('formEditAccidente');
-        form.action = `{{ url('Sst/aprendiz/tipos-eventos/accidentes') }}/${id}`;
-
-        if (data.fecha_hora) {
-            let fh = data.fecha_hora.replace(' ', 'T').substring(0, 16);
-            document.getElementById('edit_fecha_hora').value = fh;
-        }
-
-        if (data.lugar_formacion) {
-            document.getElementById('edit_lugar_formacion').value = data.lugar_formacion;
-        }
-
-        if (data.tipo_accidente) {
-            document.getElementById('edit_tipo_accidente').value = data.tipo_accidente;
-        }
-
-        if (data.gravedad) {
-            document.getElementById('edit_gravedad').value = data.gravedad;
-        }
-
+        let f = data.fecha_hora || '';
+        if (f.includes(' ')) f = f.replace(' ', 'T');
+        document.getElementById('edit_fecha_hora').value = f.substring(0, 16);
+        document.getElementById('edit_lugar_formacion').value = data.lugar_formacion || '';
+        document.getElementById('edit_tipo_accidente').value = data.tipo_accidente || '';
+        document.getElementById('edit_gravedad').value = data.gravedad || 'Leve';
+        document.getElementById('edit_persona_afectada').value = data.persona_afectada || data.personas_involucradas || '';
         document.getElementById('edit_personas_involucradas').value = data.personas_involucradas || '';
         document.getElementById('edit_instructor_responsable').value = data.instructor_responsable || '';
         document.getElementById('edit_descripcion').value = data.descripcion || '';
 
-        // Cargar fotos guardadas actuales
-        fotosConservadas = [];
-        if (data.evidencias && Array.isArray(data.evidencias) && data.evidencias.length > 0) {
-            fotosConservadas = [...data.evidencias];
-        } else if (data.evidencia && data.evidencia.trim() !== '') {
-            fotosConservadas = [data.evidencia];
-        }
-
-        renderFotosConservadas();
-
-        // Reset input de fotos nuevas
-        editarFiles = [];
-        syncEditarInput();
-        renderEditarPreview();
-
-        const overlay = document.getElementById('modalEditarOverlay');
-        const modalBox = overlay.querySelector('div');
-        overlay.classList.remove('hidden');
-        setTimeout(() => {
-            overlay.classList.remove('opacity-0');
-            modalBox.classList.remove('scale-95');
-            modalBox.classList.add('scale-100');
-        }, 10);
+        editExisting = Array.isArray(data.evidencias) ? [...data.evidencias] : (data.evidencia ? [data.evidencia] : []);
+        editNew = [];
+        renderEditPhotos();
+        toggleModal('modalEditarOverlay', true);
     }
 
-    function closeEditModal() {
-        const overlay = document.getElementById('modalEditarOverlay');
-        const modalBox = overlay.querySelector('div');
-        overlay.classList.add('opacity-0');
-        modalBox.classList.remove('scale-100');
-        modalBox.classList.add('scale-95');
-        setTimeout(() => overlay.classList.add('hidden'), 200);
-    }
-
-    // =========================================================================
-    // MODAL DE CONFIRMACIÓN PARA ELIMINAR (ALERTA PERSONALIZADA)
-    // =========================================================================
-    let idAccidenteAEliminar = null;
-
-    function confirmDeleteAccidente(id, title) {
-        idAccidenteAEliminar = id;
-        document.getElementById('deleteModalTitulo').textContent = `"${title}"`;
-
-        const overlay = document.getElementById('modalEliminarOverlay');
-        const modalBox = overlay.querySelector('div');
-        overlay.classList.remove('hidden');
-        setTimeout(() => {
-            overlay.classList.remove('opacity-0');
-            modalBox.classList.remove('scale-95');
-            modalBox.classList.add('scale-100');
-        }, 10);
-    }
-
-    function closeDeleteModal() {
-        idAccidenteAEliminar = null;
-        const overlay = document.getElementById('modalEliminarOverlay');
-        const modalBox = overlay.querySelector('div');
-        overlay.classList.add('opacity-0');
-        modalBox.classList.remove('scale-100');
-        modalBox.classList.add('scale-95');
-        setTimeout(() => overlay.classList.add('hidden'), 200);
-    }
-
-    document.getElementById('btnConfirmarEliminar')?.addEventListener('click', function () {
-        if (idAccidenteAEliminar) {
-            const form = document.getElementById('formDeleteAccidente');
-            form.action = `{{ url('Sst/aprendiz/tipos-eventos/accidentes') }}/${idAccidenteAEliminar}`;
-            form.submit();
-        }
-    });
-
-    function openDetailModal(cardElement) {
-        const title = cardElement.getAttribute('data-title') || '';
-        const desc = cardElement.getAttribute('data-desc') || '';
-        const modulo = cardElement.getAttribute('data-modulo') || 'General';
-        const gravedad = cardElement.getAttribute('data-gravedad') || 'Leve';
-        const personas = cardElement.getAttribute('data-personas') || 'Aprendiz';
-        const instructor = cardElement.getAttribute('data-instructor') || 'N/A';
-        const fecha = cardElement.getAttribute('data-fecha') || 'Reciente';
-        const evidenciasRaw = cardElement.getAttribute('data-evidencias') || '[]';
-
-        document.getElementById('modalDetalleTitulo').textContent = title;
-        document.getElementById('modalDetalleTexto').textContent = desc;
-        document.getElementById('modalDetalleModulo').textContent = modulo;
-        document.getElementById('modalDetalleGravedad').textContent = gravedad;
-        document.getElementById('modalDetallePersonas').textContent = personas;
-        document.getElementById('modalDetalleInstructor').textContent = instructor || 'N/A';
-        document.getElementById('modalDetalleFecha').textContent = fecha;
-
-        let evidencias = [];
-        try {
-            evidencias = JSON.parse(evidenciasRaw);
-        } catch(e) {
-            evidencias = [];
-        }
-
-        const galeriaContainer = document.getElementById('modalDetalleGaleriaContainer');
-        const galeriaGrid = document.getElementById('modalDetalleGaleriaGrid');
-        const totalFotosBadge = document.getElementById('modalDetalleTotalFotos');
-        galeriaGrid.innerHTML = '';
-
-        if (Array.isArray(evidencias) && evidencias.length > 0) {
-            totalFotosBadge.textContent = `${evidencias.length} foto(s)`;
-            
-            // Ajustar columnas dinámicas
-            if (evidencias.length === 1) {
-                galeriaGrid.className = 'grid grid-cols-1 gap-2';
-            } else if (evidencias.length === 2) {
-                galeriaGrid.className = 'grid grid-cols-2 gap-2';
-            } else {
-                galeriaGrid.className = 'grid grid-cols-3 gap-2';
+    function handleEditarFiles(fileList) {
+        if (!fileList) return;
+        for (const f of Array.from(fileList)) {
+            if (editNew.length + editExisting.length < 3 && !editNew.some(e => e.name === f.name && e.size === f.size)) {
+                editNew.push(f);
             }
+        }
+        syncEditInput();
+        renderEditPhotos();
+    }
 
-            evidencias.forEach((url, idx) => {
-                const item = document.createElement('div');
-                const heightClass = evidencias.length === 1 ? 'h-52' : 'h-32 sm:h-36';
-                item.className = `relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-900/5 ${heightClass} group shadow-2xs`;
-                item.innerHTML = `
-                    <img src="${url}" alt="Evidencia ${idx+1}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                    <span class="absolute top-2 left-2 px-2 py-0.5 rounded-lg bg-slate-900/80 text-white text-[10px] font-extrabold backdrop-blur-xs">
-                        Foto #${idx+1}
-                    </span>
-                    <a href="${url}" target="_blank" class="absolute bottom-2 right-2 px-2.5 py-1 rounded-xl bg-slate-900/85 hover:bg-slate-900 text-white text-[11px] font-bold backdrop-blur-xs flex items-center gap-1 transition shadow-xs">
-                        <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i> Ver
-                    </a>
-                `;
-                galeriaGrid.appendChild(item);
-            });
+    function removeExistingPhoto(idx) {
+        editExisting.splice(idx, 1);
+        renderEditPhotos();
+    }
 
-            galeriaContainer.classList.remove('hidden');
+    function removeEditNewFile(idx) {
+        editNew.splice(idx, 1);
+        syncEditInput();
+        renderEditPhotos();
+    }
+
+    function syncEditInput() {
+        const dt = new DataTransfer();
+        editNew.forEach(f => dt.items.add(f));
+        document.getElementById('edit_evidencia_file').files = dt.files;
+    }
+
+    function renderEditPhotos() {
+        const container = document.getElementById('edit_fotos_actuales_container');
+        const gridExist = document.getElementById('edit_fotos_actuales_grid');
+        const hiddenInputs = document.getElementById('edit_fotos_conservadas_inputs');
+        const badge = document.getElementById('edit_fotos_actuales_badge');
+        const gridNew = document.getElementById('previewEditarGrid');
+        const conteo = document.getElementById('conteoFotosEditar');
+        const dropZone = document.getElementById('dropZoneEditar');
+        const labelUpload = document.getElementById('labelEditEvidenciaTexto');
+
+        gridExist.innerHTML = '';
+        hiddenInputs.innerHTML = '';
+        gridNew.innerHTML = '';
+
+        const total = editExisting.length + editNew.length;
+        if (conteo) conteo.textContent = total + ' / 3 fotos';
+
+        if (total >= 3) {
+            dropZone.classList.add('opacity-40', 'pointer-events-none');
+            labelUpload.textContent = 'Límite de 3 fotos alcanzado';
         } else {
-            galeriaContainer.classList.add('hidden');
+            dropZone.classList.remove('opacity-40', 'pointer-events-none');
+            labelUpload.textContent = 'Agregar o subir nuevas fotos (' + (3 - total) + ' disponibles)';
         }
 
-        // Gestión de Respuesta del Administrador SST
-        const respuestaRaw = cardElement.getAttribute('data-respuesta-admin');
+        if (editExisting.length > 0) {
+            container.classList.remove('hidden');
+            badge.textContent = editExisting.length + ' foto(s) guardada(s)';
+            editExisting.forEach((url, idx) => {
+                const hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = 'fotos_conservadas[]';
+                hidden.value = url;
+                hiddenInputs.appendChild(hidden);
+
+                const card = document.createElement('div');
+                card.className = 'relative rounded-2xl overflow-hidden border-2 border-emerald-500 aspect-square shadow-2xs group bg-slate-900';
+                card.innerHTML = '<img src="' + url + '" class="w-full h-full object-cover">' +
+                    '<span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-emerald-600 text-white text-[8px] font-extrabold uppercase">Guardada</span>' +
+                    '<button type="button" class="btn-del absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-[11px] shadow-sm cursor-pointer"><i class="fa-solid fa-trash-can"></i></button>';
+                card.querySelector('.btn-del').onclick = (ev) => { ev.stopPropagation(); removeExistingPhoto(idx); };
+                gridExist.appendChild(card);
+            });
+        } else {
+            container.classList.add('hidden');
+            const hidden = document.createElement('input');
+            hidden.type = 'hidden';
+            hidden.name = 'fotos_conservadas';
+            hidden.value = '';
+            hiddenInputs.appendChild(hidden);
+        }
+
+        if (editNew.length > 0) {
+            gridNew.classList.remove('hidden');
+            editNew.forEach((file, idx) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const card = document.createElement('div');
+                    card.className = 'relative rounded-2xl overflow-hidden border-2 border-orange-400 aspect-square shadow-2xs group bg-slate-900';
+                    card.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">' +
+                        '<span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-orange-600 text-white text-[8px] font-extrabold uppercase">Nueva</span>' +
+                        '<button type="button" class="btn-del absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-[11px] shadow-sm cursor-pointer"><i class="fa-solid fa-xmark"></i></button>';
+                    card.querySelector('.btn-del').onclick = (ev) => { ev.stopPropagation(); removeEditNewFile(idx); };
+                    gridNew.appendChild(card);
+                };
+                reader.readAsDataURL(file);
+            });
+        } else {
+            gridNew.classList.add('hidden');
+        }
+    }
+
+    // =========================================================================
+    // ELIMINAR: Confirmación
+    // =========================================================================
+    function confirmDeleteAccidente(btn) {
+        const data = getCardData(btn);
+        if (!data) return;
+        document.getElementById('formDeleteAccidente').action = URL_BASE + '/' + data.id;
+        document.getElementById('deleteModalTitulo').textContent = '"' + (data.tipo_accidente || 'Accidente') + '"';
+        document.getElementById('btnConfirmarEliminar').onclick = () => document.getElementById('formDeleteAccidente').submit();
+        toggleModal('modalEliminarOverlay', true);
+    }
+
+    // =========================================================================
+    // DETALLE: Galería y Respuesta SST
+    // =========================================================================
+    function openDetailModal(card) {
+        const data = getCardData(card);
+        if (!data) return;
+
+        document.getElementById('modalDetalleTitulo').textContent = data.tipo_accidente || 'Accidente';
+        document.getElementById('modalDetalleModulo').textContent = data.lugar_formacion || 'General';
+        document.getElementById('modalDetalleGravedad').textContent = data.gravedad || 'Leve';
+        document.getElementById('modalDetalleFecha').textContent = data.fecha_hora || 'Reciente';
+        document.getElementById('modalDetalleAfectado').textContent = data.persona_afectada || data.personas_involucradas || 'Aprendiz';
+        document.getElementById('modalDetalleInstructor').textContent = data.instructor_responsable || 'No asignado';
+        document.getElementById('modalDetalleTexto').textContent = data.descripcion || '';
+
+        // Galería
+        const fotos = Array.isArray(data.evidencias) ? data.evidencias : (data.evidencia ? [data.evidencia] : []);
+        const galContainer = document.getElementById('modalDetalleGaleriaContainer');
+        const galGrid = document.getElementById('modalDetalleGaleriaGrid');
+        galGrid.innerHTML = '';
+
+        if (fotos.length > 0) {
+            galContainer.classList.remove('hidden');
+            document.getElementById('modalDetalleTotalFotos').textContent = fotos.length + ' foto(s)';
+            galGrid.className = 'grid gap-2 ' + (fotos.length === 1 ? 'grid-cols-1' : (fotos.length === 2 ? 'grid-cols-2' : 'grid-cols-3'));
+            fotos.forEach((url, i) => {
+                const wrap = document.createElement('div');
+                wrap.className = 'relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-950/5 cursor-pointer aspect-video';
+                wrap.innerHTML = '<img src="' + url + '" class="w-full h-full object-cover hover:scale-105 transition duration-300">' +
+                    '<span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-slate-900/70 text-white text-[8px] font-bold">Foto #' + (i + 1) + '</span>';
+                wrap.onclick = () => window.open(url, '_blank');
+                galGrid.appendChild(wrap);
+            });
+        } else {
+            galContainer.classList.add('hidden');
+        }
+
+        // Respuesta SST
+        const resp = data.respuesta_admin;
         const respContainer = document.getElementById('modalDetalleRespuestaContainer');
         const sinRespContainer = document.getElementById('modalDetalleSinRespuestaContainer');
-
-        let respuestaAdmin = null;
-        if (respuestaRaw && respuestaRaw !== 'null' && respuestaRaw !== '') {
-            try {
-                respuestaAdmin = JSON.parse(respuestaRaw);
-            } catch(e) {
-                respuestaAdmin = null;
-            }
-        }
-
-        if (respuestaAdmin) {
-            document.getElementById('modalDetalleRespuestaProtocolo').textContent = respuestaAdmin.protocolo || 'Primeros Auxilios Básicos y Remisión';
-            document.getElementById('modalDetalleRespuestaMedidas').textContent = respuestaAdmin.medidas_tomadas || 'Sin observaciones adicionales.';
-            document.getElementById('modalDetalleRespuestaFecha').textContent = respuestaAdmin.fecha_atencion || 'Atendido recientemente';
-            document.getElementById('modalDetalleRespuestaAdmin').textContent = respuestaAdmin.atendido_por || 'Equipo SST';
-            
+        if (resp && (resp.protocolo || resp.medidas)) {
             respContainer.classList.remove('hidden');
             sinRespContainer.classList.add('hidden');
+            document.getElementById('modalDetalleRespuestaFecha').textContent = resp.fecha || 'Atendido';
+            document.getElementById('modalDetalleRespuestaProtocolo').textContent = resp.protocolo || 'Protocolo de Atención Inmediata';
+            document.getElementById('modalDetalleRespuestaMedidas').textContent = resp.medidas || 'Revisión y verificación realizada por SST.';
+            document.getElementById('modalDetalleRespuestaAdmin').textContent = resp.admin_nombre || 'Coordinador SST';
         } else {
             respContainer.classList.add('hidden');
             sinRespContainer.classList.remove('hidden');
         }
 
-        const overlay = document.getElementById('modalDetalleOverlay');
-        const modalBox = overlay.querySelector('div');
-        overlay.classList.remove('hidden');
-        setTimeout(() => {
-            overlay.classList.remove('opacity-0');
-            modalBox.classList.remove('scale-95');
-            modalBox.classList.add('scale-100');
-        }, 10);
+        toggleModal('modalDetalleOverlay', true);
     }
 
-    function closeDetailModal() {
-        const overlay = document.getElementById('modalDetalleOverlay');
-        const modalBox = overlay.querySelector('div');
-        overlay.classList.add('opacity-0');
-        modalBox.classList.remove('scale-100');
-        modalBox.classList.add('scale-95');
-        setTimeout(() => overlay.classList.add('hidden'), 200);
-    }
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeRegisterModal();
-            closeEditModal();
-            closeDeleteModal();
-            closeDetailModal();
-        }
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        // Soporte Drag & Drop para Registrar
-        const dropZoneReg = document.getElementById('dropZoneRegistrar');
-        if (dropZoneReg) {
-            ['dragenter', 'dragover'].forEach(eventName => {
-                dropZoneReg.addEventListener(eventName, (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dropZoneReg.classList.add('border-orange-500', 'bg-orange-50/40');
-                });
-            });
-            ['dragleave', 'drop'].forEach(eventName => {
-                dropZoneReg.addEventListener(eventName, (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dropZoneReg.classList.remove('border-orange-500', 'bg-orange-50/40');
-                });
-            });
-            dropZoneReg.addEventListener('drop', (e) => {
-                if (e.dataTransfer && e.dataTransfer.files) {
-                    handleRegistrarFiles(e.dataTransfer.files);
-                }
-            });
-        }
-
-        // Soporte Drag & Drop para Editar
-        const dropZoneEdit = document.getElementById('dropZoneEditar');
-        if (dropZoneEdit) {
-            ['dragenter', 'dragover'].forEach(eventName => {
-                dropZoneEdit.addEventListener(eventName, (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dropZoneEdit.classList.add('border-orange-500', 'bg-orange-50/40');
-                });
-            });
-            ['dragleave', 'drop'].forEach(eventName => {
-                dropZoneEdit.addEventListener(eventName, (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dropZoneEdit.classList.remove('border-orange-500', 'bg-orange-50/40');
-                });
-            });
-            dropZoneEdit.addEventListener('drop', (e) => {
-                if (e.dataTransfer && e.dataTransfer.files) {
-                    handleEditarFiles(e.dataTransfer.files);
-                }
-            });
-        }
-
-        const searchInput = document.getElementById('inputBuscarEvento');
-        const cards = document.querySelectorAll('.item-card');
-        const noResultsMsg = document.getElementById('noResultsMsg');
+    // Buscador en Tiempo Real
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('inputBuscarEvento');
+        const cards = document.getElementsByClassName('item-card');
         const conteo = document.getElementById('conteoEventos');
+        const noResults = document.getElementById('noResultsMsg');
+        if (!input) return;
 
-        if (searchInput && cards.length > 0) {
-            searchInput.addEventListener('input', function () {
-                const query = this.value.toLowerCase().trim();
-                let visibleCount = 0;
-
-                cards.forEach(card => {
-                    const title = card.getAttribute('data-title')?.toLowerCase() || '';
-                    const desc = card.getAttribute('data-desc')?.toLowerCase() || '';
-                    const modulo = card.getAttribute('data-modulo')?.toLowerCase() || '';
-
-                    if (title.includes(query) || desc.includes(query) || modulo.includes(query)) {
-                        card.style.display = 'flex';
-                        visibleCount++;
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-
-                if (conteo) conteo.textContent = visibleCount;
-                if (noResultsMsg) {
-                    if (visibleCount === 0 && query.length > 0) {
-                        noResultsMsg.classList.remove('hidden');
-                    } else {
-                        noResultsMsg.classList.add('hidden');
-                    }
-                }
+        input.addEventListener('input', () => {
+            const q = input.value.toLowerCase().trim();
+            let count = 0;
+            Array.from(cards).forEach(card => {
+                const t = (card.dataset.title || '').toLowerCase();
+                const m = (card.dataset.modulo || '').toLowerCase();
+                const d = (card.dataset.desc || '').toLowerCase();
+                const a = (card.dataset.afectado || '').toLowerCase();
+                const match = t.includes(q) || m.includes(q) || d.includes(q) || a.includes(q);
+                card.style.display = match ? 'flex' : 'none';
+                if (match) count++;
             });
-        }
+            if (conteo) conteo.textContent = count;
+            if (noResults) noResults.classList.toggle('hidden', count > 0);
+        });
     });
 </script>
 @endpush
-@endsection

@@ -267,31 +267,6 @@
             </div>
         </div>
 
-        <!-- TIPOS DE RIESGOS -->
-        <div class="flex flex-col menu-wrapper relative" id="tiposRiesgosWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleTiposRiesgos">
-                <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition shrink-0">
-                        <i class="fa-solid fa-triangle-exclamation text-xs"></i>
-                    </span>
-                    <span class="font-bold text-[13px] sidebar-text-full">Tipos de Riesgos</span>
-                </div>
-                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowTiposRiesgos">
-                    <i class="fa-solid fa-chevron-down"></i>
-                </span>
-            </div>
-            <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
-                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Consultar</a></li>
-            </ul>
-            <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-slate-100">
-                    <span class="font-extrabold text-xs text-slate-800">Tipos de Riesgos</span>
-                </div>
-                <div class="py-1">
-                    <a href="#" class="flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">Consultar Riesgos</a>
-                </div>
-            </div>
-        </div>
 
         <!-- INSPECCIONES -->
         @php
@@ -348,14 +323,14 @@
             </div>
         </div>
 
-        <!-- PAUSAS ACTIVAS -->
+        <!-- ACTIVIDADES SST -->
         <div class="flex flex-col menu-wrapper relative" id="pausasWrapper">
             <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnTogglePausas">
                 <div class="flex items-center gap-3">
                     <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition shrink-0">
-                        <i class="fa-solid fa-spa text-xs"></i>
+                        <i class="fa-solid fa-person-chalkboard text-xs"></i>
                     </span>
-                    <span class="font-bold text-[13px] sidebar-text-full">Pausas Activas</span>
+                    <span class="font-bold text-[13px] sidebar-text-full">Actividades SST</span>
                 </div>
                 <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowPausas">
                     <i class="fa-solid fa-chevron-down"></i>
@@ -367,7 +342,7 @@
             </ul>
             <div class="sidebar-flyout">
                 <div class="px-3 py-2 border-b border-slate-100">
-                    <span class="font-extrabold text-xs text-slate-800">Pausas Activas</span>
+                    <span class="font-extrabold text-xs text-slate-800">Actividades SST</span>
                 </div>
                 <div class="py-1 space-y-0.5">
                     <a href="#" class="flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">Próximas</a>
@@ -436,7 +411,6 @@
 
         toggleMenu('btnToggleTiposEventos', 'tiposEventosWrapper');
         toggleMenu('btnToggleEmergencias', 'emergenciasWrapper');
-        toggleMenu('btnToggleTiposRiesgos', 'tiposRiesgosWrapper');
         toggleMenu('btnToggleInspecciones', 'inspeccionesWrapper');
         toggleMenu('btnTogglePausas', 'pausasWrapper');
         toggleMenu('btnToggleAsistencia', 'asistenciaWrapper');

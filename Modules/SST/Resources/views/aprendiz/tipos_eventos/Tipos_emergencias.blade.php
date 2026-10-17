@@ -1,6 +1,6 @@
 @extends('sst::components.layouts.aprendiz')
 
-@section('title', 'Tipos de Emergencias • SST')
+@section('title', 'Condiciones de Emergencia • SST')
 
 @section('content')
 <style>
@@ -29,6 +29,21 @@
         </div>
     @endif
 
+    <!-- Alerta de Errores de Validación -->
+    @if($errors->any())
+        <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200/80 text-rose-800 shadow-xs">
+            <div class="flex items-center gap-2 mb-1.5">
+                <i class="fa-solid fa-triangle-exclamation text-rose-600"></i>
+                <span class="text-xs font-bold">Por favor verifica los siguientes campos:</span>
+            </div>
+            <ul class="list-disc list-inside text-xs space-y-0.5 text-rose-700">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <!-- Tarjeta Principal Unificada -->
     <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs min-h-[460px] flex flex-col justify-between">
         
@@ -37,11 +52,11 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
                 <div class="flex items-center gap-3.5">
                     <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-500 flex items-center justify-center text-xl border border-orange-100/80 shadow-2xs shrink-0">
-                        <i class="fa-solid fa-hospital"></i>
+                        <i class="fa-solid fa-fire-extinguisher"></i>
                     </div>
                     <div>
-                        <h1 class="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight">Tipos de Emergencias</h1>
-                        <p class="text-xs sm:text-sm text-slate-400 font-medium mt-0.5">Consulta y reporta eventos de seguridad</p>
+                        <h1 class="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight">Condiciones de Emergencia</h1>
+                        <p class="text-xs sm:text-sm text-slate-400 font-medium mt-0.5">Consulta y reporta situaciones que requieran atención de emergencia</p>
                     </div>
                 </div>
 
@@ -55,60 +70,195 @@
 
             <!-- Contenido Principal -->
             <div class="pt-6">
-                @if($tiposEmergencias->count() > 0)
+                @if($emergencias->count() > 0)
                     <!-- Barra de Búsqueda -->
                     <div class="mb-5 flex flex-col sm:flex-row items-center justify-between gap-3">
                         <div class="w-full sm:w-80 relative">
                             <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-xs">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </div>
-                            <input type="text" id="inputBuscarEvento" placeholder="Buscar emergencia..." 
+                            <input type="text" id="inputBuscarEvento" placeholder="Buscar condición de emergencia..." 
                                 class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
                         </div>
                         <span class="text-xs font-bold text-slate-400 self-end sm:self-auto">
-                            <span id="conteoEventos" class="text-slate-700">{{ $tiposEmergencias->count() }}</span> {{ $tiposEmergencias->count() == 1 ? 'emergencia registrada' : 'emergencias registradas' }}
+                            <span id="conteoEventos" class="text-slate-700">{{ $emergencias->count() }}</span> {{ $emergencias->count() == 1 ? 'emergencia registrada' : 'emergencias registradas' }}
                         </span>
                     </div>
 
-                    <!-- Listado en Cuadrícula -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="contenedorEventos">
-                        @foreach($tiposEmergencias as $item)
-                            <div class="item-card bg-slate-50/50 hover:bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-orange-300 transition-all space-y-2 cursor-pointer relative group"
-                                 onclick="openDetailModal(this)"
-                                 data-title="{{ $item->nombre }}"
-                                 data-modulo="{{ $item->modulo_pertenece ?? 'General' }}"
-                                 data-desc="{{ $item->descripcion ?? 'Sin descripción disponible.' }}">
-                                
-                                <div class="flex items-start justify-between gap-3">
-                                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-orange-500 shrink-0"></span>
-                                        <span class="group-hover:text-orange-600 transition-colors">{{ $item->nombre }}</span>
-                                    </h3>
-                                    @if($item->modulo_pertenece)
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-[10px] font-bold bg-white text-slate-600 border border-slate-200 shrink-0">
-                                            {{ $item->modulo_pertenece }}
-                                        </span>
-                                    @endif
-                                </div>
+                    <!-- Listado a lo largo (Horizontal Full-Width Cards) -->
+                    <div class="space-y-4" id="contenedorEventos">
+                        @foreach($emergencias as $item)
+                            @php
+                                $data = json_decode($item->descripcion, true);
+                                if (!is_array($data)) {
+                                    $raw = $item->descripcion ?? '';
+                                    preg_match('/Lugar:\s*([^,\n\r]+?)(?=\s*(?:Prioridad|Gravedad|Personas|Instructor|Descripci|$))/i', $raw, $mLugar);
+                                    preg_match('/(?:Prioridad|Gravedad):\s*([^,\n\r]+?)(?=\s*(?:Personas|Instructor|Descripci|$))/i', $raw, $mPrio);
+                                    preg_match('/Personas(?:\s*Involucradas)?:\s*([^,\n\r]+?)(?=\s*(?:Instructor|Descripci|$))/i', $raw, $mPers);
+                                    preg_match('/Instructor(?:\s*Responsable)?:\s*([^,\n\r]+?)(?=\s*(?:Descripci|$))/i', $raw, $mInst);
+                                    preg_match('/Descripci(?:ón|on)(?:\s*Detallada)?:\s*(.*)/is', $raw, $mDesc);
 
-                                <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">
-                                    {{ $item->descripcion ?? 'Sin descripción disponible.' }}
-                                </p>
+                                    $cleanTitle = preg_replace('/^Condici[oó]n de Emergencia:\s*/i', '', $item->nombre);
+
+                                    $data = [
+                                        'tipo_suceso' => 'Condición de Emergencia',
+                                        'fecha_hora' => $item->created_at ? $item->created_at->format('d/m/Y h:i A') : 'Reciente',
+                                        'lugar_formacion' => !empty($mLugar[1]) ? trim($mLugar[1]) : (!empty($cleanTitle) ? trim($cleanTitle) : 'Lugar del Suceso'),
+                                        'prioridad' => !empty($mPrio[1]) ? trim($mPrio[1]) : 'Media',
+                                        'gravedad' => !empty($mPrio[1]) ? trim($mPrio[1]) : 'Media',
+                                        'personas_involucradas' => !empty($mPers[1]) ? trim($mPers[1]) : 'Personal en Zona',
+                                        'instructor_responsable' => !empty($mInst[1]) ? trim($mInst[1]) : '',
+                                        'descripcion' => !empty($mDesc[1]) ? trim($mDesc[1]) : $raw,
+                                        'evidencia' => null,
+                                    ];
+                                }
+                                $prio = strtolower($data['prioridad'] ?? $data['gravedad'] ?? 'media');
+                                $badgePrio = match(true) {
+                                    str_contains($prio, 'alta') || str_contains($prio, 'urgente') || str_contains($prio, 'crítico') => 'bg-rose-100 text-rose-800 border-rose-200',
+                                    str_contains($prio, 'media') => 'bg-amber-100 text-amber-800 border-amber-200',
+                                    default => 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                                };
+                            @endphp
+                            @php
+                                $fechaRaw = $data['fecha_hora'] ?? '';
+                                $fechaFormateada = 'Reciente';
+                                if (!empty($fechaRaw)) {
+                                    $ts = strtotime($fechaRaw);
+                                    if ($ts) {
+                                        $fechaFormateada = date('d/m/Y - h:i A', $ts);
+                                    } else {
+                                        $fechaFormateada = str_replace('T', ' - ', $fechaRaw);
+                                    }
+                                } elseif ($item->created_at) {
+                                    $fechaFormateada = $item->created_at->format('d/m/Y - h:i A');
+                                }
+
+                                $evidencias = !empty($data['evidencias']) && is_array($data['evidencias']) ? $data['evidencias'] : (!empty($data['evidencia']) ? [$data['evidencia']] : []);
+                                $evidencias = array_map(function($url) {
+                                    if (is_string($url) && str_contains($url, 'uploads/evidencias_sst/')) {
+                                        return asset('uploads/evidencias_sst/' . basename($url));
+                                    }
+                                    return $url;
+                                }, $evidencias);
+                                $fotoPrincipal = !empty($evidencias) ? $evidencias[0] : null;
+                                $totalFotos = count($evidencias);
+                                $estadoItem = strtolower($item->estado ?? 'activo');
+                                $tieneRespuesta = !empty($data['respuesta_admin']);
+                                $nombreLugar = $data['lugar_formacion'] ?? 'Lugar de Emergencia';
+                                $encodedData = base64_encode(json_encode($data, JSON_UNESCAPED_UNICODE));
+                            @endphp
+                            <div class="item-card bg-slate-50/70 hover:bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-orange-300 transition-all flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 cursor-pointer group"
+                                 onclick="openDetailModal(this)"
+                                 data-id="{{ $item->id_respuesta }}"
+                                 data-title="{{ $nombreLugar }}"
+                                 data-modulo="{{ $data['lugar_formacion'] ?? 'General' }}"
+                                 data-prioridad="{{ $data['prioridad'] ?? 'Media' }}"
+                                 data-afectado="{{ $data['persona_afectada'] ?? $data['personas_involucradas'] ?? 'Personal en Zona' }}"
+                                 data-personas="{{ $data['personas_involucradas'] ?? 'Personal en Zona' }}"
+                                 data-instructor="{{ $data['instructor_responsable'] ?? '' }}"
+                                 data-fecha="{{ $fechaFormateada }}"
+                                 data-desc="{{ $data['descripcion'] ?? 'Sin descripción adicional.' }}"
+                                 data-raw="{{ $encodedData }}">
+                                
+                                <!-- Foto o Icono -->
+                                @if(!empty($fotoPrincipal))
+                                    <div class="relative w-16 h-16 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 border-orange-200 bg-slate-900/5 shrink-0 group-hover:border-orange-400 transition shadow-2xs">
+                                        <img src="{{ $fotoPrincipal }}" alt="Evidencia Fotográfica" class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
+                                        @if($totalFotos > 1)
+                                            <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-slate-900/85 text-white text-[8px] font-extrabold flex items-center gap-0.5 shadow-xs">
+                                                <i class="fa-solid fa-camera text-orange-400 text-[7px]"></i> +{{ $totalFotos }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                @else
+                                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100 flex flex-col items-center justify-center text-orange-500 shrink-0 shadow-2xs">
+                                        <i class="fa-solid fa-fire-extinguisher text-2xl"></i>
+                                    </div>
+                                @endif
+
+                                <!-- Cuerpo estructurado -->
+                                <div class="flex-1 flex flex-col justify-between space-y-2.5 w-full">
+                                    <!-- Fila 1: Título, Estado SST y Prioridad -->
+                                    <div class="flex flex-wrap items-center justify-between gap-2">
+                                        <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0"></span>
+                                            <span class="group-hover:text-orange-600 transition-colors">{{ $nombreLugar }}</span>
+                                        </h3>
+                                        <div class="flex items-center gap-1.5 shrink-0">
+                                            @if($estadoItem === 'atendido' || $tieneRespuesta)
+                                                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs">
+                                                    <i class="fa-solid fa-check-double text-[9px] text-emerald-600"></i> Atendido por SST
+                                                </span>
+                                            @else
+                                                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-700 border border-amber-200 shadow-2xs">
+                                                    <i class="fa-regular fa-clock text-[9px] text-amber-500"></i> Pendiente
+                                                </span>
+                                            @endif
+                                            <span class="inline-flex items-center px-3 py-0.5 rounded-full text-[11px] font-extrabold border {{ $badgePrio }}">
+                                                Prioridad: {{ ucfirst($data['prioridad'] ?? 'Media') }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Fila 2: Etiquetas de Lugar, Fecha, Personas e Instructor -->
+                                    <div class="flex flex-wrap items-center gap-2 text-xs text-slate-600 font-medium">
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 text-slate-700 border border-slate-200/80">
+                                            <i class="fa-solid fa-location-dot text-orange-500"></i>
+                                            <span>{{ $data['lugar_formacion'] ?? 'General' }}</span>
+                                        </span>
+
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 text-slate-700 border border-slate-200/80">
+                                            <i class="fa-regular fa-calendar-days text-orange-500"></i>
+                                            <span>{{ $fechaFormateada }}</span>
+                                        </span>
+
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-orange-50 text-orange-700 border border-orange-200/80 font-bold">
+                                            <i class="fa-solid fa-user-injured text-orange-500"></i>
+                                            <span>Afectado: {{ $data['persona_afectada'] ?? $data['personas_involucradas'] ?? 'Personal Afectado' }}</span>
+                                        </span>
+
+                                        @if(!empty($data['instructor_responsable']) && $data['instructor_responsable'] !== 'N/A')
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 text-slate-700 border border-slate-200/80">
+                                                <i class="fa-solid fa-chalkboard-user text-orange-500"></i>
+                                                <span>Instructor: {{ $data['instructor_responsable'] }}</span>
+                                            </span>
+                                        @endif
+                                    </div>
+
+                                    <!-- Fila 3: Descripción & Botones de Acción -->
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1.5 border-t border-slate-100/80">
+                                        <p class="text-xs text-slate-600 line-clamp-1 flex-1">
+                                            <strong class="text-slate-700 font-semibold">Descripción:</strong> {{ $data['descripcion'] ?? 'Sin descripción disponible.' }}
+                                        </p>
+
+                                        <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                                            <!-- Botón Editar -->
+                                            <button type="button" onclick="event.stopPropagation(); openEditModal(this)" class="w-8 h-8 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 flex items-center justify-center text-xs font-bold shadow-2xs transition cursor-pointer" title="Editar reporte">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+
+                                            <!-- Botón Eliminar -->
+                                            <button type="button" onclick="event.stopPropagation(); confirmDeleteEmergencia(this)" class="w-8 h-8 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 flex items-center justify-center text-xs font-bold border border-rose-200 shadow-2xs transition cursor-pointer" title="Eliminar reporte">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         @endforeach
                     </div>
 
                     <div id="noResultsMsg" class="hidden text-center py-12">
-                        <p class="text-xs font-bold text-slate-400">No se encontraron emergencias con ese criterio de búsqueda.</p>
+                        <p class="text-xs font-bold text-slate-400">No se encontraron condiciones de emergencia con ese criterio de búsqueda.</p>
                     </div>
                 @else
-                    <!-- Estado Vacío (Igual a la Referencia) -->
+                    <!-- Estado Vacío -->
                     <div class="py-16 sm:py-24 text-center flex flex-col items-center justify-center">
                         <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-300 flex items-center justify-center text-2xl mb-3 shadow-2xs">
                             <i class="fa-solid fa-inbox"></i>
                         </div>
                         <p class="text-xs sm:text-sm font-semibold text-slate-400">
-                            No hay tipos de emergencias registradas aún.
+                            No hay condiciones de emergencia registradas aún.
                         </p>
                     </div>
                 @endif
@@ -119,53 +269,141 @@
 
 </div>
 
-<!-- Modal 1: Registrar Tipo de Emergencia -->
-<div id="modalRegistrarOverlay" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200" onclick="closeRegisterModal()">
-    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 max-w-lg w-full p-6 transform transition-transform duration-200 scale-95" onclick="event.stopPropagation()">
+<!-- ========================================================================= -->
+<!-- MODAL 1: REGISTRAR CONDICIÓN DE EMERGENCIA (SIN TIPO DE ACCIDENTE, PRIORIDAD) -->
+<!-- ========================================================================= -->
+<div id="modalRegistrarOverlay" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 hidden opacity-0 transition-opacity duration-200" onclick="closeRegisterModal()">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 max-w-2xl w-full max-h-[90vh] flex flex-col transform transition-transform duration-200 scale-95 overflow-hidden" onclick="event.stopPropagation()">
         
-        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center text-sm">
-                    <i class="fa-solid fa-plus"></i>
+        <!-- Header del Modal -->
+        <div class="p-5 sm:p-6 pb-4 border-b border-slate-100 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-3.5">
+                <div class="w-11 h-11 rounded-2xl bg-orange-50 text-orange-500 flex items-center justify-center text-lg border border-orange-100/80 shadow-2xs shrink-0">
+                    <i class="fa-solid fa-fire-extinguisher"></i>
                 </div>
                 <div>
-                    <h3 class="font-extrabold text-sm text-slate-800 tracking-tight">Registrar Tipo de Emergencia</h3>
-                    <p class="text-[11px] text-slate-400">Ingresa la información de la nueva emergencia</p>
+                    <h3 class="font-extrabold text-base sm:text-lg text-slate-800 tracking-tight">Reportar Condición de Emergencia</h3>
+                    <p class="text-xs text-slate-400 font-medium">Documenta oportunamente la situación de emergencia</p>
                 </div>
             </div>
             
-            <button type="button" onclick="closeRegisterModal()" class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs transition cursor-pointer">
+            <button type="button" onclick="closeRegisterModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs transition cursor-pointer">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
 
-        <form action="{{ route('SST.aprendiz.tipos_eventos.tipos_emergencias.store') }}" method="POST" class="pt-4 space-y-4">
+        <!-- Formulario con Scroll Interno -->
+        <form action="{{ route('SST.aprendiz.tipos_eventos.tipos_emergencias.store') }}" method="POST" enctype="multipart/form-data" class="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4">
             @csrf
 
-            <div class="space-y-1">
-                <label class="block text-xs font-bold text-slate-700">Nombre de la Emergencia <span class="text-rose-500">*</span></label>
-                <input type="text" name="nombre" required placeholder="Ej: Incendio estructural, Sismo, Evacuación..." 
-                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
+            <!-- Fila 1: Fecha/Hora y Lugar de la Emergencia -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        FECHA Y HORA DEL REPORTE <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="datetime-local" name="fecha_hora" required 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        LUGAR DE LA EMERGENCIA <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" name="lugar_formacion" required placeholder="Lugar o ambiente de la emergencia..." 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                </div>
             </div>
 
+            <!-- Fila 2: Prioridad -->
             <div class="space-y-1">
-                <label class="block text-xs font-bold text-slate-700">Área o Módulo al que Pertenece</label>
-                <input type="text" name="modulo_pertenece" placeholder="Ej: Todo el Centro, Bloque A, General..." 
-                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
+                <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                    PRIORIDAD <span class="text-rose-500">*</span>
+                </label>
+                <select name="prioridad" required 
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
+                    <option value="">Seleccione la prioridad...</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Media">Media</option>
+                    <option value="Baja">Baja</option>
+                </select>
             </div>
 
-            <div class="space-y-1">
-                <label class="block text-xs font-bold text-slate-700">Descripción Técnica</label>
-                <textarea name="descripcion" rows="3" placeholder="Describe brevemente los protocolos o características de esta emergencia..." 
-                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition resize-none"></textarea>
+            <!-- Fila 3: Persona Afectada y Personas Involucradas -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        PERSONA AFECTADA <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" name="persona_afectada" required placeholder="Nombre de la persona afectada..." 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        PERSONAS INVOLUCRADAS
+                    </label>
+                    <input type="text" name="personas_involucradas" placeholder="Otras personas presentes o en zona..." 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                </div>
             </div>
 
-            <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
-                <button type="button" onclick="closeRegisterModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold transition">
-                    Cancelar
+            <!-- Instructor Responsable -->
+            <div class="space-y-1">
+                <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                    INSTRUCTOR / RESPONSABLE A CARGO
+                </label>
+                <input type="text" name="instructor_responsable" placeholder="Nombre del instructor o encargado..." 
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+            </div>
+
+            <!-- Descripción Detallada -->
+            <div class="space-y-1">
+                <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                    DESCRIPCIÓN DE LA EMERGENCIA <span class="text-rose-500">*</span>
+                </label>
+                <textarea name="descripcion" rows="3" required placeholder="Describe detalladamente la condición o situación de emergencia..." 
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs resize-none"></textarea>
+            </div>
+
+            <!-- Evidencia Fotográfica (Hasta 3 imágenes) -->
+            <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        EVIDENCIAS FOTOGRÁFICAS <span class="text-slate-400 font-semibold">(Hasta 3 fotos de una vez)</span>
+                    </label>
+                    <span id="conteoFotosRegistrar" class="text-[10px] font-bold text-slate-400">0 / 3 seleccionadas</span>
+                </div>
+                
+                <div id="dropZoneRegistrar" class="relative border-2 border-dashed border-slate-200 rounded-2xl p-5 text-center hover:border-orange-500 hover:bg-orange-50/20 transition-all bg-slate-50/50 cursor-pointer group" onclick="document.getElementById('inputEvidenciaFile').click()">
+                    <input type="file" id="inputEvidenciaFile" name="evidencias[]" multiple accept="image/*" class="hidden" onchange="handleRegistrarFiles(this.files)">
+                    <div class="flex flex-col items-center justify-center space-y-2">
+                        <div class="w-11 h-11 rounded-2xl bg-white text-slate-400 group-hover:text-orange-500 group-hover:scale-105 flex items-center justify-center text-xl shadow-2xs transition-all border border-slate-200/60">
+                            <i class="fa-solid fa-images"></i>
+                        </div>
+                        <div>
+                            <p id="labelEvidenciaTexto" class="text-xs font-bold text-slate-700 group-hover:text-orange-600 transition-colors">
+                                Selecciona hasta 3 fotos de una vez o arrástralas aquí
+                            </p>
+                            <p class="text-[11px] text-slate-400 mt-1 font-medium flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-circle-info text-orange-400 text-[10px]"></i>
+                                Puedes seleccionar las 3 al mismo tiempo manteniendo presionado <kbd class="px-1.5 py-0.5 rounded bg-slate-200 text-slate-700 font-bold text-[9px]">Ctrl</kbd> o <kbd class="px-1.5 py-0.5 rounded bg-slate-200 text-slate-700 font-bold text-[9px]">Shift</kbd>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="previewRegistrarGrid" class="hidden grid grid-cols-3 gap-2.5 pt-1"></div>
+            </div>
+
+            <!-- Botones de Acción Inferiores -->
+            <div class="flex items-center gap-3 pt-3 border-t border-slate-100">
+                <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                    <span>Enviar Reporte</span>
                 </button>
-                <button type="submit" class="px-5 py-2 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs font-bold shadow-xs transition">
-                    Guardar Emergencia
+                <button type="button" onclick="closeRegisterModal()" class="px-5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs sm:text-sm font-bold transition cursor-pointer">
+                    Cancelar
                 </button>
             </div>
         </form>
@@ -173,16 +411,194 @@
     </div>
 </div>
 
-<!-- Modal 2: Detalle Completo -->
-<div id="modalDetalleOverlay" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200" onclick="closeDetailModal()">
-    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 max-w-lg w-full p-6 transform transition-transform duration-200 scale-95" onclick="event.stopPropagation()">
+<!-- ========================================================================= -->
+<!-- MODAL 2: EDITAR REPORTE DE CONDICIÓN DE EMERGENCIA                         -->
+<!-- ========================================================================= -->
+<div id="modalEditarOverlay" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 hidden opacity-0 transition-opacity duration-200" onclick="closeEditModal()">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 max-w-2xl w-full max-h-[90vh] flex flex-col transform transition-transform duration-200 scale-95 overflow-hidden" onclick="event.stopPropagation()">
         
-        <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
+        <!-- Header del Modal -->
+        <div class="p-5 sm:p-6 pb-4 border-b border-slate-100 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-3.5">
+                <div class="w-11 h-11 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center text-lg border border-orange-200/80 shadow-2xs shrink-0">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-base sm:text-lg text-slate-800 tracking-tight">Editar Condición de Emergencia</h3>
+                    <p class="text-xs text-slate-400 font-medium">Modifica la información registrada</p>
+                </div>
+            </div>
+            
+            <button type="button" onclick="closeEditModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Formulario de Edición -->
+        <form id="formEditarEmergencia" action="" method="POST" enctype="multipart/form-data" class="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4">
+            @csrf
+            @method('PUT')
+
+            <!-- Fila 1: Fecha/Hora y Lugar de la Emergencia -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        FECHA Y HORA DEL REPORTE <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="datetime-local" id="editFechaHora" name="fecha_hora" required 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        LUGAR DE LA EMERGENCIA <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" id="editLugarFormacion" name="lugar_formacion" required 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                </div>
+            </div>
+
+            <!-- Fila 2: Prioridad -->
+            <div class="space-y-1">
+                <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                    PRIORIDAD <span class="text-rose-500">*</span>
+                </label>
+                <select id="editPrioridad" name="prioridad" required 
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
+                    <option value="">Seleccione la prioridad...</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Media">Media</option>
+                    <option value="Baja">Baja</option>
+                </select>
+            </div>
+
+            <!-- Fila 3: Persona Afectada y Personas Involucradas -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        PERSONA AFECTADA <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" id="edit_persona_afectada" name="persona_afectada" required placeholder="Nombre de la persona afectada..." 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        PERSONAS INVOLUCRADAS
+                    </label>
+                    <input type="text" id="editPersonasInvolucradas" name="personas_involucradas" placeholder="Otras personas presentes o en zona..." 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                </div>
+            </div>
+
+            <!-- Instructor Responsable -->
+            <div class="space-y-1">
+                <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                    INSTRUCTOR / RESPONSABLE A CARGO
+                </label>
+                <input type="text" id="editInstructorResponsable" name="instructor_responsable" 
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+            </div>
+
+            <!-- Descripción Detallada -->
+            <div class="space-y-1">
+                <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                    DESCRIPCIÓN DE LA EMERGENCIA <span class="text-rose-500">*</span>
+                </label>
+                <textarea id="editDescripcion" name="descripcion" rows="3" required 
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs resize-none"></textarea>
+            </div>
+
+            <!-- Fotos existentes y Nuevas Evidencias -->
+            <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        EVIDENCIAS FOTOGRÁFICAS
+                    </label>
+                    <span id="editFotosCuposText" class="text-[10px] font-bold text-slate-400">Total: 0 / 3 fotos</span>
+                </div>
+
+                <div id="editExistingPhotosContainer" class="space-y-1.5 hidden">
+                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Fotos Actuales (puedes eliminar las que no correspondan):</span>
+                    <div id="editExistingPhotosGrid" class="grid grid-cols-3 gap-2.5"></div>
+                </div>
+
+                <div id="editUploadArea" class="relative border-2 border-dashed border-slate-200 rounded-2xl p-4 text-center hover:border-orange-500 hover:bg-orange-50/20 transition-all bg-slate-50/50 cursor-pointer group" onclick="document.getElementById('inputEditEvidenciaFiles').click()">
+                    <input type="file" id="inputEditEvidenciaFiles" name="evidencias[]" multiple accept="image/*" class="hidden" onchange="handleEditFiles(this.files)">
+                    <div class="flex items-center justify-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-white text-slate-400 group-hover:text-orange-500 flex items-center justify-center text-base shadow-2xs transition-all border border-slate-200/60">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </div>
+                        <div class="text-left">
+                            <p id="editLabelUploadTexto" class="text-xs font-bold text-slate-700 group-hover:text-orange-600 transition-colors">
+                                Agregar fotos nuevas (hasta completar 3)
+                            </p>
+                            <p class="text-[10px] text-slate-400 font-medium">Haz clic aquí para seleccionar imágenes adicionales</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="previewEditGrid" class="hidden grid grid-cols-3 gap-2.5 pt-1"></div>
+            </div>
+
+            <!-- Botones de Acción Inferiores -->
+            <div class="flex items-center gap-3 pt-3 border-t border-slate-100">
+                <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
+                    <i class="fa-solid fa-floppy-disk text-xs"></i>
+                    <span>Actualizar Reporte</span>
+                </button>
+                <button type="button" onclick="closeEditModal()" class="px-5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs sm:text-sm font-bold transition cursor-pointer">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- Formulario Oculto para Eliminar -->
+<form id="formDeleteEmergencia" action="" method="POST" class="hidden">
+    @csrf
+    @method('DELETE')
+</form>
+
+<!-- Modal 4: Confirmar Eliminación -->
+<div id="modalEliminarOverlay" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200" onclick="closeDeleteModal()">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 max-w-md w-full p-6 text-center transform transition-transform duration-200 scale-95 overflow-hidden space-y-4" onclick="event.stopPropagation()">
+        
+        <div class="w-16 h-16 rounded-3xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center text-2xl mx-auto shadow-sm">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+
+        <div>
+            <h3 class="text-lg font-extrabold text-slate-800 tracking-tight">¿Eliminar Condición de Emergencia?</h3>
+            <p class="text-xs text-slate-500 font-medium mt-1.5 leading-relaxed">
+                Estás a punto de eliminar el reporte de <span id="deleteModalTitulo" class="font-bold text-rose-600"></span>. Esta acción no se puede deshacer y borrará también las evidencias fotográficas asociadas.
+            </p>
+        </div>
+
+        <div class="flex items-center justify-center gap-3 pt-2">
+            <button type="button" onclick="closeDeleteModal()" class="px-5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs sm:text-sm font-bold transition cursor-pointer">
+                Cancelar
+            </button>
+            <button type="button" id="btnConfirmarEliminar" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-rose-600 hover:bg-rose-700 active:scale-95 text-white text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
+                <i class="fa-solid fa-trash-can text-xs"></i>
+                <span>Sí, eliminar reporte</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 3: Detalle Completo con Galería de Fotos -->
+<div id="modalDetalleOverlay" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200" onclick="closeDetailModal()">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 max-w-xl w-full p-6 transform transition-transform duration-200 scale-95 max-h-[90vh] flex flex-col overflow-hidden" onclick="event.stopPropagation()">
+        
+        <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 shrink-0">
             <div class="flex items-center gap-2.5 text-slate-800">
                 <div class="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center text-xs">
-                    <i class="fa-solid fa-hospital"></i>
+                    <i class="fa-solid fa-fire-extinguisher"></i>
                 </div>
-                <h3 class="font-bold text-sm tracking-tight">Detalle de la Emergencia</h3>
+                <h3 class="font-bold text-sm tracking-tight">Detalle de la Condición de Emergencia</h3>
             </div>
             
             <button type="button" onclick="closeDetailModal()" class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs transition cursor-pointer">
@@ -190,112 +606,543 @@
             </button>
         </div>
 
-        <div class="pt-4 space-y-3">
+        <div class="pt-4 space-y-3.5 overflow-y-auto pr-1 flex-1">
             <div class="flex items-center justify-between gap-2">
-                <h4 id="modalDetalleTitulo" class="font-extrabold text-slate-900 text-sm sm:text-base"></h4>
+                <h4 id="modalDetalleTitulo" class="font-extrabold text-slate-900 text-base"></h4>
                 <span id="modalDetalleModulo" class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-orange-50 text-orange-700 border border-orange-200 shrink-0"></span>
             </div>
+
+            <!-- Galería de Evidencias Fotográficas -->
+            <div id="modalDetalleGaleriaContainer" class="hidden space-y-1.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-camera text-orange-500"></i> Evidencias Registradas
+                    </span>
+                    <span id="modalDetalleTotalFotos" class="text-[10px] font-bold text-slate-400"></span>
+                </div>
+                <div id="modalDetalleGaleriaGrid" class="grid gap-2"></div>
+            </div>
+
+            <!-- Ficha Técnica de Detalles -->
+            <div class="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-3 rounded-2xl border border-slate-200/80">
+                <div>
+                    <span class="text-slate-400 font-bold block text-[10px] uppercase">Prioridad</span>
+                    <span id="modalDetallePrioridad" class="font-extrabold text-slate-800"></span>
+                </div>
+                <div>
+                    <span class="text-slate-400 font-bold block text-[10px] uppercase">Fecha y Hora</span>
+                    <span id="modalDetalleFecha" class="font-semibold text-slate-800"></span>
+                </div>
+                <div>
+                    <span class="text-slate-400 font-bold block text-[10px] uppercase">Persona Afectada</span>
+                    <span id="modalDetalleAfectado" class="font-bold text-orange-600 truncate block"></span>
+                </div>
+                <div>
+                    <span class="text-slate-400 font-bold block text-[10px] uppercase">Instructor</span>
+                    <span id="modalDetalleInstructor" class="font-semibold text-slate-800 truncate block"></span>
+                </div>
+            </div>
             
-            <div class="max-h-72 overflow-y-auto pr-1">
-                <p id="modalDetalleTexto" class="text-xs sm:text-sm text-slate-600 leading-relaxed whitespace-pre-line"></p>
+            <div>
+                <span class="text-slate-400 font-bold block text-[10px] uppercase mb-1">Descripción de la Emergencia</span>
+                <p id="modalDetalleTexto" class="text-xs text-slate-700 leading-relaxed whitespace-pre-line bg-white p-3 rounded-xl border border-slate-200/60"></p>
+            </div>
+
+            <!-- Bloque de Respuesta SST -->
+            <div id="modalDetalleRespuestaContainer" class="hidden rounded-2xl bg-gradient-to-br from-emerald-50/90 to-teal-50/70 border border-emerald-200 p-4 space-y-2.5 shadow-2xs">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-emerald-900 font-extrabold text-xs">
+                        <span class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-[11px] shadow-2xs">
+                            <i class="fa-solid fa-clipboard-check"></i>
+                        </span>
+                        <span>Respuesta y Medidas Tomadas por SST</span>
+                    </div>
+                    <span id="modalDetalleRespuestaFecha" class="text-[10px] font-bold text-emerald-700 bg-emerald-100/90 px-2.5 py-0.5 rounded-lg border border-emerald-200"></span>
+                </div>
+
+                <div class="space-y-2 text-xs">
+                    <div>
+                        <span class="text-[10px] uppercase font-bold text-emerald-800/80 block">Protocolo de Emergencia Activado:</span>
+                        <p id="modalDetalleRespuestaProtocolo" class="font-extrabold text-emerald-950 text-xs"></p>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase font-bold text-emerald-800/80 block">Medidas y Procedimientos Ejecutados:</span>
+                        <p id="modalDetalleRespuestaMedidas" class="text-slate-700 whitespace-pre-line bg-white/95 p-3 rounded-xl border border-emerald-200/80 leading-relaxed font-medium shadow-2xs"></p>
+                    </div>
+                    <div class="flex items-center justify-between pt-1.5 border-t border-emerald-200/60 text-[10px] text-emerald-800">
+                        <span class="font-medium">Atendido por: <strong id="modalDetalleRespuestaAdmin" class="font-bold text-emerald-950"></strong></span>
+                        <span class="inline-flex items-center gap-1 font-extrabold text-emerald-700 bg-emerald-100/60 px-2 py-0.5 rounded-md">
+                            <i class="fa-solid fa-circle-check"></i> Reporte Atendido
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloque informativo pendiente -->
+            <div id="modalDetalleSinRespuestaContainer" class="rounded-2xl bg-amber-50/80 border border-amber-200/80 p-3.5 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xs shrink-0 font-bold border border-amber-200/60">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-amber-900">Emergencia en Proceso de Atención por SST</p>
+                    <p class="text-[11px] text-amber-700 font-medium">El equipo de brigadistas y SST se encuentra al tanto de la situación reportada.</p>
+                </div>
             </div>
         </div>
 
     </div>
 </div>
+@endsection
 
 @push('scripts')
 <script>
-    function openRegisterModal() {
-        const overlay = document.getElementById('modalRegistrarOverlay');
-        const modalBox = overlay.querySelector('div');
-        overlay.classList.remove('hidden');
-        setTimeout(() => {
-            overlay.classList.remove('opacity-0');
-            modalBox.classList.remove('scale-95');
-            modalBox.classList.add('scale-100');
-        }, 10);
-    }
+    const URL_BASE = "{{ url('Sst/aprendiz/tipos-eventos/tipos-emergencias') }}";
 
-    function closeRegisterModal() {
-        const overlay = document.getElementById('modalRegistrarOverlay');
-        const modalBox = overlay.querySelector('div');
-        overlay.classList.add('opacity-0');
-        modalBox.classList.remove('scale-100');
-        modalBox.classList.add('scale-95');
-        setTimeout(() => overlay.classList.add('hidden'), 200);
-    }
-
-    function openDetailModal(cardElement) {
-        const title = cardElement.getAttribute('data-title') || '';
-        const desc = cardElement.getAttribute('data-desc') || '';
-        const modulo = cardElement.getAttribute('data-modulo') || 'General';
-
-        document.getElementById('modalDetalleTitulo').textContent = title;
-        document.getElementById('modalDetalleTexto').textContent = desc;
-        document.getElementById('modalDetalleModulo').textContent = modulo;
-
-        const overlay = document.getElementById('modalDetalleOverlay');
-        const modalBox = overlay.querySelector('div');
-        overlay.classList.remove('hidden');
-        setTimeout(() => {
-            overlay.classList.remove('opacity-0');
-            modalBox.classList.remove('scale-95');
-            modalBox.classList.add('scale-100');
-        }, 10);
-    }
-
-    function closeDetailModal() {
-        const overlay = document.getElementById('modalDetalleOverlay');
-        const modalBox = overlay.querySelector('div');
-        overlay.classList.add('opacity-0');
-        modalBox.classList.remove('scale-100');
-        modalBox.classList.add('scale-95');
-        setTimeout(() => overlay.classList.add('hidden'), 200);
-    }
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeRegisterModal();
-            closeDetailModal();
+    function toggleModal(id, show) {
+        const overlay = document.getElementById(id);
+        if (!overlay) return;
+        const box = overlay.querySelector('div');
+        if (show) {
+            overlay.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                overlay.classList.remove('opacity-0');
+                if (box) { box.classList.remove('scale-95'); box.classList.add('scale-100'); }
+            });
+        } else {
+            overlay.classList.add('opacity-0');
+            if (box) { box.classList.remove('scale-100'); box.classList.add('scale-95'); }
+            setTimeout(() => overlay.classList.add('hidden'), 200);
         }
-    });
+    }
 
+    function getCardData(el) {
+        const card = el ? (el.closest ? el.closest('.item-card') : el) : null;
+        if (!card || !card.dataset.raw) return {};
+        try {
+            const data = JSON.parse(atob(card.dataset.raw)) || {};
+            data.id = card.dataset.id;
+            return data;
+        } catch (e) {
+            console.error('Error parseando data-raw', e);
+            return {};
+        }
+    }
+
+    function openRegisterModal() { toggleModal('modalRegistrarOverlay', true); }
+    function closeRegisterModal() { toggleModal('modalRegistrarOverlay', false); }
+    function closeEditModal() { toggleModal('modalEditarOverlay', false); }
+    function closeDeleteModal() { toggleModal('modalEliminarOverlay', false); }
+    function closeDetailModal() { toggleModal('modalDetalleOverlay', false); }
+
+    // =========================================================================
+    // REGISTRAR: IMÁGENES
+    // =========================================================================
+    let registrarFiles = [];
+
+    function handleRegistrarFiles(fileList) {
+        if (!fileList || fileList.length === 0) return;
+        Array.from(fileList).forEach(f => {
+            if (registrarFiles.length < 3 && !registrarFiles.some(e => e.name === f.name && e.size === f.size)) {
+                registrarFiles.push(f);
+            }
+        });
+        syncRegistrarInput();
+        renderRegistrarPreview();
+    }
+
+    function removeRegistrarFile(index) {
+        registrarFiles.splice(index, 1);
+        syncRegistrarInput();
+        renderRegistrarPreview();
+    }
+
+    function syncRegistrarInput() {
+        const input = document.getElementById('inputEvidenciaFile');
+        if (!input) return;
+        const dt = new DataTransfer();
+        registrarFiles.forEach(f => dt.items.add(f));
+        input.files = dt.files;
+    }
+
+    function renderRegistrarPreview() {
+        const grid = document.getElementById('previewRegistrarGrid');
+        const label = document.getElementById('labelEvidenciaTexto');
+        const conteo = document.getElementById('conteoFotosRegistrar');
+        if (!grid) return;
+        grid.innerHTML = '';
+
+        if (conteo) conteo.textContent = `${registrarFiles.length} / 3 seleccionadas`;
+
+        if (registrarFiles.length === 0) {
+            grid.classList.add('hidden');
+            if (label) {
+                label.textContent = 'Selecciona hasta 3 fotos de una vez o arrástralas aquí';
+                label.classList.remove('text-orange-600');
+            }
+            if (conteo) conteo.classList.remove('text-orange-600');
+            return;
+        }
+
+        if (label) {
+            label.textContent = `${registrarFiles.length} foto(s) lista(s) para enviar`;
+            label.classList.add('text-orange-600');
+        }
+        if (conteo) conteo.classList.add('text-orange-600');
+        grid.classList.remove('hidden');
+
+        registrarFiles.forEach((file, idx) => {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const card = document.createElement('div');
+                card.className = 'relative rounded-2xl overflow-hidden border-2 border-orange-400 aspect-square shadow-2xs group bg-slate-900';
+                card.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview ${idx+1}" class="w-full h-full object-cover">
+                    <span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-slate-900/80 text-white text-[9px] font-extrabold backdrop-blur-xs">#${idx+1}</span>
+                    <button type="button" onclick="event.stopPropagation(); removeRegistrarFile(${idx})" class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-[11px] shadow-sm transition cursor-pointer" title="Quitar foto">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                `;
+                grid.appendChild(card);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // =========================================================================
+    // EDITAR: IMÁGENES
+    // =========================================================================
+    let editExistingPhotos = [];
+    let editNewFiles = [];
+
+    function openEditModal(btn) {
+        const card = btn.closest('.item-card');
+        if (!card) return;
+        const id = card.dataset.id;
+        const data = getCardData(card);
+        const form = document.getElementById('formEditarEmergencia');
+        if (!form) return;
+        form.action = URL_BASE + '/' + id;
+
+        let fechaVal = data.fecha_hora || '';
+        if (fechaVal && fechaVal.includes(' ')) {
+            fechaVal = fechaVal.replace(' ', 'T');
+        }
+        const inputFecha = document.getElementById('editFechaHora');
+        if (inputFecha) inputFecha.value = fechaVal.substring(0, 16);
+
+        const elLugar = document.getElementById('editLugarFormacion');
+        if (elLugar) elLugar.value = data.lugar_formacion || '';
+
+        const elPrio = document.getElementById('editPrioridad');
+        if (elPrio) elPrio.value = data.prioridad || data.gravedad || 'Media';
+
+        const elAfectada = document.getElementById('edit_persona_afectada');
+        if (elAfectada) elAfectada.value = data.persona_afectada || data.personas_involucradas || '';
+
+        const elInvolucradas = document.getElementById('editPersonasInvolucradas');
+        if (elInvolucradas) elInvolucradas.value = data.personas_involucradas || '';
+
+        const elInstructor = document.getElementById('editInstructorResponsable');
+        if (elInstructor) elInstructor.value = data.instructor_responsable || '';
+
+        const elDesc = document.getElementById('editDescripcion');
+        if (elDesc) elDesc.value = data.descripcion || '';
+
+        if (Array.isArray(data.evidencias) && data.evidencias.length > 0) {
+            editExistingPhotos = [...data.evidencias];
+        } else if (data.evidencia) {
+            editExistingPhotos = [data.evidencia];
+        } else {
+            editExistingPhotos = [];
+        }
+
+        editNewFiles = [];
+        renderEditPhotosState();
+        toggleModal('modalEditarOverlay', true);
+    }
+
+    function removeExistingPhoto(index) {
+        editExistingPhotos.splice(index, 1);
+        renderEditPhotosState();
+    }
+
+    function handleEditFiles(fileList) {
+        if (!fileList || fileList.length === 0) return;
+        Array.from(fileList).forEach(f => {
+            if (editNewFiles.length + editExistingPhotos.length < 3 && !editNewFiles.some(e => e.name === f.name && e.size === f.size)) {
+                editNewFiles.push(f);
+            }
+        });
+        syncEditInput();
+        renderEditPhotosState();
+    }
+
+    function removeEditNewFile(index) {
+        editNewFiles.splice(index, 1);
+        syncEditInput();
+        renderEditPhotosState();
+    }
+
+    function syncEditInput() {
+        const input = document.getElementById('inputEditEvidenciaFiles') || document.getElementById('inputEditEvidenciaFile');
+        if (!input) return;
+        const dt = new DataTransfer();
+        editNewFiles.forEach(f => dt.items.add(f));
+        input.files = dt.files;
+    }
+
+    function renderEditPhotosState() {
+        const container = document.getElementById('editExistingPhotosContainer') || document.getElementById('edit_fotos_actuales_container');
+        const gridExisting = document.getElementById('editExistingPhotosGrid') || document.getElementById('edit_fotos_actuales_grid');
+        const gridNew = document.getElementById('previewEditGrid') || document.getElementById('previewEditarGrid');
+        const cuposText = document.getElementById('editFotosCuposText');
+        const uploadArea = document.getElementById('editUploadArea') || document.getElementById('dropZoneEditar');
+        const labelUpload = document.getElementById('editLabelUploadTexto');
+
+        if (gridExisting) gridExisting.innerHTML = '';
+        if (gridNew) gridNew.innerHTML = '';
+
+        const totalActual = editExistingPhotos.length + editNewFiles.length;
+        if (cuposText) cuposText.textContent = `Total: ${totalActual} / 3 fotos`;
+
+        if (uploadArea) {
+            if (totalActual >= 3) {
+                uploadArea.classList.add('opacity-40', 'pointer-events-none');
+                if (labelUpload) labelUpload.textContent = 'Límite de 3 fotos alcanzado';
+            } else {
+                uploadArea.classList.remove('opacity-40', 'pointer-events-none');
+                if (labelUpload) labelUpload.textContent = `Agregar fotos nuevas (${3 - totalActual} disponibles)`;
+            }
+        }
+
+        if (gridExisting && container) {
+            if (editExistingPhotos.length > 0) {
+                container.classList.remove('hidden');
+                editExistingPhotos.forEach((url, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'relative rounded-2xl overflow-hidden border-2 border-emerald-500 aspect-square shadow-2xs group bg-slate-900';
+                    card.innerHTML = `
+                        <img src="${url}" alt="Foto existente ${idx+1}" class="w-full h-full object-cover">
+                        <input type="hidden" name="fotos_conservadas[]" value="${url}">
+                        <span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-emerald-600 text-white text-[8px] font-extrabold uppercase">Guardada</span>
+                        <button type="button" onclick="event.stopPropagation(); removeExistingPhoto(${idx})" class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-[11px] shadow-sm transition cursor-pointer" title="Eliminar foto">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    `;
+                    gridExisting.appendChild(card);
+                });
+            } else {
+                container.classList.add('hidden');
+                const hiddenEmpty = document.createElement('input');
+                hiddenEmpty.type = 'hidden';
+                hiddenEmpty.name = 'fotos_conservadas';
+                hiddenEmpty.value = '';
+                gridExisting.appendChild(hiddenEmpty);
+            }
+        }
+
+        if (gridNew) {
+            if (editNewFiles.length > 0) {
+                gridNew.classList.remove('hidden');
+                editNewFiles.forEach((file, idx) => {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        const card = document.createElement('div');
+                        card.className = 'relative rounded-2xl overflow-hidden border-2 border-orange-400 aspect-square shadow-2xs group bg-slate-900';
+                        card.innerHTML = `
+                            <img src="${e.target.result}" alt="Foto nueva ${idx+1}" class="w-full h-full object-cover">
+                            <span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-orange-600 text-white text-[8px] font-extrabold uppercase">Nueva</span>
+                            <button type="button" onclick="event.stopPropagation(); removeEditNewFile(${idx})" class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-[11px] shadow-sm transition cursor-pointer" title="Quitar">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        `;
+                        gridNew.appendChild(card);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            } else {
+                gridNew.classList.add('hidden');
+            }
+        }
+    }
+
+    // =========================================================================
+    // CONFIRMAR ELIMINACIÓN
+    // =========================================================================
+    function confirmDeleteEmergencia(btn) {
+        const card = btn.closest('.item-card');
+        if (!card) return;
+        const id = card.dataset.id;
+        const titulo = card.dataset.title || 'este reporte';
+        const form = document.getElementById('formDeleteEmergencia');
+        if (!form) return;
+        form.action = URL_BASE + '/' + id;
+        
+        const elTitulo = document.getElementById('deleteModalTitulo');
+        if (elTitulo) elTitulo.textContent = `"${titulo}"`;
+
+        const btnConfirm = document.getElementById('btnConfirmarEliminar');
+        if (btnConfirm) {
+            btnConfirm.onclick = function() {
+                form.submit();
+            };
+        }
+        toggleModal('modalEliminarOverlay', true);
+    }
+
+    // =========================================================================
+    // MODAL DETALLE CON GALERÍA Y RESPUESTA SST
+    // =========================================================================
+    function openDetailModal(card) {
+        const data = getCardData(card);
+        const title = card.getAttribute('data-title');
+        const modulo = card.getAttribute('data-modulo');
+        const prioridad = card.getAttribute('data-prioridad');
+        const afectado = card.getAttribute('data-afectado');
+        const instructor = card.getAttribute('data-instructor');
+        const fecha = card.getAttribute('data-fecha');
+        const desc = card.getAttribute('data-desc');
+
+        document.getElementById('modalDetalleTitulo').textContent = title || 'Detalle del Reporte';
+        document.getElementById('modalDetalleModulo').textContent = modulo || 'General';
+        document.getElementById('modalDetallePrioridad').textContent = prioridad || 'Media';
+        document.getElementById('modalDetalleFecha').textContent = fecha || '';
+        document.getElementById('modalDetalleAfectado').textContent = afectado || 'Personal en Zona';
+        document.getElementById('modalDetalleInstructor').textContent = instructor || 'No asignado';
+        document.getElementById('modalDetalleTexto').textContent = desc || '';
+
+        // Galería
+        const fotos = Array.isArray(data.evidencias) ? data.evidencias : (data.evidencia ? [data.evidencia] : []);
+        const galeriaContainer = document.getElementById('modalDetalleGaleriaContainer');
+        const galeriaGrid = document.getElementById('modalDetalleGaleriaGrid');
+        const totalFotosSpan = document.getElementById('modalDetalleTotalFotos');
+        
+        if (galeriaGrid) {
+            galeriaGrid.innerHTML = '';
+            if (fotos.length > 0) {
+                if (galeriaContainer) galeriaContainer.classList.remove('hidden');
+                if (totalFotosSpan) totalFotosSpan.textContent = `${fotos.length} foto(s)`;
+                galeriaGrid.className = fotos.length === 1 ? 'grid grid-cols-1 gap-2' : (fotos.length === 2 ? 'grid grid-cols-2 gap-2' : 'grid grid-cols-3 gap-2');
+                fotos.forEach((url, i) => {
+                    const imgWrap = document.createElement('div');
+                    imgWrap.className = 'relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-950/5 group cursor-pointer aspect-video';
+                    imgWrap.innerHTML = `
+                        <img src="${url}" alt="Foto ${i+1}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-slate-900/70 text-white text-[8px] font-bold">Foto #${i+1}</span>
+                    `;
+                    imgWrap.onclick = () => window.open(url, '_blank');
+                    galeriaGrid.appendChild(imgWrap);
+                });
+            } else {
+                if (galeriaContainer) galeriaContainer.classList.add('hidden');
+            }
+        }
+
+        // Respuesta SST
+        const resp = data.respuesta_admin || null;
+        const respContainer = document.getElementById('modalDetalleRespuestaContainer');
+        const sinRespContainer = document.getElementById('modalDetalleSinRespuestaContainer');
+
+        if (resp && (resp.protocolo || resp.medidas)) {
+            if (respContainer) respContainer.classList.remove('hidden');
+            if (sinRespContainer) sinRespContainer.classList.add('hidden');
+            const elFecha = document.getElementById('modalDetalleRespuestaFecha');
+            if (elFecha) elFecha.textContent = resp.fecha || 'Atendido';
+            const elProt = document.getElementById('modalDetalleRespuestaProtocolo');
+            if (elProt) elProt.textContent = resp.protocolo || 'Protocolo de Emergencia Activado';
+            const elMed = document.getElementById('modalDetalleRespuestaMedidas');
+            if (elMed) elMed.textContent = resp.medidas || 'Revisión y atención de brigadistas ejecutada.';
+            const elAdmin = document.getElementById('modalDetalleRespuestaAdmin');
+            if (elAdmin) elAdmin.textContent = resp.admin_nombre || 'Coordinador SST';
+        } else {
+            if (respContainer) respContainer.classList.add('hidden');
+            if (sinRespContainer) sinRespContainer.classList.remove('hidden');
+        }
+
+        toggleModal('modalDetalleOverlay', true);
+    }
+
+    // Buscador en Tiempo Real & Drag and drop
     document.addEventListener('DOMContentLoaded', function () {
-        const searchInput = document.getElementById('inputBuscarEvento');
-        const cards = document.querySelectorAll('.item-card');
-        const noResultsMsg = document.getElementById('noResultsMsg');
+        const inputBuscar = document.getElementById('inputBuscarEvento');
+        const contenedor = document.getElementById('contenedorEventos');
+        const noResults = document.getElementById('noResultsMsg');
         const conteo = document.getElementById('conteoEventos');
 
-        if (searchInput && cards.length > 0) {
-            searchInput.addEventListener('input', function () {
+        if (inputBuscar && contenedor) {
+            inputBuscar.addEventListener('input', function () {
                 const query = this.value.toLowerCase().trim();
-                let visibleCount = 0;
+                const cards = contenedor.getElementsByClassName('item-card');
+                let visibles = 0;
 
-                cards.forEach(card => {
-                    const title = card.getAttribute('data-title')?.toLowerCase() || '';
-                    const desc = card.getAttribute('data-desc')?.toLowerCase() || '';
-                    const modulo = card.getAttribute('data-modulo')?.toLowerCase() || '';
+                Array.from(cards).forEach(function (card) {
+                    const title = (card.getAttribute('data-title') || '').toLowerCase();
+                    const modulo = (card.getAttribute('data-modulo') || '').toLowerCase();
+                    const desc = (card.getAttribute('data-desc') || '').toLowerCase();
+                    const afectado = (card.getAttribute('data-afectado') || '').toLowerCase();
 
-                    if (title.includes(query) || desc.includes(query) || modulo.includes(query)) {
-                        card.style.display = 'block';
-                        visibleCount++;
+                    if (title.includes(query) || modulo.includes(query) || desc.includes(query) || afectado.includes(query)) {
+                        card.style.display = 'flex';
+                        visibles++;
                     } else {
                         card.style.display = 'none';
                     }
                 });
 
-                if (conteo) conteo.textContent = visibleCount;
-                if (noResultsMsg) {
-                    if (visibleCount === 0 && query.length > 0) {
-                        noResultsMsg.classList.remove('hidden');
+                if (conteo) conteo.textContent = visibles;
+                if (noResults) {
+                    if (visibles === 0) {
+                        noResults.classList.remove('hidden');
                     } else {
-                        noResultsMsg.classList.add('hidden');
+                        noResults.classList.add('hidden');
                     }
+                }
+            });
+        }
+
+        // Drag & Drop Registrar
+        const dropZoneReg = document.getElementById('dropZoneRegistrar');
+        if (dropZoneReg) {
+            ['dragenter', 'dragover'].forEach(name => {
+                dropZoneReg.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    dropZoneReg.classList.add('border-orange-500', 'bg-orange-50/40');
+                });
+            });
+            ['dragleave', 'drop'].forEach(name => {
+                dropZoneReg.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    dropZoneReg.classList.remove('border-orange-500', 'bg-orange-50/40');
+                });
+            });
+            dropZoneReg.addEventListener('drop', (e) => {
+                if (e.dataTransfer && e.dataTransfer.files) {
+                    handleRegistrarFiles(e.dataTransfer.files);
+                }
+            });
+        }
+
+        // Drag & Drop Editar
+        const dropZoneEd = document.getElementById('editUploadArea') || document.getElementById('dropZoneEditar');
+        if (dropZoneEd) {
+            ['dragenter', 'dragover'].forEach(name => {
+                dropZoneEd.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    dropZoneEd.classList.add('border-orange-500', 'bg-orange-50/40');
+                });
+            });
+            ['dragleave', 'drop'].forEach(name => {
+                dropZoneEd.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    dropZoneEd.classList.remove('border-orange-500', 'bg-orange-50/40');
+                });
+            });
+            dropZoneEd.addEventListener('drop', (e) => {
+                if (e.dataTransfer && e.dataTransfer.files) {
+                    handleEditFiles(e.dataTransfer.files);
                 }
             });
         }
     });
 </script>
 @endpush
-@endsection

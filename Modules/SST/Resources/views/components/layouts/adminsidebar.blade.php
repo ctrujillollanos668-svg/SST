@@ -123,7 +123,10 @@
     <nav class="py-3 flex-grow overflow-y-auto space-y-1 px-2.5 text-xs font-semibold">
 
         <!-- 1. DEFINICIONES -->
-        <div class="flex flex-col menu-wrapper relative" id="definicionesWrapper">
+        @php
+            $isDefiniciones = request()->routeIs('SST.admin.definiciones.*');
+        @endphp
+        <div class="flex flex-col menu-wrapper relative {{ $isDefiniciones ? 'open' : '' }}" id="definicionesWrapper">
             <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleDefiniciones">
                 <div class="flex items-center gap-3">
                     <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition shrink-0">
@@ -137,12 +140,18 @@
             </div>
             <!-- Acordeón Normal -->
             <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
-                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Accidentes</a></li>
-                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Incidentes</a></li>
-                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Riesgos</a></li>
-                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Actos Inseguros</a></li>
-                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Lesiones</a></li>
-                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Tipos de Emergencias</a></li>
+                @php $actDefAcc = request()->routeIs('SST.admin.definiciones.accidentes'); @endphp
+                <li><a href="{{ route('SST.admin.definiciones.accidentes') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actDefAcc ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}"><span class="text-[6px] mr-2.5 {{ $actDefAcc ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> Accidentes</a></li>
+                @php $actDefInc = request()->routeIs('SST.admin.definiciones.incidentes'); @endphp
+                <li><a href="{{ route('SST.admin.definiciones.incidentes') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actDefInc ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}"><span class="text-[6px] mr-2.5 {{ $actDefInc ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> Incidentes</a></li>
+                @php $actDefRie = request()->routeIs('SST.admin.definiciones.riesgos'); @endphp
+                <li><a href="{{ route('SST.admin.definiciones.riesgos') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actDefRie ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}"><span class="text-[6px] mr-2.5 {{ $actDefRie ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> Riesgos</a></li>
+                @php $actDefAct = request()->routeIs('SST.admin.definiciones.actos_inseguros'); @endphp
+                <li><a href="{{ route('SST.admin.definiciones.actos_inseguros') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actDefAct ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}"><span class="text-[6px] mr-2.5 {{ $actDefAct ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> Actos Inseguros</a></li>
+                @php $actDefLes = request()->routeIs('SST.admin.definiciones.lesiones'); @endphp
+                <li><a href="{{ route('SST.admin.definiciones.lesiones') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actDefLes ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}"><span class="text-[6px] mr-2.5 {{ $actDefLes ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> Lesiones</a></li>
+                @php $actDefEme = request()->routeIs('SST.admin.definiciones.tipos_emergencias'); @endphp
+                <li><a href="{{ route('SST.admin.definiciones.tipos_emergencias') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actDefEme ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}"><span class="text-[6px] mr-2.5 {{ $actDefEme ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> Tipos de Emergencias</a></li>
             </ul>
             <!-- Tarjeta Flotante (Flyout Mini) -->
             <div class="sidebar-flyout">
@@ -151,12 +160,12 @@
                     <span class="font-extrabold text-xs text-slate-800">Definiciones</span>
                 </div>
                 <div class="py-1 space-y-0.5">
-                    <a href="#" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium">Accidentes</a>
-                    <a href="#" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium">Incidentes</a>
-                    <a href="#" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium">Riesgos</a>
-                    <a href="#" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium">Actos Inseguros</a>
-                    <a href="#" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium">Lesiones</a>
-                    <a href="#" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium">Tipos de Emergencias</a>
+                    <a href="{{ route('SST.admin.definiciones.accidentes') }}" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium {{ $actDefAcc ? 'bg-orange-50 text-orange-600 font-bold' : '' }}">Accidentes</a>
+                    <a href="{{ route('SST.admin.definiciones.incidentes') }}" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium {{ $actDefInc ? 'bg-orange-50 text-orange-600 font-bold' : '' }}">Incidentes</a>
+                    <a href="{{ route('SST.admin.definiciones.riesgos') }}" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium {{ $actDefRie ? 'bg-orange-50 text-orange-600 font-bold' : '' }}">Riesgos</a>
+                    <a href="{{ route('SST.admin.definiciones.actos_inseguros') }}" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium {{ $actDefAct ? 'bg-orange-50 text-orange-600 font-bold' : '' }}">Actos Inseguros</a>
+                    <a href="{{ route('SST.admin.definiciones.lesiones') }}" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium {{ $actDefLes ? 'bg-orange-50 text-orange-600 font-bold' : '' }}">Lesiones</a>
+                    <a href="{{ route('SST.admin.definiciones.tipos_emergencias') }}" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium {{ $actDefEme ? 'bg-orange-50 text-orange-600 font-bold' : '' }}">Tipos de Emergencias</a>
                 </div>
             </div>
         </div>

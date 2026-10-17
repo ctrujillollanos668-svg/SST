@@ -104,35 +104,81 @@
                         @if($totalItems > 0)
                             <div class="flex flex-col gap-3.5 w-full">
                                 @foreach($cat['items'] as $item)
-                                    <div class="item-definicion bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-orange-300 transition-all space-y-2 min-w-0 w-full cursor-pointer relative group/card"
+                                    @php
+                                        $gravValor = ($item->tipo_gravedad === 'Otro' && $item->tipo_otro) ? $item->tipo_otro : $item->tipo_gravedad;
+                                        $grav = strtolower($gravValor ?? '');
+                                        $badgeGravedad = 'bg-slate-100 text-slate-600 border-slate-200';
+                                        if (str_contains($grav, 'leve')) {
+                                            $badgeGravedad = 'bg-emerald-50 text-emerald-700 border-emerald-200';
+                                        } elseif (str_contains($grav, 'moderado')) {
+                                            $badgeGravedad = 'bg-amber-50 text-amber-700 border-amber-200';
+                                        } elseif (str_contains($grav, 'grave')) {
+                                            $badgeGravedad = 'bg-orange-50 text-orange-700 border-orange-200';
+                                        } elseif (str_contains($grav, 'mortal') || str_contains($grav, 'muy')) {
+                                            $badgeGravedad = 'bg-rose-50 text-rose-700 border-rose-200';
+                                        } elseif ($gravValor) {
+                                            $badgeGravedad = 'bg-indigo-50 text-indigo-700 border-indigo-200';
+                                        }
+                                    @endphp
+                                    <div class="item-definicion bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-orange-300 transition-all space-y-3.5 min-w-0 w-full cursor-pointer relative group/card"
                                          onclick="openDetailModal(this)"
                                          data-title="{{ $item->nombre }}"
                                          data-modulo="{{ $item->modulo_pertenece ?? 'General' }}"
                                          data-desc="{{ $item->descripcion ?? 'Sin descripción técnica disponible actualmente.' }}"
+                                         data-prevenir="{{ $item->como_prevenir ?? 'No registrada.' }}"
+                                         data-gravedad="{{ $gravValor ?? '' }}"
+                                         data-gravedad-class="{{ $badgeGravedad }}"
                                          data-category="{{ $cat['titulo'] }}">
                                         
-                                        <div class="flex items-start justify-between gap-3 min-w-0">
-                                            <h4 class="font-bold text-slate-800 text-sm nombre-concepto flex items-center gap-2 min-w-0">
+                                        <!-- Encabezado de la Tarjeta: Título y Badges -->
+                                        <div class="flex flex-wrap items-center justify-between gap-2.5 pb-2.5 border-b border-slate-100">
+                                            <h4 class="font-bold text-slate-800 text-sm sm:text-base nombre-concepto flex items-center gap-2 min-w-0">
                                                 <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0"></span>
                                                 <span class="break-words group-hover/card:text-orange-600 transition-colors">{{ $item->nombre }}</span>
                                             </h4>
                                             
                                             <div class="flex items-center gap-2 shrink-0">
+                                                @if($gravValor)
+                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold border {{ $badgeGravedad }}">
+                                                        <i class="fa-solid fa-triangle-exclamation text-[10px]"></i>
+                                                        <span>Gravedad: {{ $gravValor }}</span>
+                                                    </span>
+                                                @endif
                                                 @if($item->modulo_pertenece)
-                                                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                                                    <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
                                                         {{ $item->modulo_pertenece }}
                                                     </span>
                                                 @endif
-                                                <span class="text-[11px] text-orange-500 opacity-0 group-hover/card:opacity-100 transition-opacity font-semibold flex items-center gap-1 hidden sm:inline-flex">
-                                                    <i class="fa-regular fa-eye text-[10px]"></i> Ver descripción
+                                                <span class="text-[11px] text-orange-500 opacity-0 group-hover/card:opacity-100 transition-opacity font-semibold items-center gap-1 hidden sm:inline-flex">
+                                                    <i class="fa-regular fa-eye text-[10px]"></i> Ver detalle
                                                 </span>
                                             </div>
                                         </div>
 
-                                        <!-- Texto Truncado a 2 Líneas -->
-                                        <p class="text-xs text-slate-600 leading-relaxed descripcion-concepto break-words line-clamp-2">
-                                            {{ $item->descripcion ?? 'Sin descripción técnica disponible actualmente.' }}
-                                        </p>
+                                        <!-- Bloques / Cuadritos de Campos -->
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-0.5">
+                                            <!-- Cuadrito 1: Definición Técnica -->
+                                            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-start">
+                                                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 flex items-center gap-1.5 mb-1.5">
+                                                    <i class="fa-solid fa-book-open text-orange-500 text-[11px]"></i>
+                                                    Definición Técnica
+                                                </span>
+                                                <p class="text-xs text-slate-600 leading-relaxed descripcion-concepto break-words line-clamp-3">
+                                                    {{ $item->descripcion ?? 'Sin descripción técnica disponible actualmente.' }}
+                                                </p>
+                                            </div>
+
+                                            <!-- Cuadrito 2: ¿Cómo Prevenir? -->
+                                            <div class="p-3.5 rounded-xl bg-emerald-50/50 border border-emerald-200/80 flex flex-col justify-start">
+                                                <span class="text-[10px] font-black uppercase tracking-wider text-emerald-800 flex items-center gap-1.5 mb-1.5">
+                                                    <i class="fa-solid fa-shield-halved text-emerald-600 text-[11px]"></i>
+                                                    ¿Cómo Prevenir?
+                                                </span>
+                                                <p class="text-xs text-slate-600 leading-relaxed prevenir-concepto break-words line-clamp-3">
+                                                    {{ $item->como_prevenir ?: 'No se han registrado medidas preventivas específicas.' }}
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 @endforeach
                             </div>
@@ -158,13 +204,13 @@
 
 <!-- Modal / Popup Emergente de Descripción Completa con botón X -->
 <div id="modalDescripcionOverlay" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200" onclick="closeDetailModal()">
-    <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-lg w-full p-5 sm:p-6 transform transition-transform duration-200 scale-95" onclick="event.stopPropagation()">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-xl w-full p-5 sm:p-6 transform transition-transform duration-200 scale-95" onclick="event.stopPropagation()">
         
         <!-- Encabezado con Icono Naranja, Título y Botón X -->
         <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
             <div class="flex items-center gap-2 text-slate-800">
-                <i class="fa-solid fa-bars-staggered text-orange-500 text-sm"></i>
-                <h3 class="font-bold text-sm tracking-tight">Descripción Completa</h3>
+                <i class="fa-solid fa-book-bookmark text-orange-500 text-sm"></i>
+                <h3 class="font-bold text-sm tracking-tight" id="modalConceptoCategory">Detalle de Definición</h3>
             </div>
             
             <!-- Botón Cerrar X -->
@@ -174,19 +220,39 @@
         </div>
 
         <!-- Contenido Completo -->
-        <div class="pt-4 space-y-3">
-            <div class="flex items-center justify-between gap-2">
-                <h4 id="modalConceptoTitulo" class="font-extrabold text-slate-900 text-sm sm:text-base"></h4>
-                <span id="modalConceptoModulo" class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-orange-50 text-orange-700 border border-orange-200 shrink-0"></span>
+        <div class="pt-4 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-1">
+                <h4 id="modalConceptoTitulo" class="font-extrabold text-slate-900 text-base sm:text-lg"></h4>
+                <div class="flex items-center gap-2">
+                    <span id="modalConceptoGravedad" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold border"></span>
+                    <span id="modalConceptoModulo" class="inline-flex items-center px-2 py-0.5 rounded-lg text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200"></span>
+                </div>
             </div>
             
-            <div class="max-h-72 overflow-y-auto pr-1">
-                <p id="modalConceptoTexto" class="text-xs sm:text-sm text-slate-600 leading-relaxed break-words break-all whitespace-pre-line"></p>
+            <div class="space-y-3 max-h-[65vh] overflow-y-auto pr-1">
+                <!-- Cuadrito 1 en Modal: Definición -->
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+                    <span class="text-[11px] font-black uppercase tracking-wider text-slate-500 flex items-center gap-1.5 mb-2">
+                        <i class="fa-solid fa-book-open text-orange-500"></i>
+                        Definición Técnica
+                    </span>
+                    <p id="modalConceptoTexto" class="text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line break-words"></p>
+                </div>
+
+                <!-- Cuadrito 2 en Modal: ¿Cómo Prevenir? -->
+                <div class="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200/80">
+                    <span class="text-[11px] font-black uppercase tracking-wider text-emerald-800 flex items-center gap-1.5 mb-2">
+                        <i class="fa-solid fa-shield-halved text-emerald-600"></i>
+                        Medidas de Prevención (¿Cómo Prevenir?)
+                    </span>
+                    <p id="modalConceptoPrevenir" class="text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line break-words"></p>
+                </div>
             </div>
         </div>
 
     </div>
 </div>
+@endsection
 
 @push('scripts')
 <script>
@@ -214,11 +280,28 @@
     function openDetailModal(cardElement) {
         const title = cardElement.getAttribute('data-title') || '';
         const desc = cardElement.getAttribute('data-desc') || '';
+        const prevenir = cardElement.getAttribute('data-prevenir') || '';
+        const gravedad = cardElement.getAttribute('data-gravedad') || '';
+        const gravedadClass = cardElement.getAttribute('data-gravedad-class') || '';
         const modulo = cardElement.getAttribute('data-modulo') || 'General';
+        const category = cardElement.getAttribute('data-category') || '';
 
         document.getElementById('modalConceptoTitulo').textContent = title;
         document.getElementById('modalConceptoTexto').textContent = desc;
+        document.getElementById('modalConceptoPrevenir').textContent = prevenir;
         document.getElementById('modalConceptoModulo').textContent = modulo;
+        if (category) {
+            document.getElementById('modalConceptoCategory').textContent = 'Definición de ' + category;
+        }
+
+        const badgeGrav = document.getElementById('modalConceptoGravedad');
+        if (gravedad && gravedad.trim() !== '') {
+            badgeGrav.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold border ' + gravedadClass;
+            badgeGrav.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-[10px]"></i> Gravedad: ' + gravedad;
+            badgeGrav.style.display = 'inline-flex';
+        } else {
+            badgeGrav.style.display = 'none';
+        }
 
         const overlay = document.getElementById('modalDescripcionOverlay');
         const modalBox = overlay.querySelector('div');
@@ -268,8 +351,10 @@
                         cards.forEach(card => {
                             const name = card.getAttribute('data-title')?.toLowerCase() || '';
                             const desc = card.getAttribute('data-desc')?.toLowerCase() || '';
+                            const prev = card.getAttribute('data-prevenir')?.toLowerCase() || '';
+                            const grav = card.getAttribute('data-gravedad')?.toLowerCase() || '';
 
-                            if (name.includes(query) || desc.includes(query)) {
+                            if (name.includes(query) || desc.includes(query) || prev.includes(query) || grav.includes(query)) {
                                 card.style.display = 'block';
                                 hasMatchInAccordion = true;
                             } else {
@@ -300,4 +385,3 @@
     });
 </script>
 @endpush
-@endsection
