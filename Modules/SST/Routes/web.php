@@ -110,6 +110,13 @@ Route::prefix('Sst')->name('SST.')->group(function () {
         Route::delete('/{id}', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\SensibilizacionController::class, 'destroy'])->name('destroy');
     });
 
+    // Rutas de Administración - Actividades SST (Grupo Unificado)
+    Route::prefix('admin/actividades-sst')->name('admin.actividades_sst.')->group(function () {
+        Route::get('/pausas-activas', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\PausasActivasController::class, 'index'])->name('pausas_activas.index');
+        Route::get('/charlas', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\CharlasController::class, 'index'])->name('charlas.index');
+        Route::get('/sensibilizacion', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\SensibilizacionController::class, 'index'])->name('sensibilizacion.index');
+    });
+
     // Rutas de Administración - Indicadores SST
     Route::prefix('admin/indicadores')->name('admin.indicadores.')->group(function () {
         Route::get('/ver-indicadores', [\Modules\SST\Http\Controllers\Admin\Indicadores\IndicadoresController::class, 'index'])->name('index');
@@ -174,6 +181,13 @@ Route::prefix('Sst')->name('SST.')->group(function () {
             Route::put('/actualizar/{id}', [AprendizInspeccionesController::class, 'update'])->name('update');
             Route::get('/historial', [AprendizInspeccionesController::class, 'historial'])->name('historial');
             Route::delete('/eliminar/{id}', [AprendizInspeccionesController::class, 'destroy'])->name('destroy');
+        });
+
+        // Actividades SST para Aprendiz
+        Route::prefix('actividades-sst')->name('actividades_sst.')->group(function () {
+            Route::get('/pausas-activas', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\PausasActivasController::class, 'index'])->name('pausas_activas.index');
+            Route::get('/charlas', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\CharlasController::class, 'index'])->name('charlas.index');
+            Route::get('/sensibilizacion', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\SensibilizacionController::class, 'index'])->name('sensibilizacion.index');
         });
     });
 

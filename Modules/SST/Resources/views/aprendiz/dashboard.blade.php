@@ -13,7 +13,7 @@
                 </span>
                 <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">¡Bienvenido, {{ Auth::user()->person->first_name ?? Auth::user()->nickname ?? 'Aprendiz' }}!</h1>
                 <p class="text-orange-100 text-sm leading-relaxed">
-                    Plataforma de Seguridad y Salud en el Trabajo. Accede al control de asistencia, pausas activas, consulta de riesgos y protocolos de emergencia.
+                    Plataforma de Seguridad y Salud en el Trabajo. Accede al control de asistencia, actividades SST, consulta de riesgos y protocolos de emergencia.
                 </p>
             </div>
             <div class="absolute right-0 bottom-0 opacity-10 transform translate-x-10 translate-y-10 pointer-events-none">
@@ -49,20 +49,20 @@
                     </div>
                 </div>
 
-                <!-- Card 2: Pausas Activas -->
+                <!-- Card 2: Actividades SST -->
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all hover:border-orange-300 group flex flex-col justify-between">
                     <div>
                         <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 text-xl group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-spa"></i>
+                            <i class="fa-solid fa-person-chalkboard"></i>
                         </div>
-                        <h3 class="font-bold text-slate-800 text-base mb-1 group-hover:text-emerald-600 transition">Pausas Activas</h3>
+                        <h3 class="font-bold text-slate-800 text-base mb-1 group-hover:text-emerald-600 transition">Actividades SST</h3>
                         <p class="text-slate-500 text-xs leading-relaxed">
-                            Revisa las jornadas de pausas programadas y mantén un registro de tu bienestar físico.
+                            Revisa las jornadas de pausas activas, charlas y actividades programadas para tu bienestar.
                         </p>
                     </div>
                     <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                        <span class="text-[11px] font-semibold text-emerald-600">Bienestar</span>
-                        <a href="#" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+                        <span class="text-[11px] font-semibold text-emerald-600">Bienestar y Salud</span>
+                        <a href="{{ route('SST.aprendiz.actividades_sst.pausas_activas.index') }}" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
                             Ver próximas <i class="fa-solid fa-arrow-right text-[10px]"></i>
                         </a>
                     </div>
@@ -81,12 +81,32 @@
                     </div>
                     <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
                         <span class="text-[11px] font-semibold text-red-600">Líneas Rápidas</span>
-                        <a href="#" class="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1">
+                        <a href="{{ route('SST.aprendiz.emergencias.contactos') }}" class="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1">
                             Contactos <i class="fa-solid fa-arrow-right text-[10px]"></i>
                         </a>
                     </div>
                 </div>
 
+                <!-- Card 4: Inspecciones SST -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all hover:border-orange-300 group flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4 text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-clipboard-check"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-base mb-1 group-hover:text-amber-600 transition">Inspecciones SST</h3>
+                        <p class="text-slate-500 text-xs leading-relaxed">
+                            Reporta actos y condiciones inseguras en ambientes de formación y consulta las que tienen seguimiento.
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <a href="{{ route('SST.aprendiz.inspecciones.realizar', ['filtro' => 'seguimiento']) }}" class="text-[11px] font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1">
+                            <i class="fa-regular fa-clock text-[10px]"></i> Seguimiento
+                        </a>
+                        <a href="{{ route('SST.aprendiz.inspecciones.realizar') }}" class="text-xs font-bold text-slate-700 hover:text-orange-600 flex items-center gap-1">
+                            Registrar <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
 
                 <!-- Card 5: Tipos de Eventos -->
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all hover:border-orange-300 group flex flex-col justify-between">
@@ -101,7 +121,7 @@
                     </div>
                     <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
                         <span class="text-[11px] font-semibold text-blue-600">Protocolos</span>
-                        <a href="#" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1">
+                        <a href="{{ route('SST.aprendiz.tipos_eventos.accidentes.index') }}" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1">
                             Ver detalles <i class="fa-solid fa-arrow-right text-[10px]"></i>
                         </a>
                     </div>

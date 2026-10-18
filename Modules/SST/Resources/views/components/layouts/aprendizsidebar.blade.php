@@ -286,7 +286,7 @@
             </div>
             <!-- Acordeón Normal -->
             <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
-                @php $actInspRealizar = request()->routeIs('SST.aprendiz.inspecciones.realizar'); @endphp
+                @php $actInspRealizar = request()->routeIs('SST.aprendiz.inspecciones.realizar') && request('filtro') !== 'seguimiento'; @endphp
                 <li>
                     <a href="{{ route('SST.aprendiz.inspecciones.realizar') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actInspRealizar ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
                         <span class="text-[6px] mr-2.5 {{ $actInspRealizar ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
@@ -294,10 +294,10 @@
                     </a>
                 </li>
 
-                @php $actInspHistorial = request()->routeIs('SST.aprendiz.inspecciones.historial'); @endphp
+                @php $actInspSeguimiento = request('filtro') === 'seguimiento' || request()->routeIs('SST.aprendiz.inspecciones.historial'); @endphp
                 <li>
-                    <a href="{{ route('SST.aprendiz.inspecciones.historial') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actInspHistorial ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actInspHistorial ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
+                    <a href="{{ route('SST.aprendiz.inspecciones.realizar', ['filtro' => 'seguimiento']) }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actInspSeguimiento ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
+                        <span class="text-[6px] mr-2.5 {{ $actInspSeguimiento ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
                         Seguimiento
                     </a>
                 </li>
@@ -315,38 +315,75 @@
                         <span>Registrar Inspección</span>
                         @if($actInspRealizar)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
                     </a>
-                    <a href="{{ route('SST.aprendiz.inspecciones.historial') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInspHistorial ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
+                    <a href="{{ route('SST.aprendiz.inspecciones.realizar', ['filtro' => 'seguimiento']) }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInspSeguimiento ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
                         <span>Seguimiento</span>
-                        @if($actInspHistorial)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
+                        @if($actInspSeguimiento)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
                     </a>
                 </div>
             </div>
         </div>
 
         <!-- ACTIVIDADES SST -->
-        <div class="flex flex-col menu-wrapper relative" id="pausasWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnTogglePausas">
+        @php
+            $isActividades = request()->routeIs('SST.aprendiz.actividades_sst.*');
+        @endphp
+        <div class="flex flex-col menu-wrapper relative {{ $isActividades ? 'open' : '' }}" id="pausasWrapper">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isActividades ? 'text-orange-600 bg-orange-50/70 font-bold' : 'text-slate-700 hover:text-orange-600 hover:bg-slate-50' }} transition cursor-pointer group" id="btnTogglePausas">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition shrink-0">
+                    <span class="w-8 h-8 rounded-xl {{ $isActividades ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-person-chalkboard text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Actividades SST</span>
                 </div>
-                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowPausas">
+                <span class="text-[10px] {{ $isActividades ? 'text-orange-600' : 'text-slate-400 group-hover:text-orange-600' }} arrow-icon" id="arrowPausas">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
+            <!-- Acordeón Normal -->
             <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
-                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Próximas</a></li>
-                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Mi Historial</a></li>
+                @php $actPausas = request()->routeIs('SST.aprendiz.actividades_sst.pausas_activas.*'); @endphp
+                <li>
+                    <a href="{{ route('SST.aprendiz.actividades_sst.pausas_activas.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actPausas ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
+                        <span class="text-[6px] mr-2.5 {{ $actPausas ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
+                        Pausas Activas
+                    </a>
+                </li>
+                @php $actCharlas = request()->routeIs('SST.aprendiz.actividades_sst.charlas.*'); @endphp
+                <li>
+                    <a href="{{ route('SST.aprendiz.actividades_sst.charlas.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actCharlas ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
+                        <span class="text-[6px] mr-2.5 {{ $actCharlas ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
+                        Charlas
+                    </a>
+                </li>
+                @php $actSensib = request()->routeIs('SST.aprendiz.actividades_sst.sensibilizacion.*'); @endphp
+                <li>
+                    <a href="{{ route('SST.aprendiz.actividades_sst.sensibilizacion.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actSensib ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
+                        <span class="text-[6px] mr-2.5 {{ $actSensib ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
+                        Sensibilización
+                    </a>
+                </li>
             </ul>
+            <!-- Tarjeta Flotante (Flyout Mini) -->
             <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-slate-100">
-                    <span class="font-extrabold text-xs text-slate-800">Actividades SST</span>
+                <div class="px-3 py-2 border-b border-slate-100 flex items-center justify-between">
+                    <span class="font-extrabold text-xs text-slate-800 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                        <span>Actividades SST</span>
+                    </span>
                 </div>
                 <div class="py-1 space-y-0.5">
-                    <a href="#" class="flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">Próximas</a>
-                    <a href="#" class="flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">Mi Historial</a>
+                    <a href="{{ route('SST.aprendiz.actividades_sst.pausas_activas.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actPausas ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
+                        <span>Pausas Activas</span>
+                        @if($actPausas)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
+                    </a>
+                    <a href="{{ route('SST.aprendiz.actividades_sst.charlas.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actCharlas ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
+                        <span>Charlas</span>
+                        @if($actCharlas)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
+                    </a>
+                    <a href="{{ route('SST.aprendiz.actividades_sst.sensibilizacion.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actSensib ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
+                        <span>Sensibilización</span>
+                        @if($actSensib)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
+                    </a>
                 </div>
             </div>
         </div>

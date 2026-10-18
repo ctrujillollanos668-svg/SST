@@ -14,7 +14,7 @@ class InspeccionesController extends Controller
     /**
      * Muestra el formulario y el listado de inspecciones SST del aprendiz.
      */
-    public function realizar()
+    public function registrar(Request $request)
     {
         // Consultar únicamente los lugares registrados por el administrador
         $lugares = LugarFormacion::where('estado', 'activo')->orderBy('nombre', 'asc')->get();
@@ -22,9 +22,60 @@ class InspeccionesController extends Controller
             $lugares = LugarFormacion::orderBy('nombre', 'asc')->get();
         }
 
-        $inspecciones = InspeccionSST::with(['lugar', 'user'])->orderBy('id_inspeccion', 'desc')->get();
+        $filtro = $request->get('filtro');
 
-        return view('sst::aprendiz.inspecciones.Realizar_inspeccion', compact('lugares', 'inspecciones'));
+        $todasInspecciones = InspeccionSST::with(['lugar', 'user'])->orderBy('id_inspeccion', 'desc')->get();
+
+        $totalSeguimiento = $todasInspecciones->filter(function ($item) {
+            $meta = json_decode($item->observaciones, true) ?? [];
+            return in_array($item->estado, ['pendiente', 'en_proceso']) || !empty($meta['seguimiento']);
+        })->count();
+
+        $totalFinalizadas = $todasInspecciones->count() - $totalSeguimiento;
+
+        if ($filtro === 'seguimiento') {
+            return redirect()->route('SST.aprendiz.inspecciones.seguimiento');
+        } elseif ($filtro === 'finalizadas') {
+            $inspecciones = $todasInspecciones->filter(function ($item) {
+                $meta = json_decode($item->observaciones, true) ?? [];
+                return !in_array($item->estado, ['pendiente', 'en_proceso']) && empty($meta['seguimiento']);
+            });
+        } else {
+            $inspecciones = $todasInspecciones;
+        }
+
+        return view('sst::aprendiz.inspecciones.Registrar_inspeccion', compact('lugares', 'inspecciones', 'filtro', 'totalSeguimiento', 'totalFinalizadas', 'todasInspecciones'));
+    }
+
+    /**
+     * Muestra el seguimiento de inspecciones SST del aprendiz.
+     */
+    public function seguimiento(Request $request)
+    {
+        $lugares = LugarFormacion::where('estado', 'activo')->orderBy('nombre', 'asc')->get();
+        if ($lugares->isEmpty()) {
+            $lugares = LugarFormacion::orderBy('nombre', 'asc')->get();
+        }
+
+        $todasInspecciones = InspeccionSST::with(['lugar', 'user'])->orderBy('id_inspeccion', 'desc')->get();
+
+        $inspecciones = $todasInspecciones->filter(function ($item) {
+            $meta = json_decode($item->observaciones, true) ?? [];
+            return in_array($item->estado, ['pendiente', 'en_proceso']) || !empty($meta['seguimiento']);
+        });
+
+        $totalSeguimiento = $inspecciones->count();
+        $totalFinalizadas = $todasInspecciones->count() - $totalSeguimiento;
+
+        return view('sst::aprendiz.inspecciones.Seguimiento', compact('lugares', 'inspecciones', 'totalSeguimiento', 'totalFinalizadas', 'todasInspecciones'));
+    }
+
+    /**
+     * Alias de compatibilidad hacia registrar
+     */
+    public function realizar(Request $request)
+    {
+        return redirect()->route('SST.aprendiz.inspecciones.registrar');
     }
 
     /**
@@ -135,12 +186,11 @@ class InspeccionesController extends Controller
     }
 
     /**
-     * Muestra el historial de inspecciones para el aprendiz.
+     * Muestra el seguimiento de inspecciones para el aprendiz.
      */
     public function historial()
     {
-        $inspecciones = InspeccionSST::with(['lugar', 'user'])->orderBy('fecha_inspeccion', 'desc')->paginate(15);
-        return view('sst::aprendiz.inspecciones.Historial', compact('inspecciones'));
+        return redirect()->route('SST.aprendiz.inspecciones.realizar', ['filtro' => 'seguimiento']);
     }
 
     /**

@@ -399,7 +399,7 @@
 
         <!-- 5. ACTIVIDADES SST -->
         @php
-            $isPausas = request()->routeIs('SST.admin.pausas_activas.*') || request()->routeIs('SST.admin.charlas.*') || request()->routeIs('SST.admin.sensibilizacion.*');
+            $isPausas = request()->routeIs('SST.admin.actividades_sst.*') || request()->routeIs('SST.admin.pausas_activas.*') || request()->routeIs('SST.admin.charlas.*') || request()->routeIs('SST.admin.sensibilizacion.*');
         @endphp
         <div class="flex flex-col menu-wrapper relative {{ $isPausas ? 'open' : '' }}" id="pausasWrapper">
             <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnTogglePausas">
