@@ -404,14 +404,14 @@
                 </span>
             </div>
             <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
-                <li><a href="#" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Registrar Asistencia</a></li>
+                <li><a href="{{ route('SST.aprendiz.asistencia.index') }}" class="flex items-center pl-7 pr-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-white hover:shadow-xs transition font-medium"><span class="text-[6px] mr-2.5 text-slate-400"><i class="fa-solid fa-circle"></i></span> Control de Asistencias</a></li>
             </ul>
             <div class="sidebar-flyout">
                 <div class="px-3 py-2 border-b border-slate-100">
                     <span class="font-extrabold text-xs text-slate-800">Asistencia</span>
                 </div>
                 <div class="py-1">
-                    <a href="#" class="flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">Registrar Asistencia</a>
+                    <a href="{{ route('SST.aprendiz.asistencia.index') }}" class="flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">Control de Asistencias</a>
                 </div>
             </div>
         </div>

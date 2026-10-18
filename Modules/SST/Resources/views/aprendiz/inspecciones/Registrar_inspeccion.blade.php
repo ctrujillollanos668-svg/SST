@@ -1290,26 +1290,95 @@
         renderizarPrevisualizacionesEdit();
     }
 
-    function filtrarInspecciones() {
-        const input = document.getElementById('inputBuscarInspeccion');
-        const query = (input ? input.value : '').toLowerCase().trim();
-        const cards = document.querySelectorAll('#contenedorInspecciones .item-card');
-        let visibles = 0;
+    let paginaActualInspeccion = 1;
+    const itemsPorPaginaInspeccion = 10;
 
-        cards.forEach(card => {
-            const text = card.innerText.toLowerCase();
-            if (!query || text.includes(query)) {
+    function renderPaginacionInspecciones(matchingCards) {
+        const total = matchingCards.length;
+        const totalPaginas = Math.ceil(total / itemsPorPaginaInspeccion) || 1;
+        if (paginaActualInspeccion > totalPaginas) paginaActualInspeccion = totalPaginas;
+        if (paginaActualInspeccion < 1) paginaActualInspeccion = 1;
+
+        matchingCards.forEach((card, idx) => {
+            const start = (paginaActualInspeccion - 1) * itemsPorPaginaInspeccion;
+            const end = start + itemsPorPaginaInspeccion;
+            if (idx >= start && idx < end) {
                 card.style.display = 'flex';
-                visibles++;
             } else {
                 card.style.display = 'none';
             }
         });
 
+        let nav = document.getElementById('paginacionInspecciones');
+        if (!nav) {
+            nav = document.createElement('div');
+            nav.id = 'paginacionInspecciones';
+            nav.className = 'pt-5 mt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3';
+            const cont = document.getElementById('contenedorInspecciones');
+            if (cont && cont.parentNode) cont.parentNode.appendChild(nav);
+        }
+
+        if (total <= itemsPorPaginaInspeccion) {
+            nav.style.display = 'none';
+            return;
+        }
+
+        nav.style.display = 'flex';
+        const startNum = (paginaActualInspeccion - 1) * itemsPorPaginaInspeccion + 1;
+        const endNum = Math.min(paginaActualInspeccion * itemsPorPaginaInspeccion, total);
+
+        let btnsHtml = '';
+        for (let i = 1; i <= totalPaginas; i++) {
+            if (i === paginaActualInspeccion) {
+                btnsHtml += `<button type="button" class="w-8 h-8 rounded-xl bg-orange-600 text-white font-bold text-xs shadow-xs">${i}</button>`;
+            } else {
+                btnsHtml += `<button type="button" onclick="irPaginaInspeccion(${i})" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition cursor-pointer">${i}</button>`;
+            }
+        }
+
+        nav.innerHTML = `
+            <span class="text-xs font-semibold text-slate-500">Mostrando <strong class="text-slate-800">${startNum}-${endNum}</strong> de <strong class="text-slate-800">${total}</strong> inspecciones</span>
+            <div class="flex items-center gap-1.5">
+                <button type="button" onclick="irPaginaInspeccion(${paginaActualInspeccion - 1})" ${paginaActualInspeccion === 1 ? 'disabled class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-400 text-xs font-bold opacity-60 cursor-not-allowed"' : 'class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer"'}>
+                    <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                </button>
+                ${btnsHtml}
+                <button type="button" onclick="irPaginaInspeccion(${paginaActualInspeccion + 1})" ${paginaActualInspeccion === totalPaginas ? 'disabled class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-400 text-xs font-bold opacity-60 cursor-not-allowed"' : 'class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer"'}>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    function irPaginaInspeccion(p) {
+        paginaActualInspeccion = p;
+        filtrarInspecciones();
+        const cont = document.getElementById('contenedorInspecciones');
+        if (cont) window.scrollTo({ top: cont.offsetTop - 100, behavior: 'smooth' });
+    }
+
+    function filtrarInspecciones() {
+        const input = document.getElementById('inputBuscarInspeccion');
+        const query = (input ? input.value : '').toLowerCase().trim();
+        const cards = Array.from(document.querySelectorAll('#contenedorInspecciones .item-card'));
+
+        cards.forEach(card => card.style.display = 'none');
+
+        const matching = cards.filter(card => {
+            const text = card.innerText.toLowerCase();
+            return !query || text.includes(query);
+        });
+
+        renderPaginacionInspecciones(matching);
+
         const conteoEl = document.getElementById('conteoInspecciones');
         if (conteoEl) {
-            conteoEl.textContent = visibles;
+            conteoEl.textContent = matching.length;
         }
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        filtrarInspecciones();
+    });
 </script>
 @endsection

@@ -1195,43 +1195,108 @@
         toggleModal('modalDetalleOverlay', true);
     }
 
-    // Buscador en Tiempo Real & Drag and drop
-    document.addEventListener('DOMContentLoaded', function () {
+    let paginaActualEvento = 1;
+    const itemsPorPaginaEvento = 10;
+
+    function renderPaginacionEventos(matchingCards) {
+        const total = matchingCards.length;
+        const totalPaginas = Math.ceil(total / itemsPorPaginaEvento) || 1;
+        if (paginaActualEvento > totalPaginas) paginaActualEvento = totalPaginas;
+        if (paginaActualEvento < 1) paginaActualEvento = 1;
+
+        matchingCards.forEach((card, idx) => {
+            const start = (paginaActualEvento - 1) * itemsPorPaginaEvento;
+            const end = start + itemsPorPaginaEvento;
+            if (idx >= start && idx < end) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        let nav = document.getElementById('paginacionEventos');
+        if (!nav) {
+            nav = document.createElement('div');
+            nav.id = 'paginacionEventos';
+            nav.className = 'pt-5 mt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3';
+            const cont = document.getElementById('contenedorEventos');
+            if (cont && cont.parentNode) cont.parentNode.appendChild(nav);
+        }
+
+        if (total <= itemsPorPaginaEvento) {
+            nav.style.display = 'none';
+            return;
+        }
+
+        nav.style.display = 'flex';
+        const startNum = (paginaActualEvento - 1) * itemsPorPaginaEvento + 1;
+        const endNum = Math.min(paginaActualEvento * itemsPorPaginaEvento, total);
+
+        let btnsHtml = '';
+        for (let i = 1; i <= totalPaginas; i++) {
+            if (i === paginaActualEvento) {
+                btnsHtml += `<button type="button" class="w-8 h-8 rounded-xl bg-orange-600 text-white font-bold text-xs shadow-xs">${i}</button>`;
+            } else {
+                btnsHtml += `<button type="button" onclick="irPaginaEvento(${i})" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition cursor-pointer">${i}</button>`;
+            }
+        }
+
+        nav.innerHTML = `
+            <span class="text-xs font-semibold text-slate-500">Mostrando <strong class="text-slate-800">${startNum}-${endNum}</strong> de <strong class="text-slate-800">${total}</strong> registros</span>
+            <div class="flex items-center gap-1.5">
+                <button type="button" onclick="irPaginaEvento(${paginaActualEvento - 1})" ${paginaActualEvento === 1 ? 'disabled class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-400 text-xs font-bold opacity-60 cursor-not-allowed"' : 'class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer"'}>
+                    <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                </button>
+                ${btnsHtml}
+                <button type="button" onclick="irPaginaEvento(${paginaActualEvento + 1})" ${paginaActualEvento === totalPaginas ? 'disabled class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-400 text-xs font-bold opacity-60 cursor-not-allowed"' : 'class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer"'}>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    function irPaginaEvento(p) {
+        paginaActualEvento = p;
+        filtrarEventos();
+        const cont = document.getElementById('contenedorEventos');
+        if (cont) window.scrollTo({ top: cont.offsetTop - 100, behavior: 'smooth' });
+    }
+
+    function filtrarEventos() {
         const inputBuscar = document.getElementById('inputBuscarEvento');
+        const query = (inputBuscar ? inputBuscar.value : '').toLowerCase().trim();
         const contenedor = document.getElementById('contenedorEventos');
+        if (!contenedor) return;
+        const cards = Array.from(contenedor.getElementsByClassName('item-card'));
         const noResults = document.getElementById('noResultsMsg');
         const conteo = document.getElementById('conteoEventos');
 
-        if (inputBuscar && contenedor) {
+        cards.forEach(card => card.style.display = 'none');
+
+        const matching = cards.filter(card => {
+            const title = (card.getAttribute('data-title') || '').toLowerCase();
+            const modulo = (card.getAttribute('data-modulo') || '').toLowerCase();
+            const desc = (card.getAttribute('data-desc') || '').toLowerCase();
+            const afectado = (card.getAttribute('data-afectado') || '').toLowerCase();
+            return !query || (title.includes(query) || modulo.includes(query) || desc.includes(query) || afectado.includes(query));
+        });
+
+        renderPaginacionEventos(matching);
+
+        if (conteo) conteo.textContent = matching.length;
+        if (noResults) noResults.classList.toggle('hidden', matching.length > 0);
+    }
+
+    // Buscador en Tiempo Real & Drag and drop
+    document.addEventListener('DOMContentLoaded', function () {
+        const inputBuscar = document.getElementById('inputBuscarEvento');
+        if (inputBuscar) {
             inputBuscar.addEventListener('input', function () {
-                const query = this.value.toLowerCase().trim();
-                const cards = contenedor.getElementsByClassName('item-card');
-                let visibles = 0;
-
-                Array.from(cards).forEach(function (card) {
-                    const title = (card.getAttribute('data-title') || '').toLowerCase();
-                    const modulo = (card.getAttribute('data-modulo') || '').toLowerCase();
-                    const desc = (card.getAttribute('data-desc') || '').toLowerCase();
-                    const afectado = (card.getAttribute('data-afectado') || '').toLowerCase();
-
-                    if (title.includes(query) || modulo.includes(query) || desc.includes(query) || afectado.includes(query)) {
-                        card.style.display = 'flex';
-                        visibles++;
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-
-                if (conteo) conteo.textContent = visibles;
-                if (noResults) {
-                    if (visibles === 0) {
-                        noResults.classList.remove('hidden');
-                    } else {
-                        noResults.classList.add('hidden');
-                    }
-                }
+                paginaActualEvento = 1;
+                filtrarEventos();
             });
         }
+        filtrarEventos();
 
         // Drag & Drop Registrar
         const dropZoneReg = document.getElementById('dropZoneRegistrar');

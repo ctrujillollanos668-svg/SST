@@ -38,7 +38,7 @@ class UsuarioController extends Controller
             });
         }
 
-        $usuarios = $query->orderBy('nickname', 'asc')->paginate(15)->withQueryString();
+        $usuarios = $query->orderBy('nickname', 'asc')->paginate(10)->withQueryString();
         $allUsers = User::with('person')->orderBy('nickname', 'asc')->get();
         $roles = Role::orderBy('name', 'asc')->get();
 

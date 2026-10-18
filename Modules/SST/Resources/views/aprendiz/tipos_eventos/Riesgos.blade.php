@@ -169,7 +169,7 @@
                                              <i class="fa-solid fa-expand text-white text-xs drop-shadow-xs"></i>
                                          </div>
                                      </div>
-                                @else    @else
+                                @else
                                      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100 flex flex-col items-center justify-center text-orange-500 shrink-0 shadow-2xs">
                                          <i class="fa-solid fa-biohazard text-2xl"></i>
                                      </div>
@@ -1199,29 +1199,106 @@
         toggleModal('modalDetalleOverlay', true);
     }
 
-    // Buscador en Tiempo Real
+    let paginaActualEvento = 1;
+    const itemsPorPaginaEvento = 10;
+
+    function renderPaginacionEventos(matchingCards) {
+        const total = matchingCards.length;
+        const totalPaginas = Math.ceil(total / itemsPorPaginaEvento) || 1;
+        if (paginaActualEvento > totalPaginas) paginaActualEvento = totalPaginas;
+        if (paginaActualEvento < 1) paginaActualEvento = 1;
+
+        matchingCards.forEach((card, idx) => {
+            const start = (paginaActualEvento - 1) * itemsPorPaginaEvento;
+            const end = start + itemsPorPaginaEvento;
+            if (idx >= start && idx < end) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        let nav = document.getElementById('paginacionEventos');
+        if (!nav) {
+            nav = document.createElement('div');
+            nav.id = 'paginacionEventos';
+            nav.className = 'pt-5 mt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3';
+            const cont = document.getElementById('contenedorEventos');
+            if (cont && cont.parentNode) cont.parentNode.appendChild(nav);
+        }
+
+        if (total <= itemsPorPaginaEvento) {
+            nav.style.display = 'none';
+            return;
+        }
+
+        nav.style.display = 'flex';
+        const startNum = (paginaActualEvento - 1) * itemsPorPaginaEvento + 1;
+        const endNum = Math.min(paginaActualEvento * itemsPorPaginaEvento, total);
+
+        let btnsHtml = '';
+        for (let i = 1; i <= totalPaginas; i++) {
+            if (i === paginaActualEvento) {
+                btnsHtml += `<button type="button" class="w-8 h-8 rounded-xl bg-orange-600 text-white font-bold text-xs shadow-xs">${i}</button>`;
+            } else {
+                btnsHtml += `<button type="button" onclick="irPaginaEvento(${i})" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition cursor-pointer">${i}</button>`;
+            }
+        }
+
+        nav.innerHTML = `
+            <span class="text-xs font-semibold text-slate-500">Mostrando <strong class="text-slate-800">${startNum}-${endNum}</strong> de <strong class="text-slate-800">${total}</strong> registros</span>
+            <div class="flex items-center gap-1.5">
+                <button type="button" onclick="irPaginaEvento(${paginaActualEvento - 1})" ${paginaActualEvento === 1 ? 'disabled class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-400 text-xs font-bold opacity-60 cursor-not-allowed"' : 'class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer"'}>
+                    <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                </button>
+                ${btnsHtml}
+                <button type="button" onclick="irPaginaEvento(${paginaActualEvento + 1})" ${paginaActualEvento === totalPaginas ? 'disabled class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-400 text-xs font-bold opacity-60 cursor-not-allowed"' : 'class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer"'}>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    function irPaginaEvento(p) {
+        paginaActualEvento = p;
+        filtrarEventos();
+        const cont = document.getElementById('contenedorEventos');
+        if (cont) window.scrollTo({ top: cont.offsetTop - 100, behavior: 'smooth' });
+    }
+
+    function filtrarEventos() {
+        const input = document.getElementById('inputBuscarEvento');
+        const q = (input ? input.value : '').toLowerCase().trim();
+        const cards = Array.from(document.getElementsByClassName('item-card'));
+        const noResults = document.getElementById('noResultsMsg');
+
+        cards.forEach(card => card.style.display = 'none');
+
+        const matching = cards.filter(card => {
+            const t = (card.dataset.title || '').toLowerCase();
+            const m = (card.dataset.modulo || '').toLowerCase();
+            const d = (card.dataset.desc || '').toLowerCase();
+            const a = (card.dataset.afectado || '').toLowerCase();
+            return !q || (t.includes(q) || m.includes(q) || d.includes(q) || a.includes(q));
+        });
+
+        renderPaginacionEventos(matching);
+
+        const conteo = document.getElementById('conteoEventos');
+        if (conteo) conteo.textContent = matching.length;
+        if (noResults) noResults.classList.toggle('hidden', matching.length > 0);
+    }
+
+    // Buscador en Tiempo Real con Paginación de 10
     document.addEventListener('DOMContentLoaded', () => {
         const input = document.getElementById('inputBuscarEvento');
-        const cards = document.getElementsByClassName('item-card');
-        const conteo = document.getElementById('conteoEventos');
-        const noResults = document.getElementById('noResultsMsg');
-        if (!input) return;
-
-        input.addEventListener('input', () => {
-            const q = input.value.toLowerCase().trim();
-            let count = 0;
-            Array.from(cards).forEach(card => {
-                const t = (card.dataset.title || '').toLowerCase();
-                const m = (card.dataset.modulo || '').toLowerCase();
-                const d = (card.dataset.desc || '').toLowerCase();
-                const a = (card.dataset.afectado || '').toLowerCase();
-                const match = t.includes(q) || m.includes(q) || d.includes(q) || a.includes(q);
-                card.style.display = match ? 'flex' : 'none';
-                if (match) count++;
+        if (input) {
+            input.addEventListener('input', () => {
+                paginaActualEvento = 1;
+                filtrarEventos();
             });
-            if (conteo) conteo.textContent = count;
-            if (noResults) noResults.classList.toggle('hidden', count > 0);
-        });
+        }
+        filtrarEventos();
     });
 </script>
 @endpush

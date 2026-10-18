@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\SST\Entities\ActividadSST;
 
+use Modules\SICA\Entities\Course;
+
 class SensibilizacionController extends Controller
 {
     /**
@@ -29,7 +31,7 @@ class SensibilizacionController extends Controller
             $query->where('estado', $request->estado);
         }
 
-        $actividades = $query->orderBy('fecha', 'desc')->orderBy('hora_inicio', 'asc')->paginate(12)->withQueryString();
+        $actividades = $query->orderBy('fecha', 'desc')->orderBy('hora_inicio', 'asc')->paginate(10)->withQueryString();
 
         $stats = [
             'total' => ActividadSST::where('tipo_actividad', 'Sensibilización')->count(),
@@ -37,6 +39,33 @@ class SensibilizacionController extends Controller
             'realizadas' => ActividadSST::where('tipo_actividad', 'Sensibilización')->where('estado', 'Realizada')->count(),
         ];
 
-        return view('sst::aprendiz.actividades_sst.Sensibilizacion', compact('actividades', 'stats'));
+        $cursos = Course::with('program')->where('status', 'Activo')->orderBy('code', 'asc')->get();
+
+        return view('sst::aprendiz.actividades_sst.Sensibilizacion', compact('actividades', 'stats', 'cursos'));
+    }
+
+    /**
+     * Registra o actualiza la asistencia a la jornada de sensibilización.
+     */
+    public function asistencia(Request $request, $id)
+    {
+        $actividad = ActividadSST::where('tipo_actividad', 'Sensibilización')->findOrFail($id);
+
+        $validated = $request->validate([
+            'ficha_programa' => 'nullable|string|max:150',
+            'instructor' => 'nullable|string|max:150',
+            'responsable' => 'nullable|string|max:150',
+            'numero_asistentes' => 'nullable|integer|min:0',
+            'participantes' => 'nullable|string',
+            'observaciones' => 'nullable|string',
+            'estado' => 'required|in:Programada,Realizada,Cancelada'
+        ]);
+
+        $validated['numero_asistentes'] = !empty($validated['numero_asistentes']) ? (int) $validated['numero_asistentes'] : 0;
+
+        $actividad->update($validated);
+
+        return redirect()->route('SST.aprendiz.actividades_sst.sensibilizacion.index')
+            ->with('success', '¡Asistencia registrada exitosamente para la jornada de sensibilización!');
     }
 }

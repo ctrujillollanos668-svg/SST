@@ -189,9 +189,22 @@ Route::prefix('Sst')->name('SST.')->group(function () {
 
         // Actividades SST para Aprendiz
         Route::prefix('actividades-sst')->name('actividades_sst.')->group(function () {
+            Route::get('/aprendices-por-ficha', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\CharlasController::class, 'getAprendicesPorFicha'])->name('aprendices_por_ficha');
+
             Route::get('/pausas-activas', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\PausasActivasController::class, 'index'])->name('pausas_activas.index');
+            Route::post('/pausas-activas/{id}/asistencia', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\PausasActivasController::class, 'asistencia'])->name('pausas_activas.asistencia');
+
             Route::get('/charlas', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\CharlasController::class, 'index'])->name('charlas.index');
+            Route::post('/charlas/{id}/asistencia', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\CharlasController::class, 'asistencia'])->name('charlas.asistencia');
+
             Route::get('/sensibilizacion', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\SensibilizacionController::class, 'index'])->name('sensibilizacion.index');
+            Route::post('/sensibilizacion/{id}/asistencia', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\SensibilizacionController::class, 'asistencia'])->name('sensibilizacion.asistencia');
+        });
+
+        // Módulo Central de Control de Asistencias SST
+        Route::prefix('asistencia')->name('asistencia.')->group(function () {
+            Route::get('/', [\Modules\SST\Http\Controllers\Aprendiz\Asistencia\AsistenciaController::class, 'index'])->name('index');
+            Route::get('/{id}', [\Modules\SST\Http\Controllers\Aprendiz\Asistencia\AsistenciaController::class, 'show'])->name('show');
         });
     });
 

@@ -30,7 +30,7 @@ class CharlasController extends Controller
             $query->where('estado', $request->estado);
         }
 
-        $actividades = $query->orderBy('fecha', 'desc')->orderBy('hora_inicio', 'desc')->paginate(12)->withQueryString();
+        $actividades = $query->orderBy('fecha', 'desc')->orderBy('hora_inicio', 'desc')->paginate(10)->withQueryString();
 
         $stats = [
             'total' => ActividadSST::where('tipo_actividad', 'Charla')->count(),
