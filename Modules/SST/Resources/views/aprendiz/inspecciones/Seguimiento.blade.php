@@ -91,30 +91,28 @@
                                 ];
                             }
                             $evidencias = $meta['evidencias'] ?? [];
-                            $fotoPrincipal = !empty($evidencias) ? $evidencias[0] : 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80';
+                            $fotoPrincipal = !empty($evidencias) ? $evidencias[0] : null;
                             $totalFotos = count($evidencias);
                             $lugarNombre = $item->lugar ? $item->lugar->nombre : ($meta['lugar_nombre'] ?? 'Ambiente de Formación');
                             $responsable = $meta['responsable'] ?? ($item->user ? $item->user->name : 'Aprendiz SST');
                             $unidad = $meta['lider_unidad'] ?? 'Coordinación SST';
                             $desc = $meta['descripcion'] ?? ($item->observaciones ?? 'Sin descripción');
                             $esSeguimiento = in_array($item->estado, ['pendiente', 'en_proceso']) || (!empty($meta['seguimiento']));
-                            $fechaSeguimientoPlazo = !empty($meta['fecha_seguimiento']) ? \Carbon\Carbon::parse($meta['fecha_seguimiento'])->format('d/m/Y') : null;
-                            $fechaHora = $item->fecha_inspeccion ? \Carbon\Carbon::parse($item->fecha_inspeccion)->format('d/m/Y') : now()->format('d/m/Y');
-                            if ($item->hora_inspeccion) {
-                                $fechaHora .= ' - ' . \Carbon\Carbon::parse($item->hora_inspeccion)->format('h:i A');
-                            }
+                            $fechaSeguimientoPlazo = !empty($meta['fecha_seguimiento']) ? \Carbon\Carbon::parse($meta['fecha_seguimiento'])->format('d/m/Y') : ($esSeguimiento ? \Carbon\Carbon::parse($item->fecha_inspeccion ?? now())->addDays(7)->format('d/m/Y') : null);
+                            $fechaSolo = $item->fecha_inspeccion ? \Carbon\Carbon::parse($item->fecha_inspeccion)->format('d/m/Y') : now()->format('d/m/Y');
                             $payloadItem = [
                                 'id' => $item->id_inspeccion,
                                 'lugar_id' => $item->lugar_id,
                                 'lugar_nombre' => $lugarNombre,
                                 'responsable' => $responsable,
-                                'lider_unidad' => $unidad !== 'Coordinación SST' ? $unidad : 'Coordinación SST',
+                                'lider_unidad' => (!empty($unidad) && $unidad !== 'Coordinación SST') ? $unidad : 'Sin asignar',
                                 'fecha_inspeccion' => $item->fecha_inspeccion ? \Carbon\Carbon::parse($item->fecha_inspeccion)->format('Y-m-d') : date('Y-m-d'),
-                                'fecha_hora_texto' => $fechaHora,
+                                'fecha_inspeccion_formato' => $fechaSolo,
+                                'fecha_hora_texto' => $fechaSolo,
                                 'tipo_inspeccion' => $item->tipo_inspeccion,
                                 'descripcion' => $desc !== 'Sin descripción' ? $desc : '',
                                 'seguimiento' => $esSeguimiento,
-                                'fecha_seguimiento' => !empty($meta['fecha_seguimiento']) ? \Carbon\Carbon::parse($meta['fecha_seguimiento'])->format('Y-m-d') : '',
+                                'fecha_seguimiento' => !empty($meta['fecha_seguimiento']) ? \Carbon\Carbon::parse($meta['fecha_seguimiento'])->format('Y-m-d') : ($esSeguimiento ? \Carbon\Carbon::parse($item->fecha_inspeccion ?? now())->addDays(7)->format('Y-m-d') : ''),
                                 'fecha_seguimiento_formato' => $fechaSeguimientoPlazo,
                                 'evidencias' => $evidencias
                             ];
@@ -128,20 +126,31 @@
                              data-item="{{ htmlspecialchars(json_encode($payloadItem, JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8') }}"
                              data-es-seguimiento="{{ $esSeguimiento ? '1' : '0' }}">
                             
-                            <!-- Miniatura de Imagen con Contador -->
-                            <div class="relative w-16 h-16 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 border-orange-200 bg-slate-900/5 shrink-0 group-hover:border-orange-400 transition shadow-2xs">
-                                <img src="{{ $fotoPrincipal }}" alt="Evidencia" class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
-                                @if($totalFotos > 1)
-                                    <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-slate-900/85 text-white text-[8px] font-extrabold flex items-center gap-0.5 shadow-xs">
-                                        <i class="fa-solid fa-camera text-orange-400 text-[7px]"></i> +{{ $totalFotos }}
-                                    </span>
-                                @endif
-                            </div>
+                            <!-- Miniatura de Imagen con Contador O Ícono si no hay foto -->
+                            @if(!empty($fotoPrincipal))
+                                <div onclick="event.stopPropagation(); abrirVisorImagen('{{ $fotoPrincipal }}', {{ json_encode($evidencias) }}, 0)"
+                                     title="Ver fotografía de evidencia"
+                                     class="relative w-16 h-16 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 border-orange-200 bg-slate-900/5 shrink-0 group-hover:border-orange-500 transition shadow-2xs cursor-pointer group/thumb">
+                                    <img src="{{ $fotoPrincipal }}" alt="Evidencia" class="w-full h-full object-cover group-hover/thumb:scale-110 transition duration-300">
+                                    @if($totalFotos > 1)
+                                        <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-slate-900/85 text-white text-[8px] font-extrabold flex items-center gap-0.5 shadow-xs">
+                                            <i class="fa-solid fa-camera text-orange-400 text-[7px]"></i> +{{ $totalFotos }}
+                                        </span>
+                                    @endif
+                                    <div class="absolute inset-0 bg-slate-900/25 opacity-0 group-hover/thumb:opacity-100 transition flex items-center justify-center">
+                                        <i class="fa-solid fa-expand text-white text-xs drop-shadow-xs"></i>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="w-16 h-16 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200/80 flex flex-col items-center justify-center text-orange-500 shrink-0 shadow-2xs group-hover:border-orange-400 transition">
+                                    <i class="fa-solid fa-clipboard-check text-2xl text-orange-500"></i>
+                                </div>
+                            @endif
 
                             <!-- Cuerpo de la Tarjeta -->
                             <div class="flex-1 flex flex-col justify-between space-y-2.5 w-full">
                                 
-                                <!-- Fila 1: Título y Estado -->
+                                <!-- Fila 1: Título (Tipo de Hallazgo) y En Seguimiento -->
                                 <div class="flex flex-wrap items-center justify-between gap-2">
                                     <h3 class="font-extrabold text-slate-900 text-sm sm:text-base flex items-center gap-2">
                                         <span class="w-2.5 h-2.5 rounded-full {{ str_contains(strtolower($item->tipo_inspeccion), 'condici') ? 'bg-rose-500' : 'bg-orange-500' }} shrink-0"></span>
@@ -149,32 +158,40 @@
                                     </h3>
 
                                     <div class="flex items-center gap-2">
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-800 border border-amber-300 shadow-2xs">
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-800 border border-amber-300 shadow-2xs select-none">
                                             <i class="fa-regular fa-clock text-[9px] text-amber-600"></i> 
                                             <span>Seguimiento @if($fechaSeguimientoPlazo)<span class="text-amber-900 font-extrabold">({{ $fechaSeguimientoPlazo }})</span>@endif</span>
-                                        </span>
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-50 text-orange-700 border border-orange-200/80">
-                                            Moderado
                                         </span>
                                     </div>
                                 </div>
 
-                                <!-- Fila 2: Chips informativos -->
+                                <!-- Fila 2: Chips informativos con TODOS los campos del formulario -->
                                 <div class="flex flex-wrap items-center gap-2 text-[11px] font-medium text-slate-600">
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
-                                        <i class="fa-solid fa-location-dot text-orange-500 text-[10px]"></i> {{ $lugarNombre }}
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Lugar de Formación">
+                                        <i class="fa-solid fa-location-dot text-orange-500 text-[10px]"></i>
+                                        <span class="text-slate-400 font-semibold">Lugar de Formación:</span>
+                                        <strong class="font-bold text-slate-700">{{ $lugarNombre }}</strong>
                                     </span>
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
-                                        <i class="fa-regular fa-calendar text-orange-500 text-[10px]"></i> {{ $fechaHora }}
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Fecha de Inspección">
+                                        <i class="fa-regular fa-calendar text-orange-500 text-[10px]"></i>
+                                        <span class="text-slate-400 font-semibold">Fecha de Inspección:</span>
+                                        <strong class="font-bold text-slate-700">{{ $fechaSolo }}</strong>
                                     </span>
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
-                                        <i class="fa-solid fa-user text-orange-500 text-[10px]"></i> {{ $responsable }}
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Nombre del Responsable">
+                                        <i class="fa-solid fa-user text-orange-500 text-[10px]"></i>
+                                        <span class="text-slate-400 font-semibold">Responsable:</span>
+                                        <strong class="font-bold text-slate-700">{{ $responsable }}</strong>
                                     </span>
-                                    @if(!empty($unidad) && $unidad !== 'Coordinación SST')
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
-                                            <i class="fa-solid fa-building-user text-orange-500 text-[10px]"></i> Líder: {{ $unidad }}
-                                        </span>
-                                    @endif
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Líder de Unidad">
+                                        <i class="fa-solid fa-building-user text-orange-500 text-[10px]"></i>
+                                        <span class="text-slate-400 font-semibold">Líder de Unidad:</span>
+                                        <strong class="font-bold text-slate-700">{{ (!empty($unidad) && $unidad !== 'Coordinación SST') ? $unidad : 'Sin asignar' }}</strong>
+                                    </span>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Evidencia Fotográfica">
+                                        <i class="fa-solid fa-camera text-orange-500 text-[10px]"></i>
+                                        <span class="text-slate-400 font-semibold">Evidencia Fotográfica:</span>
+                                        <strong class="font-bold text-slate-700">{{ $totalFotos > 0 ? $totalFotos . ' foto(s)' : 'Sin fotografías' }}</strong>
+                                    </span>
                                 </div>
 
                                 <!-- Fila 3: Descripción y Acciones -->
@@ -264,9 +281,6 @@
 
                 <div class="flex items-center gap-2">
                     <span id="detalleBadgeEstado" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold"></span>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-50 text-orange-700 border border-orange-200/80">
-                        Moderado
-                    </span>
                 </div>
             </div>
 
@@ -346,6 +360,58 @@
             <button type="button" id="btnEditarDesdeDetalle" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200 text-orange-700 border border-orange-200/90 text-xs font-bold shadow-xs transition cursor-pointer">
                 <i class="fa-solid fa-pen-to-square text-xs"></i>
                 <span>Editar Inspección</span>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- ============================================================== -->
+<!-- MODAL: VISOR DE IMÁGENES / LIGHTBOX (MEDIANO Y ELEGANTE)       -->
+<!-- ============================================================== -->
+<div id="modalVisorImagen" class="fixed inset-0 z-[60] bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 hidden transition-opacity duration-200" onclick="cerrarVisorImagen()">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 max-w-lg sm:max-w-xl w-full overflow-hidden transform transition-all duration-200 scale-95 flex flex-col my-auto relative" onclick="event.stopPropagation()">
+        
+        <!-- Header del Visor -->
+        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100 shrink-0 bg-white">
+            <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-lg bg-orange-50 border border-orange-200 text-orange-600 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
+                <div>
+                    <h4 class="text-xs font-extrabold text-slate-800 leading-tight">Evidencia Fotográfica</h4>
+                    <p class="text-[10px] text-slate-400 font-medium">Inspección de Seguridad</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <span id="visorContador" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">1 / 1</span>
+                <button type="button" onclick="cerrarVisorImagen()" class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs transition cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Área de la Imagen -->
+        <div class="relative bg-slate-950 flex items-center justify-center p-2 min-h-[260px] max-h-[60vh] overflow-hidden select-none">
+            <img id="visorImagenSrc" src="" alt="Evidencia" class="max-h-[58vh] max-w-full w-auto h-auto object-contain rounded-xl shadow-lg transition-transform duration-200">
+
+            <!-- Botones Prev / Next (si hay más de 1 imagen) -->
+            <button type="button" id="btnVisorPrev" onclick="cambiarFotoVisor(-1)" class="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-900/70 hover:bg-slate-900 text-white flex items-center justify-center text-xs backdrop-blur-xs transition shadow-md cursor-pointer hidden">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button type="button" id="btnVisorNext" onclick="cambiarFotoVisor(1)" class="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-900/70 hover:bg-slate-900 text-white flex items-center justify-center text-xs backdrop-blur-xs transition shadow-md cursor-pointer hidden">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- Footer del Visor -->
+        <div class="flex items-center justify-between px-4 py-2.5 border-t border-slate-100 bg-slate-50/70 shrink-0">
+            <span class="text-[10px] text-slate-400 font-medium flex items-center gap-1">
+                <i class="fa-regular fa-eye text-orange-500 text-[10px]"></i> Visualización en pantalla
+            </span>
+            <button type="button" onclick="cerrarVisorImagen()" class="px-4 py-1.5 rounded-xl bg-white border border-slate-200/80 hover:bg-slate-100 text-slate-700 text-xs font-bold transition shadow-2xs cursor-pointer">
+                Cerrar
             </button>
         </div>
 
@@ -527,6 +593,74 @@
     let currentCardElementForEdit = null;
     const urlActualizarBase = "{{ url('Sst/aprendiz/inspecciones/actualizar') }}";
 
+    // Visor de Imágenes en Modal Mediano (Lightbox interno)
+    let visorGaleria = [];
+    let visorIndiceActual = 0;
+
+    function abrirVisorImagen(src, galeria = [], idx = 0) {
+        if (Array.isArray(galeria) && galeria.length > 0) {
+            visorGaleria = galeria;
+            visorIndiceActual = (idx >= 0 && idx < galeria.length) ? idx : 0;
+        } else {
+            visorGaleria = [src];
+            visorIndiceActual = 0;
+        }
+        actualizarVistaVisor();
+        const modal = document.getElementById('modalVisorImagen');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    function cerrarVisorImagen() {
+        const modal = document.getElementById('modalVisorImagen');
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+
+    function cambiarFotoVisor(delta) {
+        if (visorGaleria.length <= 1) return;
+        visorIndiceActual = (visorIndiceActual + delta + visorGaleria.length) % visorGaleria.length;
+        actualizarVistaVisor();
+    }
+
+    function actualizarVistaVisor() {
+        const imgEl = document.getElementById('visorImagenSrc');
+        const contadorEl = document.getElementById('visorContador');
+        const btnPrev = document.getElementById('btnVisorPrev');
+        const btnNext = document.getElementById('btnVisorNext');
+
+        if (imgEl && visorGaleria.length > 0) {
+            imgEl.src = visorGaleria[visorIndiceActual];
+        }
+        if (contadorEl) {
+            contadorEl.textContent = `${visorIndiceActual + 1} / ${visorGaleria.length}`;
+        }
+        if (btnPrev && btnNext) {
+            if (visorGaleria.length > 1) {
+                btnPrev.classList.remove('hidden');
+                btnNext.classList.remove('hidden');
+            } else {
+                btnPrev.classList.add('hidden');
+                btnNext.classList.add('hidden');
+            }
+        }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        const modal = document.getElementById('modalVisorImagen');
+        if (modal && !modal.classList.contains('hidden')) {
+            if (e.key === 'Escape') {
+                cerrarVisorImagen();
+            } else if (e.key === 'ArrowLeft') {
+                cambiarFotoVisor(-1);
+            } else if (e.key === 'ArrowRight') {
+                cambiarFotoVisor(1);
+            }
+        }
+    });
+
     function closeModalEdicion() {
         document.getElementById('modalEdicion').classList.add('hidden');
     }
@@ -577,17 +711,18 @@
         const badgeEstado = document.getElementById('detalleBadgeEstado');
         if (data.seguimiento) {
             badgeEstado.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold bg-amber-50 text-amber-800 border border-amber-300';
-            badgeEstado.innerHTML = '<i class="fa-regular fa-clock text-[10px]"></i> <span>En Seguimiento</span>';
+            const fSeg = data.fecha_seguimiento_formato || data.fecha_seguimiento;
+            badgeEstado.innerHTML = `<i class="fa-regular fa-clock text-[10px]"></i> <span>Seguimiento ${fSeg ? `(${fSeg})` : ''}</span>`;
         } else {
             badgeEstado.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-300';
-            badgeEstado.innerHTML = '<i class="fa-solid fa-check text-[10px]"></i> <span>Finalizado</span>';
+            badgeEstado.innerHTML = '<i class="fa-solid fa-check text-[10px]"></i> <span>Finalizada</span>';
         }
 
         // Ficha técnica
         document.getElementById('detalleLugar').textContent = data.lugar_nombre || 'Ambiente de Formación';
-        document.getElementById('detalleFecha').textContent = data.fecha_hora_texto || (data.fecha_inspeccion || 'Sin fecha');
+        document.getElementById('detalleFecha').textContent = data.fecha_inspeccion_formato || data.fecha_hora_texto || (data.fecha_inspeccion || 'Sin fecha');
         document.getElementById('detalleResponsable').textContent = data.responsable || 'Aprendiz SST';
-        document.getElementById('detalleLider').textContent = data.lider_unidad || 'Coordinación SST';
+        document.getElementById('detalleLider').textContent = data.lider_unidad || 'Sin asignar';
 
         // Banner de seguimiento
         const bannerSeg = document.getElementById('detalleBannerSeguimiento');
@@ -606,22 +741,36 @@
         const contFotos = document.getElementById('detalleFotosContainer');
         const gridFotos = document.getElementById('detalleFotosGrid');
         gridFotos.innerHTML = '';
+        contFotos.classList.remove('hidden');
 
         if (fotos.length > 0) {
-            contFotos.classList.remove('hidden');
-            document.getElementById('detalleTotalFotosTexto').textContent = `${fotos.length} foto(s)`;
+            document.getElementById('detalleTotalFotosTexto').textContent = `${fotos.length}/3 imágenes`;
             fotos.forEach((url, idx) => {
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-900/5 aspect-video group cursor-pointer shadow-2xs hover:shadow-md transition';
                 itemDiv.innerHTML = `
                     <img src="${url}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" alt="Evidencia #${idx+1}">
                     <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-slate-900/80 text-white text-[9px] font-bold">Foto #${idx+1}</span>
+                    <div class="absolute inset-0 bg-slate-900/25 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <span class="px-2.5 py-1 rounded-xl bg-slate-900/85 text-white text-[10px] font-bold flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-expand text-[9px]"></i> Ver imagen
+                        </span>
+                    </div>
                 `;
-                itemDiv.onclick = () => window.open(url, '_blank');
+                itemDiv.onclick = (e) => {
+                    e.stopPropagation();
+                    abrirVisorImagen(url, fotos, idx);
+                };
                 gridFotos.appendChild(itemDiv);
             });
         } else {
-            contFotos.classList.add('hidden');
+            document.getElementById('detalleTotalFotosTexto').textContent = '0/3 imágenes';
+            gridFotos.innerHTML = `
+                <div class="col-span-2 sm:col-span-3 p-3 rounded-2xl bg-slate-50 border border-dashed border-slate-200 text-slate-400 text-center text-xs flex items-center justify-center gap-2">
+                    <i class="fa-regular fa-image text-slate-400"></i>
+                    <span>Sin fotografías adjuntas en este reporte (0/3)</span>
+                </div>
+            `;
         }
 
         // Botón editar desde detalle
@@ -699,9 +848,13 @@
     }
 
     function setCheckboxEstado(prefix, tipo, activo) {
-        const checkbox = document.getElementById(`${prefix}Check${tipo}`);
-        const card = document.getElementById(`${prefix}Card${tipo}`);
-        const indicator = document.getElementById(`${prefix}CheckIndicator${tipo}`);
+        const checkId = prefix ? `${prefix}Check${tipo}` : `check${tipo}`;
+        const cardId = prefix ? `${prefix}Card${tipo}` : `card${tipo}`;
+        const indicatorId = prefix ? `${prefix}CheckIndicator${tipo}` : `checkIndicator${tipo}`;
+
+        const checkbox = document.getElementById(checkId);
+        const card = document.getElementById(cardId);
+        const indicator = document.getElementById(indicatorId);
         const icon = indicator ? indicator.querySelector('i') : null;
 
         if (!checkbox || !card || !indicator) return;
@@ -724,8 +877,14 @@
 
     function toggleEditSeguimientoCalendario(checkbox) {
         const seccion = document.getElementById('editSeccionFechaSeguimiento');
+        const input = document.getElementById('editInputFechaSeguimiento');
         if (checkbox.checked) {
             seccion.classList.remove('hidden');
+            if (input && !input.value) {
+                const hoy = new Date();
+                hoy.setDate(hoy.getDate() + 7);
+                input.value = hoy.toISOString().split('T')[0];
+            }
         } else {
             seccion.classList.add('hidden');
         }

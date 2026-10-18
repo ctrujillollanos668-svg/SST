@@ -160,13 +160,18 @@
                                 
                                 <!-- Foto a la izquierda pequeña o Icono -->
                                 @if(!empty($fotoPrincipal))
-                                    <div class="relative w-16 h-16 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 border-orange-200 bg-slate-900/5 shrink-0 group-hover:border-orange-400 transition shadow-2xs">
-                                        <img src="{{ $fotoPrincipal }}" alt="Evidencia Fotográfica" class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
+                                    <div onclick="event.stopPropagation(); abrirVisorImagen('{{ $fotoPrincipal }}', {{ json_encode($evidencias) }}, 0)"
+                                         title="Ver fotografía de evidencia"
+                                         class="relative w-16 h-16 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 border-orange-200 bg-slate-900/5 shrink-0 group-hover:border-orange-500 transition shadow-2xs cursor-pointer group/thumb">
+                                        <img src="{{ $fotoPrincipal }}" alt="Evidencia Fotográfica" class="w-full h-full object-cover group-hover/thumb:scale-110 transition duration-300">
                                         @if($totalFotos > 1)
                                             <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-slate-900/85 text-white text-[8px] font-extrabold flex items-center gap-0.5 shadow-xs">
                                                 <i class="fa-solid fa-camera text-orange-400 text-[7px]"></i> +{{ $totalFotos }}
                                             </span>
                                         @endif
+                                        <div class="absolute inset-0 bg-slate-900/25 opacity-0 group-hover/thumb:opacity-100 transition flex items-center justify-center">
+                                            <i class="fa-solid fa-expand text-white text-xs drop-shadow-xs"></i>
+                                        </div>
                                     </div>
                                 @else
                                     <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100 flex flex-col items-center justify-center text-orange-500 shrink-0 shadow-2xs">
@@ -753,11 +758,131 @@
 
     </div>
 </div>
+
+<!-- ============================================================== -->
+<!-- MODAL: VISOR DE IMÁGENES / LIGHTBOX (MEDIANO Y ELEGANTE)       -->
+<!-- ============================================================== -->
+<div id="modalVisorImagen" class="fixed inset-0 z-[60] bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 hidden transition-opacity duration-200" onclick="cerrarVisorImagen()">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 max-w-lg sm:max-w-xl w-full overflow-hidden transform transition-all duration-200 scale-95 flex flex-col my-auto relative" onclick="event.stopPropagation()">
+        
+        <!-- Header del Visor -->
+        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100 shrink-0 bg-white">
+            <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-lg bg-orange-50 border border-orange-200 text-orange-600 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
+                <div>
+                    <h4 class="text-xs font-extrabold text-slate-800 leading-tight">Evidencia Fotográfica</h4>
+                    <p class="text-[10px] text-slate-400 font-medium">Acto o Condición Insegura SST</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <span id="visorContador" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">1 / 1</span>
+                <button type="button" onclick="cerrarVisorImagen()" class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs transition cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Área de la Imagen -->
+        <div class="relative bg-slate-950 flex items-center justify-center p-2 min-h-[260px] max-h-[60vh] overflow-hidden select-none">
+            <img id="visorImagenSrc" src="" alt="Evidencia" class="max-h-[58vh] max-w-full w-auto h-auto object-contain rounded-xl shadow-lg transition-transform duration-200">
+
+            <!-- Botones Prev / Next (si hay más de 1 imagen) -->
+            <button type="button" id="btnVisorPrev" onclick="cambiarFotoVisor(-1)" class="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-900/70 hover:bg-slate-900 text-white flex items-center justify-center text-xs backdrop-blur-xs transition shadow-md cursor-pointer hidden">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button type="button" id="btnVisorNext" onclick="cambiarFotoVisor(1)" class="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-900/70 hover:bg-slate-900 text-white flex items-center justify-center text-xs backdrop-blur-xs transition shadow-md cursor-pointer hidden">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- Footer del Visor -->
+        <div class="flex items-center justify-between px-4 py-2.5 border-t border-slate-100 bg-slate-50/70 shrink-0">
+            <span class="text-[10px] text-slate-400 font-medium flex items-center gap-1">
+                <i class="fa-regular fa-eye text-orange-500 text-[10px]"></i> Visualización en pantalla
+            </span>
+            <button type="button" onclick="cerrarVisorImagen()" class="px-4 py-1.5 rounded-xl bg-white border border-slate-200/80 hover:bg-slate-100 text-slate-700 text-xs font-bold transition shadow-2xs cursor-pointer">
+                Cerrar
+            </button>
+        </div>
+
+    </div>
+</div>
 @endsection
 
 @push('scripts')
 <script>
     const URL_BASE = "{{ url('Sst/aprendiz/tipos-eventos/actos-inseguros') }}";
+
+    // Visor de Imágenes en Modal Mediano (Lightbox interno)
+    let visorGaleria = [];
+    let visorIndiceActual = 0;
+
+    function abrirVisorImagen(src, galeria = [], idx = 0) {
+        if (Array.isArray(galeria) && galeria.length > 0) {
+            visorGaleria = galeria;
+            visorIndiceActual = (idx >= 0 && idx < galeria.length) ? idx : 0;
+        } else {
+            visorGaleria = [src];
+            visorIndiceActual = 0;
+        }
+        actualizarVistaVisor();
+        const modal = document.getElementById('modalVisorImagen');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    function cerrarVisorImagen() {
+        const modal = document.getElementById('modalVisorImagen');
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+
+    function cambiarFotoVisor(delta) {
+        if (visorGaleria.length <= 1) return;
+        visorIndiceActual = (visorIndiceActual + delta + visorGaleria.length) % visorGaleria.length;
+        actualizarVistaVisor();
+    }
+
+    function actualizarVistaVisor() {
+        const imgEl = document.getElementById('visorImagenSrc');
+        const contadorEl = document.getElementById('visorContador');
+        const btnPrev = document.getElementById('btnVisorPrev');
+        const btnNext = document.getElementById('btnVisorNext');
+
+        if (imgEl && visorGaleria.length > 0) {
+            imgEl.src = visorGaleria[visorIndiceActual];
+        }
+        if (contadorEl) {
+            contadorEl.textContent = `${visorIndiceActual + 1} / ${visorGaleria.length}`;
+        }
+        if (btnPrev && btnNext) {
+            if (visorGaleria.length > 1) {
+                btnPrev.classList.remove('hidden');
+                btnNext.classList.remove('hidden');
+            } else {
+                btnPrev.classList.add('hidden');
+                btnNext.classList.add('hidden');
+            }
+        }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        const modal = document.getElementById('modalVisorImagen');
+        if (modal && !modal.classList.contains('hidden')) {
+            if (e.key === 'Escape') {
+                cerrarVisorImagen();
+            } else if (e.key === 'ArrowLeft') {
+                cambiarFotoVisor(-1);
+            } else if (e.key === 'ArrowRight') {
+                cambiarFotoVisor(1);
+            }
+        }
+    });
 
     // Utilidad de Modales
     function toggleModal(id, show) {
@@ -1034,10 +1159,16 @@
             galGrid.className = 'grid gap-2 ' + (fotos.length === 1 ? 'grid-cols-1' : (fotos.length === 2 ? 'grid-cols-2' : 'grid-cols-3'));
             fotos.forEach((url, i) => {
                 const wrap = document.createElement('div');
-                wrap.className = 'relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-950/5 cursor-pointer aspect-video';
-                wrap.innerHTML = '<img src="' + url + '" class="w-full h-full object-cover hover:scale-105 transition duration-300">' +
-                    '<span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-slate-900/70 text-white text-[8px] font-bold">Foto #' + (i + 1) + '</span>';
-                wrap.onclick = () => window.open(url, '_blank');
+                wrap.className = 'relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-950/5 cursor-pointer aspect-video group';
+                wrap.innerHTML = '<img src="' + url + '" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">' +
+                    '<span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-slate-900/80 text-white text-[8px] font-bold">Foto #' + (i + 1) + '</span>' +
+                    '<div class="absolute inset-0 bg-slate-900/25 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">' +
+                    '<span class="px-2.5 py-1 rounded-xl bg-slate-900/85 text-white text-[10px] font-bold flex items-center gap-1.5 shadow-sm">' +
+                    '<i class="fa-solid fa-expand text-[9px]"></i> Ver imagen</span></div>';
+                wrap.onclick = (e) => {
+                    e.stopPropagation();
+                    abrirVisorImagen(url, fotos, i);
+                };
                 galGrid.appendChild(wrap);
             });
         } else {

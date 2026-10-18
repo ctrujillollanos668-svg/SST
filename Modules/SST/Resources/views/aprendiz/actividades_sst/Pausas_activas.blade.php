@@ -83,9 +83,9 @@
         </form>
     </div>
 
-    <!-- 4. Cuadrícula de Actividades -->
+    <!-- 4. Listado de Actividades (Horizontal / De largo) -->
     @if($actividades->count() > 0)
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="space-y-3 sm:space-y-3.5">
             @foreach($actividades as $item)
                 @php
                     $fechaObj = \Carbon\Carbon::parse($item->fecha);
@@ -94,72 +94,90 @@
                     $rawData = base64_encode(json_encode($item, JSON_UNESCAPED_UNICODE));
                     
                     $badgeEstado = match($item->estado) {
-                        'Programada' => 'bg-amber-50 text-amber-700 border-amber-200',
-                        'Realizada' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
-                        'Cancelada' => 'bg-rose-50 text-rose-700 border-rose-200',
-                        default => 'bg-slate-50 text-slate-700 border-slate-200'
+                        'Programada' => 'bg-amber-50 text-amber-700 border-amber-300',
+                        'Realizada' => 'bg-emerald-50 text-emerald-700 border-emerald-300',
+                        'Cancelada' => 'bg-rose-50 text-rose-700 border-rose-300',
+                        default => 'bg-slate-50 text-slate-700 border-slate-300'
                     };
                 @endphp
-                <div class="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-2xs hover:shadow-md hover:border-orange-300 transition-all flex flex-col justify-between group">
-                    <div class="space-y-3.5">
-                        <!-- Cabecera de Tarjeta -->
-                        <div class="flex items-start justify-between gap-3">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border {{ $badgeEstado }}">
-                                {{ $item->estado }}
-                            </span>
-                            <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
-                                <i class="fa-regular fa-calendar text-orange-500"></i>
-                                {{ $fechaObj->isoFormat('D MMM, Y') }}
-                            </span>
-                        </div>
+                <div class="item-card bg-slate-50/70 hover:bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-orange-300 transition-all flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 cursor-pointer group"
+                     onclick="openDetailModal(this)"
+                     data-raw="{{ $rawData }}">
 
-                        <!-- Título y Descripción -->
-                        <div>
-                            <h3 class="font-extrabold text-base text-slate-900 group-hover:text-orange-600 transition-colors line-clamp-1">
-                                {{ $item->titulo }}
+                    <!-- Ícono de la Actividad -->
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200/80 flex flex-col items-center justify-center text-orange-500 shrink-0 shadow-2xs group-hover:border-orange-400 group-hover:scale-105 transition">
+                        <i class="fa-solid fa-spa text-2xl text-orange-500"></i>
+                    </div>
+
+                    <!-- Contenido Central Estructurado -->
+                    <div class="flex-1 flex flex-col justify-between space-y-2.5 w-full">
+                        <!-- Fila 1: Título y Estado -->
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <h3 class="font-extrabold text-slate-900 text-sm sm:text-base flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0"></span>
+                                <span class="group-hover:text-orange-600 transition-colors">{{ $item->titulo }}</span>
                             </h3>
-                            <p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
-                                {{ $item->descripcion ?? $item->actividad_a_realizar ?? 'Sin descripción adicional.' }}
-                            </p>
+
+                            <div class="flex items-center gap-2">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold border {{ $badgeEstado }} shadow-2xs select-none">
+                                    <span class="w-1.5 h-1.5 rounded-full {{ $item->estado === 'Realizada' ? 'bg-emerald-500' : ($item->estado === 'Cancelada' ? 'bg-rose-500' : 'bg-amber-500') }}"></span>
+                                    <span>{{ $item->estado }}</span>
+                                </span>
+                            </div>
                         </div>
 
-                        <!-- Metadatos de la Actividad -->
-                        <div class="space-y-1.5 text-xs text-slate-600 pt-2 border-t border-slate-100">
-                            <div class="flex items-center gap-2">
-                                <span class="w-5 text-orange-500 text-center"><i class="fa-regular fa-clock text-xs"></i></span>
-                                <span class="font-semibold">{{ $horaIni }} @if($horaFin) - {{ $horaFin }} @endif</span>
-                            </div>
+                        <!-- Fila 2: Chips informativos -->
+                        <div class="flex flex-wrap items-center gap-2 text-[11px] font-medium text-slate-600">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Fecha Programada">
+                                <i class="fa-regular fa-calendar text-orange-500 text-[10px]"></i>
+                                <span class="text-slate-400 font-semibold">Fecha:</span>
+                                <strong class="font-bold text-slate-700">{{ $fechaObj->isoFormat('D MMM, Y') }}</strong>
+                            </span>
+
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Horario">
+                                <i class="fa-regular fa-clock text-orange-500 text-[10px]"></i>
+                                <span class="text-slate-400 font-semibold">Horario:</span>
+                                <strong class="font-bold text-slate-700">{{ $horaIni }} @if($horaFin) - {{ $horaFin }} @endif</strong>
+                            </span>
 
                             @if($item->lugar)
-                                <div class="flex items-center gap-2">
-                                    <span class="w-5 text-orange-500 text-center"><i class="fa-solid fa-location-dot text-xs"></i></span>
-                                    <span class="font-medium truncate">{{ $item->lugar }}</span>
-                                </div>
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Lugar / Ubicación">
+                                <i class="fa-solid fa-location-dot text-orange-500 text-[10px]"></i>
+                                <span class="text-slate-400 font-semibold">Lugar:</span>
+                                <strong class="font-bold text-slate-700">{{ $item->lugar }}</strong>
+                            </span>
                             @endif
 
                             @if($item->instructor)
-                                <div class="flex items-center gap-2">
-                                    <span class="w-5 text-orange-500 text-center"><i class="fa-solid fa-chalkboard-user text-xs"></i></span>
-                                    <span class="font-medium truncate">{{ $item->instructor }}</span>
-                                </div>
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Instructor / Responsable">
+                                <i class="fa-solid fa-chalkboard-user text-orange-500 text-[10px]"></i>
+                                <span class="text-slate-400 font-semibold">Responsable:</span>
+                                <strong class="font-bold text-slate-700">{{ $item->instructor }}</strong>
+                            </span>
                             @endif
 
                             @if($item->ficha_programa)
-                                <div class="flex items-center gap-2">
-                                    <span class="w-5 text-orange-500 text-center"><i class="fa-solid fa-users-rectangle text-xs"></i></span>
-                                    <span class="font-medium text-slate-500 truncate">{{ $item->ficha_programa }}</span>
-                                </div>
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Ficha / Programa">
+                                <i class="fa-solid fa-users-rectangle text-orange-500 text-[10px]"></i>
+                                <span class="text-slate-400 font-semibold">Ficha:</span>
+                                <strong class="font-bold text-slate-700">{{ $item->ficha_programa }}</strong>
+                            </span>
                             @endif
+                        </div>
+
+                        <!-- Fila 3: Descripción y Botón Ver Detalles -->
+                        <div class="flex items-center justify-between gap-3 pt-0.5">
+                            <p class="text-xs text-slate-500 line-clamp-1 flex-1 leading-relaxed">
+                                <strong class="font-bold text-slate-700">Actividad:</strong> {{ $item->descripcion ?? $item->actividad_a_realizar ?? 'Sin descripción adicional.' }}
+                            </p>
+
+                            <button type="button" onclick="event.stopPropagation(); openDetailModal(this.closest('.item-card'))" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 text-xs font-bold border border-orange-200/80 transition cursor-pointer shrink-0 shadow-2xs">
+                                <i class="fa-solid fa-eye text-xs"></i>
+                                <span>Ver Detalles</span>
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Botón Ver Detalles -->
-                    <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between">
-                        <span class="text-[10px] font-bold text-slate-400">Pausa Activa SST</span>
-                        <button type="button" onclick="openDetailModal(this)" data-raw="{{ $rawData }}" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 text-xs font-bold border border-orange-200/80 transition cursor-pointer">
-                            <i class="fa-solid fa-eye text-xs"></i> Ver Detalles
-                        </button>
-                    </div>
                 </div>
             @endforeach
         </div>
@@ -263,9 +281,11 @@
     }
 
     function openDetailModal(btn) {
-        if (!btn || !btn.dataset.raw) return;
+        if (!btn) return;
+        const raw = btn.dataset.raw || btn.closest('.item-card')?.dataset.raw;
+        if (!raw) return;
         try {
-            const data = JSON.parse(atob(btn.dataset.raw));
+            const data = JSON.parse(atob(raw));
             document.getElementById('modalTitulo').textContent = data.titulo || 'Pausa Activa';
             document.getElementById('modalEstadoTexto').textContent = 'Estado: ' + (data.estado || 'Programada');
             
