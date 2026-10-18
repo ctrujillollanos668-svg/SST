@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Modules\SST\Entities\ActividadSST;
 use Modules\SICA\Entities\Course;
 
-class AsistenciaController extends Controller
+class ControlAsistenciasController extends Controller
 {
     /**
      * Muestra el panel centralizado y consolidado de Control de Asistencias SST.

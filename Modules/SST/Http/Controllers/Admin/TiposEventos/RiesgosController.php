@@ -6,18 +6,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\SST\Entities\TipoEvento;
 
-class TiposEmergenciasController extends Controller
+class RiesgosController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $emergencias = TipoEvento::where('tipo_categoria', 'tipo_emergencia')
+        $riesgos = TipoEvento::where('tipo_categoria', 'riesgo')
             ->orderBy('id_tipo_evento', 'desc')
             ->get();
 
-        return view('sst::admin.tipos_eventos.Tipos_de_emergencias', compact('emergencias'));
+        return view('sst::admin.tipos_eventos.Riesgos', compact('riesgos'));
     }
 
     /**
@@ -33,14 +33,14 @@ class TiposEmergenciasController extends Controller
             'estado' => 'nullable|in:activo,inactivo',
         ]);
 
-        $validated['tipo_categoria'] = 'tipo_emergencia';
+        $validated['tipo_categoria'] = 'riesgo';
         $validated['estado'] = $validated['estado'] ?? 'activo';
         $validated['notificaciones'] = $request->has('notificaciones');
 
         TipoEvento::create($validated);
 
-        return redirect()->route('SST.admin.tipos_eventos.tipos_emergencias.index')
-            ->with('success', 'Tipo de Emergencia registrado correctamente.');
+        return redirect()->route('SST.admin.tipos_eventos.riesgos.index')
+            ->with('success', 'Riesgo registrado correctamente.');
     }
 
     /**
@@ -48,7 +48,7 @@ class TiposEmergenciasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $emergencia = TipoEvento::where('tipo_categoria', 'tipo_emergencia')->findOrFail($id);
+        $riesgo = TipoEvento::where('tipo_categoria', 'riesgo')->findOrFail($id);
 
         $validated = $request->validate([
             'nombre' => 'required|string|max:100',
@@ -60,10 +60,10 @@ class TiposEmergenciasController extends Controller
 
         $validated['notificaciones'] = $request->has('notificaciones');
 
-        $emergencia->update($validated);
+        $riesgo->update($validated);
 
-        return redirect()->route('SST.admin.tipos_eventos.tipos_emergencias.index')
-            ->with('success', 'Tipo de Emergencia actualizado correctamente.');
+        return redirect()->route('SST.admin.tipos_eventos.riesgos.index')
+            ->with('success', 'Riesgo actualizado correctamente.');
     }
 
     /**
@@ -71,10 +71,10 @@ class TiposEmergenciasController extends Controller
      */
     public function destroy($id)
     {
-        $emergencia = TipoEvento::where('tipo_categoria', 'tipo_emergencia')->findOrFail($id);
-        $emergencia->delete();
+        $riesgo = TipoEvento::where('tipo_categoria', 'riesgo')->findOrFail($id);
+        $riesgo->delete();
 
-        return redirect()->route('SST.admin.tipos_eventos.tipos_emergencias.index')
-            ->with('success', 'Tipo de Emergencia eliminado correctamente.');
+        return redirect()->route('SST.admin.tipos_eventos.riesgos.index')
+            ->with('success', 'Riesgo eliminado correctamente.');
     }
 }

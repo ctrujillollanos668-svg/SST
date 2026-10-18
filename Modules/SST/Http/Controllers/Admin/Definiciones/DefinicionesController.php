@@ -53,7 +53,7 @@ class DefinicionesController extends Controller
             ->orderBy('nombre', 'asc')
             ->get();
 
-        return view('sst::admin.definiciones.Riegos', [
+        return view('sst::admin.definiciones.Riesgos', [
             'definiciones' => $definiciones,
             'categoria' => 'riesgo',
             'titulo' => 'Riesgos',

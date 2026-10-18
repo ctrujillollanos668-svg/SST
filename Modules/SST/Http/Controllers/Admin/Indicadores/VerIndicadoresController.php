@@ -9,7 +9,7 @@ use Modules\SST\Entities\TipoEvento;
 use Modules\SST\Entities\InspeccionSST;
 use Modules\SST\Entities\IndicadorSST;
 
-class IndicadoresController extends Controller
+class VerIndicadoresController extends Controller
 {
     /**
      * Muestra el listado de Indicadores de Gestión SST desde la base de datos.

@@ -8,7 +8,7 @@ use App\Models\User;
 use Modules\SICA\Entities\Person;
 use Modules\SICA\Entities\Role;
 
-class UsuarioController extends Controller
+class RegistrarUsuarioController extends Controller
 {
     /**
      * Muestra el listado de usuarios reales y sus roles en SST.

@@ -8,7 +8,7 @@ use Modules\SST\Entities\InspeccionSST;
 use Modules\SST\Entities\LugarFormacion;
 use Illuminate\Support\Facades\Auth;
 
-class InspeccionesController extends Controller
+class HistorialController extends Controller
 {
     /**
      * Muestra el formulario para realizar una nueva inspección SST (redirige a historial para el admin).

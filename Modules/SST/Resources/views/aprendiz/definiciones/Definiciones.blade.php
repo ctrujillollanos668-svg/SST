@@ -64,9 +64,22 @@
     <!-- 2. Lista de Categorías en Acordeón -->
     <div class="space-y-4" id="listaAcordeonesDefiniciones">
 
+        @php
+            $rutasEventos = [
+                'accidentes' => route('SST.aprendiz.tipos_eventos.accidentes.index'),
+                'incidentes' => route('SST.aprendiz.tipos_eventos.incidentes.index'),
+                'riesgos' => route('SST.aprendiz.tipos_eventos.riesgos.index'),
+                'actos_inseguros' => route('SST.aprendiz.tipos_eventos.actos_inseguros.index'),
+                'condiciones_inseguras' => route('SST.aprendiz.tipos_eventos.condiciones_inseguras.index'),
+                'lesiones' => route('SST.aprendiz.tipos_eventos.lesiones.index'),
+                'tipos_emergencias' => route('SST.aprendiz.tipos_eventos.tipos_emergencias.index'),
+            ];
+        @endphp
+
         @foreach($categorias as $key => $cat)
             @php
                 $totalItems = $cat['items']->count();
+                $rutaEvento = $cat['ruta'] ?? ($rutasEventos[$key] ?? '#');
             @endphp
             <div class="accordion-item bg-white rounded-2xl border border-slate-200/80 shadow-2xs transition-all hover:border-slate-300 overflow-hidden" data-category="{{ $key }}" id="cat-{{ $key }}">
                 
@@ -88,9 +101,9 @@
 
                     <!-- Lado Derecho: Botón de Acción y Flecha Desplegable -->
                     <div class="flex items-center gap-2">
-                        <button type="button" class="w-9 h-9 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200/90 hover:border-orange-300 flex items-center justify-center shadow-xs transition active:scale-95 text-xs" title="Ver detalles">
+                        <a href="{{ $rutaEvento }}" onclick="event.stopPropagation()" class="w-9 h-9 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200/90 hover:border-orange-300 flex items-center justify-center shadow-xs transition active:scale-95 text-xs" title="Ver eventos de {{ $cat['titulo'] }}">
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                        </button>
+                        </a>
                         <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center text-xs accordion-chevron">
                             <i class="fa-solid fa-chevron-down"></i>
                         </div>

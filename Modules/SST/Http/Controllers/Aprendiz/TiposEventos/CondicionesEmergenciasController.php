@@ -10,7 +10,7 @@ use Modules\SST\Entities\TipoEvento;
 use Modules\SST\Entities\LugarFormacion;
 use Modules\SST\Entities\RespuestaEvento;
 
-class TiposEmergenciasController extends Controller
+class CondicionesEmergenciasController extends Controller
 {
     /**
      * Muestra las Condiciones de Emergencia para el Aprendiz SST
@@ -43,7 +43,7 @@ class TiposEmergenciasController extends Controller
                 ->orderBy('nombre', 'asc')
                 ->get();
 
-            return view('sst::aprendiz.tipos_eventos.Tipos_emergencias', compact('emergencias', 'lugares', 'catalogoEmergencias'));
+            return view('sst::aprendiz.tipos_eventos.Condiciones_emergencias', compact('emergencias', 'lugares', 'catalogoEmergencias'));
         }
 
         abort(403, 'Acceso denegado: No tienes permisos para consultar este recurso en el módulo SST.');
