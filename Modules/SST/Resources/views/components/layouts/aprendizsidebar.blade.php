@@ -119,97 +119,27 @@
     <!-- Navigation Menu -->
     <nav class="py-3 flex-grow overflow-y-auto space-y-1 px-2.5 text-xs font-semibold">
 
-        <!-- DEFINICIONES -->
+        <!-- DEFINICIONES (Enlace Único Directo al Glosario Completo) -->
         @php
             $isDefiniciones = request()->routeIs('SST.aprendiz.definiciones*');
         @endphp
-        <div class="flex flex-col menu-wrapper relative {{ $isDefiniciones ? 'open' : '' }}" id="defAprendizWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isDefiniciones ? 'text-orange-600 bg-orange-50/70 font-bold' : 'text-slate-700 hover:text-orange-600 hover:bg-slate-50' }} transition cursor-pointer group" id="btnToggleDefAprendiz">
+        <div class="relative menu-wrapper">
+            <a href="{{ route('SST.aprendiz.definiciones') }}" 
+               class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isDefiniciones ? 'text-orange-600 bg-orange-50/70 font-bold' : 'text-slate-700 hover:text-orange-600 hover:bg-slate-50' }} transition group cursor-pointer"
+               title="Definiciones SST">
                 <div class="flex items-center gap-3">
                     <span class="w-8 h-8 rounded-xl {{ $isDefiniciones ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-book text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Definiciones</span>
                 </div>
-                <span class="text-[10px] {{ $isDefiniciones ? 'text-orange-600' : 'text-slate-400 group-hover:text-orange-600' }} arrow-icon" id="arrowDefAprendiz">
-                    <i class="fa-solid fa-chevron-down"></i>
-                </span>
-            </div>
-            <!-- Acordeón Normal -->
-            <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
-                <li>
-                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-accidentes" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs">
-                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-burst"></i></span> 
-                        Accidentes
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-incidentes" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs">
-                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-triangle-exclamation"></i></span> 
-                        Incidentes
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-riesgos" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs">
-                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-biohazard"></i></span> 
-                        Riesgos
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-actos_inseguros" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs">
-                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-lightbulb"></i></span> 
-                        Actos Inseguros
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-condiciones_inseguras" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs">
-                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-triangle-exclamation"></i></span> 
-                        Condiciones Inseguras
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-lesiones" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs">
-                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-crutch"></i></span> 
-                        Lesiones
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-tipos_emergencias" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs">
-                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-hospital"></i></span> 
-                        Condiciones de Emergencias
-                    </a>
-                </li>
-            </ul>
+            </a>
             <!-- Tarjeta Flotante (Flyout Mini) -->
             <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-slate-100 flex items-center justify-between">
-                    <span class="font-extrabold text-xs text-slate-800 flex items-center gap-1.5">
+                <div class="px-3 py-2">
+                    <a href="{{ route('SST.aprendiz.definiciones') }}" class="font-extrabold text-xs text-slate-800 hover:text-orange-600 flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                        <span>Definiciones</span>
-                    </span>
-                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-100 text-orange-700">7</span>
-                </div>
-                <div class="py-1 space-y-0.5">
-                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-accidentes" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">
-                        <span>Accidentes</span>
-                    </a>
-                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-incidentes" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">
-                        <span>Incidentes</span>
-                    </a>
-                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-riesgos" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">
-                        <span>Riesgos</span>
-                    </a>
-                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-actos_inseguros" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">
-                        <span>Actos Inseguros</span>
-                    </a>
-                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-condiciones_inseguras" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">
-                        <span>Condiciones Inseguras</span>
-                    </a>
-                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-lesiones" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">
-                        <span>Lesiones</span>
-                    </a>
-                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-tipos_emergencias" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">
-                        <span>Condiciones de Emergencias</span>
+                        <span>Definiciones SST</span>
                     </a>
                 </div>
             </div>

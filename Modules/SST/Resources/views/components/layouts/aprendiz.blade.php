@@ -138,6 +138,10 @@
                                 <i class="fa-solid fa-grid-horizontal text-slate-400"></i>
                                 <span>Portal General ERP</span>
                             </a>
+                            <button type="button" onclick="openApprenticePasswordModal()" class="w-full text-left flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-600 transition cursor-pointer">
+                                <i class="fa-solid fa-key text-slate-400"></i>
+                                <span>Cambiar Mi Contraseña</span>
+                            </button>
                         </div>
 
                         <!-- Botón Cerrar Sesión -->
@@ -156,6 +160,43 @@
 
         <!-- 3. Contenido inyectado desde cada vista -->
         <main class="flex-1 p-4 sm:p-6 lg:p-8">
+            <!-- Mensajes Flash y Errores -->
+            @if(session('success'))
+                <div class="mb-4 p-4 rounded-2xl bg-emerald-50 border border-emerald-200/80 text-emerald-800 flex items-center justify-between shadow-xs">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-check text-sm"></i>
+                        </span>
+                        <span class="text-xs sm:text-sm font-semibold">{{ session('success') }}</span>
+                    </div>
+                    <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 p-1 cursor-pointer">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+            @endif
+            @if(session('error') || $errors->any())
+                <div class="mb-4 p-4 rounded-2xl bg-rose-50 border border-rose-200/80 text-rose-800 flex items-center justify-between shadow-xs">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-circle-exclamation text-sm"></i>
+                        </span>
+                        <div class="text-xs sm:text-sm font-semibold">
+                            {{ session('error') ?? 'Ocurrieron errores al procesar la solicitud:' }}
+                            @if($errors->any())
+                                <ul class="list-disc list-inside text-xs mt-1 text-rose-700 font-medium">
+                                    @foreach($errors->all() as $err)
+                                        <li>{{ $err }}</li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        </div>
+                    </div>
+                    <button onclick="this.parentElement.remove()" class="text-rose-500 hover:text-rose-700 p-1 cursor-pointer">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+            @endif
+
             @yield('content')
         </main>
     </div>
@@ -232,7 +273,101 @@
             }
 
         });
+
+        function openApprenticePasswordModal() {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown) {
+                dropdown.classList.remove('show-dropdown');
+                dropdown.classList.add('hidden-dropdown');
+            }
+            document.getElementById('modalApprenticePassword').classList.remove('hidden');
+        }
+
+        function closeApprenticePasswordModal() {
+            document.getElementById('modalApprenticePassword').classList.add('hidden');
+        }
+
+        function togglePasswordEye(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                if (icon) icon.className = 'fa-solid fa-eye-slash text-xs';
+            } else {
+                input.type = 'password';
+                if (icon) icon.className = 'fa-solid fa-eye text-xs';
+            }
+        }
     </script>
+
+    <!-- Modal Cambiar Contraseña del Aprendiz -->
+    <div id="modalApprenticePassword" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-sm">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-slate-900 text-base leading-tight">Cambiar Mi Contraseña</h3>
+                        <p class="text-[11px] text-slate-500">Actualiza tu clave de acceso al sistema</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeApprenticePasswordModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
+            </div>
+
+            <form action="{{ route('SST.aprendiz.cambiar_clave') }}" method="POST" class="space-y-4">
+                @csrf
+                @method('PUT')
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Contraseña Actual *</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="password" name="current_password" id="appr_curr_pass" required placeholder="Tu contraseña actual..." class="w-full pl-9 pr-10 py-2.5 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold font-mono">
+                        <button type="button" onclick="togglePasswordEye('appr_curr_pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-1">
+                            <i class="fa-solid fa-eye text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Nueva Contraseña * (Mínimo 6 caracteres)</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-key absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="password" name="new_password" id="appr_new_pass" required placeholder="Escribe tu nueva clave..." class="w-full pl-9 pr-10 py-2.5 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold font-mono">
+                        <button type="button" onclick="togglePasswordEye('appr_new_pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-1">
+                            <i class="fa-solid fa-eye text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Confirmar Nueva Contraseña *</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock-open absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="password" name="new_password_confirmation" id="appr_confirm_pass" required placeholder="Repite tu nueva clave..." class="w-full pl-9 pr-10 py-2.5 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold font-mono">
+                        <button type="button" onclick="togglePasswordEye('appr_confirm_pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-1">
+                            <i class="fa-solid fa-eye text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeApprenticePasswordModal()" class="px-4 py-2 text-xs font-bold text-slate-600 rounded-xl hover:bg-slate-100 transition cursor-pointer">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-orange-600 hover:bg-orange-700 active:bg-orange-800 rounded-xl shadow-xs transition cursor-pointer flex items-center gap-1.5">
+                        <i class="fa-solid fa-check text-xs"></i>
+                        <span>Actualizar Clave</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     @stack('scripts')
 </body>

@@ -133,12 +133,14 @@ Route::prefix('Sst')->name('SST.')->group(function () {
         Route::get('/search', [\Modules\SST\Http\Controllers\Admin\Usuarios\UsuarioController::class, 'search'])->name('search');
         Route::post('/assign-role', [\Modules\SST\Http\Controllers\Admin\Usuarios\UsuarioController::class, 'assignRole'])->name('assign_role');
         Route::delete('/remove-role/{user}/{role}', [\Modules\SST\Http\Controllers\Admin\Usuarios\UsuarioController::class, 'removeRole'])->name('remove_role');
+        Route::put('/update-credentials/{id}', [\Modules\SST\Http\Controllers\Admin\Usuarios\UsuarioController::class, 'updateCredentials'])->name('update_credentials');
     });
 
     // 4. Rutas para el Aprendiz SST
     Route::prefix('aprendiz')->name('aprendiz.')->group(function () {
         Route::get('/dashboard', [AprendizController::class, 'dashboard'])->name('dashboard');
         Route::get('/definiciones', [AprendizDefinicionesController::class, 'index'])->name('definiciones');
+        Route::put('/cambiar-clave', [\Modules\SST\Http\Controllers\Admin\Usuarios\UsuarioController::class, 'updateMyPassword'])->name('cambiar_clave');
 
         // Tipos de Eventos para Aprendiz
         Route::prefix('tipos-eventos')->name('tipos_eventos.')->group(function () {
