@@ -40,7 +40,7 @@ class ActosInsegurosController extends Controller
                 ->orderBy('nombre', 'asc')
                 ->get();
 
-            return view('sst::aprendiz.tipos_eventos.Acto_inseguros', compact('actosInseguros', 'lugares'));
+            return view('sst::aprendiz.tipos_eventos.Actos_inseguros', compact('actosInseguros', 'lugares'));
         }
 
         abort(403, 'Acceso denegado: No tienes permisos para consultar este recurso en el módulo SST.');

@@ -286,17 +286,17 @@
             </div>
             <!-- Acordeón Normal -->
             <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
-                @php $actInspRealizar = request()->routeIs('SST.aprendiz.inspecciones.realizar') && request('filtro') !== 'seguimiento'; @endphp
+                @php $actInspRegistrar = request()->routeIs('SST.aprendiz.inspecciones.registrar') || request()->routeIs('SST.aprendiz.inspecciones.realizar'); @endphp
                 <li>
-                    <a href="{{ route('SST.aprendiz.inspecciones.realizar') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actInspRealizar ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actInspRealizar ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
+                    <a href="{{ route('SST.aprendiz.inspecciones.registrar') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actInspRegistrar ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
+                        <span class="text-[6px] mr-2.5 {{ $actInspRegistrar ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
                         Registrar Inspección
                     </a>
                 </li>
 
-                @php $actInspSeguimiento = request('filtro') === 'seguimiento' || request()->routeIs('SST.aprendiz.inspecciones.historial'); @endphp
+                @php $actInspSeguimiento = request()->routeIs('SST.aprendiz.inspecciones.seguimiento') || request()->routeIs('SST.aprendiz.inspecciones.historial'); @endphp
                 <li>
-                    <a href="{{ route('SST.aprendiz.inspecciones.realizar', ['filtro' => 'seguimiento']) }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actInspSeguimiento ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
+                    <a href="{{ route('SST.aprendiz.inspecciones.seguimiento') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actInspSeguimiento ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
                         <span class="text-[6px] mr-2.5 {{ $actInspSeguimiento ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
                         Seguimiento
                     </a>
@@ -311,11 +311,11 @@
                     </span>
                 </div>
                 <div class="py-1 space-y-0.5">
-                    <a href="{{ route('SST.aprendiz.inspecciones.realizar') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInspRealizar ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
+                    <a href="{{ route('SST.aprendiz.inspecciones.registrar') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInspRegistrar ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
                         <span>Registrar Inspección</span>
-                        @if($actInspRealizar)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
+                        @if($actInspRegistrar)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
                     </a>
-                    <a href="{{ route('SST.aprendiz.inspecciones.realizar', ['filtro' => 'seguimiento']) }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInspSeguimiento ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
+                    <a href="{{ route('SST.aprendiz.inspecciones.seguimiento') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInspSeguimiento ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
                         <span>Seguimiento</span>
                         @if($actInspSeguimiento)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
                     </a>

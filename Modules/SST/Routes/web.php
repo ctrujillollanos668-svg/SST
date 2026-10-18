@@ -176,11 +176,15 @@ Route::prefix('Sst')->name('SST.')->group(function () {
 
         // Inspecciones para Aprendiz
         Route::prefix('inspecciones')->name('inspecciones.')->group(function () {
-            Route::get('/realizar', [AprendizInspeccionesController::class, 'realizar'])->name('realizar');
-            Route::post('/realizar', [AprendizInspeccionesController::class, 'store'])->name('store');
+            Route::get('/registrar', [AprendizInspeccionesController::class, 'registrar'])->name('registrar');
+            Route::post('/registrar', [AprendizInspeccionesController::class, 'store'])->name('store');
+            Route::get('/seguimiento', [AprendizInspeccionesController::class, 'seguimiento'])->name('seguimiento');
             Route::put('/actualizar/{id}', [AprendizInspeccionesController::class, 'update'])->name('update');
-            Route::get('/historial', [AprendizInspeccionesController::class, 'historial'])->name('historial');
             Route::delete('/eliminar/{id}', [AprendizInspeccionesController::class, 'destroy'])->name('destroy');
+
+            // Alias de compatibilidad
+            Route::get('/realizar', [AprendizInspeccionesController::class, 'realizar'])->name('realizar');
+            Route::get('/historial', [AprendizInspeccionesController::class, 'historial'])->name('historial');
         });
 
         // Actividades SST para Aprendiz

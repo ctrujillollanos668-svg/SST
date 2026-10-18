@@ -99,10 +99,10 @@
                         </p>
                     </div>
                     <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                        <a href="{{ route('SST.aprendiz.inspecciones.realizar', ['filtro' => 'seguimiento']) }}" class="text-[11px] font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1">
+                        <a href="{{ route('SST.aprendiz.inspecciones.seguimiento') }}" class="text-[11px] font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1">
                             <i class="fa-regular fa-clock text-[10px]"></i> Seguimiento
                         </a>
-                        <a href="{{ route('SST.aprendiz.inspecciones.realizar') }}" class="text-xs font-bold text-slate-700 hover:text-orange-600 flex items-center gap-1">
+                        <a href="{{ route('SST.aprendiz.inspecciones.registrar') }}" class="text-xs font-bold text-slate-700 hover:text-orange-600 flex items-center gap-1">
                             Registrar <i class="fa-solid fa-arrow-right text-[10px]"></i>
                         </a>
                     </div>

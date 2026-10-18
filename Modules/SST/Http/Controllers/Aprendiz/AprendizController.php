@@ -22,7 +22,7 @@ class AprendizController extends Controller
         $user = Auth::user();
 
         if ($user->roles->contains('slug', 'sst.aprendiz') || $user->roles->contains('slug', 'sst.funcionario') || $user->roles->contains('slug', 'sst.admin') || $user->hasSuperAdmin()) {
-            return redirect()->route('SST.aprendiz.definiciones');
+            return view('sst::aprendiz.dashboard');
         }
 
         abort(403, 'Acceso denegado: No tienes permisos de Aprendiz en el módulo SST.');

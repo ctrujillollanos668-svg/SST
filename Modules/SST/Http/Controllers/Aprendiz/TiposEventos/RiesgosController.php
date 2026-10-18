@@ -47,7 +47,7 @@ class RiesgosController extends Controller
                 ->orderBy('nombre', 'asc')
                 ->get();
 
-            return view('sst::aprendiz.tipos_eventos.Riegos', compact('riesgos', 'lugares', 'catalogoRiesgos'));
+            return view('sst::aprendiz.tipos_eventos.Riesgos', compact('riesgos', 'lugares', 'catalogoRiesgos'));
         }
 
         abort(403, 'Acceso denegado: No tienes permisos para consultar este recurso en el módulo SST.');

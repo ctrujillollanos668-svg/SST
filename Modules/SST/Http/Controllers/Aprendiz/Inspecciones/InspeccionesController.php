@@ -181,16 +181,16 @@ class InspeccionesController extends Controller
             ]);
         }
 
-        return redirect()->route('SST.aprendiz.inspecciones.realizar')
+        return redirect()->route('SST.aprendiz.inspecciones.registrar')
             ->with('success', 'Inspección guardada exitosamente en el sistema.');
     }
 
     /**
-     * Muestra el seguimiento de inspecciones para el aprendiz.
+     * Muestra el seguimiento de inspecciones para el aprendiz (alias de compatibilidad).
      */
     public function historial()
     {
-        return redirect()->route('SST.aprendiz.inspecciones.realizar', ['filtro' => 'seguimiento']);
+        return redirect()->route('SST.aprendiz.inspecciones.seguimiento');
     }
 
     /**
@@ -302,7 +302,7 @@ class InspeccionesController extends Controller
             ]);
         }
 
-        return redirect()->route('SST.aprendiz.inspecciones.realizar')
+        return redirect()->back()
             ->with('success', 'Inspección actualizada exitosamente en el sistema.');
     }
 
@@ -318,7 +318,7 @@ class InspeccionesController extends Controller
             return response()->json(['success' => true, 'message' => 'Inspección eliminada exitosamente.']);
         }
 
-        return redirect()->route('SST.aprendiz.inspecciones.realizar')
+        return redirect()->back()
             ->with('success', 'Inspección eliminada exitosamente.');
     }
 }

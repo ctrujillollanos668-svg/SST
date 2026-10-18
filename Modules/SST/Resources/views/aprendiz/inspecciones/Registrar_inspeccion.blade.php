@@ -96,13 +96,6 @@
                             <span class="px-1.5 py-0.2 rounded-md bg-slate-200/80 text-[10px] font-extrabold">{{ isset($todasInspecciones) ? $todasInspecciones->count() : $inspecciones->count() }}</span>
                         </a>
 
-                        <a href="{{ route('SST.aprendiz.inspecciones.seguimiento') }}" 
-                           class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 {{ (!empty($filtro) && $filtro === 'seguimiento') ? 'bg-white text-amber-700 shadow-2xs' : 'text-slate-500 hover:text-amber-700' }}">
-                            <i class="fa-regular fa-clock text-[10px] text-amber-500"></i>
-                            <span>Seguimiento</span>
-                            <span class="px-1.5 py-0.2 rounded-md {{ (!empty($filtro) && $filtro === 'seguimiento') ? 'bg-amber-100 text-amber-800' : 'bg-slate-200/80 text-slate-600' }} text-[10px] font-extrabold">{{ $totalSeguimiento ?? 0 }}</span>
-                        </a>
-
                         <a href="{{ route('SST.aprendiz.inspecciones.registrar', ['filtro' => 'finalizadas']) }}" 
                            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 {{ (!empty($filtro) && $filtro === 'finalizadas') ? 'bg-white text-emerald-700 shadow-2xs' : 'text-slate-500 hover:text-emerald-700' }}">
                             <i class="fa-solid fa-check text-[10px] text-emerald-500"></i>

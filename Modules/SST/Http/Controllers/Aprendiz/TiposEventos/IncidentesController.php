@@ -47,7 +47,7 @@ class IncidentesController extends Controller
                 ->orderBy('nombre', 'asc')
                 ->get();
 
-            return view('sst::aprendiz.tipos_eventos.Incidente', compact('incidentes', 'lugares', 'catalogoIncidentes'));
+            return view('sst::aprendiz.tipos_eventos.Incidentes', compact('incidentes', 'lugares', 'catalogoIncidentes'));
         }
 
         abort(403, 'Acceso denegado: No tienes permisos para consultar este recurso en el módulo SST.');
