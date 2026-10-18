@@ -16,19 +16,59 @@ class RespuestaEventoController extends Controller
         $respuestas = RespuestaEvento::orderBy('id_respuesta', 'desc')->get();
 
         $accidentes = $respuestas->filter(function($r) {
-            return stripos($r->nombre, 'accidente') !== false;
+            $data = json_decode($r->descripcion, true);
+            $suceso = is_array($data) ? ($data['tipo_suceso'] ?? '') : '';
+            return stripos($r->nombre, 'accidente') !== false || stripos($suceso, 'accidente') !== false;
         });
 
         $incidentes = $respuestas->filter(function($r) {
-            return stripos($r->nombre, 'incidente') !== false;
+            $data = json_decode($r->descripcion, true);
+            $suceso = is_array($data) ? ($data['tipo_suceso'] ?? '') : '';
+            return stripos($r->nombre, 'incidente') !== false || stripos($suceso, 'incidente') !== false;
         });
 
-        // Si hay respuestas que no tienen la palabra explícita, agruparlas en accidentes por defecto
-        if ($accidentes->isEmpty() && !$respuestas->isEmpty() && $incidentes->isEmpty()) {
-            $accidentes = $respuestas;
-        }
+        $riesgos = $respuestas->filter(function($r) {
+            $data = json_decode($r->descripcion, true);
+            $suceso = is_array($data) ? ($data['tipo_suceso'] ?? '') : '';
+            return stripos($r->nombre, 'riesgo') !== false || stripos($suceso, 'riesgo') !== false;
+        });
 
-        return view('sst::admin.informacion_basica.Respuesta_evento', compact('respuestas', 'accidentes', 'incidentes'));
+        $actosInseguros = $respuestas->filter(function($r) {
+            $data = json_decode($r->descripcion, true);
+            $suceso = is_array($data) ? ($data['tipo_suceso'] ?? '') : '';
+            return (stripos($r->nombre, 'acto') !== false && stripos($r->nombre, 'condici') === false)
+                || (stripos($suceso, 'acto') !== false && stripos($suceso, 'condici') === false);
+        });
+
+        $condicionesInseguras = $respuestas->filter(function($r) {
+            $data = json_decode($r->descripcion, true);
+            $suceso = is_array($data) ? ($data['tipo_suceso'] ?? '') : '';
+            return (stripos($r->nombre, 'condición insegura') !== false || stripos($r->nombre, 'condicion insegura') !== false)
+                || (stripos($suceso, 'condición insegura') !== false || stripos($suceso, 'condicion insegura') !== false);
+        });
+
+        $lesiones = $respuestas->filter(function($r) {
+            $data = json_decode($r->descripcion, true);
+            $suceso = is_array($data) ? ($data['tipo_suceso'] ?? '') : '';
+            return stripos($r->nombre, 'lesi') !== false || stripos($suceso, 'lesi') !== false;
+        });
+
+        $emergencias = $respuestas->filter(function($r) {
+            $data = json_decode($r->descripcion, true);
+            $suceso = is_array($data) ? ($data['tipo_suceso'] ?? '') : '';
+            return stripos($r->nombre, 'emergencia') !== false || stripos($suceso, 'emergencia') !== false;
+        });
+
+        return view('sst::admin.informacion_basica.Respuesta_evento', compact(
+            'respuestas',
+            'accidentes',
+            'incidentes',
+            'riesgos',
+            'actosInseguros',
+            'condicionesInseguras',
+            'lesiones',
+            'emergencias'
+        ));
     }
 
     /**

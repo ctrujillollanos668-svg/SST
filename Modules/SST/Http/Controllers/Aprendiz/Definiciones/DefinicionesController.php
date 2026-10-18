@@ -78,6 +78,18 @@ class DefinicionesController extends Controller
                     'badge_text' => 'text-yellow-700',
                     'items' => $eventos->where('tipo_categoria', 'acto_inseguro')
                 ],
+                'condiciones_inseguras' => [
+                    'titulo' => 'Condiciones Inseguras',
+                    'categoria_slug' => 'condicion_insegura',
+                    'icono' => 'fa-solid fa-triangle-exclamation',
+                    'color_accent' => 'teal',
+                    'bg_light' => 'bg-teal-50/60',
+                    'border_color' => 'border-teal-200/80',
+                    'text_color' => 'text-teal-600',
+                    'badge_bg' => 'bg-teal-100/80',
+                    'badge_text' => 'text-teal-700',
+                    'items' => $eventos->where('tipo_categoria', 'condicion_insegura')
+                ],
                 'lesiones' => [
                     'titulo' => 'Lesiones',
                     'categoria_slug' => 'lesion',
@@ -91,7 +103,7 @@ class DefinicionesController extends Controller
                     'items' => $eventos->where('tipo_categoria', 'lesion')
                 ],
                 'tipos_emergencias' => [
-                    'titulo' => 'Tipos de Emergencias',
+                    'titulo' => 'Condiciones de Emergencias',
                     'categoria_slug' => 'tipo_emergencia',
                     'icono' => 'fa-solid fa-hospital',
                     'color_accent' => 'rose',

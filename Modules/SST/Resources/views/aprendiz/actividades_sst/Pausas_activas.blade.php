@@ -303,7 +303,7 @@
                             @endforeach
                             <div id="no_fichas_match" class="px-4 py-3 text-xs text-slate-400 text-center hidden">No se encontraron fichas coincidentes</div>
                         @else
-                            <div class="px-4 py-3 text-xs text-slate-400 text-center">No hay fichas activas registradas en SICA</div>
+                            <div class="px-4 py-3 text-xs text-slate-400 text-center">No hay fichas activas registradas</div>
                         @endif
                     </div>
                 </div>
@@ -826,7 +826,7 @@
         }
     }
 
-    function toggleFichasDropdown(e) {
+    function toggleFichasDropdown(e, forceOpen = false) {
         if (e) {
             e.stopPropagation();
             e.preventDefault();
@@ -836,13 +836,32 @@
         if (!menu) return;
         
         const isHidden = menu.classList.contains('hidden');
-        if (isHidden) {
+        if (isHidden || forceOpen) {
             const options = menu.querySelectorAll('.ficha-option');
             const noMatch = document.getElementById('no_fichas_match');
             if (noMatch) noMatch.classList.add('hidden');
             options.forEach(opt => opt.classList.remove('hidden'));
             menu.classList.remove('hidden');
             if (icon) icon.classList.add('rotate-180');
+
+            // Resaltar la ficha que esté actualmente seleccionada
+            const input = document.getElementById('asistencia_ficha_programa');
+            if (input && input.value) {
+                const currentVal = input.value.toLowerCase().trim();
+                let selectedElem = null;
+                options.forEach(opt => {
+                    const text = (opt.getAttribute('data-value') || '').toLowerCase().trim();
+                    if (text === currentVal || text.startsWith(currentVal) || (currentVal.length > 5 && text.includes(currentVal.substring(0, 7)))) {
+                        opt.classList.add('bg-blue-100/70', 'font-bold');
+                        if (!selectedElem) selectedElem = opt;
+                    } else {
+                        opt.classList.remove('bg-blue-100/70', 'font-bold');
+                    }
+                });
+                if (selectedElem) {
+                    selectedElem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                }
+            }
         } else {
             menu.classList.add('hidden');
             if (icon) icon.classList.remove('rotate-180');
@@ -853,6 +872,7 @@
         const input = document.getElementById('asistencia_ficha_programa');
         if (input) {
             input.value = value;
+            input.dispatchEvent(new Event('change'));
         }
         const menu = document.getElementById('fichas_dropdown_menu');
         const icon = document.getElementById('iconArrowFicha');
@@ -877,11 +897,17 @@
         const icon = document.getElementById('iconArrowFicha');
         
         if (input && menu) {
-            input.addEventListener('focus', function() {
-                const isHidden = menu.classList.contains('hidden');
-                if (isHidden) {
-                    toggleFichasDropdown();
+            input.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (menu.classList.contains('hidden')) {
+                    toggleFichasDropdown(null, true);
                 }
+                this.select();
+            });
+
+            input.addEventListener('focus', function() {
+                toggleFichasDropdown(null, true);
+                this.select();
             });
 
             input.addEventListener('input', function() {

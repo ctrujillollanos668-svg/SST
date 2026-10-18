@@ -34,11 +34,16 @@ class TiposEmergenciasController extends Controller
                 ->orderBy('id_respuesta', 'desc')
                 ->get();
 
+            $catalogoEmergencias = TipoEvento::where('tipo_categoria', 'tipo_emergencia')
+                ->where('estado', 'activo')
+                ->orderBy('nombre', 'asc')
+                ->get();
+
             $lugares = LugarFormacion::where('estado', 'activo')
                 ->orderBy('nombre', 'asc')
                 ->get();
 
-            return view('sst::aprendiz.tipos_eventos.Tipos_emergencias', compact('emergencias', 'lugares'));
+            return view('sst::aprendiz.tipos_eventos.Tipos_emergencias', compact('emergencias', 'lugares', 'catalogoEmergencias'));
         }
 
         abort(403, 'Acceso denegado: No tienes permisos para consultar este recurso en el módulo SST.');
@@ -50,6 +55,7 @@ class TiposEmergenciasController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'tipo_emergencia' => 'nullable|string|max:255',
             'fecha_hora' => 'nullable',
             'lugar_formacion' => 'nullable|string|max:150',
             'prioridad' => 'nullable|string|max:50',
@@ -62,6 +68,7 @@ class TiposEmergenciasController extends Controller
             'evidencia' => 'nullable|file|max:10240',
         ]);
 
+        $tipoEmergencia = !empty($validated['tipo_emergencia']) ? $validated['tipo_emergencia'] : 'Emergencia General';
         $personaAfectada = !empty($validated['persona_afectada']) ? $validated['persona_afectada'] : (!empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : 'Personal Afectado');
         $personas = !empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : '';
         $lugar = !empty($validated['lugar_formacion']) ? $validated['lugar_formacion'] : 'Instalaciones del Centro';
@@ -98,6 +105,7 @@ class TiposEmergenciasController extends Controller
 
         $reportData = [
             'tipo_suceso' => 'Condición de Emergencia',
+            'tipo_emergencia' => $tipoEmergencia,
             'fecha_hora' => $fecha,
             'lugar_formacion' => $lugar,
             'prioridad' => $prioridad,
@@ -111,7 +119,7 @@ class TiposEmergenciasController extends Controller
         ];
 
         RespuestaEvento::create([
-            'nombre' => "Condición de Emergencia: {$lugar} ({$personaAfectada})",
+            'nombre' => "Condición de Emergencia: {$tipoEmergencia} - {$lugar} ({$personaAfectada})",
             'descripcion' => json_encode($reportData, JSON_UNESCAPED_UNICODE),
             'estado' => 'activo'
         ]);
@@ -128,6 +136,7 @@ class TiposEmergenciasController extends Controller
         $evento = RespuestaEvento::findOrFail($id);
 
         $validated = $request->validate([
+            'tipo_emergencia' => 'nullable|string|max:255',
             'fecha_hora' => 'nullable',
             'lugar_formacion' => 'nullable|string|max:150',
             'prioridad' => 'nullable|string|max:50',
@@ -186,6 +195,7 @@ class TiposEmergenciasController extends Controller
 
         $evidenciasUrls = array_slice($evidenciasUrls, 0, 3);
 
+        $tipoEmergencia = !empty($validated['tipo_emergencia']) ? $validated['tipo_emergencia'] : (is_array($existingData) && !empty($existingData['tipo_emergencia']) ? $existingData['tipo_emergencia'] : 'Emergencia General');
         $personaAfectada = !empty($validated['persona_afectada']) ? $validated['persona_afectada'] : (!empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : 'Personal Afectado');
         $personas = !empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : '';
         $lugar = !empty($validated['lugar_formacion']) ? $validated['lugar_formacion'] : 'Instalaciones del Centro';
@@ -197,6 +207,7 @@ class TiposEmergenciasController extends Controller
 
         $reportData = [
             'tipo_suceso' => 'Condición de Emergencia',
+            'tipo_emergencia' => $tipoEmergencia,
             'fecha_hora' => $fecha,
             'lugar_formacion' => $lugar,
             'prioridad' => $prioridad,
@@ -210,7 +221,7 @@ class TiposEmergenciasController extends Controller
         ];
 
         $evento->update([
-            'nombre' => "Condición de Emergencia: {$lugar} ({$personaAfectada})",
+            'nombre' => "Condición de Emergencia: {$tipoEmergencia} - {$lugar} ({$personaAfectada})",
             'descripcion' => json_encode($reportData, JSON_UNESCAPED_UNICODE),
         ]);
 

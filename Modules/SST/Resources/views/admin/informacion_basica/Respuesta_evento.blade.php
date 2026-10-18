@@ -19,7 +19,112 @@
     }
 </style>
 
-<div class="space-y-8 max-w-7xl mx-auto">
+@php
+    $categories = [
+        'accidentes' => [
+            'slug' => 'accidentes',
+            'title' => 'Accidentes',
+            'subtitle' => 'Accidentes de trabajo reportados por aprendices',
+            'icon' => 'fa-burst',
+            'color' => 'rose',
+            'border_color' => 'border-l-rose-500',
+            'icon_bg' => 'bg-rose-50 text-rose-600',
+            'badge_bg' => 'bg-rose-100 text-rose-800',
+            'items' => $accidentes ?? collect(),
+            'tipo_key' => 'tipo_accidente',
+            'tipo_label' => 'TIPO ACCIDENTE',
+            'empty_text' => 'No hay accidentes reportados por los aprendices aún.'
+        ],
+        'incidentes' => [
+            'slug' => 'incidentes',
+            'title' => 'Incidentes',
+            'subtitle' => 'Casi-accidentes y situaciones preventivas sin lesiones',
+            'icon' => 'fa-triangle-exclamation',
+            'color' => 'amber',
+            'border_color' => 'border-l-amber-500',
+            'icon_bg' => 'bg-amber-50 text-amber-600',
+            'badge_bg' => 'bg-amber-100 text-amber-800',
+            'items' => $incidentes ?? collect(),
+            'tipo_key' => 'tipo_incidente',
+            'tipo_label' => 'TIPO INCIDENTE',
+            'empty_text' => 'No hay incidentes reportados por los aprendices aún.'
+        ],
+        'riesgos' => [
+            'slug' => 'riesgos',
+            'title' => 'Riesgos',
+            'subtitle' => 'Factores y condiciones de peligro identificadas',
+            'icon' => 'fa-bolt',
+            'color' => 'purple',
+            'border_color' => 'border-l-purple-500',
+            'icon_bg' => 'bg-purple-50 text-purple-600',
+            'badge_bg' => 'bg-purple-100 text-purple-800',
+            'items' => $riesgos ?? collect(),
+            'tipo_key' => 'tipo_riesgo',
+            'tipo_label' => 'TIPO RIESGO',
+            'empty_text' => 'No hay riesgos identificados reportados por aprendices aún.'
+        ],
+        'actos_inseguros' => [
+            'slug' => 'actos_inseguros',
+            'title' => 'Actos Inseguros',
+            'subtitle' => 'Comportamientos o prácticas inseguras observadas',
+            'icon' => 'fa-person-falling-burst',
+            'color' => 'orange',
+            'border_color' => 'border-l-orange-500',
+            'icon_bg' => 'bg-orange-50 text-orange-600',
+            'badge_bg' => 'bg-orange-100 text-orange-800',
+            'items' => $actosInseguros ?? collect(),
+            'tipo_key' => 'tipo_acto',
+            'tipo_label' => 'TIPO ACTO INSEGURO',
+            'empty_text' => 'No hay actos inseguros reportados por aprendices aún.'
+        ],
+        'condiciones_inseguras' => [
+            'slug' => 'condiciones_inseguras',
+            'title' => 'Condiciones Inseguras',
+            'subtitle' => 'Fallas locativas, herramientas o riesgos ambientales',
+            'icon' => 'fa-triangle-exclamation',
+            'color' => 'sky',
+            'border_color' => 'border-l-sky-500',
+            'icon_bg' => 'bg-sky-50 text-sky-600',
+            'badge_bg' => 'bg-sky-100 text-sky-800',
+            'items' => $condicionesInseguras ?? collect(),
+            'tipo_key' => 'tipo_condicion',
+            'tipo_label' => 'TIPO CONDICIÓN INSEGURA',
+            'empty_text' => 'No hay condiciones inseguras reportadas por aprendices aún.'
+        ],
+        'lesiones' => [
+            'slug' => 'lesiones',
+            'title' => 'Lesiones',
+            'subtitle' => 'Lesiones físicas sufridas durante la formación',
+            'icon' => 'fa-heart-pulse',
+            'color' => 'red',
+            'border_color' => 'border-l-red-500',
+            'icon_bg' => 'bg-red-50 text-red-600',
+            'badge_bg' => 'bg-red-100 text-red-800',
+            'items' => $lesiones ?? collect(),
+            'tipo_key' => 'tipo_lesion',
+            'tipo_label' => 'TIPO LESIÓN',
+            'empty_text' => 'No hay lesiones reportadas por aprendices aún.'
+        ],
+        'emergencias' => [
+            'slug' => 'emergencias',
+            'title' => 'Condiciones de Emergencias',
+            'subtitle' => 'Situaciones críticas de emergencia o contingencia',
+            'icon' => 'fa-fire-extinguisher',
+            'color' => 'emerald',
+            'border_color' => 'border-l-emerald-500',
+            'icon_bg' => 'bg-emerald-50 text-emerald-600',
+            'badge_bg' => 'bg-emerald-100 text-emerald-800',
+            'items' => $emergencias ?? collect(),
+            'tipo_key' => 'tipo_emergencia',
+            'tipo_label' => 'TIPO EMERGENCIA',
+            'empty_text' => 'No hay condiciones de emergencia reportadas por aprendices aún.'
+        ],
+    ];
+
+    $totalGeneral = $respuestas->count();
+@endphp
+
+<div class="space-y-6 max-w-7xl mx-auto">
 
     <!-- Mensaje Flash de Éxito -->
     @if(session('success'))
@@ -37,303 +142,330 @@
     @endif
 
     <!-- 1. Encabezado General -->
-    <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
+    <div class="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
         <div class="flex items-center gap-3.5">
-            <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-xs">
+            <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-xs shrink-0">
                 <i class="fa-solid fa-clipboard-check text-xl"></i>
             </div>
             <div>
                 <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Gestión y Respuesta a Eventos</h1>
-                <p class="text-sm text-slate-500 font-medium mt-0.5">Seguimiento en tiempo real a reportes de aprendices, evidencias y medidas correctivas.</p>
+                <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">Seguimiento en tiempo real a los 7 tipos de reportes de aprendices, evidencias fotográficas y protocolos correctivos.</p>
             </div>
         </div>
 
-        <div class="flex items-center gap-2">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-50 text-orange-700 text-xs font-bold border border-orange-200">
+        <div class="flex items-center gap-2 shrink-0">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-orange-50 text-orange-700 text-xs font-extrabold border border-orange-200">
                 <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
-                Conectado con Aprendices
+                <span>{{ $totalGeneral }} Reportes en Total</span>
             </span>
         </div>
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- BLOQUE 1: ACCIDENTES LABORALES REPORTADOS                                 -->
-    <!-- ========================================================================= -->
-    <div class="bg-white rounded-2xl border border-slate-200/80 border-l-[6px] border-l-rose-500 shadow-xs overflow-hidden">
-        
-        <!-- Header del Bloque Accidentes -->
-        <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div class="flex items-center gap-3.5">
-                <div class="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-lg shrink-0">
-                    <i class="fa-solid fa-burst"></i>
-                </div>
-                <div>
-                    <h2 class="text-lg font-extrabold text-slate-900">Accidentes Laborales Reportados</h2>
-                    <p class="text-xs text-slate-400 font-semibold">Reportes generados desde el panel de Aprendiz</p>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-2">
-                <span class="text-xs font-black tracking-widest text-slate-400 uppercase">
-                    <span class="text-base text-rose-600 font-extrabold" id="countAccidentes">{{ $accidentes->count() }}</span> REGISTROS
+    <!-- 2. Pestañas de Navegación Rápida entre las 7 Categorías -->
+    <div class="bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/80 overflow-x-auto flex items-center gap-1.5 scrollbar-none">
+        @foreach($categories as $slug => $cat)
+            @php
+                $isFirst = $loop->first;
+                $count = $cat['items']->count();
+            @endphp
+            <button type="button" 
+                    onclick="switchEventTab('{{ $slug }}')" 
+                    data-tab="{{ $slug }}"
+                    class="event-tab-btn inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs whitespace-nowrap transition cursor-pointer {{ $isFirst ? 'bg-white shadow-xs border border-slate-300 text-slate-900 font-black' : 'bg-transparent hover:bg-white/60 text-slate-500 font-bold border border-transparent' }}">
+                <i class="fa-solid {{ $cat['icon'] }} text-xs"></i>
+                <span>{{ $cat['title'] }}</span>
+                <span class="px-1.5 py-0.5 rounded-md text-[10px] font-black {{ $count > 0 ? $cat['badge_bg'] : 'bg-slate-200/70 text-slate-600' }}">
+                    {{ $count }}
                 </span>
-            </div>
-        </div>
+            </button>
+        @endforeach
+    </div>
 
-        <!-- Tabla de Accidentes -->
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse table-auto" id="tablaAccidentes">
-                <thead>
-                    <tr class="bg-slate-50/90 border-b border-slate-200/80 text-slate-500 text-[10px] font-bold uppercase tracking-wider">
-                        <th class="py-3 px-2 text-center w-8">#</th>
-                        <th class="py-3 px-2.5 whitespace-nowrap"><i class="fa-regular fa-calendar mr-1"></i> FECHA / HORA</th>
-                        <th class="py-3 px-2.5 whitespace-nowrap"><i class="fa-solid fa-location-dot mr-1"></i> LUGAR</th>
-                        <th class="py-3 px-2.5 whitespace-nowrap"><i class="fa-solid fa-burst mr-1"></i> TIPO ACCIDENTE</th>
-                        <th class="py-3 px-2 text-center whitespace-nowrap"><i class="fa-solid fa-stethoscope mr-1"></i> GRAVEDAD</th>
-                        <th class="py-3 px-2 whitespace-nowrap"><i class="fa-solid fa-users mr-1"></i> AFECTADOS</th>
-                        <th class="py-3 px-2 whitespace-nowrap"><i class="fa-solid fa-chalkboard-user mr-1"></i> INSTRUCTOR</th>
-                        <th class="py-3 px-2.5 max-w-[140px]"><i class="fa-regular fa-file-lines mr-1"></i> DESCRIPCIÓN</th>
-                        <th class="py-3 px-2 text-center whitespace-nowrap"><i class="fa-regular fa-image mr-1"></i> EVIDENCIA</th>
-                        <th class="py-3 px-2 text-center whitespace-nowrap"><i class="fa-solid fa-circle-check mr-1"></i> ESTADO</th>
-                        <th class="py-3 px-2.5 text-center whitespace-nowrap"><i class="fa-solid fa-comment-dots mr-1"></i> GESTIÓN</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 text-slate-700 text-xs font-medium">
-                    @forelse($accidentes as $index => $acc)
-                        @php
-                            $data = json_decode($acc->descripcion, true);
-                            if (!is_array($data)) {
-                                $raw = $acc->descripcion ?? '';
-                                preg_match('/Lugar:\s*([^,\n\r]+?)(?=\s*(?:Tipo|Gravedad|Personas|Instructor|Descripci|$))/i', $raw, $mLugar);
-                                preg_match('/Tipo(?:\s*de\s*Accidente)?:\s*([^,\n\r]+?)(?=\s*(?:Gravedad|Personas|Instructor|Descripci|$))/i', $raw, $mTipo);
-                                preg_match('/Gravedad:\s*([^,\n\r]+?)(?=\s*(?:Personas|Instructor|Descripci|$))/i', $raw, $mGrav);
-                                preg_match('/Personas(?:\s*Involucradas)?:\s*([^,\n\r]+?)(?=\s*(?:Instructor|Descripci|$))/i', $raw, $mPers);
-                                preg_match('/Instructor(?:\s*Responsable)?:\s*([^,\n\r]+?)(?=\s*(?:Descripci|$))/i', $raw, $mInst);
-                                preg_match('/Descripci(?:ón|on)(?:\s*Detallada)?:\s*(.*)/is', $raw, $mDesc);
+    <!-- 3. Paneles de Tablas para las 7 Categorías -->
+    @foreach($categories as $slug => $cat)
+        @php
+            $isFirst = $loop->first;
+            $items = $cat['items'];
+        @endphp
+        <div id="panel_{{ $slug }}" class="event-tab-panel space-y-4 {{ $isFirst ? '' : 'hidden' }}">
+            
+            <div class="bg-white rounded-3xl border border-slate-200/80 border-l-[6px] {{ $cat['border_color'] }} shadow-xs overflow-hidden">
+                
+                <!-- Encabezado del Bloque de Categoría -->
+                <div class="p-5 sm:p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-11 h-11 rounded-2xl {{ $cat['icon_bg'] }} flex items-center justify-center font-bold text-lg shrink-0 border border-slate-100 shadow-2xs">
+                            <i class="fa-solid {{ $cat['icon'] }}"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-extrabold text-slate-900">{{ $cat['title'] }}</h2>
+                            <p class="text-xs text-slate-400 font-semibold">{{ $cat['subtitle'] }}</p>
+                        </div>
+                    </div>
 
-                                $cleanTipo = preg_replace('/^Accidente:\s*/i', '', $acc->nombre);
-                                $cleanTipo = preg_replace('/\s*\([^)]*\)$/', '', $cleanTipo);
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                        <!-- Buscador en tiempo real de la tabla -->
+                        <div class="relative w-full sm:w-64">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </div>
+                            <input type="text" 
+                                   id="buscar_{{ $slug }}" 
+                                   onkeyup="filterTableRows('buscar_{{ $slug }}', 'tabla_{{ $slug }}')" 
+                                   placeholder="Buscar en {{ strtolower($cat['title']) }}..." 
+                                   class="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
+                        </div>
 
-                                $data = [
-                                    'tipo_accidente' => !empty($mTipo[1]) ? trim($mTipo[1]) : (!empty($cleanTipo) ? trim($cleanTipo) : 'Accidente'),
-                                    'fecha_hora' => $acc->created_at ? $acc->created_at->format('d/m/Y h:i A') : 'Reciente',
-                                    'lugar_formacion' => !empty($mLugar[1]) ? trim($mLugar[1]) : 'Taller / Ambiente',
-                                    'gravedad' => !empty($mGrav[1]) ? trim($mGrav[1]) : 'Leve',
-                                    'personas_involucradas' => !empty($mPers[1]) ? trim($mPers[1]) : 'Aprendiz',
-                                    'instructor_responsable' => !empty($mInst[1]) ? trim($mInst[1]) : 'N/A',
-                                    'descripcion' => !empty($mDesc[1]) ? trim($mDesc[1]) : $raw,
-                                    'evidencia' => null,
-                                ];
-                            }
-                            $grav = strtolower($data['gravedad'] ?? 'leve');
-                            $badgeGrav = match(true) {
-                                str_contains($grav, 'fatal') || str_contains($grav, 'crítico') => 'bg-rose-100 text-rose-800 border-rose-300',
-                                str_contains($grav, 'grave') => 'bg-orange-100 text-orange-800 border-orange-300',
-                                str_contains($grav, 'moderado') => 'bg-amber-100 text-amber-800 border-amber-300',
-                                default => 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                            };
-                        @endphp
-                        <tr class="hover:bg-slate-50/70 transition-colors">
-                            <td class="py-3 px-2 text-center font-bold text-slate-400">{{ $index + 1 }}</td>
-                            
-                            <!-- 1. Fecha y Hora -->
-                            <td class="py-3 px-2.5 whitespace-nowrap">
-                                <p class="font-bold text-slate-900 text-[11px]">{{ $data['fecha_hora'] ?? ($acc->created_at ? $acc->created_at->format('d/m/Y h:i A') : 'N/A') }}</p>
-                            </td>
+                        <span class="text-xs font-black tracking-widest text-slate-400 uppercase text-right sm:text-left self-center">
+                            <span class="text-sm font-black text-slate-800" id="count_{{ $slug }}">{{ $items->count() }}</span> REGISTROS
+                        </span>
+                    </div>
+                </div>
 
-                            <!-- 2. Lugar de Formación -->
-                            <td class="py-3 px-2.5 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-                                    {{ $data['lugar_formacion'] ?? 'General' }}
-                                </span>
-                            </td>
-
-                            <!-- 3. Tipo de Accidente -->
-                            <td class="py-3 px-2.5 font-bold text-slate-900 text-xs whitespace-nowrap">
-                                {{ $data['tipo_accidente'] ?? $acc->nombre }}
-                            </td>
-
-                            <!-- 4. Gravedad -->
-                            <td class="py-3 px-2 text-center whitespace-nowrap">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold border {{ $badgeGrav }}">
-                                    {{ ucfirst($data['gravedad'] ?? 'Leve') }}
-                                </span>
-                            </td>
-
-                            <!-- 5. Personas Involucradas -->
-                            <td class="py-3 px-2 font-semibold text-slate-800 text-xs whitespace-nowrap max-w-[120px] truncate" title="{{ $data['personas_involucradas'] ?? 'N/A' }}">
-                                {{ $data['personas_involucradas'] ?? 'N/A' }}
-                            </td>
-
-                            <!-- 6. Instructor Responsable -->
-                            <td class="py-3 px-2 text-slate-600 text-xs whitespace-nowrap max-w-[110px] truncate" title="{{ !empty($data['instructor_responsable']) ? $data['instructor_responsable'] : 'N/A' }}">
-                                {{ !empty($data['instructor_responsable']) ? $data['instructor_responsable'] : 'N/A' }}
-                            </td>
-
-                            <!-- 7. Descripción -->
-                            <td class="py-3 px-2.5 text-slate-600 max-w-[140px]">
-                                <p class="truncate text-[11px] leading-relaxed" title="{{ $data['descripcion'] ?? 'Sin descripción.' }}">
-                                    {{ $data['descripcion'] ?? 'Sin descripción.' }}
-                                </p>
-                            </td>
-
-                            <!-- 8. Evidencia Fotográfica -->
-                            <td class="py-3 px-2 text-center whitespace-nowrap">
+                <!-- Tabla Estandarizada y Limpia -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse table-auto" id="tabla_{{ $slug }}">
+                        <thead>
+                            <tr class="bg-slate-50/90 border-b border-slate-200/80 text-slate-500 text-[10px] font-extrabold uppercase tracking-wider">
+                                <th class="py-3 px-2.5 text-center w-8">#</th>
+                                <th class="py-3 px-2.5 whitespace-nowrap"><i class="fa-regular fa-calendar mr-1"></i> FECHA / HORA</th>
+                                <th class="py-3 px-2.5 whitespace-nowrap"><i class="fa-solid fa-location-dot mr-1"></i> LUGAR</th>
+                                <th class="py-3 px-2.5 whitespace-nowrap"><i class="fa-solid {{ $cat['icon'] }} mr-1"></i> {{ $cat['tipo_label'] }}</th>
+                                <th class="py-3 px-2 text-center whitespace-nowrap"><i class="fa-solid fa-gauge-high mr-1"></i> GRAVEDAD</th>
+                                <th class="py-3 px-2.5 whitespace-nowrap"><i class="fa-solid fa-user-group mr-1"></i> AFECTADOS</th>
+                                <th class="py-3 px-2 whitespace-nowrap"><i class="fa-solid fa-chalkboard-user mr-1"></i> INSTRUCTOR</th>
+                                <th class="py-3 px-2.5 max-w-[160px]"><i class="fa-regular fa-file-lines mr-1"></i> DESCRIPCIÓN</th>
+                                <th class="py-3 px-2 text-center whitespace-nowrap"><i class="fa-regular fa-image mr-1"></i> EVIDENCIA</th>
+                                <th class="py-3 px-2 text-center whitespace-nowrap"><i class="fa-solid fa-circle-check mr-1"></i> ESTADO</th>
+                                <th class="py-3 px-2.5 text-center whitespace-nowrap"><i class="fa-solid fa-comment-dots mr-1"></i> GESTIÓN</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-slate-700 text-xs font-medium">
+                            @forelse($items as $index => $item)
                                 @php
-                                    $evidenciasAdmin = !empty($data['evidencias']) && is_array($data['evidencias']) ? $data['evidencias'] : (!empty($data['evidencia']) ? [$data['evidencia']] : []);
-                                    $fotoPrincipalAdmin = !empty($evidenciasAdmin) ? $evidenciasAdmin[0] : null;
-                                    $totalFotosAdmin = count($evidenciasAdmin);
+                                    $data = json_decode($item->descripcion, true);
+                                    if (!is_array($data)) {
+                                        $raw = $item->descripcion ?? '';
+                                        preg_match('/Lugar:\s*([^,\n\r]+?)(?=\s*(?:Tipo|Gravedad|Prioridad|Personas|Instructor|Descripci|$))/i', $raw, $mLugar);
+                                        preg_match('/Tipo(?:\s*de\s*\w+)?:\s*([^,\n\r]+?)(?=\s*(?:Gravedad|Prioridad|Personas|Instructor|Descripci|$))/i', $raw, $mTipo);
+                                        preg_match('/(?:Gravedad|Prioridad):\s*([^,\n\r]+?)(?=\s*(?:Personas|Instructor|Descripci|$))/i', $raw, $mGrav);
+                                        preg_match('/Personas(?:\s*Involucradas)?:\s*([^,\n\r]+?)(?=\s*(?:Instructor|Descripci|$))/i', $raw, $mPers);
+                                        preg_match('/Instructor(?:\s*Responsable)?:\s*([^,\n\r]+?)(?=\s*(?:Descripci|$))/i', $raw, $mInst);
+                                        preg_match('/Descripci(?:ón|on)(?:\s*Detallada)?:\s*(.*)/is', $raw, $mDesc);
+
+                                        $cleanTitle = preg_replace('/^[^:]+:\s*/i', '', $item->nombre);
+                                        $cleanTitle = preg_replace('/\s*\([^)]*\)$/', '', $cleanTitle);
+
+                                        $data = [
+                                            $cat['tipo_key'] => !empty($mTipo[1]) ? trim($mTipo[1]) : (!empty($cleanTitle) ? trim($cleanTitle) : $cat['title']),
+                                            'fecha_hora' => $item->created_at ? $item->created_at->format('d/m/Y h:i A') : 'Reciente',
+                                            'lugar_formacion' => !empty($mLugar[1]) ? trim($mLugar[1]) : 'Instalaciones CEFA',
+                                            'lugar_especifico' => '',
+                                            'gravedad' => !empty($mGrav[1]) ? trim($mGrav[1]) : 'Media',
+                                            'prioridad' => !empty($mGrav[1]) ? trim($mGrav[1]) : 'Media',
+                                            'persona_afectada' => !empty($mPers[1]) ? trim($mPers[1]) : 'Aprendiz',
+                                            'personas_involucradas' => !empty($mPers[1]) ? trim($mPers[1]) : 'Aprendiz',
+                                            'instructor_responsable' => !empty($mInst[1]) ? trim($mInst[1]) : '',
+                                            'descripcion' => !empty($mDesc[1]) ? trim($mDesc[1]) : $raw,
+                                            'evidencia' => null,
+                                            'evidencias' => [],
+                                        ];
+                                    }
+
+                                    // Formato de Fecha
+                                    $fechaRaw = $data['fecha_hora'] ?? '';
+                                    $fechaDia = 'Reciente';
+                                    $fechaHora = '';
+                                    if (!empty($fechaRaw)) {
+                                        $ts = strtotime($fechaRaw);
+                                        if ($ts) {
+                                            $fechaDia = date('d/m/Y', $ts);
+                                            $fechaHora = date('h:i A', $ts);
+                                        } else {
+                                            $partes = explode('T', str_replace(' - ', 'T', $fechaRaw));
+                                            $fechaDia = $partes[0] ?? $fechaRaw;
+                                            $fechaHora = $partes[1] ?? '';
+                                        }
+                                    } elseif ($item->created_at) {
+                                        $fechaDia = $item->created_at->format('d/m/Y');
+                                        $fechaHora = $item->created_at->format('h:i A');
+                                    }
+
+                                    // Evidencias (hasta 3 fotos)
+                                    $evidencias = !empty($data['evidencias']) && is_array($data['evidencias']) 
+                                        ? $data['evidencias'] 
+                                        : (!empty($data['evidencia']) ? [$data['evidencia']] : []);
+
+                                    $evidencias = array_map(function($url) {
+                                        if (is_string($url) && str_contains($url, 'uploads/evidencias_sst/')) {
+                                            return asset('uploads/evidencias_sst/' . basename($url));
+                                        }
+                                        return $url;
+                                    }, $evidencias);
+                                    $fotoPrincipal = !empty($evidencias) ? $evidencias[0] : null;
+                                    $totalFotos = count($evidencias);
+
+                                    // Gravedad o Prioridad
+                                    $gravVal = strtolower($data['gravedad'] ?? $data['prioridad'] ?? 'media');
+                                    $badgeGrav = match(true) {
+                                        str_contains($gravVal, 'fatal') || str_contains($gravVal, 'crítico') || str_contains($gravVal, 'alta') || str_contains($gravVal, 'urgente') => 'bg-rose-100 text-rose-800 border-rose-200',
+                                        str_contains($gravVal, 'grave') => 'bg-orange-100 text-orange-800 border-orange-200',
+                                        str_contains($gravVal, 'moderado') || str_contains($gravVal, 'media') => 'bg-amber-100 text-amber-800 border-amber-200',
+                                        default => 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                                    };
+
+                                    // Tipo específico
+                                    $tipoEspecifico = $data[$cat['tipo_key']] ?? $data['tipo_suceso'] ?? null;
+                                    if (empty($tipoEspecifico)) {
+                                        $tipoEspecifico = preg_replace('/^[^:]+:\s*/i', '', $item->nombre);
+                                        $tipoEspecifico = preg_replace('/\s*\([^)]*\)$/', '', $tipoEspecifico);
+                                    }
+
+                                    // Estado y Respuesta
+                                    $estadoItem = strtolower($item->estado ?? 'activo');
+                                    $tieneRespuesta = !empty($data['respuesta_admin']) || $estadoItem === 'atendido';
+                                    $afectadoStr = $data['persona_afectada'] ?? $data['personas_involucradas'] ?? 'Personal';
+                                    $lugarStr = $data['lugar_formacion'] ?? 'Ambiente';
+                                    $lugarEspStr = $data['lugar_especifico'] ?? '';
+                                    $descStr = $data['descripcion'] ?? $data['descripcion_original'] ?? 'Sin descripción adicional.';
                                 @endphp
-                                @if(!empty($fotoPrincipalAdmin))
-                                    <div class="flex items-center justify-center">
-                                        <button type="button" onclick="showEvidencePhoto({{ json_encode($evidenciasAdmin) }}, '{{ addslashes($data['tipo_accidente'] ?? 'Accidente') }}')" class="relative group/photo p-0.5 rounded-xl border-2 border-orange-200 hover:border-orange-500 bg-white transition-all shadow-2xs hover:shadow-md cursor-pointer overflow-hidden inline-flex items-center justify-center" title="Clic para ampliar evidencia">
-                                            <img src="{{ $fotoPrincipalAdmin }}" alt="Evidencia" class="w-9 h-9 rounded-lg object-cover group-hover/photo:scale-110 transition duration-200">
-                                            @if($totalFotosAdmin > 1)
-                                                <span class="absolute bottom-0.5 right-0.5 px-1 py-0.2 rounded bg-slate-900/85 text-white text-[7px] font-extrabold shadow-2xs">
-                                                    +{{ $totalFotosAdmin }}
-                                                </span>
-                                            @endif
-                                            <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover/photo:opacity-100 transition-opacity flex items-center justify-center text-white rounded-lg text-xs">
-                                                <i class="fa-solid fa-magnifying-glass-plus"></i>
+
+                                <tr class="event-row hover:bg-slate-50/80 transition-colors">
+                                    <!-- 1. Número -->
+                                    <td class="py-3 px-2.5 text-center font-bold text-slate-400">
+                                        {{ $index + 1 }}
+                                    </td>
+
+                                    <!-- 2. Fecha / Hora -->
+                                    <td class="py-3 px-2.5 whitespace-nowrap">
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="w-6 h-6 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-[10px] shrink-0">
+                                                <i class="fa-regular fa-clock"></i>
+                                            </span>
+                                            <div>
+                                                <p class="font-bold text-slate-900 leading-tight">{{ $fechaDia }}</p>
+                                                @if(!empty($fechaHora))
+                                                    <span class="text-[10px] text-slate-400 font-semibold">{{ $fechaHora }}</span>
+                                                @endif
                                             </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- 3. Lugar -->
+                                    <td class="py-3 px-2.5 whitespace-nowrap">
+                                        <p class="font-extrabold text-slate-800">{{ $lugarStr }}</p>
+                                        @if(!empty($lugarEspStr))
+                                            <span class="text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200/80 inline-block font-semibold">
+                                                <i class="fa-solid fa-map-pin mr-0.5 text-[8px]"></i> {{ $lugarEspStr }}
+                                            </span>
+                                        @endif
+                                    </td>
+
+                                    <!-- 4. Tipo Específico -->
+                                    <td class="py-3 px-2.5 whitespace-nowrap">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-extrabold border bg-slate-50 text-slate-800 border-slate-200">
+                                            <i class="fa-solid {{ $cat['icon'] }} text-orange-500 text-[10px]"></i>
+                                            <span>{{ $tipoEspecifico }}</span>
+                                        </span>
+                                    </td>
+
+                                    <!-- 5. Gravedad / Prioridad -->
+                                    <td class="py-3 px-2 text-center whitespace-nowrap">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black border {{ $badgeGrav }}">
+                                            {{ ucfirst($data['gravedad'] ?? $data['prioridad'] ?? 'Media') }}
+                                        </span>
+                                    </td>
+
+                                    <!-- 6. Afectados / Involucrados -->
+                                    <td class="py-3 px-2.5 whitespace-nowrap">
+                                        <p class="font-bold text-slate-800 text-xs">{{ $afectadoStr }}</p>
+                                        @if(!empty($data['personas_involucradas']) && $data['personas_involucradas'] !== $afectadoStr)
+                                            <span class="text-[10px] text-slate-400 block truncate max-w-[130px]" title="{{ $data['personas_involucradas'] }}">
+                                                Otras: {{ $data['personas_involucradas'] }}
+                                            </span>
+                                        @endif
+                                    </td>
+
+                                    <!-- 7. Instructor -->
+                                    <td class="py-3 px-2 whitespace-nowrap">
+                                        @if(!empty($instructor) && $instructor !== 'N/A')
+                                            <span class="inline-flex items-center gap-1 text-[11px] text-slate-700 font-semibold">
+                                                <i class="fa-solid fa-chalkboard-user text-orange-500 text-[10px]"></i>
+                                                <span>{{ $instructor }}</span>
+                                            </span>
+                                        @else
+                                            <span class="text-slate-400 text-[11px] italic">No asignado</span>
+                                        @endif
+                                    </td>
+
+                                    <!-- 8. Descripción Decodificada y Limpia -->
+                                    <td class="py-3 px-2.5 max-w-[160px]">
+                                        <p class="line-clamp-2 text-[11px] text-slate-600 leading-snug cursor-help" title="{{ $descStr }}">
+                                            {{ $descStr }}
+                                        </p>
+                                    </td>
+
+                                    <!-- 9. Evidencias Fotográficas -->
+                                    <td class="py-3 px-2 text-center whitespace-nowrap">
+                                        @if($totalFotos > 0)
+                                            <button type="button" 
+                                                    onclick="showEvidencePhoto({{ json_encode($evidencias) }}, '{{ addslashes($tipoEspecifico) }}')"
+                                                    class="inline-flex items-center gap-1 px-2 py-1 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 text-[10px] font-black border border-orange-200/80 shadow-2xs transition cursor-pointer">
+                                                <i class="fa-solid fa-camera text-[10px]"></i>
+                                                <span>{{ $totalFotos }} {{ $totalFotos == 1 ? 'Foto' : 'Fotos' }}</span>
+                                            </button>
+                                        @else
+                                            <span class="text-[10px] font-semibold text-slate-400 italic">Sin fotos</span>
+                                        @endif
+                                    </td>
+
+                                    <!-- 10. Estado -->
+                                    <td class="py-3 px-2 text-center whitespace-nowrap">
+                                        @if($tieneRespuesta)
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs">
+                                                <i class="fa-solid fa-check-double text-[9px] text-emerald-600"></i> Atendido
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-700 border border-amber-200 shadow-2xs">
+                                                <i class="fa-regular fa-clock text-[9px] text-amber-500"></i> Pendiente
+                                            </span>
+                                        @endif
+                                    </td>
+
+                                    <!-- 11. Gestión / Responder -->
+                                    <td class="py-3 px-2.5 text-center whitespace-nowrap">
+                                        <button type="button"
+                                                onclick="openResponseModal({{ $item->id_respuesta }}, '{{ addslashes($tipoEspecifico) }}', '{{ addslashes($afectadoStr) }}', '{{ addslashes(json_encode($data, JSON_UNESCAPED_UNICODE)) }}', '{{ $item->estado }}')" 
+                                                class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-800 text-[11px] font-bold border border-orange-200 shadow-2xs transition cursor-pointer">
+                                            <i class="fa-solid fa-reply text-[9px]"></i>
+                                            <span>{{ $tieneRespuesta ? 'Ver / Editar' : 'Responder' }}</span>
                                         </button>
-                                    </div>
-                                @else
-                                    <span class="inline-flex items-center gap-1 text-[10px] text-slate-300 font-semibold italic">
-                                        <i class="fa-regular fa-image"></i> Sin foto
-                                    </span>
-                                @endif
-                            </td>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="11" class="py-12 text-center text-slate-400">
+                                        <div class="w-12 h-12 mx-auto rounded-2xl bg-slate-100 text-slate-300 flex items-center justify-center text-xl mb-2">
+                                            <i class="fa-solid fa-inbox"></i>
+                                        </div>
+                                        <p class="text-xs font-semibold">{{ $cat['empty_text'] }}</p>
+                                    </td>
+                                </tr>
+                            @endforelse
 
-                            <!-- 9. Estado -->
-                            <td class="py-3 px-2 text-center whitespace-nowrap">
-                                @php
-                                    $estadoAcc = strtolower($acc->estado ?? 'activo');
-                                    $tieneRespuesta = !empty($data['respuesta_admin']);
-                                @endphp
-                                @if($estadoAcc === 'atendido' || $tieneRespuesta)
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                                        <i class="fa-solid fa-check-double text-[9px]"></i> Atendido
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-700 border border-amber-200">
-                                        <i class="fa-regular fa-clock text-[9px]"></i> Pendiente
-                                    </span>
-                                @endif
-                            </td>
-
-                            <!-- 10. Gestionar / Responder -->
-                            <td class="py-3 px-2.5 text-center whitespace-nowrap">
-                                <button onclick="openResponseModal({{ $acc->id_respuesta }}, '{{ addslashes($data['tipo_accidente'] ?? $acc->nombre) }}', '{{ addslashes($data['personas_involucradas'] ?? 'Aprendiz') }}', '{{ addslashes(json_encode($data, JSON_UNESCAPED_UNICODE)) }}', '{{ $acc->estado }}')" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-bold border border-rose-200 shadow-2xs transition cursor-pointer">
-                                    <i class="fa-solid fa-reply text-[9px]"></i>
-                                    <span>{{ !empty($data['respuesta_admin']) ? 'Ver / Editar Respuesta' : 'Responder' }}</span>
-                                </button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="11" class="py-12 text-center text-slate-400">
-                                <div class="w-12 h-12 mx-auto rounded-2xl bg-slate-100 text-slate-300 flex items-center justify-center text-xl mb-2">
-                                    <i class="fa-solid fa-inbox"></i>
-                                </div>
-                                <p class="text-xs font-semibold">No hay accidentes reportados por los aprendices aún.</p>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-
-    <!-- ========================================================================= -->
-    <!-- BLOQUE 2: INCIDENTES DE TRABAJO REPORTADOS                                -->
-    <!-- ========================================================================= -->
-    <div class="bg-white rounded-2xl border border-slate-200/80 border-l-[6px] border-l-amber-500 shadow-xs overflow-hidden">
-        
-        <!-- Header del Bloque Incidentes -->
-        <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div class="flex items-center gap-3.5">
-                <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-lg shrink-0">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                </div>
-                <div>
-                    <h2 class="text-lg font-extrabold text-slate-900">Incidentes de Trabajo (Casi-Accidentes)</h2>
-                    <p class="text-xs text-slate-400 font-semibold">Reportes preventivos registrados por aprendices</p>
+                            <!-- Fila mostrada cuando la búsqueda no da resultados -->
+                            <tr class="empty-search-row hidden">
+                                <td colspan="11" class="py-8 text-center text-slate-400">
+                                    <p class="text-xs font-semibold">No se encontraron resultados para la búsqueda ingresada.</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <div class="flex items-center gap-2">
-                <span class="text-xs font-black tracking-widest text-slate-400 uppercase">
-                    <span class="text-base text-amber-600 font-extrabold" id="countIncidentes">{{ $incidentes->count() }}</span> REGISTROS
-                </span>
-            </div>
         </div>
-
-        <!-- Tabla de Incidentes -->
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse" id="tablaIncidentes">
-                <thead>
-                    <tr class="bg-slate-50/90 border-b border-slate-200/80 text-slate-500 text-[10px] font-bold uppercase tracking-wider">
-                        <th class="py-3.5 px-3 text-center w-10">#</th>
-                        <th class="py-3.5 px-3 whitespace-nowrap"><i class="fa-regular fa-calendar mr-1"></i> FECHA Y HORA</th>
-                        <th class="py-3.5 px-3 whitespace-nowrap"><i class="fa-solid fa-triangle-exclamation mr-1"></i> ASUNTO / INCIDENTE</th>
-                        <th class="py-3.5 px-3 min-w-[240px]"><i class="fa-regular fa-file-lines mr-1"></i> DESCRIPCIÓN</th>
-                        <th class="py-3.5 px-3 text-center whitespace-nowrap"><i class="fa-solid fa-circle-check mr-1"></i> ESTADO</th>
-                        <th class="py-3.5 px-3 text-center whitespace-nowrap"><i class="fa-solid fa-comment-dots mr-1"></i> GESTIONAR</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 text-slate-700 text-xs font-medium">
-                    @forelse($incidentes as $index => $inc)
-                        <tr class="hover:bg-slate-50/70 transition-colors">
-                            <td class="py-4 px-3 text-center font-bold text-slate-400">{{ $index + 1 }}</td>
-                            <td class="py-4 px-3 whitespace-nowrap">
-                                <p class="font-bold text-slate-900">{{ $inc->created_at ? $inc->created_at->format('d/m/Y') : now()->format('d/m/Y') }}</p>
-                                <span class="text-[10px] text-slate-400">{{ $inc->created_at ? $inc->created_at->format('h:i A') : now()->format('h:i A') }}</span>
-                            </td>
-                            <td class="py-4 px-3 font-bold text-slate-900">
-                                {{ $inc->nombre }}
-                            </td>
-                            <td class="py-4 px-3 text-slate-600">
-                                <p class="line-clamp-2 text-[11px] leading-relaxed">{{ $inc->descripcion ?? 'Sin descripción.' }}</p>
-                            </td>
-                            <td class="py-4 px-3 text-center">
-                                @php
-                                    $incData = json_decode($inc->descripcion, true);
-                                    $estadoInc = strtolower($inc->estado ?? 'activo');
-                                    $tieneRespuestaInc = is_array($incData) && !empty($incData['respuesta_admin']);
-                                @endphp
-                                @if($estadoInc === 'atendido' || $tieneRespuestaInc)
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                                        <i class="fa-solid fa-check-double text-[9px]"></i> Atendido
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-700 border border-amber-200">
-                                        <i class="fa-regular fa-clock text-[9px]"></i> Pendiente
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="py-4 px-3 text-center whitespace-nowrap">
-                                <button onclick="openResponseModal({{ $inc->id_respuesta }}, '{{ addslashes($inc->nombre) }}', 'Aprendiz', '{{ addslashes($inc->descripcion) }}', '{{ $inc->estado }}')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold border border-amber-200 shadow-2xs transition cursor-pointer">
-                                    <i class="fa-solid fa-reply text-[10px]"></i>
-                                    <span>{{ $tieneRespuestaInc ? 'Ver / Editar' : 'Responder' }}</span>
-                                </button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="py-12 text-center text-slate-400">
-                                <div class="w-12 h-12 mx-auto rounded-2xl bg-slate-100 text-slate-300 flex items-center justify-center text-xl mb-2">
-                                    <i class="fa-solid fa-inbox"></i>
-                                </div>
-                                <p class="text-xs font-semibold">No hay incidentes reportados por los aprendices aún.</p>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
+    @endforeach
 
 </div>
 
@@ -417,6 +549,7 @@
                     <option value="Investigación Formal COPASST">Investigación Formal COPASST</option>
                     <option value="Aislamiento preventivo del área">Aislamiento preventivo del área</option>
                     <option value="Evaluación Médica / EPS">Evaluación Médica / EPS</option>
+                    <option value="Activación de Brigada de Emergencia">Activación de Brigada de Emergencia</option>
                 </select>
             </div>
 
@@ -453,6 +586,47 @@
 </div>
 
 <script>
+    // Cambio entre pestañas de las 7 categorías
+    function switchEventTab(targetSlug) {
+        document.querySelectorAll('.event-tab-btn').forEach(btn => {
+            const isActive = btn.dataset.tab === targetSlug;
+            if (isActive) {
+                btn.className = 'event-tab-btn inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs whitespace-nowrap transition cursor-pointer bg-white shadow-xs border border-slate-300 text-slate-900 font-black';
+            } else {
+                btn.className = 'event-tab-btn inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs whitespace-nowrap transition cursor-pointer bg-transparent hover:bg-white/60 text-slate-500 font-bold border border-transparent';
+            }
+        });
+
+        document.querySelectorAll('.event-tab-panel').forEach(panel => {
+            if (panel.id === `panel_${targetSlug}`) {
+                panel.classList.remove('hidden');
+            } else {
+                panel.classList.add('hidden');
+            }
+        });
+    }
+
+    // Buscador en tiempo real de filas en cada tabla
+    function filterTableRows(inputId, tableId) {
+        const input = document.getElementById(inputId);
+        const query = (input ? input.value : '').toLowerCase().trim();
+        const rows = document.querySelectorAll(`#${tableId} tbody tr.event-row`);
+        let visibleCount = 0;
+
+        rows.forEach(tr => {
+            const text = tr.innerText.toLowerCase();
+            const match = !query || text.includes(query);
+            tr.style.display = match ? '' : 'none';
+            if (match) visibleCount++;
+        });
+
+        const emptyRow = document.querySelector(`#${tableId} tbody tr.empty-search-row`);
+        if (emptyRow) {
+            emptyRow.classList.toggle('hidden', visibleCount > 0 || rows.length === 0);
+        }
+    }
+
+    // Galería Modal de Evidencias Fotográficas
     function showEvidencePhoto(inputData, title) {
         let photos = [];
         if (Array.isArray(inputData)) {
@@ -501,6 +675,7 @@
         document.getElementById('modalEvidenciaPhoto').classList.add('hidden');
     }
 
+    // Modal de Respuesta / Atención del Administrador SST
     function openResponseModal(id, title, reporter, rawData, currentStatus) {
         document.getElementById('modalResponseTitle').innerText = title;
         
@@ -514,13 +689,19 @@
 
         try {
             const parsed = typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
-            textContent = `📍 Lugar: ${parsed.lugar_formacion || 'N/A'}\n`
-                        + `💼 Tipo: ${parsed.tipo_accidente || title}\n`
-                        + `🩺 Gravedad: ${parsed.gravedad || 'N/A'}\n`
-                        + `👥 Personas: ${parsed.personas_involucradas || reporter}\n`
+            const tipoReporte = parsed.tipo_accidente || parsed.tipo_incidente || parsed.tipo_riesgo || parsed.tipo_acto || parsed.tipo_condicion || parsed.tipo_lesion || parsed.tipo_emergencia || parsed.tipo_suceso || title;
+            const gravedadReporte = parsed.gravedad || parsed.prioridad || 'N/A';
+            const personasReporte = parsed.persona_afectada || parsed.personas_involucradas || reporter;
+            const lugarReporte = parsed.lugar_formacion || 'N/A';
+            const lugarEsp = parsed.lugar_especifico ? ` (Punto: ${parsed.lugar_especifico})` : '';
+
+            textContent = `📍 Lugar: ${lugarReporte}${lugarEsp}\n`
+                        + `💼 Tipo: ${tipoReporte}\n`
+                        + `🩺 Nivel / Gravedad: ${gravedadReporte}\n`
+                        + `👥 Afectado / Involucrados: ${personasReporte}\n`
                         + (parsed.instructor_responsable ? `👨‍🏫 Instructor: ${parsed.instructor_responsable}\n` : '')
                         + `📅 Fecha: ${parsed.fecha_hora || 'N/A'}\n\n`
-                        + `📝 Descripción: ${parsed.descripcion || parsed.descripcion_original || 'Sin descripción'}`;
+                        + `📝 Descripción: ${parsed.descripcion || parsed.descripcion_original || 'Sin descripción adicional'}`;
             
             if (parsed.evidencias && Array.isArray(parsed.evidencias)) {
                 evidenciasUrls = parsed.evidencias;

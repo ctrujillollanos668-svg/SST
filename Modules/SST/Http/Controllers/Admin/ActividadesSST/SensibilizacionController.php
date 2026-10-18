@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\SST\Entities\ActividadSST;
 use Modules\SST\Entities\LugarFormacion;
+use Modules\SICA\Entities\Course;
 
 class SensibilizacionController extends Controller
 {
@@ -40,8 +41,9 @@ class SensibilizacionController extends Controller
         ];
 
         $lugares = LugarFormacion::orderBy('nombre', 'asc')->get();
+        $cursos = Course::with('program')->where('status', 'Activo')->orderBy('code', 'asc')->get();
 
-        return view('sst::admin.actividades_sst.Sensibilizacion', compact('actividades', 'stats', 'lugares'));
+        return view('sst::admin.actividades_sst.Sensibilizacion', compact('actividades', 'stats', 'lugares', 'cursos'));
     }
 
     /**

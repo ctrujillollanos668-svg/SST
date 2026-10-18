@@ -3,6 +3,16 @@
 @section('title', 'Control de Asistencias • SG-SST')
 
 @section('content')
+<style>
+    input::-webkit-calendar-picker-indicator,
+    input[list]::-webkit-calendar-picker-indicator {
+        display: none !important;
+        -webkit-appearance: none !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+</style>
 <div class="space-y-6 max-w-7xl mx-auto">
 
     <!-- 1. Encabezado de la Sección -->
@@ -128,7 +138,24 @@
 
                 <!-- Filtro Ficha Formativa -->
                 <div class="relative">
-                    <input type="text" name="ficha" value="{{ request('ficha') }}" placeholder="Filtrar por ficha (Ej: 2847386)" class="w-full px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 rounded-2xl border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
+                    <input type="text" 
+                           name="ficha" 
+                           list="lista_fichas_filtro_asistencias" 
+                           value="{{ request('ficha') }}" 
+                           placeholder="Filtrar por ficha o programa..." 
+                           autocomplete="off"
+                           onclick="this.showPicker ? this.showPicker() : null"
+                           class="w-full pl-3.5 pr-8 py-2 text-xs font-semibold text-slate-700 bg-slate-50 rounded-2xl border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
+                    <span class="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                    </span>
+                    <datalist id="lista_fichas_filtro_asistencias">
+                        @if(isset($cursos) && count($cursos) > 0)
+                            @foreach($cursos as $c)
+                                <option value="{{ $c->code }}">{{ $c->code }} - {{ $c->program->name ?? '' }}</option>
+                            @endforeach
+                        @endif
+                    </datalist>
                 </div>
 
                 <!-- Botones Aplicar y Limpiar -->

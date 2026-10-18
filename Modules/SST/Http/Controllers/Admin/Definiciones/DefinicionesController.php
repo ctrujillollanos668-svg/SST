@@ -99,7 +99,25 @@ class DefinicionesController extends Controller
     }
 
     /**
-     * Muestra las definiciones de Tipos de Emergencias
+     * Muestra las definiciones de Condiciones Inseguras
+     */
+    public function condicionesInseguras()
+    {
+        $definiciones = DefinicionSST::where('tipo_categoria', 'condicion_insegura')
+            ->orderBy('nombre', 'asc')
+            ->get();
+
+        return view('sst::admin.definiciones.Condiciones_inseguras', [
+            'definiciones' => $definiciones,
+            'categoria' => 'condicion_insegura',
+            'titulo' => 'Condiciones Inseguras',
+            'icono' => 'fa-triangle-exclamation',
+            'color' => 'teal',
+        ]);
+    }
+
+    /**
+     * Muestra las definiciones de Condiciones de Emergencias
      */
     public function tiposEmergencias()
     {
@@ -110,7 +128,7 @@ class DefinicionesController extends Controller
         return view('sst::admin.definiciones.Tipos_de_emergencias', [
             'definiciones' => $definiciones,
             'categoria' => 'tipo_emergencia',
-            'titulo' => 'Tipos de Emergencias',
+            'titulo' => 'Condiciones de Emergencias',
             'icono' => 'fa-hospital',
             'color' => 'rose',
         ]);
@@ -122,7 +140,7 @@ class DefinicionesController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'tipo_categoria' => 'required|string|in:accidente,incidente,riesgo,acto_inseguro,lesion,tipo_emergencia',
+            'tipo_categoria' => 'required|string|in:accidente,incidente,riesgo,acto_inseguro,condicion_insegura,lesion,tipo_emergencia',
             'nombre' => 'required|string|max:150',
             'descripcion' => 'required|string',
             'como_prevenir' => 'nullable|string',

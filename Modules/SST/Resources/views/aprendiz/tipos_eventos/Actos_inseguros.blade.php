@@ -338,14 +338,27 @@
                 </div>
             </div>
 
-            <!-- Fila 2: Lugar en Específico del Suceso y Gravedad -->
+            <!-- Fila 2: Tipo de Acto Inseguro y Gravedad -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="space-y-1">
                     <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
-                        LUGAR EN ESPECÍFICO DEL SUCESO <span class="text-rose-500">*</span>
+                        TIPO DE ACTO INSEGURO <span class="text-rose-500">*</span>
                     </label>
-                    <input type="text" name="lugar_especifico" required placeholder="Ej: Al lado de la puerta, junto al torno..." 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                    <select name="tipo_acto" required 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
+                        <option value="">Seleccione el tipo de acto...</option>
+                        @if(isset($catalogoActos) && $catalogoActos->count() > 0)
+                            @foreach($catalogoActos as $acto)
+                                <option value="{{ $acto->nombre }}">{{ $acto->nombre }}</option>
+                            @endforeach
+                        @else
+                            <option value="No usar equipo de protección personal (EPP)">No usar equipo de protección personal (EPP)</option>
+                            <option value="Operar equipos sin autorización o capacitación">Operar equipos sin autorización o capacitación</option>
+                            <option value="Desactivar o retirar dispositivos de seguridad">Desactivar o retirar dispositivos de seguridad</option>
+                            <option value="Adoptar posturas incorrectas o levantar cargas en exceso">Adoptar posturas incorrectas o levantar cargas en exceso</option>
+                            <option value="Distracción, bromas o uso indebido de celular">Distracción, bromas o uso indebido de celular</option>
+                        @endif
+                    </select>
                 </div>
 
                 <div class="space-y-1">
@@ -361,6 +374,15 @@
                         <option value="Fatal">Fatal / Crítico</option>
                     </select>
                 </div>
+            </div>
+
+            <!-- Fila 3: Lugar en Específico del Suceso -->
+            <div class="space-y-1">
+                <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                    LUGAR EN ESPECÍFICO DEL SUCESO <span class="text-rose-500">*</span>
+                </label>
+                <input type="text" name="lugar_especifico" required placeholder="Ej: Al lado de la puerta, junto al torno..." 
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
             </div>
 
             <!-- Fila 3: Persona Afectada y Personas Involucradas -->
@@ -505,14 +527,27 @@
                 </div>
             </div>
 
-            <!-- Fila 2: Lugar en Específico y Gravedad -->
+            <!-- Fila 2: Tipo de Acto Inseguro y Gravedad -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="space-y-1">
                     <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
-                        LUGAR EN ESPECÍFICO DEL SUCESO <span class="text-rose-500">*</span>
+                        TIPO DE ACTO INSEGURO <span class="text-rose-500">*</span>
                     </label>
-                    <input type="text" id="editLugarEspecifico" name="lugar_especifico" required placeholder="Ej: Al lado de la puerta, junto al torno..." 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                    <select id="editTipoActo" name="tipo_acto" required 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
+                        <option value="">Seleccione el tipo de acto...</option>
+                        @if(isset($catalogoActos) && $catalogoActos->count() > 0)
+                            @foreach($catalogoActos as $acto)
+                                <option value="{{ $acto->nombre }}">{{ $acto->nombre }}</option>
+                            @endforeach
+                        @else
+                            <option value="No usar equipo de protección personal (EPP)">No usar equipo de protección personal (EPP)</option>
+                            <option value="Operar equipos sin autorización o capacitación">Operar equipos sin autorización o capacitación</option>
+                            <option value="Desactivar o retirar dispositivos de seguridad">Desactivar o retirar dispositivos de seguridad</option>
+                            <option value="Adoptar posturas incorrectas o levantar cargas en exceso">Adoptar posturas incorrectas o levantar cargas en exceso</option>
+                            <option value="Distracción, bromas o uso indebido de celular">Distracción, bromas o uso indebido de celular</option>
+                        @endif
+                    </select>
                 </div>
 
                 <div class="space-y-1">
@@ -528,6 +563,15 @@
                         <option value="Fatal">Fatal / Crítico</option>
                     </select>
                 </div>
+            </div>
+
+            <!-- Fila 3: Lugar en Específico del Suceso -->
+            <div class="space-y-1">
+                <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                    LUGAR EN ESPECÍFICO DEL SUCESO <span class="text-rose-500">*</span>
+                </label>
+                <input type="text" id="editLugarEspecifico" name="lugar_especifico" required placeholder="Ej: Al lado de la puerta, junto al torno..." 
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
             </div>
 
             <!-- Fila 3: Persona Afectada y Personas Involucradas -->
@@ -1015,9 +1059,14 @@
         if (f.includes(' ')) f = f.replace(' ', 'T');
         document.getElementById('editFechaHora').value = f.substring(0, 16);
         document.getElementById('editLugarFormacion').value = data.lugar_formacion || '';
+        if (document.getElementById('editTipoActo')) document.getElementById('editTipoActo').value = data.tipo_acto || '';
         document.getElementById('editLugarEspecifico').value = data.lugar_especifico || '';
         document.getElementById('editGravedad').value = data.gravedad || 'Leve';
-        document.getElementById('edit_persona_afectada').value = data.persona_afectada || data.personas_involucradas || '';
+        if (document.getElementById('editPersonaAfectada')) {
+            document.getElementById('editPersonaAfectada').value = data.persona_afectada || data.personas_involucradas || '';
+        } else if (document.getElementById('edit_persona_afectada')) {
+            document.getElementById('edit_persona_afectada').value = data.persona_afectada || data.personas_involucradas || '';
+        }
         document.getElementById('editPersonasInvolucradas').value = data.personas_involucradas || '';
         document.getElementById('editInstructorResponsable').value = data.instructor_responsable || '';
         document.getElementById('editDescripcion').value = data.descripcion || '';

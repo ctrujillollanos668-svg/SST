@@ -21,6 +21,7 @@ use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\AccidentesController as A
 use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\IncidentesController as AprendizIncidentesController;
 use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\RiesgosController as AprendizRiesgosController;
 use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\ActosInsegurosController as AprendizActosInsegurosController;
+use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\CondicionesInsegurasController as AprendizCondicionesInsegurasController;
 use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\LesionesController as AprendizLesionesController;
 use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\TiposEmergenciasController as AprendizTiposEmergenciasController;
 use Modules\SST\Http\Controllers\Aprendiz\Emergencias\ContactoEmergenciaController as AprendizContactoEmergenciaController;
@@ -43,6 +44,7 @@ Route::prefix('Sst')->name('SST.')->group(function () {
         Route::get('/incidentes', [AdminDefinicionesController::class, 'incidentes'])->name('incidentes');
         Route::get('/riesgos', [AdminDefinicionesController::class, 'riesgos'])->name('riesgos');
         Route::get('/actos-inseguros', [AdminDefinicionesController::class, 'actosInseguros'])->name('actos_inseguros');
+        Route::get('/condiciones-inseguras', [AdminDefinicionesController::class, 'condicionesInseguras'])->name('condiciones_inseguras');
         Route::get('/lesiones', [AdminDefinicionesController::class, 'lesiones'])->name('lesiones');
         Route::get('/tipos-emergencias', [AdminDefinicionesController::class, 'tiposEmergencias'])->name('tipos_emergencias');
         Route::post('/store', [AdminDefinicionesController::class, 'store'])->name('store');
@@ -159,6 +161,11 @@ Route::prefix('Sst')->name('SST.')->group(function () {
             Route::post('/actos-inseguros', [AprendizActosInsegurosController::class, 'store'])->name('actos_inseguros.store');
             Route::put('/actos-inseguros/{id}', [AprendizActosInsegurosController::class, 'update'])->name('actos_inseguros.update');
             Route::delete('/actos-inseguros/{id}', [AprendizActosInsegurosController::class, 'destroy'])->name('actos_inseguros.destroy');
+
+            Route::get('/condiciones-inseguras', [AprendizCondicionesInsegurasController::class, 'index'])->name('condiciones_inseguras.index');
+            Route::post('/condiciones-inseguras', [AprendizCondicionesInsegurasController::class, 'store'])->name('condiciones_inseguras.store');
+            Route::put('/condiciones-inseguras/{id}', [AprendizCondicionesInsegurasController::class, 'update'])->name('condiciones_inseguras.update');
+            Route::delete('/condiciones-inseguras/{id}', [AprendizCondicionesInsegurasController::class, 'destroy'])->name('condiciones_inseguras.destroy');
 
             Route::get('/lesiones', [AprendizLesionesController::class, 'index'])->name('lesiones.index');
             Route::post('/lesiones', [AprendizLesionesController::class, 'store'])->name('lesiones.store');

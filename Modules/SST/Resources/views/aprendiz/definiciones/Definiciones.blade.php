@@ -68,7 +68,7 @@
             @php
                 $totalItems = $cat['items']->count();
             @endphp
-            <div class="accordion-item bg-white rounded-2xl border border-slate-200/80 shadow-2xs transition-all hover:border-slate-300 overflow-hidden" data-category="{{ $key }}">
+            <div class="accordion-item bg-white rounded-2xl border border-slate-200/80 shadow-2xs transition-all hover:border-slate-300 overflow-hidden" data-category="{{ $key }}" id="cat-{{ $key }}">
                 
                 <!-- Barra / Cabecera del Acordeón -->
                 <div class="accordion-header p-4 sm:p-5 flex items-center justify-between cursor-pointer select-none transition hover:bg-slate-50/70" onclick="toggleAccordion('{{ $key }}')">
@@ -381,6 +381,17 @@
                     }
                 });
             });
+        }
+
+        // Si la URL contiene un hash como #cat-accidentes, abrir automáticamente ese acordeón
+        if (window.location.hash) {
+            const target = document.querySelector(window.location.hash);
+            if (target && target.classList.contains('accordion-item')) {
+                setTimeout(() => {
+                    target.classList.add('active');
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 150);
+            }
         }
     });
 </script>

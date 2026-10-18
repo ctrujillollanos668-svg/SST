@@ -17,6 +17,16 @@
     
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        /* Ocultar flecha nativa negra de inputs con datalist para mantener diseño limpio */
+        input::-webkit-calendar-picker-indicator,
+        input[list]::-webkit-calendar-picker-indicator {
+            display: none !important;
+            -webkit-appearance: none !important;
+            opacity: 0 !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
         
         #mainContentWrapper {
             transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);

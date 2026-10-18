@@ -120,19 +120,97 @@
     <nav class="py-3 flex-grow overflow-y-auto space-y-1 px-2.5 text-xs font-semibold">
 
         <!-- DEFINICIONES -->
-        <div class="flex flex-col menu-wrapper relative" id="defAprendizWrapper">
-            <a href="{{ route('SST.aprendiz.definiciones') }}" class="menu-btn-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition group {{ request()->routeIs('SST.aprendiz.definiciones') ? 'bg-orange-50 text-orange-600 font-bold' : '' }}">
-                <span class="w-8 h-8 rounded-xl {{ request()->routeIs('SST.aprendiz.definiciones') ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500' }} flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition shrink-0">
-                    <i class="fa-solid fa-book text-xs"></i>
-                </span>
-                <span class="font-bold text-[13px] sidebar-text-full">Definiciones</span>
-            </a>
-            <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-slate-100">
-                    <span class="font-extrabold text-xs text-slate-800">Definiciones SST</span>
+        @php
+            $isDefiniciones = request()->routeIs('SST.aprendiz.definiciones*');
+        @endphp
+        <div class="flex flex-col menu-wrapper relative {{ $isDefiniciones ? 'open' : '' }}" id="defAprendizWrapper">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isDefiniciones ? 'text-orange-600 bg-orange-50/70 font-bold' : 'text-slate-700 hover:text-orange-600 hover:bg-slate-50' }} transition cursor-pointer group" id="btnToggleDefAprendiz">
+                <div class="flex items-center gap-3">
+                    <span class="w-8 h-8 rounded-xl {{ $isDefiniciones ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600' }} flex items-center justify-center transition shrink-0">
+                        <i class="fa-solid fa-book text-xs"></i>
+                    </span>
+                    <span class="font-bold text-[13px] sidebar-text-full">Definiciones</span>
                 </div>
-                <div class="py-1">
-                    <a href="{{ route('SST.aprendiz.definiciones') }}" class="flex items-center px-3 py-1.5 text-slate-600 hover:bg-slate-50 hover:text-orange-600 rounded-lg text-xs font-semibold transition">Ver Glosario y Conceptos</a>
+                <span class="text-[10px] {{ $isDefiniciones ? 'text-orange-600' : 'text-slate-400 group-hover:text-orange-600' }} arrow-icon" id="arrowDefAprendiz">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </span>
+            </div>
+            <!-- Acordeón Normal -->
+            <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
+                <li>
+                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-accidentes" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs">
+                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-burst"></i></span> 
+                        Accidentes
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-incidentes" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs">
+                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-triangle-exclamation"></i></span> 
+                        Incidentes
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-riesgos" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs">
+                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-biohazard"></i></span> 
+                        Riesgos
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-actos_inseguros" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs">
+                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-lightbulb"></i></span> 
+                        Actos Inseguros
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-condiciones_inseguras" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs">
+                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-triangle-exclamation"></i></span> 
+                        Condiciones Inseguras
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-lesiones" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs">
+                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-crutch"></i></span> 
+                        Lesiones
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-tipos_emergencias" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs">
+                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-hospital"></i></span> 
+                        Condiciones de Emergencias
+                    </a>
+                </li>
+            </ul>
+            <!-- Tarjeta Flotante (Flyout Mini) -->
+            <div class="sidebar-flyout">
+                <div class="px-3 py-2 border-b border-slate-100 flex items-center justify-between">
+                    <span class="font-extrabold text-xs text-slate-800 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                        <span>Definiciones</span>
+                    </span>
+                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-100 text-orange-700">7</span>
+                </div>
+                <div class="py-1 space-y-0.5">
+                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-accidentes" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">
+                        <span>Accidentes</span>
+                    </a>
+                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-incidentes" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">
+                        <span>Incidentes</span>
+                    </a>
+                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-riesgos" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">
+                        <span>Riesgos</span>
+                    </a>
+                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-actos_inseguros" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">
+                        <span>Actos Inseguros</span>
+                    </a>
+                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-condiciones_inseguras" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">
+                        <span>Condiciones Inseguras</span>
+                    </a>
+                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-lesiones" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">
+                        <span>Lesiones</span>
+                    </a>
+                    <a href="{{ route('SST.aprendiz.definiciones') }}#cat-tipos_emergencias" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-600 transition">
+                        <span>Condiciones de Emergencias</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -187,6 +265,14 @@
                     </a>
                 </li>
 
+                @php $actCond = request()->routeIs('SST.aprendiz.tipos_eventos.condiciones_inseguras.*'); @endphp
+                <li>
+                    <a href="{{ route('SST.aprendiz.tipos_eventos.condiciones_inseguras.index') }}" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium {{ $actCond ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
+                        <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-triangle-exclamation"></i></span> 
+                        Condiciones Inseguras
+                    </a>
+                </li>
+
                 @php $actLes = request()->routeIs('SST.aprendiz.tipos_eventos.lesiones.*'); @endphp
                 <li>
                     <a href="{{ route('SST.aprendiz.tipos_eventos.lesiones.index') }}" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium {{ $actLes ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
@@ -199,7 +285,7 @@
                 <li>
                     <a href="{{ route('SST.aprendiz.tipos_eventos.tipos_emergencias.index') }}" class="flex items-center pl-6 pr-3 py-1.5 rounded-lg transition font-medium {{ $actEmerg ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
                         <span class="mr-2.5 text-xs text-orange-500 w-4 text-center"><i class="fa-solid fa-hospital"></i></span> 
-                        Tipos de Emergencias
+                        Condiciones de Emergencias
                     </a>
                 </li>
             </ul>
@@ -210,7 +296,7 @@
                         <span class="w-2 h-2 rounded-full bg-orange-500"></span>
                         <span>Tipos de Eventos</span>
                     </span>
-                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-100 text-orange-700">6</span>
+                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-100 text-orange-700">7</span>
                 </div>
                 <div class="py-1 space-y-0.5">
                     <a href="{{ route('SST.aprendiz.tipos_eventos.accidentes.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actAcc ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
@@ -229,12 +315,16 @@
                         <span>Actos Inseguros</span>
                         @if($actActos)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
                     </a>
+                    <a href="{{ route('SST.aprendiz.tipos_eventos.condiciones_inseguras.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actCond ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
+                        <span>Condiciones Inseguras</span>
+                        @if($actCond)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
+                    </a>
                     <a href="{{ route('SST.aprendiz.tipos_eventos.lesiones.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actLes ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
                         <span>Lesiones</span>
                         @if($actLes)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
                     </a>
                     <a href="{{ route('SST.aprendiz.tipos_eventos.tipos_emergencias.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actEmerg ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Tipos de Emergencias</span>
+                        <span>Condiciones de Emergencias</span>
                         @if($actEmerg)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
                     </a>
                 </div>
@@ -448,6 +538,7 @@
             }
         };
 
+        toggleMenu('btnToggleDefAprendiz', 'defAprendizWrapper');
         toggleMenu('btnToggleTiposEventos', 'tiposEventosWrapper');
         toggleMenu('btnToggleEmergencias', 'emergenciasWrapper');
         toggleMenu('btnToggleInspecciones', 'inspeccionesWrapper');

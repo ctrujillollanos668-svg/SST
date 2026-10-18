@@ -11,6 +11,14 @@
     .animate-modal-pop {
         animation: modalPopIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+    input::-webkit-calendar-picker-indicator,
+    input[list]::-webkit-calendar-picker-indicator {
+        display: none !important;
+        -webkit-appearance: none !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
 </style>
 
 <div class="space-y-6 max-w-7xl mx-auto">
@@ -334,7 +342,44 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Ficha o Programa</label>
-                    <input type="text" name="ficha_programa" placeholder="Ej: Comunidad SENA CEFA" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                    <div class="relative" id="create_ficha_combo_container">
+                        <input type="text" 
+                               name="ficha_programa" 
+                               id="create_ficha_programa"
+                               placeholder="Selecciona o escribe la ficha (Ej: 2847386 - ADSO)" 
+                               autocomplete="off" 
+                               class="w-full pl-3.5 pr-10 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                        <button type="button" 
+                                onclick="toggleAdminFichasDropdown(event, 'create_ficha_combo_container')"
+                                class="absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-orange-600 transition cursor-pointer"
+                                title="Desplegar fichas activas">
+                            <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200 icon-arrow-ficha"></i>
+                        </button>
+
+                        <!-- Menú Desplegable con todas las fichas de SICA -->
+                        <div class="fichas-dropdown-menu absolute z-50 left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white rounded-xl border border-slate-200 shadow-xl divide-y divide-slate-100 hidden">
+                            @if(isset($cursos) && count($cursos) > 0)
+                                @foreach($cursos as $c)
+                                    @php
+                                        $fichaTexto = $c->code . ' - ' . ($c->program->name ?? 'Programa de Formación');
+                                    @endphp
+                                    <div class="ficha-option px-3.5 py-2.5 hover:bg-orange-50 cursor-pointer flex items-center justify-between text-xs transition group"
+                                         data-text="{{ strtolower($fichaTexto) }}"
+                                         data-value="{{ $fichaTexto }}"
+                                         onclick="selectAdminFicha('create_ficha_programa', this.getAttribute('data-value'), 'create_ficha_combo_container')">
+                                        <div class="truncate">
+                                            <strong class="font-extrabold text-slate-800 group-hover:text-orange-600">{{ $c->code }}</strong>
+                                            <span class="text-slate-500 text-[11px] ml-1.5">{{ $c->program->name ?? '' }}</span>
+                                        </div>
+                                        <span class="text-[10px] font-bold text-orange-500 opacity-0 group-hover:opacity-100 transition shrink-0 ml-2">Seleccionar</span>
+                                    </div>
+                                @endforeach
+                                <div class="no-fichas-match px-4 py-3 text-xs text-slate-400 text-center hidden">No se encontraron fichas coincidentes</div>
+                            @else
+                                <div class="px-4 py-3 text-xs text-slate-400 text-center">No hay fichas activas registradas</div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Estado *</label>
@@ -433,7 +478,44 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Ficha o Programa</label>
-                    <input type="text" name="ficha_programa" id="edit_ficha_programa" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                    <div class="relative" id="edit_ficha_combo_container">
+                        <input type="text" 
+                               name="ficha_programa" 
+                               id="edit_ficha_programa" 
+                               placeholder="Selecciona o escribe la ficha..." 
+                               autocomplete="off" 
+                               class="w-full pl-3.5 pr-10 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                        <button type="button" 
+                                onclick="toggleAdminFichasDropdown(event, 'edit_ficha_combo_container')"
+                                class="absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-orange-600 transition cursor-pointer"
+                                title="Desplegar fichas activas">
+                            <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200 icon-arrow-ficha"></i>
+                        </button>
+
+                        <!-- Menú Desplegable con todas las fichas de SICA -->
+                        <div class="fichas-dropdown-menu absolute z-50 left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white rounded-xl border border-slate-200 shadow-xl divide-y divide-slate-100 hidden">
+                            @if(isset($cursos) && count($cursos) > 0)
+                                @foreach($cursos as $c)
+                                    @php
+                                        $fichaTexto = $c->code . ' - ' . ($c->program->name ?? 'Programa de Formación');
+                                    @endphp
+                                    <div class="ficha-option px-3.5 py-2.5 hover:bg-orange-50 cursor-pointer flex items-center justify-between text-xs transition group"
+                                         data-text="{{ strtolower($fichaTexto) }}"
+                                         data-value="{{ $fichaTexto }}"
+                                         onclick="selectAdminFicha('edit_ficha_programa', this.getAttribute('data-value'), 'edit_ficha_combo_container')">
+                                        <div class="truncate">
+                                            <strong class="font-extrabold text-slate-800 group-hover:text-orange-600">{{ $c->code }}</strong>
+                                            <span class="text-slate-500 text-[11px] ml-1.5">{{ $c->program->name ?? '' }}</span>
+                                        </div>
+                                        <span class="text-[10px] font-bold text-orange-500 opacity-0 group-hover:opacity-100 transition shrink-0 ml-2">Seleccionar</span>
+                                    </div>
+                                @endforeach
+                                <div class="no-fichas-match px-4 py-3 text-xs text-slate-400 text-center hidden">No se encontraron fichas coincidentes</div>
+                            @else
+                                <div class="px-4 py-3 text-xs text-slate-400 text-center">No hay fichas activas registradas</div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Estado *</label>
@@ -535,12 +617,123 @@
 </div>
 
 <script>
+    function toggleAdminFichasDropdown(event, containerId, forceOpen = false) {
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const menu = container.querySelector('.fichas-dropdown-menu');
+        const icon = container.querySelector('.icon-arrow-ficha');
+        if (!menu) return;
+
+        const isHidden = menu.classList.contains('hidden');
+        if (isHidden || forceOpen) {
+            document.querySelectorAll('.fichas-dropdown-menu').forEach(m => m.classList.add('hidden'));
+            document.querySelectorAll('.icon-arrow-ficha').forEach(i => i.classList.remove('rotate-180'));
+
+            // Mostramos todas las opciones sin filtro para permitir cambiar de ficha libremente
+            const options = menu.querySelectorAll('.ficha-option');
+            options.forEach(opt => opt.classList.remove('hidden'));
+            const noMatch = menu.querySelector('.no-fichas-match');
+            if (noMatch) noMatch.classList.add('hidden');
+
+            menu.classList.remove('hidden');
+            if (icon) icon.classList.add('rotate-180');
+
+            // Resaltar la ficha que esté actualmente seleccionada
+            const input = container.querySelector('input[name="ficha_programa"]');
+            if (input && input.value) {
+                const currentVal = input.value.toLowerCase().trim();
+                let selectedElem = null;
+                options.forEach(opt => {
+                    const text = (opt.getAttribute('data-value') || '').toLowerCase().trim();
+                    if (text === currentVal || text.startsWith(currentVal) || (currentVal.length > 5 && text.includes(currentVal.substring(0, 7)))) {
+                        opt.classList.add('bg-purple-100/70', 'font-bold');
+                        if (!selectedElem) selectedElem = opt;
+                    } else {
+                        opt.classList.remove('bg-purple-100/70', 'font-bold');
+                    }
+                });
+                if (selectedElem) {
+                    selectedElem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                }
+            }
+        } else {
+            menu.classList.add('hidden');
+            if (icon) icon.classList.remove('rotate-180');
+        }
+    }
+
+    function selectAdminFicha(inputId, value, containerId) {
+        const input = document.getElementById(inputId);
+        if (input) {
+            input.value = value;
+            input.dispatchEvent(new Event('change'));
+        }
+        const container = document.getElementById(containerId);
+        if (container) {
+            const menu = container.querySelector('.fichas-dropdown-menu');
+            const icon = container.querySelector('.icon-arrow-ficha');
+            if (menu) menu.classList.add('hidden');
+            if (icon) icon.classList.remove('rotate-180');
+        }
+    }
+
+    function setupAdminFichaFilter(containerId, inputId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const input = document.getElementById(inputId);
+        const menu = container.querySelector('.fichas-dropdown-menu');
+        const icon = container.querySelector('.icon-arrow-ficha');
+        if (!input || !menu) return;
+
+        // Al hacer clic o foco en el input, desplegar las fichas y seleccionar el texto para cambiarlo rápido
+        input.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (menu.classList.contains('hidden')) {
+                toggleAdminFichasDropdown(null, containerId, true);
+            }
+            this.select();
+        });
+
+        input.addEventListener('focus', function() {
+            toggleAdminFichasDropdown(null, containerId, true);
+            this.select();
+        });
+
+        input.addEventListener('input', function() {
+            const val = this.value.toLowerCase().trim();
+            menu.classList.remove('hidden');
+            if (icon) icon.classList.add('rotate-180');
+
+            const options = menu.querySelectorAll('.ficha-option');
+            const noMatch = menu.querySelector('.no-fichas-match');
+            let count = 0;
+            options.forEach(opt => {
+                const text = opt.getAttribute('data-text') || '';
+                if (!val || text.includes(val)) {
+                    opt.classList.remove('hidden');
+                    count++;
+                } else {
+                    opt.classList.add('hidden');
+                }
+            });
+            if (noMatch) {
+                noMatch.classList.toggle('hidden', count > 0 || options.length === 0);
+            }
+        });
+    }
+
     function openRegisterModal() {
         document.getElementById('modalRegister').classList.remove('hidden');
     }
 
     function closeRegisterModal() {
         document.getElementById('modalRegister').classList.add('hidden');
+        document.querySelectorAll('.fichas-dropdown-menu').forEach(m => m.classList.add('hidden'));
+        document.querySelectorAll('.icon-arrow-ficha').forEach(i => i.classList.remove('rotate-180'));
     }
 
     function openEditModal(item) {
@@ -574,6 +767,8 @@
 
     function closeEditModal() {
         document.getElementById('modalEdit').classList.add('hidden');
+        document.querySelectorAll('.fichas-dropdown-menu').forEach(m => m.classList.add('hidden'));
+        document.querySelectorAll('.icon-arrow-ficha').forEach(i => i.classList.remove('rotate-180'));
     }
 
     function openDetailModal(item) {
@@ -653,6 +848,17 @@
                 }
             });
         }
+
+        // Inicializar filtros para combobox de fichas
+        setupAdminFichaFilter('create_ficha_combo_container', 'create_ficha_programa');
+        setupAdminFichaFilter('edit_ficha_combo_container', 'edit_ficha_programa');
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#create_ficha_combo_container') && !e.target.closest('#edit_ficha_combo_container')) {
+            document.querySelectorAll('.fichas-dropdown-menu').forEach(m => m.classList.add('hidden'));
+            document.querySelectorAll('.icon-arrow-ficha').forEach(i => i.classList.remove('rotate-180'));
+        }
     });
 
     document.addEventListener('keydown', function(e) {
@@ -660,6 +866,8 @@
             closeRegisterModal();
             closeEditModal();
             closeDetailModal();
+            document.querySelectorAll('.fichas-dropdown-menu').forEach(m => m.classList.add('hidden'));
+            document.querySelectorAll('.icon-arrow-ficha').forEach(i => i.classList.remove('rotate-180'));
         }
     });
 </script>

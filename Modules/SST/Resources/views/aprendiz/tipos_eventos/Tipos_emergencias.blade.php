@@ -144,7 +144,7 @@
                                 $totalFotos = count($evidencias);
                                 $estadoItem = strtolower($item->estado ?? 'activo');
                                 $tieneRespuesta = !empty($data['respuesta_admin']);
-                                $nombreLugar = $data['lugar_formacion'] ?? 'Lugar de Emergencia';
+                                $nombreLugar = !empty($data['tipo_emergencia']) ? "{$data['tipo_emergencia']} — {$data['lugar_formacion']}" : ($data['lugar_formacion'] ?? 'Lugar de Emergencia');
                                 $encodedData = base64_encode(json_encode($data, JSON_UNESCAPED_UNICODE));
                             @endphp
                             <div class="item-card bg-slate-50/70 hover:bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-orange-300 transition-all flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 cursor-pointer group"
@@ -207,6 +207,12 @@
 
                                     <!-- Fila 2: Etiquetas de Lugar, Fecha, Personas e Instructor -->
                                     <div class="flex flex-wrap items-center gap-2 text-xs text-slate-600 font-medium">
+                                        @if(!empty($data['tipo_emergencia']))
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-orange-100 text-orange-800 border border-orange-200 font-bold">
+                                                <i class="fa-solid fa-triangle-exclamation text-orange-600"></i>
+                                                <span>{{ $data['tipo_emergencia'] }}</span>
+                                            </span>
+                                        @endif
                                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 text-slate-700 border border-slate-200/80">
                                             <i class="fa-solid fa-location-dot text-orange-500"></i>
                                             <span>{{ $data['lugar_formacion'] ?? 'General' }}</span>
@@ -320,18 +326,41 @@
                 </div>
             </div>
 
-            <!-- Fila 2: Prioridad -->
-            <div class="space-y-1">
-                <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
-                    PRIORIDAD <span class="text-rose-500">*</span>
-                </label>
-                <select name="prioridad" required 
-                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
-                    <option value="">Seleccione la prioridad...</option>
-                    <option value="Alta">Alta</option>
-                    <option value="Media">Media</option>
-                    <option value="Baja">Baja</option>
-                </select>
+            <!-- Fila 2: Tipo de Condición de Emergencia y Prioridad -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        TIPO DE CONDICIÓN DE EMERGENCIA <span class="text-rose-500">*</span>
+                    </label>
+                    <select name="tipo_emergencia" required 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
+                        <option value="">Seleccione el tipo de emergencia...</option>
+                        @if(isset($catalogoEmergencias) && $catalogoEmergencias->count() > 0)
+                            @foreach($catalogoEmergencias as $em)
+                                <option value="{{ $em->nombre }}">{{ $em->nombre }}</option>
+                            @endforeach
+                        @else
+                            <option value="Conato de incendio / Fuego activo">Conato de incendio / Fuego activo</option>
+                            <option value="Fuga de gas o químico peligroso">Fuga de gas o químico peligroso</option>
+                            <option value="Colapso estructural o sismo">Colapso estructural o sismo</option>
+                            <option value="Inundación o falla hidrosanitaria">Inundación o falla hidrosanitaria</option>
+                            <option value="Emergencia médica grave / Pérdida de conciencia">Emergencia médica grave / Pérdida de conciencia</option>
+                        @endif
+                    </select>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        PRIORIDAD <span class="text-rose-500">*</span>
+                    </label>
+                    <select name="prioridad" required 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
+                        <option value="">Seleccione la prioridad...</option>
+                        <option value="Alta">Alta</option>
+                        <option value="Media">Media</option>
+                        <option value="Baja">Baja</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Fila 3: Persona Afectada y Personas Involucradas -->
@@ -463,18 +492,41 @@
                 </div>
             </div>
 
-            <!-- Fila 2: Prioridad -->
-            <div class="space-y-1">
-                <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
-                    PRIORIDAD <span class="text-rose-500">*</span>
-                </label>
-                <select id="editPrioridad" name="prioridad" required 
-                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
-                    <option value="">Seleccione la prioridad...</option>
-                    <option value="Alta">Alta</option>
-                    <option value="Media">Media</option>
-                    <option value="Baja">Baja</option>
-                </select>
+            <!-- Fila 2: Tipo de Condición de Emergencia y Prioridad -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        TIPO DE CONDICIÓN DE EMERGENCIA <span class="text-rose-500">*</span>
+                    </label>
+                    <select id="editTipoEmergencia" name="tipo_emergencia" required 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
+                        <option value="">Seleccione el tipo de emergencia...</option>
+                        @if(isset($catalogoEmergencias) && $catalogoEmergencias->count() > 0)
+                            @foreach($catalogoEmergencias as $em)
+                                <option value="{{ $em->nombre }}">{{ $em->nombre }}</option>
+                            @endforeach
+                        @else
+                            <option value="Conato de incendio / Fuego activo">Conato de incendio / Fuego activo</option>
+                            <option value="Fuga de gas o químico peligroso">Fuga de gas o químico peligroso</option>
+                            <option value="Colapso estructural o sismo">Colapso estructural o sismo</option>
+                            <option value="Inundación o falla hidrosanitaria">Inundación o falla hidrosanitaria</option>
+                            <option value="Emergencia médica grave / Pérdida de conciencia">Emergencia médica grave / Pérdida de conciencia</option>
+                        @endif
+                    </select>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
+                        PRIORIDAD <span class="text-rose-500">*</span>
+                    </label>
+                    <select id="editPrioridad" name="prioridad" required 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
+                        <option value="">Seleccione la prioridad...</option>
+                        <option value="Alta">Alta</option>
+                        <option value="Media">Media</option>
+                        <option value="Baja">Baja</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Fila 3: Persona Afectada y Personas Involucradas -->
@@ -957,6 +1009,9 @@
 
         const elLugar = document.getElementById('editLugarFormacion');
         if (elLugar) elLugar.value = data.lugar_formacion || '';
+
+        const elTipoEmergencia = document.getElementById('editTipoEmergencia');
+        if (elTipoEmergencia) elTipoEmergencia.value = data.tipo_emergencia || '';
 
         const elPrio = document.getElementById('editPrioridad');
         if (elPrio) elPrio.value = data.prioridad || data.gravedad || 'Media';

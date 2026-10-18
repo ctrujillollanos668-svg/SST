@@ -26,13 +26,13 @@ class ActosInsegurosController extends Controller
 
         if ($user->roles->contains('slug', 'sst.aprendiz') || $user->roles->contains('slug', 'sst.funcionario') || $user->roles->contains('slug', 'sst.admin') || $user->hasSuperAdmin()) {
             
-            // Consultar reportes de actos o condiciones inseguras registrados
+            // Consultar reportes de actos inseguros registrados
             $actosInseguros = RespuestaEvento::where(function($q) {
                     $q->where('nombre', 'LIKE', '%Acto%')
-                      ->orWhere('nombre', 'LIKE', '%acto%')
-                      ->orWhere('nombre', 'LIKE', '%Condici%')
-                      ->orWhere('nombre', 'LIKE', '%condici%');
+                      ->orWhere('nombre', 'LIKE', '%acto%');
                 })
+                ->where('nombre', 'NOT LIKE', '%Condici%')
+                ->where('nombre', 'NOT LIKE', '%condici%')
                 ->orderBy('id_respuesta', 'desc')
                 ->get();
 
@@ -40,7 +40,16 @@ class ActosInsegurosController extends Controller
                 ->orderBy('nombre', 'asc')
                 ->get();
 
-            return view('sst::aprendiz.tipos_eventos.Actos_inseguros', compact('actosInseguros', 'lugares'));
+            $catalogoActos = TipoEvento::where(function($q) {
+                    $q->where('tipo_categoria', 'acto_inseguro')
+                      ->orWhere('tipo_categoria', 'Acto Inseguro')
+                      ->orWhereRaw('LOWER(tipo_categoria) = ?', ['acto_inseguro']);
+                })
+                ->where('estado', 'activo')
+                ->orderBy('nombre', 'asc')
+                ->get();
+
+            return view('sst::aprendiz.tipos_eventos.Actos_inseguros', compact('actosInseguros', 'lugares', 'catalogoActos'));
         }
 
         abort(403, 'Acceso denegado: No tienes permisos para consultar este recurso en el módulo SST.');
@@ -52,6 +61,7 @@ class ActosInsegurosController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'tipo_acto' => 'nullable|string|max:150',
             'fecha_hora' => 'nullable',
             'lugar_formacion' => 'nullable|string|max:150',
             'lugar_especifico' => 'nullable|string|max:255',
@@ -65,6 +75,7 @@ class ActosInsegurosController extends Controller
             'evidencia' => 'nullable|file|max:10240',
         ]);
 
+        $tipoActo = !empty($validated['tipo_acto']) ? $validated['tipo_acto'] : 'Acto Inseguro General';
         $personaAfectada = !empty($validated['persona_afectada']) ? $validated['persona_afectada'] : (!empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : 'Persona Afectada');
         $personas = !empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : '';
         $lugar = !empty($validated['lugar_formacion']) ? $validated['lugar_formacion'] : 'Instalaciones del Centro';
@@ -101,7 +112,8 @@ class ActosInsegurosController extends Controller
         $evidenciaPrincipal = !empty($evidenciasUrls) ? $evidenciasUrls[0] : null;
 
         $reportData = [
-            'tipo_suceso' => 'Acto / Condición Insegura',
+            'tipo_acto' => $tipoActo,
+            'tipo_suceso' => 'Acto Inseguro',
             'fecha_hora' => $fecha,
             'lugar_formacion' => $lugar,
             'lugar_especifico' => $lugarEspecifico,
@@ -114,9 +126,7 @@ class ActosInsegurosController extends Controller
             'evidencias' => $evidenciasUrls,
         ];
 
-        $nombreRegistro = !empty($lugarEspecifico) 
-            ? "Acto Inseguro: {$lugar} - {$lugarEspecifico} ({$personaAfectada})"
-            : "Acto Inseguro: {$lugar} ({$personaAfectada})";
+        $nombreRegistro = "Acto Inseguro: {$tipoActo} ({$personaAfectada})";
 
         RespuestaEvento::create([
             'nombre' => $nombreRegistro,
@@ -136,6 +146,7 @@ class ActosInsegurosController extends Controller
         $evento = RespuestaEvento::findOrFail($id);
 
         $validated = $request->validate([
+            'tipo_acto' => 'nullable|string|max:150',
             'fecha_hora' => 'nullable',
             'lugar_formacion' => 'nullable|string|max:150',
             'lugar_especifico' => 'nullable|string|max:255',
@@ -195,6 +206,7 @@ class ActosInsegurosController extends Controller
 
         $evidenciasUrls = array_slice($evidenciasUrls, 0, 3);
 
+        $tipoActo = !empty($validated['tipo_acto']) ? $validated['tipo_acto'] : (!empty($existingData['tipo_acto']) ? $existingData['tipo_acto'] : 'Acto Inseguro General');
         $personaAfectada = !empty($validated['persona_afectada']) ? $validated['persona_afectada'] : (!empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : 'Persona Afectada');
         $personas = !empty($validated['personas_involucradas']) ? $validated['personas_involucradas'] : '';
         $lugar = !empty($validated['lugar_formacion']) ? $validated['lugar_formacion'] : 'Instalaciones del Centro';
@@ -206,7 +218,8 @@ class ActosInsegurosController extends Controller
         $evidenciaPrincipal = !empty($evidenciasUrls) ? $evidenciasUrls[0] : null;
 
         $reportData = [
-            'tipo_suceso' => 'Acto / Condición Insegura',
+            'tipo_acto' => $tipoActo,
+            'tipo_suceso' => 'Acto Inseguro',
             'fecha_hora' => $fecha,
             'lugar_formacion' => $lugar,
             'lugar_especifico' => $lugarEspecifico,
@@ -219,9 +232,7 @@ class ActosInsegurosController extends Controller
             'evidencias' => $evidenciasUrls,
         ];
 
-        $nombreRegistro = !empty($lugarEspecifico) 
-            ? "Acto Inseguro: {$lugar} - {$lugarEspecifico} ({$personaAfectada})"
-            : "Acto Inseguro: {$lugar} ({$personaAfectada})";
+        $nombreRegistro = "Acto Inseguro: {$tipoActo} ({$personaAfectada})";
 
         $evento->update([
             'nombre' => $nombreRegistro,
