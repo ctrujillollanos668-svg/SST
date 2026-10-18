@@ -19,6 +19,10 @@ class CreateDefinicionesSstTable extends Migration
                 $table->string('tipo_categoria', 50)->comment('accidente, incidente, riesgo, acto_inseguro, lesion, tipo_emergencia');
                 $table->string('nombre', 150);
                 $table->text('descripcion');
+                $table->text('como_prevenir')->nullable();
+                $table->string('tipo_gravedad', 50)->nullable();
+                $table->string('tipo_clasificacion', 100)->nullable();
+                $table->string('tipo_otro', 150)->nullable();
                 $table->string('modulo_pertenece', 150)->nullable();
                 $table->enum('estado', ['activo', 'inactivo'])->default('activo');
                 $table->timestamps();

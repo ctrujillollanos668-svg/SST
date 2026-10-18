@@ -14,7 +14,7 @@ return new class extends Migration
         if (!Schema::hasTable('tipos_eventos')) {
             Schema::create('tipos_eventos', function (Blueprint $table) {
                 $table->id('id_tipo_evento');
-                $table->enum('tipo_categoria', ['accidente', 'incidente', 'riesgo', 'acto_inseguro', 'lesion', 'tipo_emergencia']);
+                $table->enum('tipo_categoria', ['accidente', 'incidente', 'riesgo', 'acto_inseguro', 'condicion_insegura', 'lesion', 'tipo_emergencia']);
                 $table->unsignedBigInteger('id_aprendiz')->nullable();
                 $table->unsignedBigInteger('id_fase')->nullable();
                 $table->string('nombre', 100);

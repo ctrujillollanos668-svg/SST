@@ -5,7 +5,6 @@ namespace Modules\SST\Http\Controllers\Admin\Cronograma;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\SST\Entities\ActividadSST;
-use Modules\SST\Entities\CronogramaActividad;
 use Modules\SST\Entities\LugarFormacion;
 use Modules\SST\Entities\TipoActividad;
 
@@ -40,29 +39,7 @@ class CalendarioController extends Controller
             ];
         });
 
-        // 3. Incluir también las de CronogramaActividad si existieran
-        $cronogramaActividades = CronogramaActividad::with('lugar')
-            ->orderBy('fecha', 'asc')
-            ->orderBy('hora', 'asc')
-            ->get();
 
-        foreach ($cronogramaActividades as $cAct) {
-            $actividades->push((object) [
-                'id_actividad' => $cAct->id_actividad,
-                'source' => 'cronograma',
-                'nombre' => $cAct->nombre,
-                'fecha' => $cAct->fecha,
-                'hora' => $cAct->hora ? substr($cAct->hora, 0, 5) : '08:00',
-                'hora_fin' => null,
-                'tipo_actividad' => $cAct->tipo_actividad ?? 'Capacitación',
-                'id_lugar' => $cAct->id_lugar,
-                'lugar_nombre' => $cAct->lugar ? $cAct->lugar->nombre : null,
-                'responsable' => $cAct->responsable ?? 'No asignado',
-                'estado' => $cAct->estado ?? 'Programada',
-                'descripcion' => $cAct->descripcion ?? '',
-                'ficha_programa' => null
-            ]);
-        }
 
         // Ordenar actividades por fecha y hora
         $actividades = $actividades->sortBy([
@@ -191,7 +168,7 @@ class CalendarioController extends Controller
     }
 
     /**
-     * Update the specified calendar activity (actualiza en ActividadSST o CronogramaActividad).
+     * Update the specified calendar activity.
      */
     public function update(Request $request, $id)
     {
@@ -267,33 +244,6 @@ class CalendarioController extends Controller
                 ->with('success', 'Actividad actualizada con éxito.');
         }
 
-        // Fallback a CronogramaActividad si correspondía a ese modelo
-        $cronAct = CronogramaActividad::find($id);
-        if ($cronAct) {
-            if (!empty($validated['nombre'])) $cronAct->nombre = $validated['nombre'];
-            if (!empty($validated['fecha'])) $cronAct->fecha = $validated['fecha'];
-            if (!empty($validated['hora'])) $cronAct->hora = date('H:i:s', strtotime($validated['hora']));
-            if (!empty($validated['responsable'])) $cronAct->responsable = $validated['responsable'];
-            if (!empty($validated['tipo_actividad'])) $cronAct->tipo_actividad = $validated['tipo_actividad'];
-            if (!empty($validated['id_lugar'])) $cronAct->id_lugar = $validated['id_lugar'];
-            if (!empty($validated['estado'])) $cronAct->estado = $validated['estado'];
-            if (isset($validated['descripcion'])) $cronAct->descripcion = $validated['descripcion'];
-
-            $cronAct->save();
-            $cronAct->load('lugar');
-
-            if ($request->wantsJson() || $request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Actividad actualizada con éxito.',
-                    'data' => $cronAct
-                ]);
-            }
-
-            return redirect()->route('SST.admin.cronograma.calendario')
-                ->with('success', 'Actividad actualizada con éxito.');
-        }
-
         return response()->json(['success' => false, 'message' => 'Actividad no encontrada'], 404);
     }
 
@@ -303,25 +253,12 @@ class CalendarioController extends Controller
     public function destroy(Request $request, $id)
     {
         $actSST = ActividadSST::find($id);
-        if ($actSST && ($request->get('source') !== 'cronograma')) {
+        if ($actSST) {
             $actSST->delete();
             if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Actividad de SST eliminada con éxito.'
-                ]);
-            }
-            return redirect()->route('SST.admin.cronograma.calendario')
-                ->with('success', 'Actividad eliminada con éxito.');
-        }
-
-        $cronAct = CronogramaActividad::find($id);
-        if ($cronAct) {
-            $cronAct->delete();
-            if ($request->wantsJson() || $request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Actividad eliminada con éxito.'
                 ]);
             }
             return redirect()->route('SST.admin.cronograma.calendario')
