@@ -22,7 +22,7 @@ class AdminController extends Controller
         $user = Auth::user();
 
         if ($user->roles->contains('slug', 'sst.admin') || $user->hasSuperAdmin()) {
-            return view('sst::admin.dashboard');
+            return redirect()->route('SST.admin.definiciones.accidentes');
         }
 
         abort(403, 'Acceso denegado: No tienes permisos de Administrador en el módulo SST.');

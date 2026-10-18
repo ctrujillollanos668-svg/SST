@@ -18,14 +18,30 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-        /* Ocultar flecha nativa negra de inputs con datalist para mantener diseño limpio */
-        input::-webkit-calendar-picker-indicator,
-        input[list]::-webkit-calendar-picker-indicator {
+        /* Ocultar flecha nativa negra ÚNICAMENTE de inputs con datalist para mantener diseño limpio */
+        input[list]:not([type="date"]):not([type="datetime-local"])::-webkit-calendar-picker-indicator {
             display: none !important;
             -webkit-appearance: none !important;
             opacity: 0 !important;
             width: 0 !important;
             height: 0 !important;
+        }
+
+        /* Selector de fecha y hora interactivo estilizado */
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            opacity: 0.8;
+            padding: 2px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            filter: invert(42%) sepia(85%) saturate(1450%) hue-rotate(360deg) brightness(97%) contrast(98%);
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator:hover,
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+            opacity: 1;
+            transform: scale(1.15);
+            background-color: rgba(254, 243, 199, 0.5);
         }
         
         #mainContentWrapper {
@@ -378,6 +394,18 @@
             window.addEventListener('popstate', function(e) {
                 if (window.location.pathname.includes('/Sst/admin') || window.location.pathname.includes('/sst/admin')) {
                     loadSpaPage(window.location.href, false);
+                }
+            });
+
+            // Abrir calendario automáticamente al hacer clic en inputs de fecha/hora
+            document.addEventListener('click', function (e) {
+                const target = e.target;
+                if (target && (target.type === 'date' || target.type === 'datetime-local')) {
+                    if (typeof target.showPicker === 'function') {
+                        try {
+                            target.showPicker();
+                        } catch (err) {}
+                    }
                 }
             });
 

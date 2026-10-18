@@ -4,8 +4,8 @@
 
 @section('content')
 <style>
-    input::-webkit-calendar-picker-indicator,
-    input[list]::-webkit-calendar-picker-indicator {
+    /* Ocultar flecha nativa negra ÚNICAMENTE de inputs con datalist */
+    input[list]:not([type="date"]):not([type="datetime-local"])::-webkit-calendar-picker-indicator {
         display: none !important;
         -webkit-appearance: none !important;
         opacity: 0 !important;

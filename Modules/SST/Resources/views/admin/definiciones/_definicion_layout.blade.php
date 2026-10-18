@@ -37,9 +37,9 @@
             </div>
         </div>
 
-        <div class="flex items-center gap-2.5">
-            <button onclick="openModalCreate()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white text-xs font-bold shadow-xs hover:shadow-sm transition cursor-pointer">
-                <i class="fa-solid fa-plus text-xs"></i>
+        <div class="flex items-center gap-3">
+            <button onclick="openModalCreate()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 text-sm font-bold shadow-xs transition-all duration-200 cursor-pointer group border border-orange-200/90 hover:border-orange-300">
+                <i class="fa-solid fa-plus text-xs group-hover:rotate-90 transition-transform duration-300"></i>
                 <span>Nueva Definición</span>
             </button>
         </div>

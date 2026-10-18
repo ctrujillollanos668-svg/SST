@@ -11,8 +11,7 @@
     .animate-modal-pop {
         animation: modalPopIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    input::-webkit-calendar-picker-indicator,
-    input[list]::-webkit-calendar-picker-indicator {
+    input[list]:not([type="date"]):not([type="datetime-local"])::-webkit-calendar-picker-indicator {
         display: none !important;
         -webkit-appearance: none !important;
         opacity: 0 !important;

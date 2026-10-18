@@ -36,7 +36,7 @@ class SSTController extends Controller
 
         // 3. Si tiene el rol de Administrador o es Superadmin
         if ($user->roles->contains('slug', 'sst.admin') || $user->hasSuperAdmin()) {
-            return redirect()->route('SST.admin.dashboard');
+            return redirect()->route('SST.admin.definiciones.accidentes');
         }
 
         // 4. Si no tiene rol asignado en SST
