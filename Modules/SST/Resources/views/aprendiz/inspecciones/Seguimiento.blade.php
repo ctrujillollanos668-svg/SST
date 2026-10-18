@@ -50,54 +50,19 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-3 self-start sm:self-auto">
-                    <a href="{{ route('SST.aprendiz.inspecciones.registrar') }}" class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-2xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
-                        <i class="fa-solid fa-plus text-xs"></i>
-                        <span>+ Registrar Inspección</span>
-                    </a>
-                </div>
             </div>
 
             <!-- Contenido Principal -->
             <div class="pt-6">
 
-                <!-- Banner Informativo -->
-                <div class="mb-5 p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200/90 text-amber-900 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
-                    <div class="flex items-center gap-2.5">
-                        <span class="w-7 h-7 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xs shrink-0 font-bold">
-                            <i class="fa-solid fa-clock-rotate-left"></i>
-                        </span>
-                        <span class="text-xs font-semibold">Visualizando reportes con <strong class="text-amber-950 font-extrabold">Seguimiento Activo</strong> ({{ $inspecciones->count() }} encontradas).</span>
-                    </div>
-                    <a href="{{ route('SST.aprendiz.inspecciones.registrar') }}" class="text-xs font-bold text-amber-800 hover:text-orange-600 underline transition shrink-0">
-                        Ver todas las inspecciones
-                    </a>
-                </div>
-
-                <!-- Filtros rápidos por estado y Barra de Búsqueda -->
+                <!-- Barra de Búsqueda -->
                 <div class="mb-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-                    
-                    <!-- Pestañas de Navegación -->
-                    <div class="flex items-center gap-1.5 p-1 bg-slate-100 rounded-2xl border border-slate-200/80 shrink-0">
-                        <a href="{{ route('SST.aprendiz.inspecciones.registrar') }}" 
-                           class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 text-slate-500 hover:text-slate-800">
-                            <span>Todas</span>
-                            <span class="px-1.5 py-0.2 rounded-md bg-slate-200/80 text-[10px] font-extrabold">{{ isset($todasInspecciones) ? $todasInspecciones->count() : $inspecciones->count() }}</span>
-                        </a>
-
-                        <a href="{{ route('SST.aprendiz.inspecciones.seguimiento') }}" 
-                           class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-white text-amber-700 shadow-2xs">
-                            <i class="fa-regular fa-clock text-[10px] text-amber-500"></i>
-                            <span>Seguimiento</span>
-                            <span class="px-1.5 py-0.2 rounded-md bg-amber-100 text-amber-800 text-[10px] font-extrabold">{{ $totalSeguimiento ?? $inspecciones->count() }}</span>
-                        </a>
-
-                        <a href="{{ route('SST.aprendiz.inspecciones.registrar', ['filtro' => 'finalizadas']) }}" 
-                           class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 text-slate-500 hover:text-emerald-700">
-                            <i class="fa-solid fa-check text-[10px] text-emerald-500"></i>
-                            <span>Finalizadas</span>
-                            <span class="px-1.5 py-0.2 rounded-md bg-slate-200/80 text-slate-600 text-[10px] font-extrabold">{{ $totalFinalizadas ?? 0 }}</span>
-                        </a>
+                    <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
+                        <span class="px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200/80 flex items-center gap-2">
+                            <i class="fa-regular fa-clock text-amber-500"></i>
+                            <span>Reportes en Seguimiento:</span>
+                            <span class="px-1.5 py-0.2 rounded-md bg-amber-100 text-amber-800 text-[10px] font-extrabold">{{ $inspecciones->count() }}</span>
+                        </span>
                     </div>
 
                     <!-- Buscador -->
@@ -390,9 +355,8 @@
 <!-- ================================================================= -->
 <!-- MODAL DE EDICIÓN                                                  -->
 <!-- ================================================================= -->
-<div id="modalEdicion" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center hidden p-3 sm:p-4 overflow-y-auto">
-    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-150 my-auto relative">
-        <div class="h-1.5 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600"></div>
+<div id="modalEdicion" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center hidden p-3 sm:p-4 overflow-y-auto" onclick="closeModalEdicion()">
+    <div class="bg-white rounded-3xl shadow-2xl border-t-[6px] border-orange-500 border-x border-b border-slate-100 w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-150 my-auto relative" onclick="event.stopPropagation()">
 
         <div class="p-5 sm:p-6">
             <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
@@ -415,7 +379,7 @@
                 </button>
             </div>
 
-            <form id="formEdicion" action="" method="POST" enctype="multipart/form-data" class="mt-4 space-y-3 text-xs">
+            <form id="formEdicion" action="" method="POST" enctype="multipart/form-data" class="mt-4 space-y-3 text-xs" onsubmit="return validarTipoHallazgo(this)">
                 @csrf
                 @method('PUT')
                 <input type="hidden" id="editInspeccionId" name="id">
@@ -543,12 +507,12 @@
                     </label>
 
                     <div class="flex items-center gap-2">
-                        <button type="button" onclick="closeModalEdicion()" class="px-3 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 transition cursor-pointer">
+                        <button type="button" onclick="closeModalEdicion()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold transition cursor-pointer">
                             Cancelar
                         </button>
-                        <button type="submit" class="inline-flex items-center justify-center gap-1.5 px-5 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white text-xs font-black shadow-xs cursor-pointer uppercase tracking-wider">
-                            <i class="fa-solid fa-check text-[10px]"></i>
-                            <span>GUARDAR</span>
+                        <button type="submit" class="inline-flex items-center justify-center gap-1.5 px-5 py-2 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs font-bold shadow-xs transition cursor-pointer">
+                            <i class="fa-solid fa-check text-xs"></i>
+                            <span>Guardar</span>
                         </button>
                     </div>
                 </div>
@@ -770,6 +734,19 @@
     function toggleEditReporte(tipo) {
         const checkbox = document.getElementById(`editCheck${tipo}`);
         setCheckboxEstado('edit', tipo, !checkbox.checked);
+    }
+
+    function validarTipoHallazgo(form) {
+        const checkActos = form.querySelector('[name="check_actos"]');
+        const checkCond = form.querySelector('[name="check_condiciones"]');
+        const actosActivo = checkActos && checkActos.checked;
+        const condActivo = checkCond && checkCond.checked;
+
+        if (!actosActivo && !condActivo) {
+            alert('Por favor, selecciona al menos un Tipo de Hallazgo (Actos Inseguros o Condiciones Inseguras).');
+            return false;
+        }
+        return true;
     }
 
     function contarPalabrasEdit(textarea) {

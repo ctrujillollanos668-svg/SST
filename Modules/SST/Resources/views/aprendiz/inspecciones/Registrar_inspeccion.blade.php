@@ -61,9 +61,9 @@
                 </div>
 
                 <div class="flex items-center gap-3 self-start sm:self-auto">
-                    <button type="button" onclick="openModalRegistro()" class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-2xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
+                    <button type="button" onclick="openModalRegistro()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
                         <i class="fa-solid fa-plus text-xs"></i>
-                        <span>Registrar</span>
+                        <span>Registrar Inspección</span>
                     </button>
                 </div>
             </div>
@@ -286,19 +286,18 @@
 <!-- ================================================================= -->
 <!-- MODAL DE FORMULARIO COMPACTO (FIGMA MEJORADO)                     -->
 <!-- ================================================================= -->
-<div id="modalRegistro" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center hidden p-3 sm:p-4 overflow-y-auto">
-    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-150 my-auto relative">
-        <div class="h-1.5 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600"></div>
+<div id="modalRegistro" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center hidden p-3 sm:p-4 overflow-y-auto" onclick="closeModalRegistro()">
+    <div class="bg-white rounded-3xl shadow-2xl border-t-[6px] border-orange-500 border-x border-b border-slate-100 w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-150 my-auto relative" onclick="event.stopPropagation()">
 
         <div class="p-5 sm:p-6">
             <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
                 <div class="flex items-center gap-2.5">
                     <div class="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200/80 text-orange-600 flex items-center justify-center shrink-0">
-                        <i class="fa-solid fa-clipboard-list text-sm"></i>
+                        <i class="fa-solid fa-pen-to-square text-sm"></i>
                     </div>
                     <div>
                         <h2 class="text-base font-extrabold text-slate-900 leading-tight">
-                            Registro de Inspección
+                            Registrar Inspección
                         </h2>
                         <p class="text-[11px] text-slate-400 font-medium">
                             Nuevo reporte de seguridad
@@ -312,7 +311,7 @@
             </div>
 
             <!-- Formulario con Líder de Unidad y Fecha Condicional -->
-            <form action="{{ route('SST.aprendiz.inspecciones.store') }}" method="POST" enctype="multipart/form-data" class="mt-4 space-y-3 text-xs">
+            <form action="{{ route('SST.aprendiz.inspecciones.store') }}" method="POST" enctype="multipart/form-data" class="mt-4 space-y-3 text-xs" onsubmit="return validarTipoHallazgo(this)">
                 @csrf
                 
                 <!-- 1. Responsable -->
@@ -406,21 +405,21 @@
                 <!-- 6. Evidencia Fotográfica -->
                 <div class="space-y-1">
                     <div class="flex items-center justify-between">
-                        <label class="block text-[11px] font-bold text-slate-700">Evidencia Fotográfica *</label>
+                        <label class="block text-[11px] font-bold text-slate-700">Evidencia Fotográfica</label>
                         <span class="text-[10px] font-bold text-orange-600 font-mono" id="contadorFotos">0/3 imágenes</span>
                     </div>
                     <input type="file" name="fotos[]" id="inputFotoFigma" accept="image/*" multiple onchange="manejarFotos(event)" class="hidden">
                     <input type="hidden" name="fotos_base64" id="inputFotosBase64">
                     
                     <label for="inputFotoFigma" class="border border-dashed border-slate-300 hover:border-orange-400 hover:bg-orange-50/30 rounded-xl px-3 py-2 flex items-center justify-between cursor-pointer bg-slate-50/40 transition">
-                        <span class="text-[11px] font-semibold text-slate-700"><i class="fa-solid fa-camera mr-1 text-orange-500"></i> Subir fotografías</span>
+                        <span class="text-[11px] font-semibold text-slate-700"><i class="fa-solid fa-camera mr-1 text-orange-500"></i> Cambiar / Añadir fotografías</span>
                         <span class="text-[10px] text-slate-400">Máx. 3</span>
                     </label>
                     <div id="fotosPreviewContainer" class="flex flex-wrap gap-2 pt-1 hidden"></div>
                 </div>
 
                 <!-- 7. Sección Condicional: Fecha de Seguimiento -->
-                <div id="seccionFechaSeguimiento" class="p-3 rounded-2xl bg-orange-50/80 border border-orange-200/80 space-y-1.5 transition-all">
+                <div id="seccionFechaSeguimiento" class="p-3 rounded-2xl bg-orange-50/80 border border-orange-200/80 space-y-1.5 transition-all hidden">
                     <div class="flex items-center justify-between">
                         <label class="block text-[11px] font-bold text-orange-800">
                             <i class="fa-regular fa-calendar-check mr-1 text-orange-600"></i> Fecha Límite de Seguimiento *
@@ -430,17 +429,22 @@
                     <input type="date" name="fecha_seguimiento" id="inputFechaSeguimiento" min="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" value="{{ \Carbon\Carbon::now()->addDays(7)->format('Y-m-d') }}" class="w-full px-3 py-1.5 rounded-xl border border-orange-200 bg-white focus:outline-none focus:border-orange-500 text-xs font-semibold text-slate-800">
                 </div>
 
-                <!-- 8. Fila Inferior: Toggle Seguimiento y Botón Registrar -->
+                <!-- 8. Fila Inferior: Toggle Seguimiento y Botones -->
                 <div class="flex items-center justify-between pt-2.5 border-t border-slate-100">
                     <label class="flex items-center gap-2 cursor-pointer select-none">
-                        <input type="checkbox" name="seguimiento" id="checkSeguimiento" value="1" checked onchange="toggleSeguimientoCalendario(this)" class="w-4 h-4 rounded text-orange-500 focus:ring-orange-400 border-slate-300 accent-orange-500 cursor-pointer">
+                        <input type="checkbox" name="seguimiento" id="checkSeguimiento" value="1" onchange="toggleSeguimientoCalendario(this)" class="w-4 h-4 rounded text-orange-500 focus:ring-orange-400 border-slate-300 accent-orange-500 cursor-pointer">
                         <span class="text-[11px] font-bold text-slate-700">En Seguimiento</span>
                     </label>
 
-                    <button type="submit" class="inline-flex items-center justify-center gap-1.5 px-6 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white text-xs font-black shadow-xs cursor-pointer uppercase tracking-wider">
-                        <i class="fa-solid fa-check text-[10px]"></i>
-                        <span>REGISTRAR</span>
-                    </button>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="closeModalRegistro()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold transition cursor-pointer">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="inline-flex items-center justify-center gap-1.5 px-5 py-2 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs font-bold shadow-xs transition cursor-pointer">
+                            <i class="fa-solid fa-check text-xs"></i>
+                            <span>Guardar</span>
+                        </button>
+                    </div>
                 </div>
 
             </form>
@@ -451,9 +455,8 @@
 <!-- ================================================================= -->
 <!-- MODAL DE EDICIÓN (CAMPOS DEL FORMULARIO COMPLETOS)                 -->
 <!-- ================================================================= -->
-<div id="modalEdicion" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center hidden p-3 sm:p-4 overflow-y-auto">
-    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-150 my-auto relative">
-        <div class="h-1.5 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600"></div>
+<div id="modalEdicion" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center hidden p-3 sm:p-4 overflow-y-auto" onclick="closeModalEdicion()">
+    <div class="bg-white rounded-3xl shadow-2xl border-t-[6px] border-orange-500 border-x border-b border-slate-100 w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-150 my-auto relative" onclick="event.stopPropagation()">
 
         <div class="p-5 sm:p-6">
             <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
@@ -476,7 +479,7 @@
                 </button>
             </div>
 
-            <form id="formEdicion" action="" method="POST" enctype="multipart/form-data" class="mt-4 space-y-3 text-xs">
+            <form id="formEdicion" action="" method="POST" enctype="multipart/form-data" class="mt-4 space-y-3 text-xs" onsubmit="return validarTipoHallazgo(this)">
                 @csrf
                 @method('PUT')
                 <input type="hidden" id="editInspeccionId" name="id">
@@ -604,12 +607,12 @@
                     </label>
 
                     <div class="flex items-center gap-2">
-                        <button type="button" onclick="closeModalEdicion()" class="px-3 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 transition cursor-pointer">
+                        <button type="button" onclick="closeModalEdicion()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold transition cursor-pointer">
                             Cancelar
                         </button>
-                        <button type="submit" class="inline-flex items-center justify-center gap-1.5 px-5 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white text-xs font-black shadow-xs cursor-pointer uppercase tracking-wider">
-                            <i class="fa-solid fa-check text-[10px]"></i>
-                            <span>GUARDAR</span>
+                        <button type="submit" class="inline-flex items-center justify-center gap-1.5 px-5 py-2 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs font-bold shadow-xs transition cursor-pointer">
+                            <i class="fa-solid fa-check text-xs"></i>
+                            <span>Guardar</span>
                         </button>
                     </div>
                 </div>
@@ -753,7 +756,10 @@
     const urlActualizarBase = "{{ url('Sst/aprendiz/inspecciones/actualizar') }}";
 
     function openModalRegistro() {
-        document.getElementById('modalRegistro').classList.remove('hidden');
+        const modal = document.getElementById('modalRegistro');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
     }
 
     function closeModalRegistro() {
@@ -1004,6 +1010,19 @@
 
     function toggleReporteCustom(prefix, tipo, nuevoEstado) {
         setCheckboxEstado(prefix, tipo, nuevoEstado);
+    }
+
+    function validarTipoHallazgo(form) {
+        const checkActos = form.querySelector('[name="check_actos"]');
+        const checkCond = form.querySelector('[name="check_condiciones"]');
+        const actosActivo = checkActos && checkActos.checked;
+        const condActivo = checkCond && checkCond.checked;
+
+        if (!actosActivo && !condActivo) {
+            alert('Por favor, selecciona al menos un Tipo de Hallazgo (Actos Inseguros o Condiciones Inseguras).');
+            return false;
+        }
+        return true;
     }
 
     function contarPalabras(textarea) {
