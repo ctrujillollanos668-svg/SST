@@ -82,9 +82,9 @@
             </div>
 
             <!-- Indicador informativo de regla de selección -->
-            <div class="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] font-semibold text-slate-500" title="Selección disponible desde 3 días antes de hoy">
+            <div class="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] font-semibold text-slate-500" title="Fechas anteriores a 3 días están en modo solo lectura">
                 <i class="fa-solid fa-clock-rotate-left text-orange-500 text-xs"></i>
-                <span>Disponible: <strong>desde hace 3 días</strong> en adelante</span>
+                <span>Edición permitida: <strong>últimos 3 días</strong> en adelante</span>
             </div>
         </div>
 
@@ -110,28 +110,22 @@
                 <i class="fa-solid fa-palette text-slate-400 mr-1"></i> Tipos de Actividades:
             </span>
             
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-teal-50 border border-teal-200/90 text-teal-800 text-[11px] font-extrabold shadow-2xs">
-                <span class="w-2.5 h-2.5 rounded-full bg-teal-500 ring-2 ring-teal-200"></span>
-                <i class="fa-solid fa-person-running text-teal-600 text-[10px]"></i>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-50 border border-sky-200/90 text-sky-800 text-[11px] font-extrabold shadow-2xs">
+                <span class="w-2.5 h-2.5 rounded-full bg-sky-500 ring-2 ring-sky-200"></span>
+                <i class="fa-solid fa-person-running text-sky-600 text-[10px]"></i>
                 <span>Pausas Activas</span>
             </div>
 
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200/90 text-amber-800 text-[11px] font-extrabold shadow-2xs">
-                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 ring-2 ring-amber-200"></span>
-                <i class="fa-solid fa-bullhorn text-amber-600 text-[10px]"></i>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-300/90 text-blue-900 text-[11px] font-extrabold shadow-2xs">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-700 ring-2 ring-blue-200"></span>
+                <i class="fa-solid fa-bullhorn text-blue-700 text-[10px]"></i>
                 <span>Charlas de Seguridad</span>
             </div>
 
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-200/90 text-indigo-800 text-[11px] font-extrabold shadow-2xs">
-                <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 ring-2 ring-indigo-200"></span>
-                <i class="fa-solid fa-hand-holding-heart text-indigo-600 text-[10px]"></i>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200/90 text-emerald-800 text-[11px] font-extrabold shadow-2xs">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-emerald-200"></span>
+                <i class="fa-solid fa-hand-holding-heart text-emerald-600 text-[10px]"></i>
                 <span>Sensibilización</span>
-            </div>
-
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200/90 text-blue-800 text-[11px] font-extrabold shadow-2xs">
-                <span class="w-2.5 h-2.5 rounded-full bg-blue-500 ring-2 ring-blue-200"></span>
-                <i class="fa-solid fa-graduation-cap text-blue-600 text-[10px]"></i>
-                <span>Capacitaciones / Otras</span>
             </div>
         </div>
 
@@ -523,7 +517,8 @@
         renderCurrentView();
     }
 
-    // Regla de negocio: Permitir seleccionar solo desde 3 días antes de hoy en adelante (ej: si hoy es 15, desde el 12)
+    // Regla de negocio: Edición permitida solo en los últimos 3 días en adelante.
+    // Fechas con más de 3 días de antigüedad entran en modo "Solo lectura (Histórico)"
     function getMinSelectableDate() {
         const d = new Date();
         d.setHours(0, 0, 0, 0);
@@ -531,17 +526,27 @@
         return d;
     }
 
-    function isDateDisabled(d) {
+    function isDateReadOnly(d) {
         if (!d) return false;
         const check = new Date(d);
         check.setHours(0, 0, 0, 0);
         return check < getMinSelectableDate();
     }
 
+    function isEventReadOnly(evt) {
+        if (!evt || !evt.date) return false;
+        const parts = evt.date.split('-');
+        const d = new Date(parts[0], parseInt(parts[1]) - 1, parts[2]);
+        return isDateReadOnly(d);
+    }
+
+    function isDateDisabled(d) {
+        // Todas las fechas son navegables y visibles
+        return false;
+    }
+
     function showDisabledDateNotice() {
-        const minD = getMinSelectableDate();
-        const formattedMin = `${minD.getDate()} de ${monthNames[minD.getMonth()]}`;
-        showToastNotification(`Solo se pueden seleccionar fechas a partir del ${formattedMin} (máximo 3 días anteriores a hoy).`, 'warning', 'Fecha no permitida');
+        showToastNotification('Esta fecha tiene más de 3 días de antigüedad y está en modo solo lectura (no se puede editar).', 'warning', 'Fecha Histórica');
     }
 
     // Paleta de colores e iconos específicos y profesionales para cada tipo de actividad SST
@@ -551,40 +556,40 @@
         if (textToMatch.includes('pausa')) {
             return {
                 name: 'Pausa Activa',
-                badgeClass: 'bg-teal-600 text-white shadow-2xs border-teal-700/30',
-                badgeLight: 'bg-teal-50 text-teal-800 border-teal-200',
-                dot: 'bg-teal-500 ring-teal-200',
-                cellBg: 'bg-teal-50/40 border-teal-200/90 shadow-2xs hover:bg-teal-100/40',
-                textColor: 'text-teal-700',
-                topBorder: 'border-t-4 border-t-teal-500',
+                badgeClass: 'bg-sky-500 text-white shadow-2xs border-sky-600/30',
+                badgeLight: 'bg-sky-50 text-sky-800 border-sky-200',
+                dot: 'bg-sky-500 ring-sky-200',
+                cellBg: 'bg-sky-50/40 border-sky-200/90 shadow-2xs hover:bg-sky-100/40',
+                textColor: 'text-sky-700',
+                topBorder: 'border-t-4 border-t-sky-500',
                 icon: 'fa-person-running',
-                pillColor: 'teal'
+                pillColor: 'sky'
             };
         }
         if (textToMatch.includes('charla')) {
             return {
                 name: 'Charla',
-                badgeClass: 'bg-amber-500 text-white shadow-2xs border-amber-600/30',
-                badgeLight: 'bg-amber-50 text-amber-800 border-amber-200',
-                dot: 'bg-amber-500 ring-amber-200',
-                cellBg: 'bg-amber-50/40 border-amber-200/90 shadow-2xs hover:bg-amber-100/40',
-                textColor: 'text-amber-700',
-                topBorder: 'border-t-4 border-t-amber-500',
+                badgeClass: 'bg-blue-700 text-white shadow-2xs border-blue-800/30',
+                badgeLight: 'bg-blue-50 text-blue-900 border-blue-300',
+                dot: 'bg-blue-700 ring-blue-200',
+                cellBg: 'bg-blue-50/40 border-blue-300/90 shadow-2xs hover:bg-blue-100/40',
+                textColor: 'text-blue-800',
+                topBorder: 'border-t-4 border-t-blue-700',
                 icon: 'fa-bullhorn',
-                pillColor: 'amber'
+                pillColor: 'blue'
             };
         }
         if (textToMatch.includes('sensibiliz')) {
             return {
                 name: 'Sensibilización',
-                badgeClass: 'bg-indigo-600 text-white shadow-2xs border-indigo-700/30',
-                badgeLight: 'bg-indigo-50 text-indigo-800 border-indigo-200',
-                dot: 'bg-indigo-500 ring-indigo-200',
-                cellBg: 'bg-indigo-50/40 border-indigo-200/90 shadow-2xs hover:bg-indigo-100/40',
-                textColor: 'text-indigo-700',
-                topBorder: 'border-t-4 border-t-indigo-500',
+                badgeClass: 'bg-emerald-600 text-white shadow-2xs border-emerald-700/30',
+                badgeLight: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+                dot: 'bg-emerald-500 ring-emerald-200',
+                cellBg: 'bg-emerald-50/40 border-emerald-200/90 shadow-2xs hover:bg-emerald-100/40',
+                textColor: 'text-emerald-700',
+                topBorder: 'border-t-4 border-t-emerald-500',
                 icon: 'fa-hand-holding-heart',
-                pillColor: 'indigo'
+                pillColor: 'emerald'
             };
         }
         if (textToMatch.includes('simulacro')) {
@@ -651,7 +656,7 @@
     function triggerDatePicker() {
         const picker = document.getElementById('datePickerHeader');
         if (picker) {
-            picker.min = formatDateForInput(getMinSelectableDate());
+            picker.removeAttribute('min');
             picker.value = formatDateForInput(selectedDate);
             if (typeof picker.showPicker === 'function') {
                 picker.showPicker();
@@ -665,10 +670,6 @@
         if (!val) return;
         const parts = val.split('-');
         const chosen = new Date(parts[0], parseInt(parts[1]) - 1, parts[2]);
-        if (isDateDisabled(chosen)) {
-            showDisabledDateNotice();
-            return;
-        }
         currentDate = chosen;
         selectedDate = new Date(chosen);
         renderCurrentView();
@@ -737,39 +738,36 @@
 
         const parts = fullDateStr.split('-');
         const cellDate = new Date(parts[0], parseInt(parts[1]) - 1, parts[2]);
-        const isDisabled = isDateDisabled(cellDate);
+        const isReadOnly = isDateReadOnly(cellDate);
         const hasEvents = dayEvents.length > 0;
         const primaryTheme = hasEvents ? getActivityTheme(dayEvents[0].tipo_actividad, dayEvents[0].name) : null;
 
         let bgClass = 'bg-white';
-        if (isDisabled) {
-            bgClass = 'bg-slate-50/70 border-slate-200/50 opacity-40 cursor-not-allowed select-none';
-        } else if (isSelected) {
+        if (isSelected) {
             bgClass = 'calendar-day-selected cursor-pointer transition';
         } else if (isToday) {
             bgClass = 'calendar-day-today cursor-pointer transition';
         } else if (hasEvents) {
             bgClass = `${primaryTheme.cellBg} cursor-pointer transition`;
+        } else if (isReadOnly) {
+            bgClass = 'bg-slate-50/50 hover:bg-slate-100/70 cursor-pointer transition';
         } else {
             bgClass = 'bg-white hover:bg-slate-50/80 cursor-pointer transition';
         }
 
         cell.className = `calendar-grid-day border border-slate-200/70 p-1.5 rounded-xl flex flex-col justify-between ${bgClass}`;
-        
-        if (!isDisabled) {
-            cell.setAttribute('onclick', `selectDay('${fullDateStr}')`);
-        } else {
-            cell.setAttribute('title', 'Fecha no disponible (solo desde 3 días antes de hoy en adelante)');
-            cell.setAttribute('onclick', `showDisabledDateNotice()`);
+        cell.setAttribute('onclick', `selectDay('${fullDateStr}')`);
+        if (isReadOnly) {
+            cell.setAttribute('title', 'Fecha histórica (Solo lectura)');
         }
 
         let numberBadgeHTML = '';
-        if (isDisabled) {
-            numberBadgeHTML = `<span class="text-xs font-semibold text-slate-400 pl-1">${dayNum}</span>`;
-        } else if (isSelected) {
+        if (isSelected) {
             numberBadgeHTML = `<span class="w-5 h-5 rounded-md bg-blue-600 text-white text-[11px] font-extrabold flex items-center justify-center shadow-xs">${dayNum}</span>`;
         } else if (isToday) {
             numberBadgeHTML = `<span class="w-5 h-5 rounded-md bg-orange-500 text-white text-[11px] font-extrabold flex items-center justify-center shadow-xs">${dayNum}</span>`;
+        } else if (isReadOnly) {
+            numberBadgeHTML = `<span class="text-xs font-bold text-slate-500 pl-1">${dayNum}</span>`;
         } else {
             numberBadgeHTML = `<span class="text-xs font-extrabold ${hasEvents ? primaryTheme.textColor : 'text-slate-700'} pl-1">${dayNum}</span>`;
         }
@@ -780,12 +778,12 @@
             const evtTheme = getActivityTheme(firstEvt.tipo_actividad, firstEvt.name);
 
             eventsHTML = `
-                <div class="mt-1 space-y-0.5 overflow-hidden ${isDisabled ? 'opacity-60' : ''}">
-                    <div class="px-2 py-0.5 rounded-lg text-[9.5px] font-extrabold ${isDisabled ? 'bg-slate-400 text-white border-slate-500/20' : `${evtTheme.badgeClass} border`} truncate flex items-center gap-1.5" title="[${evtTheme.name}] ${firstEvt.name}">
+                <div class="mt-1 space-y-0.5 overflow-hidden">
+                    <div class="px-2 py-0.5 rounded-lg text-[9.5px] font-extrabold ${evtTheme.badgeClass} border truncate flex items-center gap-1.5" title="[${evtTheme.name}] ${firstEvt.name}">
                         <i class="fa-solid ${evtTheme.icon} text-[8.5px] shrink-0 opacity-90"></i>
                         <span class="truncate">${firstEvt.name}</span>
                     </div>
-                    ${dayEvents.length > 1 ? `<div class="text-[8px] font-black ${isDisabled ? 'text-slate-500' : evtTheme.textColor} pl-0.5 tracking-tight">+${dayEvents.length - 1} más</div>` : ''}
+                    ${dayEvents.length > 1 ? `<div class="text-[8px] font-black ${evtTheme.textColor} pl-0.5 tracking-tight">+${dayEvents.length - 1} más</div>` : ''}
                 </div>
             `;
         }
@@ -793,7 +791,7 @@
         cell.innerHTML = `
             <div class="flex items-center justify-between">
                 ${numberBadgeHTML}
-                ${hasEvents ? `<span class="w-2.5 h-2.5 rounded-full ${isDisabled ? 'bg-slate-300' : `${primaryTheme.dot} ring-2`} shrink-0"></span>` : ''}
+                ${hasEvents ? `<span class="w-2.5 h-2.5 rounded-full ${primaryTheme.dot} ring-2 shrink-0"></span>` : ''}
             </div>
             ${eventsHTML}
         `;
@@ -825,25 +823,22 @@
             const dayDate = new Date(firstDayOfWeek);
             dayDate.setDate(firstDayOfWeek.getDate() + i);
 
-            const isDisabled = isDateDisabled(dayDate);
+            const isReadOnly = isDateReadOnly(dayDate);
             const isSelected = isSameDate(dayDate, selectedDate);
             const isToday = isSameDate(dayDate, new Date());
             const formattedDate = formatDateForInput(dayDate);
             const dayEvents = events.filter(e => e.date === formattedDate);
 
             const headerCol = document.createElement('div');
-            if (isDisabled) {
-                headerCol.className = 'p-2 rounded-xl text-center border border-transparent text-slate-300 opacity-40 cursor-not-allowed select-none';
-                headerCol.setAttribute('title', 'Fecha no disponible (máximo 3 días antes de hoy)');
-                headerCol.setAttribute('onclick', 'showDisabledDateNotice()');
-            } else {
-                headerCol.className = `p-2 rounded-xl text-center border transition cursor-pointer ${
-                    isSelected ? 'bg-orange-50 border-orange-300 text-orange-700 font-extrabold' : 'border-transparent text-slate-600 hover:bg-slate-50'
-                }`;
-                headerCol.setAttribute('onclick', `selectDay('${formattedDate}')`);
+            headerCol.className = `p-2 rounded-xl text-center border transition cursor-pointer ${
+                isSelected ? 'bg-orange-50 border-orange-300 text-orange-700 font-extrabold' : 'border-transparent text-slate-600 hover:bg-slate-50'
+            }`;
+            headerCol.setAttribute('onclick', `selectDay('${formattedDate}')`);
+            if (isReadOnly) {
+                headerCol.setAttribute('title', 'Fecha histórica (Solo lectura)');
             }
             headerCol.innerHTML = `
-                <div class="text-[11px] font-bold uppercase tracking-wider ${isDisabled ? 'text-slate-300' : 'text-slate-400'}">${shortDayNames[i]}</div>
+                <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">${shortDayNames[i]}</div>
                 <div class="text-base font-extrabold mt-0.5 ${isToday ? 'w-7 h-7 rounded-full bg-orange-500 text-white flex items-center justify-center mx-auto shadow-xs' : ''}">
                     ${dayDate.getDate()}
                 </div>
@@ -851,28 +846,23 @@
             headersGrid.appendChild(headerCol);
 
             const dayCol = document.createElement('div');
-            if (isDisabled) {
-                dayCol.className = 'min-h-[380px] p-2 rounded-2xl border border-slate-100 flex flex-col gap-2 bg-slate-100/40 opacity-40 cursor-not-allowed select-none';
-                dayCol.setAttribute('onclick', 'showDisabledDateNotice()');
-            } else {
-                dayCol.className = `min-h-[380px] p-2 rounded-2xl border border-slate-100 flex flex-col gap-2 ${isSelected ? 'bg-orange-50/20 border-orange-200/60' : 'bg-slate-50/40'}`;
-            }
+            dayCol.className = `min-h-[380px] p-2 rounded-2xl border border-slate-100 flex flex-col gap-2 ${isSelected ? 'bg-orange-50/20 border-orange-200/60' : (isReadOnly ? 'bg-slate-50/30' : 'bg-slate-50/40')}`;
 
             if (dayEvents.length === 0) {
                 dayCol.innerHTML = `
-                    <div ${!isDisabled ? `onclick="selectDay('${formattedDate}')"` : ''} class="h-full flex flex-col items-center justify-center text-center p-2 text-slate-300 ${!isDisabled ? 'hover:text-slate-400 cursor-pointer' : ''}">
-                        <i class="fa-solid ${isDisabled ? 'fa-ban' : 'fa-plus'} text-xs mb-1"></i>
-                        <span class="text-[10px] font-semibold">${isDisabled ? 'No disponible' : 'Sin eventos'}</span>
+                    <div onclick="selectDay('${formattedDate}')" class="h-full flex flex-col items-center justify-center text-center p-2 text-slate-300 hover:text-slate-400 cursor-pointer">
+                        <i class="fa-solid fa-calendar text-xs mb-1"></i>
+                        <span class="text-[10px] font-semibold">Sin eventos</span>
                     </div>
                 `;
             } else {
                 dayCol.innerHTML = dayEvents.map(evt => {
                     const evtTheme = getActivityTheme(evt.tipo_actividad, evt.name);
                     return `
-                    <div ${!isDisabled ? `onclick="selectDay('${formattedDate}')"` : ''} class="p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs ${!isDisabled ? 'hover:shadow-xs transition cursor-pointer' : 'opacity-70'} space-y-1.5 border-l-4 ${evtTheme.topBorder.replace('border-t-4', '')}">
-                        <div class="flex items-center justify-between text-[10px] font-extrabold ${isDisabled ? 'text-slate-400' : evtTheme.textColor}">
+                    <div onclick="selectDay('${formattedDate}')" class="p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs hover:shadow-xs transition cursor-pointer space-y-1.5 border-l-4 ${evtTheme.topBorder.replace('border-t-4', '')}">
+                        <div class="flex items-center justify-between text-[10px] font-extrabold ${evtTheme.textColor}">
                             <span><i class="fa-regular fa-clock"></i> ${evt.time}</span>
-                            <span class="w-2 h-2 rounded-full ${isDisabled ? 'bg-slate-300' : (evt.estado === 'Completada' || evt.estado === 'Realizada' ? 'bg-emerald-500' : evtTheme.dot)}"></span>
+                            <span class="w-2 h-2 rounded-full ${evt.estado === 'Completada' || evt.estado === 'Realizada' ? 'bg-emerald-500' : evtTheme.dot}"></span>
                         </div>
                         <h5 class="text-xs font-bold text-slate-800 line-clamp-2 leading-tight">${evt.name}</h5>
                         <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-bold ${evtTheme.badgeLight} truncate">
@@ -966,10 +956,6 @@
         if (!dateStr) return;
         const parts = dateStr.split('-');
         const chosen = new Date(parts[0], parseInt(parts[1]) - 1, parts[2]);
-        if (isDateDisabled(chosen)) {
-            showDisabledDateNotice();
-            return;
-        }
         selectedDate = chosen;
         currentDate = new Date(selectedDate);
         renderCurrentView();
@@ -981,14 +967,19 @@
         const dayNum = selectedDate.getDate();
         const monthName = monthNames[selectedDate.getMonth()];
         const year = selectedDate.getFullYear();
+        const isReadOnly = isDateReadOnly(selectedDate);
 
         const selectedDateTitle = document.getElementById('selectedDateTitle');
         if (selectedDateTitle) {
-            selectedDateTitle.innerText = `${dayName}, ${dayNum} de ${monthName} de ${year}`;
+            selectedDateTitle.innerHTML = `${dayName}, ${dayNum} de ${monthName} de ${year} ${isReadOnly ? '<span class="ml-2 text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200 inline-flex items-center gap-1"><i class="fa-solid fa-lock text-[10px]"></i>Solo lectura</span>' : ''}`;
         }
         const selectedDateSubtitleEvents = document.getElementById('selectedDateSubtitleEvents');
         if (selectedDateSubtitleEvents) {
-            selectedDateSubtitleEvents.innerText = `Mostrando registros para: ${dayName}, ${dayNum} de ${monthName} de ${year}`;
+            if (isReadOnly) {
+                selectedDateSubtitleEvents.innerHTML = `Mostrando registros históricos de: <strong>${dayName}, ${dayNum} de ${monthName} de ${year}</strong> <span class="text-amber-600 font-semibold">(Modo histórico: solo lectura, no editable)</span>`;
+            } else {
+                selectedDateSubtitleEvents.innerText = `Mostrando registros para: ${dayName}, ${dayNum} de ${monthName} de ${year}`;
+            }
         }
         const inputFecha = document.getElementById('inputFecha');
         if (inputFecha) {
@@ -1013,6 +1004,7 @@
 
     function renderDayEventsGrid() {
         const formattedSelected = formatDateForInput(selectedDate);
+        const isReadOnly = isDateReadOnly(selectedDate);
         let dayEvents = events.filter(e => e.date === formattedSelected);
 
         if (currentStatusFilter !== 'all') {
@@ -1063,14 +1055,21 @@
                             </span>
                             
                             <div class="relative">
-                                <select onchange="changeEventStatus(${evt.id}, this.value)" class="text-[10px] font-extrabold px-2.5 py-1 rounded-full border cursor-pointer ${statusStyle} focus:outline-none transition appearance-none pr-5">
-                                    <option value="Programada" ${evt.estado === 'Programada' ? 'selected' : ''}>● Programada</option>
-                                    <option value="Realizada" ${(evt.estado === 'Realizada' || evt.estado === 'Completada') ? 'selected' : ''}>● Realizada</option>
-                                    <option value="Cancelada" ${evt.estado === 'Cancelada' ? 'selected' : ''}>● Cancelada</option>
-                                </select>
-                                <span class="absolute inset-y-0 right-1.5 flex items-center pointer-events-none text-[8px] opacity-70">
-                                    <i class="fa-solid fa-chevron-down"></i>
-                                </span>
+                                ${isReadOnly ? `
+                                    <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold border ${statusStyle} opacity-90 select-none cursor-default" title="Fecha histórica: No editable">
+                                        <span>● ${evt.estado}</span>
+                                        <i class="fa-solid fa-lock text-[8px] text-slate-400 ml-1"></i>
+                                    </div>
+                                ` : `
+                                    <select onchange="changeEventStatus(${evt.id}, this.value)" class="text-[10px] font-extrabold px-2.5 py-1 rounded-full border cursor-pointer ${statusStyle} focus:outline-none transition appearance-none pr-5">
+                                        <option value="Programada" ${evt.estado === 'Programada' ? 'selected' : ''}>● Programada</option>
+                                        <option value="Realizada" ${(evt.estado === 'Realizada' || evt.estado === 'Completada') ? 'selected' : ''}>● Realizada</option>
+                                        <option value="Cancelada" ${evt.estado === 'Cancelada' ? 'selected' : ''}>● Cancelada</option>
+                                    </select>
+                                    <span class="absolute inset-y-0 right-1.5 flex items-center pointer-events-none text-[8px] opacity-70">
+                                        <i class="fa-solid fa-chevron-down"></i>
+                                    </span>
+                                `}
                             </div>
                         </div>
 
@@ -1103,14 +1102,23 @@
                     </div>
 
                     <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                        <button onclick="openEditModal(${evt.id})" class="text-[11px] font-extrabold text-blue-600 hover:text-blue-700 transition cursor-pointer flex items-center gap-1">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                            <span>Editar</span>
-                        </button>
-                        <button onclick="deleteEvent(${evt.id})" class="text-[11px] font-extrabold text-rose-600 hover:text-rose-700 transition cursor-pointer flex items-center gap-1">
-                            <i class="fa-regular fa-trash-can"></i>
-                            <span>Eliminar</span>
-                        </button>
+                        ${isReadOnly ? `
+                            <div class="w-full flex items-center justify-center py-1">
+                                <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-lock text-[10px] text-slate-400"></i>
+                                    <span>Histórico (Solo lectura)</span>
+                                </span>
+                            </div>
+                        ` : `
+                            <button onclick="openEditModal(${evt.id})" class="text-[11px] font-extrabold text-blue-600 hover:text-blue-700 transition cursor-pointer flex items-center gap-1">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                <span>Editar</span>
+                            </button>
+                            <button onclick="deleteEvent(${evt.id})" class="text-[11px] font-extrabold text-rose-600 hover:text-rose-700 transition cursor-pointer flex items-center gap-1">
+                                <i class="fa-regular fa-trash-can"></i>
+                                <span>Eliminar</span>
+                            </button>
+                        `}
                     </div>
                 </div>
             `;
@@ -1297,6 +1305,10 @@
 
     async function handleSaveActivity(e) {
         e.preventDefault();
+        if (isDateReadOnly(selectedDate)) {
+            showToastNotification('No se pueden registrar actividades en fechas con más de 3 días de antigüedad.', 'warning', 'Acción no permitida');
+            return;
+        }
         const dateStr = formatDateForInput(selectedDate);
         const lugarVal = document.getElementById('selectLugar').value;
 
@@ -1358,6 +1370,12 @@
         const evt = events.find(e => e.id === id);
         if (!evt) return;
 
+        if (isEventReadOnly(evt)) {
+            showToastNotification('No se pueden modificar actividades con más de 3 días de antigüedad.', 'warning', 'Acción no permitida');
+            closeEditModal();
+            return;
+        }
+
         const selectLugar = document.getElementById('editLugar');
         const lugarVal = selectLugar.value;
         const lugarText = selectLugar.options[selectLugar.selectedIndex] ? (lugarVal ? selectLugar.options[selectLugar.selectedIndex].text : '') : '';
@@ -1414,6 +1432,12 @@
         const evt = events.find(e => e.id === id);
         if (!evt) return;
 
+        if (isEventReadOnly(evt)) {
+            showToastNotification('No se puede cambiar el estado de actividades con más de 3 días de antigüedad.', 'warning', 'Acción no permitida');
+            renderDayEventsGrid();
+            return;
+        }
+
         const payload = {
             source: evt.source || 'actividad_sst',
             nombre: evt.name,
@@ -1451,11 +1475,18 @@
     }
 
     async function deleteEvent(id) {
-        if (!confirm('¿Estás seguro de eliminar esta actividad del cronograma?')) return;
         const evt = events.find(e => e.id === id);
+        if (!evt) return;
+
+        if (isEventReadOnly(evt)) {
+            showToastNotification('No se pueden eliminar actividades con más de 3 días de antigüedad.', 'warning', 'Acción no permitida');
+            return;
+        }
+
+        if (!confirm('¿Estás seguro de eliminar esta actividad del cronograma?')) return;
 
         try {
-            const response = await fetch(`${baseUrl}/${id}?source=${encodeURIComponent(evt ? evt.source : 'actividad_sst')}`, {
+            const response = await fetch(`${baseUrl}/${id}?source=${encodeURIComponent(evt.source || 'actividad_sst')}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
@@ -1469,9 +1500,7 @@
                 renderCurrentView();
                 updateSelectedDateUI();
                 updateEventsCount();
-                if (evt) {
-                    showToastNotification(`Actividad "${evt.name}" eliminada de la base de datos.`);
-                }
+                showToastNotification(`Actividad "${evt.name}" eliminada de la base de datos.`);
             }
         } catch (error) {
             console.error(error);
@@ -1482,6 +1511,11 @@
     function openEditModal(id) {
         const evt = events.find(e => e.id === id);
         if (!evt) return;
+
+        if (isEventReadOnly(evt)) {
+            showToastNotification('Esta actividad es de una fecha histórica y no se puede editar.', 'warning', 'Solo lectura');
+            return;
+        }
         document.getElementById('editEventId').value = evt.id;
         document.getElementById('editTipoActividad').value = evt.tipo_actividad || 'Pausa Activa';
         

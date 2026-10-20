@@ -73,6 +73,63 @@
             </div>
         </div>
 
+        <!-- Barra de Filtros: Buscar, Fecha y Estado -->
+        <div class="p-4 sm:p-5 bg-slate-50/70 border-b border-slate-100 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 flex-1">
+                <!-- 1. Buscar -->
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </span>
+                    <input type="text" 
+                           id="filtroBuscar" 
+                           oninput="filtrarInspecciones()" 
+                           value="{{ request('search') }}"
+                           placeholder="Buscar por lugar, responsable, líder o hallazgo..." 
+                           class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-white border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition font-medium">
+                </div>
+
+                <!-- 2. Fecha -->
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-regular fa-calendar text-xs"></i>
+                    </span>
+                    <input type="date" 
+                           id="filtroFecha" 
+                           onchange="filtrarInspecciones()" 
+                           value="{{ request('fecha') }}"
+                           title="Filtrar por fecha de inspección"
+                           class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-700 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition font-medium cursor-pointer">
+                </div>
+
+                <!-- 3. Estado -->
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-circle-check text-xs"></i>
+                    </span>
+                    <select id="filtroEstado" 
+                            onchange="filtrarInspecciones()" 
+                            class="w-full pl-9 pr-3 py-2 text-xs font-semibold rounded-xl bg-white border border-slate-200 text-slate-700 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition cursor-pointer">
+                        <option value="todos" {{ request('estado') == 'todos' || !request('estado') ? 'selected' : '' }}>Todos los estados</option>
+                        <option value="pendiente" {{ request('estado') == 'pendiente' ? 'selected' : '' }}>Pendiente (Requiere Revisión)</option>
+                        <option value="en_proceso" {{ request('estado') == 'en_proceso' ? 'selected' : '' }}>En Proceso (En Ejecución)</option>
+                        <option value="completada" {{ request('estado') == 'completada' ? 'selected' : '' }}>Completada (Cerrada)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 4. Botón Limpiar -->
+            <div class="flex items-center gap-2 self-end md:self-auto shrink-0">
+                <button type="button" 
+                        onclick="limpiarFiltros()" 
+                        class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-600 bg-white hover:bg-slate-100 border border-slate-200/90 rounded-xl transition cursor-pointer shadow-2xs" 
+                        title="Limpiar todos los filtros">
+                    <i class="fa-solid fa-rotate-left text-xs"></i>
+                    <span>Limpiar</span>
+                </button>
+            </div>
+        </div>
+
         <!-- Tabla de Inspecciones -->
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse table-auto">
@@ -119,7 +176,10 @@
                                 default => 'bg-amber-50 text-amber-700 border-amber-200'
                             };
                         @endphp
-                        <tr class="hover:bg-slate-50/70 transition-colors">
+                        <tr class="inspeccion-row hover:bg-slate-50/70 transition-colors"
+                            data-fecha="{{ \Carbon\Carbon::parse($insp->fecha_inspeccion)->format('Y-m-d') }}"
+                            data-estado="{{ $estadoActual }}"
+                            data-search="{{ strtolower($lugarNombre . ' ' . $tipo . ' ' . $responsable . ' ' . $lider . ' ' . $desc) }}">
                             <td class="py-3.5 px-3 text-center font-bold text-slate-400">{{ $index + 1 }}</td>
                             
                             <!-- 1. Fecha / Hora -->
@@ -427,5 +487,46 @@
     function closeManageModal() {
         document.getElementById('modalManage').classList.add('hidden');
     }
+
+    // =========================================================================
+    // FILTROS EN TIEMPO REAL: BUSCAR, FECHA Y ESTADO
+    // =========================================================================
+    function filtrarInspecciones() {
+        const query = (document.getElementById('filtroBuscar')?.value || '').toLowerCase().trim();
+        const fecha = (document.getElementById('filtroFecha')?.value || '').trim();
+        const estado = (document.getElementById('filtroEstado')?.value || 'todos').toLowerCase().trim();
+
+        const rows = document.querySelectorAll('.inspeccion-row');
+        rows.forEach(function(row) {
+            const rowSearch = (row.getAttribute('data-search') || '').toLowerCase();
+            const rowFecha = (row.getAttribute('data-fecha') || '').trim();
+            const rowEstado = (row.getAttribute('data-estado') || '').toLowerCase().trim();
+
+            const matchSearch = !query || rowSearch.includes(query);
+            const matchFecha = !fecha || rowFecha === fecha;
+            const matchEstado = !estado || estado === 'todos' || rowEstado === estado;
+
+            if (matchSearch && matchFecha && matchEstado) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    function limpiarFiltros() {
+        const b = document.getElementById('filtroBuscar');
+        const f = document.getElementById('filtroFecha');
+        const e = document.getElementById('filtroEstado');
+        if (b) b.value = '';
+        if (f) f.value = '';
+        if (e) e.value = 'todos';
+        filtrarInspecciones();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar filtros si ya vienen con valor
+        filtrarInspecciones();
+    });
 </script>
 @endsection

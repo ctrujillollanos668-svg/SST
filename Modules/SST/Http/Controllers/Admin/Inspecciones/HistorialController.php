@@ -21,9 +21,33 @@ class HistorialController extends Controller
     /**
      * Muestra el historial y listado de inspecciones de seguridad registradas por aprendices.
      */
-    public function historial()
+    public function historial(Request $request)
     {
-        $inspecciones = InspeccionSST::with(['lugar', 'user'])->orderBy('id_inspeccion', 'desc')->get();
+        $query = InspeccionSST::with(['lugar', 'user'])->orderBy('id_inspeccion', 'desc');
+
+        if ($request->filled('fecha')) {
+            $query->whereDate('fecha_inspeccion', $request->fecha);
+        }
+
+        if ($request->filled('estado') && $request->estado !== 'todos') {
+            $query->where('estado', $request->estado);
+        }
+
+        if ($request->filled('search')) {
+            $s = trim($request->search);
+            $query->where(function($q) use ($s) {
+                $q->where('tipo_inspeccion', 'like', "%{$s}%")
+                  ->orWhere('observaciones', 'like', "%{$s}%")
+                  ->orWhereHas('lugar', function($ql) use ($s) {
+                      $ql->where('nombre', 'like', "%{$s}%");
+                  })
+                  ->orWhereHas('user', function($qu) use ($s) {
+                      $qu->where('name', 'like', "%{$s}%");
+                  });
+            });
+        }
+
+        $inspecciones = $query->get();
         return view('sst::admin.inspecciones.Historial', compact('inspecciones'));
     }
 
