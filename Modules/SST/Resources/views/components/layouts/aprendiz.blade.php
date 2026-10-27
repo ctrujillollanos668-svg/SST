@@ -12,11 +12,92 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        /* Estilos personalizados para SweetAlert2 en SST */
+        .swal2-popup.sst-swal-popup {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            border-radius: 28px !important;
+            padding: 1.75rem !important;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
+            border: 1px solid #f1f5f9 !important;
+            max-width: 420px !important;
+            width: 100% !important;
+        }
+        .swal2-title.sst-swal-title {
+            font-size: 1.2rem !important;
+            font-weight: 800 !important;
+            color: #1e293b !important;
+            letter-spacing: -0.025em !important;
+            padding: 0.25rem 0 0 0 !important;
+        }
+        .swal2-html-container.sst-swal-text {
+            font-size: 0.825rem !important;
+            color: #64748b !important;
+            font-weight: 500 !important;
+            line-height: 1.55 !important;
+            margin: 0.5rem 0 0 0 !important;
+        }
+        .sst-swal-actions {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.75rem !important;
+            padding-top: 1.25rem !important;
+            width: 100% !important;
+        }
+        .sst-swal-confirm-btn {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.5rem !important;
+            padding: 0.65rem 1.25rem !important;
+            border-radius: 1rem !important;
+            background-color: #e11d48 !important;
+            color: #ffffff !important;
+            font-size: 0.8125rem !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.25) !important;
+            transition: all 0.15s ease !important;
+            cursor: pointer !important;
+            border: none !important;
+        }
+        .sst-swal-confirm-btn:hover {
+            background-color: #be123c !important;
+            transform: translateY(-1px) !important;
+        }
+        .sst-swal-confirm-btn:active {
+            transform: scale(0.96) !important;
+        }
+        .sst-swal-cancel-btn {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.5rem !important;
+            padding: 0.65rem 1.25rem !important;
+            border-radius: 1rem !important;
+            background-color: #f1f5f9 !important;
+            color: #475569 !important;
+            font-size: 0.8125rem !important;
+            font-weight: 700 !important;
+            transition: all 0.15s ease !important;
+            cursor: pointer !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+        .sst-swal-cancel-btn:hover {
+            background-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        .sst-swal-cancel-btn:active {
+            transform: scale(0.96) !important;
+        }
 
         /* Ocultar flecha nativa negra ÚNICAMENTE de inputs con datalist para mantener diseño limpio */
         input[list]:not([type="date"]):not([type="datetime-local"])::-webkit-calendar-picker-indicator {
@@ -298,6 +379,79 @@
 
         });
 
+        // =========================================================================
+        // SST • MODAL ELEGANTE DE CONFIRMACIÓN DE ELIMINACIÓN (SWEETALERT2)
+        // =========================================================================
+        window.sstConfirmDelete = function(options = {}) {
+            const title = options.title || '¿Eliminar registro?';
+            const text = options.text || 'Esta acción no se puede deshacer y el registro será eliminado permanentemente.';
+            const confirmButtonText = options.confirmButtonText || '<i class="fa-solid fa-trash-can text-xs"></i><span>Sí, eliminar</span>';
+            const cancelButtonText = options.cancelButtonText || '<span>Cancelar</span>';
+
+            return Swal.fire({
+                title: title,
+                text: text,
+                icon: 'warning',
+                iconColor: '#e11d48',
+                showCancelButton: true,
+                confirmButtonText: confirmButtonText,
+                cancelButtonText: cancelButtonText,
+                reverseButtons: true,
+                focusCancel: true,
+                buttonsStyling: false,
+                backdrop: 'rgba(15, 23, 42, 0.6)',
+                customClass: {
+                    popup: 'sst-swal-popup',
+                    title: 'sst-swal-title',
+                    htmlContainer: 'sst-swal-text',
+                    actions: 'sst-swal-actions',
+                    confirmButton: 'sst-swal-confirm-btn',
+                    cancelButton: 'sst-swal-cancel-btn'
+                }
+            });
+        };
+
+        // Interceptor Global de Formularios de Eliminación en SST Aprendiz
+        document.addEventListener('submit', function(e) {
+            const form = e.target;
+            if (form.dataset.confirmed === 'true') {
+                return;
+            }
+
+            const onsubmitAttr = form.getAttribute('onsubmit') || '';
+            const hasDeleteMethod = form.querySelector('input[name="_method"][value="DELETE"]') !== null;
+            const isDeleteRoute = (form.action || '').toLowerCase().includes('destroy') || (form.action || '').toLowerCase().includes('delete');
+            const isDeleteForm = onsubmitAttr.includes('confirm(') || hasDeleteMethod || isDeleteRoute || form.classList.contains('form-eliminar');
+
+            if (isDeleteForm) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                let msg = '¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.';
+                let title = '¿Eliminar registro?';
+
+                const match = onsubmitAttr.match(/confirm\s*\(\s*['"`](.*?)['"`]\s*\)/);
+                if (match && match[1]) {
+                    msg = match[1];
+                }
+
+                if (msg.toLowerCase().includes('inspección') || (form.action || '').includes('inspecciones')) {
+                    title = '¿Eliminar Inspección?';
+                } else if (msg.toLowerCase().includes('reporte') || (form.action || '').includes('eventos')) {
+                    title = '¿Eliminar Reporte?';
+                }
+
+                sstConfirmDelete({
+                    title: title,
+                    text: msg
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.dataset.confirmed = 'true';
+                        form.submit();
+                    }
+                });
+            }
+        }, true);
     </script>
 
     @stack('scripts')

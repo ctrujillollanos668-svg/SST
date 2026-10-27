@@ -236,10 +236,10 @@
                                     <button type="button" onclick='openEditModal(@json($item))' class="w-8 h-8 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-600 flex items-center justify-center transition cursor-pointer" title="Editar">
                                         <i class="fa-solid fa-pen text-xs"></i>
                                     </button>
-                                    <form action="{{ route('SST.admin.sensibilizacion.destroy', $item->id_actividad) }}" method="POST" onsubmit="return confirm('¿Deseas eliminar esta jornada de sensibilización?')" class="inline-block">
+                                    <form action="{{ route('SST.admin.sensibilizacion.destroy', $item->id_actividad) }}" method="POST" class="inline-block">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="w-8 h-8 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 flex items-center justify-center transition cursor-pointer" title="Eliminar">
+                                        <button type="button" onclick="confirmDeleteSensibilizacion(this)" class="w-8 h-8 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 flex items-center justify-center transition cursor-pointer" title="Eliminar">
                                             <i class="fa-solid fa-trash text-xs"></i>
                                         </button>
                                     </form>
@@ -301,8 +301,7 @@
             <div class="grid grid-cols-3 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Fecha *</label>
-                    <input type="date" name="fecha" id="register_fecha" min="{{ \Carbon\Carbon::now('America/Bogota')->subDays(3)->format('Y-m-d') }}" value="{{ \Carbon\Carbon::now('America/Bogota')->format('Y-m-d') }}" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
-                    <span class="text-[10px] text-orange-600 font-semibold block mt-1"><i class="fa-solid fa-clock-rotate-left mr-0.5"></i> Mínimo: {{ \Carbon\Carbon::now('America/Bogota')->subDays(3)->format('d/m/Y') }}</span>
+                    <input type="date" name="fecha" id="register_fecha" value="{{ \Carbon\Carbon::now('America/Bogota')->format('Y-m-d') }}" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Hora Inicio *</label>
@@ -440,8 +439,7 @@
             <div class="grid grid-cols-3 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Fecha *</label>
-                    <input type="date" name="fecha" id="edit_fecha" min="{{ \Carbon\Carbon::now('America/Bogota')->subDays(3)->format('Y-m-d') }}" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
-                    <span class="text-[10px] text-orange-600 font-semibold block mt-1"><i class="fa-solid fa-clock-rotate-left mr-0.5"></i> Mínimo: {{ \Carbon\Carbon::now('America/Bogota')->subDays(3)->format('d/m/Y') }}</span>
+                    <input type="date" name="fecha" id="edit_fecha" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Hora Inicio *</label>
@@ -737,7 +735,7 @@
 
     function openEditModal(item) {
         const form = document.getElementById('formEdit');
-        form.action = "{{ url('SST/admin/sensibilizacion') }}/" + item.id_actividad;
+        form.action = "{{ url('Sst/admin/sensibilizacion') }}/" + item.id_actividad;
 
         document.getElementById('edit_titulo').value = item.titulo || '';
         document.getElementById('edit_descripcion').value = item.descripcion || '';
@@ -804,49 +802,11 @@
         document.getElementById('modalDetail').classList.add('hidden');
     }
 
-    const MIN_SELECTABLE_DATE_STR = "{{ \Carbon\Carbon::now('America/Bogota')->subDays(3)->format('Y-m-d') }}";
-    const MIN_SELECTABLE_DATE_FORMATTED = "{{ \Carbon\Carbon::now('America/Bogota')->subDays(3)->format('d/m/Y') }}";
-
     function validateActivityDate(inputElem) {
-        if (!inputElem || !inputElem.value) return true;
-        if (inputElem.value < MIN_SELECTABLE_DATE_STR) {
-            alert(`⚠️ Fecha no permitida: Solo se pueden seleccionar o registrar actividades a partir del ${MIN_SELECTABLE_DATE_FORMATTED} (máximo 3 días anteriores a hoy).`);
-            inputElem.value = "{{ \Carbon\Carbon::now('America/Bogota')->format('Y-m-d') }}";
-            inputElem.focus();
-            return false;
-        }
         return true;
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        const regFecha = document.getElementById('register_fecha');
-        if (regFecha) {
-            regFecha.min = MIN_SELECTABLE_DATE_STR;
-            regFecha.addEventListener('change', function() { validateActivityDate(this); });
-        }
-        const editFecha = document.getElementById('edit_fecha');
-        if (editFecha) {
-            editFecha.min = MIN_SELECTABLE_DATE_STR;
-            editFecha.addEventListener('change', function() { validateActivityDate(this); });
-        }
-
-        const formRegister = document.querySelector('form[action*="sensibilizacion"]');
-        if (formRegister) {
-            formRegister.addEventListener('submit', function(e) {
-                if (regFecha && !validateActivityDate(regFecha)) {
-                    e.preventDefault();
-                }
-            });
-        }
-
-        const formEdit = document.getElementById('formEdit');
-        if (formEdit) {
-            formEdit.addEventListener('submit', function(e) {
-                if (editFecha && !validateActivityDate(editFecha)) {
-                    e.preventDefault();
-                }
-            });
-        }
 
         // Inicializar filtros para combobox de fichas
         setupAdminFichaFilter('create_ficha_combo_container', 'create_ficha_programa');
@@ -869,5 +829,26 @@
             document.querySelectorAll('.icon-arrow-ficha').forEach(i => i.classList.remove('rotate-180'));
         }
     });
+    function confirmDeleteSensibilizacion(btn) {
+        const form = btn.closest('form');
+        sstConfirmDelete({
+            title: '¿Eliminar Jornada de Sensibilización?',
+            text: '¿Deseas eliminar esta jornada de sensibilización programada de la base de datos?'
+        }).then(res => {
+            if (res.isConfirmed) {
+                form.dataset.confirmed = 'true';
+                form.submit();
+            }
+        });
+    }
+
+    // Exponer funciones globales para interacción inline y navegación dinámica
+    window.openEditModal = openEditModal;
+    window.closeEditModal = closeEditModal;
+    window.openDetailModal = openDetailModal;
+    window.closeDetailModal = closeDetailModal;
+    window.openRegisterModal = openRegisterModal;
+    window.closeRegisterModal = closeRegisterModal;
+    window.confirmDeleteSensibilizacion = confirmDeleteSensibilizacion;
 </script>
 @endsection

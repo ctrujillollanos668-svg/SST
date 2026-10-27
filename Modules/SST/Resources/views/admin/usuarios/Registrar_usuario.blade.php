@@ -500,11 +500,16 @@
     }
 
     function confirmRemoveRole(userId, roleId, roleName, userName) {
-        if (confirm(`¿Estás seguro de remover el rol "${roleName}" del usuario "${userName}"?`)) {
-            const form = document.getElementById('formRemoveRole');
-            form.action = `{{ url('Sst/admin/usuarios/remove-role') }}/${userId}/${roleId}`;
-            form.submit();
-        }
+        sstConfirmDelete({
+            title: '¿Remover Rol?',
+            text: `¿Estás seguro de remover el rol "${roleName}" del usuario "${userName}"?`
+        }).then(result => {
+            if (result.isConfirmed) {
+                const form = document.getElementById('formRemoveRole');
+                form.action = `{{ url('Sst/admin/usuarios/remove-role') }}/${userId}/${roleId}`;
+                form.submit();
+            }
+        });
     }
 
     function filterTable() {

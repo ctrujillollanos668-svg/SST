@@ -256,10 +256,10 @@
                                         <button type="button" onclick="event.stopPropagation(); abrirModalEdicion(this.closest('.item-card'))" class="w-8 h-8 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-600 border border-orange-200/80 flex items-center justify-center transition cursor-pointer shadow-2xs" title="Editar reporte">
                                             <i class="fa-solid fa-pen-to-square text-xs"></i>
                                         </button>
-                                        <form action="{{ route('SST.aprendiz.inspecciones.destroy', $item->id_inspeccion) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar esta inspección de la base de datos?')" class="inline-block">
+                                        <form action="{{ route('SST.aprendiz.inspecciones.destroy', $item->id_inspeccion) }}" method="POST" class="inline-block">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="w-8 h-8 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 flex items-center justify-center transition cursor-pointer shadow-2xs" title="Eliminar">
+                                            <button type="button" onclick="confirmDeleteInspeccion(this)" class="w-8 h-8 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 flex items-center justify-center transition cursor-pointer shadow-2xs" title="Eliminar">
                                                 <i class="fa-regular fa-trash-can text-xs"></i>
                                             </button>
                                         </form>
@@ -443,7 +443,7 @@
                         </label>
                         <span class="text-[10px] text-orange-600 font-semibold">Plazo de verificación</span>
                     </div>
-                    <input type="date" name="fecha_seguimiento" id="inputFechaSeguimiento" min="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" value="{{ \Carbon\Carbon::now()->addDays(7)->format('Y-m-d') }}" class="w-full px-3 py-1.5 rounded-xl border border-orange-200 bg-white focus:outline-none focus:border-orange-500 text-xs font-semibold text-slate-800">
+                    <input type="date" name="fecha_seguimiento" id="inputFechaSeguimiento" value="{{ \Carbon\Carbon::now()->addDays(7)->format('Y-m-d') }}" class="w-full px-3 py-1.5 rounded-xl border border-orange-200 bg-white focus:outline-none focus:border-orange-500 text-xs font-semibold text-slate-800">
                 </div>
 
                 <!-- 8. Fila Inferior: Toggle Seguimiento y Botones -->
@@ -1380,5 +1380,17 @@
     document.addEventListener('DOMContentLoaded', () => {
         filtrarInspecciones();
     });
+    function confirmDeleteInspeccion(btn) {
+        const form = btn.closest('form');
+        sstConfirmDelete({
+            title: '¿Eliminar Inspección?',
+            text: '¿Está seguro de eliminar esta inspección de seguridad de la base de datos?'
+        }).then(res => {
+            if (res.isConfirmed) {
+                form.dataset.confirmed = 'true';
+                form.submit();
+            }
+        });
+    }
 </script>
 @endsection

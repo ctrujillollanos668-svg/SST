@@ -191,10 +191,10 @@
                                         title="Editar definición">
                                         <i class="fa-solid fa-pen-to-square text-xs"></i>
                                     </button>
-                                    <form action="{{ route('SST.admin.definiciones.destroy', $item->id_definicion) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta definición? Ya no estará visible para los aprendices.');" class="inline-block">
+                                    <form action="{{ route('SST.admin.definiciones.destroy', $item->id_definicion) }}" method="POST" class="inline-block form-delete-definicion">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-500 flex items-center justify-center transition cursor-pointer" title="Eliminar definición">
+                                        <button type="button" onclick="confirmDeleteDefinicion(this)" class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-500 flex items-center justify-center transition cursor-pointer" title="Eliminar definición">
                                             <i class="fa-solid fa-trash text-xs"></i>
                                         </button>
                                     </form>
@@ -455,6 +455,18 @@
                 fila.style.display = '';
             } else {
                 fila.style.display = 'none';
+            }
+        });
+    }
+    function confirmDeleteDefinicion(btn) {
+        const form = btn.closest('form');
+        sstConfirmDelete({
+            title: '¿Eliminar definición?',
+            text: '¿Estás seguro de eliminar esta definición? Ya no estará visible para los aprendices.'
+        }).then(result => {
+            if (result.isConfirmed) {
+                form.dataset.confirmed = 'true';
+                form.submit();
             }
         });
     }

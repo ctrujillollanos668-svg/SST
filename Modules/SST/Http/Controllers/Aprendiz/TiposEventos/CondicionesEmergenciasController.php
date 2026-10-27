@@ -64,8 +64,8 @@ class CondicionesEmergenciasController extends Controller
             'instructor_responsable' => 'nullable|string|max:255',
             'descripcion' => 'nullable|string',
             'evidencias' => 'nullable|array|max:3',
-            'evidencias.*' => 'nullable|file|max:10240',
-            'evidencia' => 'nullable|file|max:10240',
+            'evidencias.*' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:10240',
+            'evidencia' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:10240',
         ]);
 
         $tipoEmergencia = !empty($validated['tipo_emergencia']) ? $validated['tipo_emergencia'] : 'Emergencia General';
@@ -87,7 +87,9 @@ class CondicionesEmergenciasController extends Controller
             $files = array_slice($request->file('evidencias'), 0, 3);
             foreach ($files as $file) {
                 if ($file && $file->isValid()) {
-                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $ext = strtolower($file->getClientOriginalExtension());
+                    if (!in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'pdf'])) $ext = 'jpg';
+                    $filename = time() . '_' . uniqid() . '.' . $ext;
                     $file->move($destination, $filename);
                     $evidenciasUrls[] = asset('uploads/evidencias_sst/' . $filename);
                 }
@@ -95,7 +97,9 @@ class CondicionesEmergenciasController extends Controller
         } elseif ($request->hasFile('evidencia')) {
             $file = $request->file('evidencia');
             if ($file && $file->isValid()) {
-                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $ext = strtolower($file->getClientOriginalExtension());
+                if (!in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'pdf'])) $ext = 'jpg';
+                $filename = time() . '_' . uniqid() . '.' . $ext;
                 $file->move($destination, $filename);
                 $evidenciasUrls[] = asset('uploads/evidencias_sst/' . $filename);
             }
@@ -145,8 +149,8 @@ class CondicionesEmergenciasController extends Controller
             'instructor_responsable' => 'nullable|string|max:255',
             'descripcion' => 'nullable|string',
             'evidencias' => 'nullable|array|max:3',
-            'evidencias.*' => 'nullable|file|max:10240',
-            'evidencia' => 'nullable|file|max:10240',
+            'evidencias.*' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:10240',
+            'evidencia' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:10240',
         ]);
 
         $existingData = json_decode($evento->descripcion, true);
@@ -179,7 +183,9 @@ class CondicionesEmergenciasController extends Controller
 
             foreach ($filesToAdd as $file) {
                 if ($file && $file->isValid()) {
-                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $ext = strtolower($file->getClientOriginalExtension());
+                    if (!in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'pdf'])) $ext = 'jpg';
+                    $filename = time() . '_' . uniqid() . '.' . $ext;
                     $file->move($destination, $filename);
                     $evidenciasUrls[] = asset('uploads/evidencias_sst/' . $filename);
                 }
@@ -187,7 +193,9 @@ class CondicionesEmergenciasController extends Controller
         } elseif ($request->hasFile('evidencia')) {
             $file = $request->file('evidencia');
             if ($file && $file->isValid() && count($evidenciasUrls) < 3) {
-                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $ext = strtolower($file->getClientOriginalExtension());
+                if (!in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'pdf'])) $ext = 'jpg';
+                $filename = time() . '_' . uniqid() . '.' . $ext;
                 $file->move($destination, $filename);
                 $evidenciasUrls[] = asset('uploads/evidencias_sst/' . $filename);
             }

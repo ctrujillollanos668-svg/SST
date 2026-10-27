@@ -82,9 +82,9 @@
             </div>
 
             <!-- Indicador informativo de regla de selección -->
-            <div class="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] font-semibold text-slate-500" title="Fechas anteriores a 3 días están en modo solo lectura">
-                <i class="fa-solid fa-clock-rotate-left text-orange-500 text-xs"></i>
-                <span>Edición permitida: <strong>últimos 3 días</strong> en adelante</span>
+            <div class="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200/80 text-[11px] font-semibold text-emerald-700" title="Edición permitida en el día actual y fechas futuras. Días anteriores en modo solo lectura.">
+                <i class="fa-solid fa-calendar-check text-emerald-600 text-xs"></i>
+                <span>Edición: <strong>Hoy y fechas futuras</strong> (Días anteriores solo lectura)</span>
             </div>
         </div>
 
@@ -268,8 +268,19 @@
 
             <div class="grid grid-cols-2 gap-3">
                 <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Fecha de la Actividad *</label>
+                    <input type="date" id="editFecha" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 bg-white cursor-pointer">
+                </div>
+                <div>
                     <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Hora *</label>
                     <input type="time" id="editHora" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Responsable *</label>
+                    <input type="text" id="editResponsable" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
                 </div>
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Estado de la Actividad</label>
@@ -279,11 +290,6 @@
                         <option value="Cancelada">Cancelada</option>
                     </select>
                 </div>
-            </div>
-
-            <div>
-                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Responsable *</label>
-                <input type="text" id="editResponsable" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
             </div>
 
             <div>
@@ -517,27 +523,34 @@
         renderCurrentView();
     }
 
-    // Regla de negocio: Edición permitida solo en los últimos 3 días en adelante.
-    // Fechas con más de 3 días de antigüedad entran en modo "Solo lectura (Histórico)"
-    function getMinSelectableDate() {
+    // Regla de negocio: Edición permitida solo en el día actual (hoy) y fechas futuras.
+    // Días anteriores (ayer, anteayer, etc.) entran en modo "Solo lectura (Histórico)" y no se pueden editar ni borrar.
+    function getTodayZero() {
         const d = new Date();
         d.setHours(0, 0, 0, 0);
-        d.setDate(d.getDate() - 3);
         return d;
     }
 
     function isDateReadOnly(d) {
         if (!d) return false;
-        const check = new Date(d);
+        let check;
+        if (typeof d === 'string') {
+            const parts = d.split('-');
+            if (parts.length === 3) {
+                check = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+            } else {
+                check = new Date(d);
+            }
+        } else {
+            check = new Date(d);
+        }
         check.setHours(0, 0, 0, 0);
-        return check < getMinSelectableDate();
+        return check.getTime() < getTodayZero().getTime();
     }
 
     function isEventReadOnly(evt) {
         if (!evt || !evt.date) return false;
-        const parts = evt.date.split('-');
-        const d = new Date(parts[0], parseInt(parts[1]) - 1, parts[2]);
-        return isDateReadOnly(d);
+        return isDateReadOnly(evt.date);
     }
 
     function isDateDisabled(d) {
@@ -546,7 +559,7 @@
     }
 
     function showDisabledDateNotice() {
-        showToastNotification('Esta fecha tiene más de 3 días de antigüedad y está en modo solo lectura (no se puede editar).', 'warning', 'Fecha Histórica');
+        showToastNotification('Esta actividad pertenece a una fecha pasada y está protegida en modo histórico (no se puede editar).', 'warning', 'Fecha Histórica');
     }
 
     // Paleta de colores e iconos específicos y profesionales para cada tipo de actividad SST
@@ -1211,7 +1224,11 @@
     }
 
     async function deleteQuickTipoActividad(id, nombre) {
-        if (!confirm(`¿Estás seguro de eliminar el tipo de actividad "${nombre}"?`)) return;
+        const result = await sstConfirmDelete({
+            title: '¿Eliminar Tipo de Actividad?',
+            text: `¿Estás seguro de eliminar el tipo de actividad "${nombre}"?`
+        });
+        if (!result.isConfirmed) return;
 
         try {
             const response = await fetch(`${deleteTipoUrl}/${id}`, {
@@ -1306,7 +1323,7 @@
     async function handleSaveActivity(e) {
         e.preventDefault();
         if (isDateReadOnly(selectedDate)) {
-            showToastNotification('No se pueden registrar actividades en fechas con más de 3 días de antigüedad.', 'warning', 'Acción no permitida');
+            showToastNotification('No se pueden programar actividades en fechas pasadas.', 'warning', 'Acción no permitida');
             return;
         }
         const dateStr = formatDateForInput(selectedDate);
@@ -1371,7 +1388,7 @@
         if (!evt) return;
 
         if (isEventReadOnly(evt)) {
-            showToastNotification('No se pueden modificar actividades con más de 3 días de antigüedad.', 'warning', 'Acción no permitida');
+            showToastNotification('No se pueden modificar actividades de fechas pasadas.', 'warning', 'Acción no permitida');
             closeEditModal();
             return;
         }
@@ -1380,10 +1397,16 @@
         const lugarVal = selectLugar.value;
         const lugarText = selectLugar.options[selectLugar.selectedIndex] ? (lugarVal ? selectLugar.options[selectLugar.selectedIndex].text : '') : '';
 
+        const newFecha = document.getElementById('editFecha').value;
+        if (!newFecha) {
+            showToastNotification('La fecha de la actividad es requerida.', 'warning', 'Campo obligatorio');
+            return;
+        }
+
         const payload = {
             source: evt.source || 'actividad_sst',
             nombre: document.getElementById('editNombre').value,
-            fecha: evt.date,
+            fecha: newFecha,
             hora: document.getElementById('editHora').value,
             tipo_actividad: document.getElementById('editTipoActividad').value,
             id_lugar: lugarVal ? parseInt(lugarVal) : null,
@@ -1407,6 +1430,7 @@
             const res = await response.json();
             if (res.success) {
                 evt.name = payload.nombre;
+                evt.date = res.data && res.data.fecha ? res.data.fecha : payload.fecha;
                 evt.time = payload.hora;
                 evt.tipo_actividad = payload.tipo_actividad;
                 evt.id_lugar = payload.id_lugar;
@@ -1433,7 +1457,7 @@
         if (!evt) return;
 
         if (isEventReadOnly(evt)) {
-            showToastNotification('No se puede cambiar el estado de actividades con más de 3 días de antigüedad.', 'warning', 'Acción no permitida');
+            showToastNotification('No se puede cambiar el estado de actividades de fechas pasadas.', 'warning', 'Acción no permitida');
             renderDayEventsGrid();
             return;
         }
@@ -1479,11 +1503,15 @@
         if (!evt) return;
 
         if (isEventReadOnly(evt)) {
-            showToastNotification('No se pueden eliminar actividades con más de 3 días de antigüedad.', 'warning', 'Acción no permitida');
+            showToastNotification('No se pueden eliminar actividades de fechas pasadas.', 'warning', 'Acción no permitida');
             return;
         }
 
-        if (!confirm('¿Estás seguro de eliminar esta actividad del cronograma?')) return;
+        const result = await sstConfirmDelete({
+            title: '¿Eliminar Actividad del Cronograma?',
+            text: `¿Estás seguro de eliminar la actividad "${evt.name}" del cronograma?`
+        });
+        if (!result.isConfirmed) return;
 
         try {
             const response = await fetch(`${baseUrl}/${id}?source=${encodeURIComponent(evt.source || 'actividad_sst')}`, {
@@ -1513,7 +1541,7 @@
         if (!evt) return;
 
         if (isEventReadOnly(evt)) {
-            showToastNotification('Esta actividad es de una fecha histórica y no se puede editar.', 'warning', 'Solo lectura');
+            showToastNotification('Esta actividad es de una fecha pasada y no se puede editar.', 'warning', 'Solo lectura');
             return;
         }
         document.getElementById('editEventId').value = evt.id;
@@ -1537,6 +1565,7 @@
         if (!matched) selectLugar.value = '';
 
         document.getElementById('editNombre').value = evt.name;
+        document.getElementById('editFecha').value = evt.date;
         document.getElementById('editHora').value = evt.time;
         document.getElementById('editEstado').value = (evt.estado === 'Completada') ? 'Realizada' : evt.estado;
         document.getElementById('editResponsable').value = evt.responsable;

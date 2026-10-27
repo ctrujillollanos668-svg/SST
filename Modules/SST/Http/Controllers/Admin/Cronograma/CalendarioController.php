@@ -133,8 +133,20 @@ class CalendarioController extends Controller
         $estado = $validated['estado'] ?? 'Programada';
         if ($estado === 'Completada') $estado = 'Realizada';
 
+        $tipoActividad = $validated['tipo_actividad'] ?? 'Pausa Activa';
+        $allowedTipos = ['Pausa Activa', 'Charla', 'Sensibilización'];
+        if (!in_array($tipoActividad, $allowedTipos)) {
+            if (stripos($tipoActividad, 'charla') !== false) {
+                $tipoActividad = 'Charla';
+            } elseif (stripos($tipoActividad, 'sensibil') !== false) {
+                $tipoActividad = 'Sensibilización';
+            } else {
+                $tipoActividad = 'Pausa Activa';
+            }
+        }
+
         $actividad = ActividadSST::create([
-            'tipo_actividad' => $validated['tipo_actividad'] ?? 'Pausa Activa',
+            'tipo_actividad' => $tipoActividad,
             'titulo' => $validated['nombre'],
             'actividad_a_realizar' => $validated['nombre'],
             'fecha' => $validated['fecha'],
@@ -187,6 +199,33 @@ class CalendarioController extends Controller
 
         $actSST = ActividadSST::find($id);
         if ($actSST && ($request->get('source') !== 'cronograma')) {
+            $hoy = now('America/Bogota')->format('Y-m-d');
+            $nuevaFecha = !empty($validated['fecha']) ? $validated['fecha'] : $actSST->fecha;
+
+            // Si la actividad pertenecía a una fecha pasada y no se está reprogramando a hoy o al futuro:
+            if ($actSST->fecha < $hoy && $nuevaFecha < $hoy) {
+                if ($request->wantsJson() || $request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Esta actividad pertenece a una fecha pasada y está protegida contra modificaciones.'
+                    ], 422);
+                }
+                return redirect()->route('SST.admin.cronograma.calendario')
+                    ->with('error', 'Esta actividad pertenece a una fecha pasada y está protegida contra modificaciones.');
+            }
+
+            // Si la actividad es actual o futura, pero intentan cambiarla a una fecha pasada:
+            if ($actSST->fecha >= $hoy && $nuevaFecha < $hoy) {
+                if ($request->wantsJson() || $request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No se puede reprogramar una actividad hacia una fecha pasada.'
+                    ], 422);
+                }
+                return redirect()->route('SST.admin.cronograma.calendario')
+                    ->with('error', 'No se puede reprogramar una actividad hacia una fecha pasada.');
+            }
+
             if (!empty($validated['nombre'])) {
                 $actSST->titulo = $validated['nombre'];
                 $actSST->actividad_a_realizar = $validated['nombre'];
@@ -201,7 +240,15 @@ class CalendarioController extends Controller
                 $actSST->responsable = $validated['responsable'];
             }
             if (!empty($validated['tipo_actividad'])) {
-                $actSST->tipo_actividad = $validated['tipo_actividad'];
+                $tipoAct = $validated['tipo_actividad'];
+                if (stripos($tipoAct, 'charla') !== false) {
+                    $tipoAct = 'Charla';
+                } elseif (stripos($tipoAct, 'sensibil') !== false) {
+                    $tipoAct = 'Sensibilización';
+                } else {
+                    $tipoAct = 'Pausa Activa';
+                }
+                $actSST->tipo_actividad = $tipoAct;
             }
             if (!empty($validated['estado'])) {
                 $st = $validated['estado'];
@@ -254,6 +301,18 @@ class CalendarioController extends Controller
     {
         $actSST = ActividadSST::find($id);
         if ($actSST) {
+            $hoy = now('America/Bogota')->format('Y-m-d');
+            if ($actSST->fecha < $hoy) {
+                if ($request->wantsJson() || $request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No se pueden eliminar actividades pertenecientes a fechas pasadas.'
+                    ], 422);
+                }
+                return redirect()->route('SST.admin.cronograma.calendario')
+                    ->with('error', 'No se pueden eliminar actividades pertenecientes a fechas pasadas.');
+            }
+
             $actSST->delete();
             if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([

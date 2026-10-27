@@ -83,7 +83,14 @@ class ControlAsistenciasController extends Controller
      */
     public function show($id)
     {
-        $actividad = ActividadSST::findOrFail($id);
+        $actividad = ActividadSST::find($id);
+        if (!$actividad) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Actividad no encontrada.'
+            ], 404);
+        }
+
         return response()->json([
             'success' => true,
             'actividad' => $actividad

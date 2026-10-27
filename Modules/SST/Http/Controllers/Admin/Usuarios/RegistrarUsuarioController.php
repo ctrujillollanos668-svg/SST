@@ -68,6 +68,33 @@ class RegistrarUsuarioController extends Controller
     }
 
     /**
+     * Búsqueda dinámica de usuarios para asignación o relevo.
+     */
+    public function search(Request $request)
+    {
+        $q = $request->get('q') ?? $request->get('search') ?? '';
+        $users = User::with(['person', 'roles'])
+            ->when(!empty($q), function ($query) use ($q) {
+                $query->where(function ($sub) use ($q) {
+                    $sub->where('nickname', 'like', "%{$q}%")
+                        ->orWhere('email', 'like', "%{$q}%")
+                        ->orWhereHas('person', function ($qp) use ($q) {
+                            $qp->where('first_name', 'like', "%{$q}%")
+                               ->orWhere('first_last_name', 'like', "%{$q}%")
+                               ->orWhere('document_number', 'like', "%{$q}%");
+                        });
+                });
+            })
+            ->limit(25)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $users
+        ]);
+    }
+
+    /**
      * Asigna un rol a un usuario en el sistema.
      */
     public function assignRole(Request $request)
