@@ -5,6 +5,7 @@ namespace Modules\SST\Http\Controllers\Admin\Inspecciones;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\SST\Entities\InspeccionSST;
+use Modules\SST\Entities\HallazgoInspeccion;
 use Modules\SST\Entities\LugarFormacion;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,7 +24,7 @@ class HistorialController extends Controller
      */
     public function historial(Request $request)
     {
-        $query = InspeccionSST::with(['lugar', 'user'])->orderBy('id_inspeccion', 'desc');
+        $query = InspeccionSST::with(['lugar', 'user', 'hallazgos'])->orderBy('id_inspeccion', 'desc');
 
         if ($request->filled('fecha')) {
             $query->whereDate('fecha_inspeccion', $request->fecha);
@@ -43,6 +44,10 @@ class HistorialController extends Controller
                   })
                   ->orWhereHas('user', function($qu) use ($s) {
                       $qu->where('name', 'like', "%{$s}%");
+                  })
+                  ->orWhereHas('hallazgos', function($qh) use ($s) {
+                      $qh->where('descripcion_hallazgo', 'like', "%{$s}%")
+                         ->orWhere('responsable', 'like', "%{$s}%");
                   });
             });
         }
@@ -82,6 +87,15 @@ class HistorialController extends Controller
         $inspeccion->estado = $validated['estado'];
         $inspeccion->observaciones = json_encode($meta, JSON_UNESCAPED_UNICODE);
         $inspeccion->save();
+
+        // Sincronizar estado en hallazgos_inspecciones (Buenas prácticas de ERP)
+        $estadoHallazgo = in_array($validated['estado'], ['completada']) ? 'cerrado' : ($validated['estado'] === 'con_hallazgos' ? 'abierto' : 'en_proceso');
+        $hallazgo = HallazgoInspeccion::firstOrNew(['id_inspeccion' => $inspeccion->id_inspeccion]);
+        $hallazgo->estado = $estadoHallazgo;
+        if (!empty($validated['observacion_admin'])) {
+            $hallazgo->accion_correctiva = $validated['observacion_admin'];
+        }
+        $hallazgo->save();
 
         return redirect()->route('SST.admin.inspecciones.historial')
             ->with('success', '¡Inspección gestionada exitosamente! Se actualizó el estado y el seguimiento.');

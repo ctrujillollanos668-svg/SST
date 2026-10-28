@@ -5,6 +5,7 @@ namespace Modules\SST\Http\Controllers\Aprendiz\Inspecciones;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\SST\Entities\InspeccionSST;
+use Modules\SST\Entities\HallazgoInspeccion;
 use Modules\SST\Entities\LugarFormacion;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,7 +21,7 @@ class SeguimientoController extends Controller
             $lugares = LugarFormacion::orderBy('nombre', 'asc')->get();
         }
 
-        $todasInspecciones = InspeccionSST::with(['lugar', 'user'])->orderBy('id_inspeccion', 'desc')->get();
+        $todasInspecciones = InspeccionSST::with(['lugar', 'user', 'hallazgos'])->orderBy('id_inspeccion', 'desc')->get();
 
         $inspecciones = $todasInspecciones->filter(function ($item) {
             $meta = json_decode($item->observaciones, true) ?? [];
@@ -141,6 +142,17 @@ class SeguimientoController extends Controller
             'observaciones' => json_encode($metadata, JSON_UNESCAPED_UNICODE)
         ]);
 
+        // Sincronizar con la tabla relacional hallazgos_inspecciones (Buenas prácticas de ERP)
+        $hallazgo = HallazgoInspeccion::firstOrNew(['id_inspeccion' => $inspeccion->id_inspeccion]);
+        $hallazgo->descripcion_hallazgo = $request->input('descripcion') ?: ($hallazgo->descripcion_hallazgo ?: 'Inspección de seguridad realizada.');
+        $hallazgo->responsable = $request->input('responsable') ?: ($hallazgo->responsable ?: 'Aprendiz SST');
+        $hallazgo->fecha_compromiso = $fechaSeguimiento;
+        $hallazgo->estado = $isSeguimiento ? 'en_proceso' : 'cerrado';
+        if (!empty($request->input('lider_unidad'))) {
+            $hallazgo->accion_correctiva = 'Gestionar con: ' . $request->input('lider_unidad');
+        }
+        $hallazgo->save();
+
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
                 'success' => true,
@@ -160,6 +172,7 @@ class SeguimientoController extends Controller
     public function destroy($id)
     {
         $inspeccion = InspeccionSST::findOrFail($id);
+        HallazgoInspeccion::where('id_inspeccion', $id)->delete();
         $inspeccion->delete();
 
         if (request()->wantsJson() || request()->ajax()) {

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Modules\SST\Entities\ActividadSST;
 use Modules\SST\Entities\TipoEvento;
 use Modules\SST\Entities\InspeccionSST;
+use Modules\SST\Entities\HallazgoInspeccion;
 use Modules\SST\Entities\IndicadorSST;
 
 class VerIndicadoresController extends Controller
@@ -129,12 +130,20 @@ class VerIndicadoresController extends Controller
             $inspeccionesPorTipo[$tipoInsp] = ($inspeccionesPorTipo[$tipoInsp] ?? 0) + 1;
         }
 
+        $totalHallazgos = HallazgoInspeccion::count();
+        $hallazgosCerrados = HallazgoInspeccion::where('estado', 'cerrado')->count();
+        $hallazgosAbiertos = HallazgoInspeccion::whereIn('estado', ['abierto', 'en_proceso'])->count();
+
         $inspeccionesStats = [
             'total' => $totalInspecciones,
             'realizadas' => $inspeccionesRealizadas,
             'pendientes' => $inspeccionesPendientes,
             'efectividad_pct' => $totalInspecciones > 0 ? round(($inspeccionesRealizadas / $totalInspecciones) * 100, 1) : 0,
             'por_tipo' => $inspeccionesPorTipo,
+            'total_hallazgos' => $totalHallazgos,
+            'hallazgos_cerrados' => $hallazgosCerrados,
+            'hallazgos_abiertos' => $hallazgosAbiertos,
+            'eficacia_hallazgos_pct' => $totalHallazgos > 0 ? round(($hallazgosCerrados / $totalHallazgos) * 100, 1) : 100,
         ];
 
         return view('sst::admin.indicadores.Ver_indicadores', compact(

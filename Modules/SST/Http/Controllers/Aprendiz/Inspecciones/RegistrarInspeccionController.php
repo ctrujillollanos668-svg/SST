@@ -5,7 +5,9 @@ namespace Modules\SST\Http\Controllers\Aprendiz\Inspecciones;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\SST\Entities\InspeccionSST;
+use Modules\SST\Entities\HallazgoInspeccion;
 use Modules\SST\Entities\LugarFormacion;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -24,7 +26,7 @@ class RegistrarInspeccionController extends Controller
 
         $filtro = $request->get('filtro');
 
-        $todasInspecciones = InspeccionSST::with(['lugar', 'user'])->orderBy('id_inspeccion', 'desc')->get();
+        $todasInspecciones = InspeccionSST::with(['lugar', 'user', 'hallazgos'])->orderBy('id_inspeccion', 'desc')->get();
 
         $totalSeguimiento = $todasInspecciones->filter(function ($item) {
             $meta = json_decode($item->observaciones, true) ?? [];
@@ -141,12 +143,23 @@ class RegistrarInspeccionController extends Controller
         // 6. Crear en la tabla real de la base de datos (inspecciones_sst)
         $inspeccion = InspeccionSST::create([
             'lugar_id' => $lugarId,
-            'user_id' => Auth::id() ?? 1,
+            'user_id' => Auth::id() ?? (User::first()?->id ?? null),
             'tipo_inspeccion' => $tipoInspeccion,
             'fecha_inspeccion' => $request->input('fecha_inspeccion') ?? now()->format('Y-m-d'),
             'hora_inspeccion' => now()->format('H:i:s'),
             'estado' => $estado,
             'observaciones' => json_encode($metadata, JSON_UNESCAPED_UNICODE)
+        ]);
+
+        // 7. Conectar y registrar en la tabla relacional hallazgos_inspecciones (Buenas prácticas de ERP)
+        HallazgoInspeccion::create([
+            'id_inspeccion' => $inspeccion->id_inspeccion,
+            'descripcion_hallazgo' => $request->input('descripcion') ?: 'Inspección de seguridad realizada.',
+            'nivel_riesgo' => $isSeguimiento ? 'alto' : 'medio',
+            'accion_correctiva' => !empty($request->input('lider_unidad')) ? ('Gestionar con: ' . $request->input('lider_unidad')) : 'Verificación y cierre de condiciones.',
+            'responsable' => $request->input('responsable') ?: 'Aprendiz SST',
+            'fecha_compromiso' => $fechaSeguimiento,
+            'estado' => $isSeguimiento ? 'abierto' : 'cerrado'
         ]);
 
         if ($request->wantsJson() || $request->ajax()) {
