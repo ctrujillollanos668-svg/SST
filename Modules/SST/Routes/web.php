@@ -14,9 +14,7 @@ use Modules\SST\Http\Controllers\Admin\Informacion_basica\LugarInformacionContro
 use Modules\SST\Http\Controllers\Admin\Informacion_basica\RespuestaEventoController;
 use Modules\SST\Http\Controllers\Admin\Informacion_basica\ContactoEmergenciaController;
 use Modules\SST\Http\Controllers\Admin\AdminController;
-use Modules\SST\Http\Controllers\Admin\Definiciones\DefinicionesController as AdminDefinicionesController;
 use Modules\SST\Http\Controllers\Aprendiz\AprendizController;
-use Modules\SST\Http\Controllers\Aprendiz\Definiciones\DefinicionesController as AprendizDefinicionesController;
 use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\AccidentesController as AprendizAccidentesController;
 use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\IncidentesController as AprendizIncidentesController;
 use Modules\SST\Http\Controllers\Aprendiz\TiposEventos\RiesgosController as AprendizRiesgosController;
@@ -40,21 +38,6 @@ Route::prefix('Sst')->name('SST.')->group(function () {
     Route::middleware([\Modules\SST\Http\Middleware\SSTAdminMiddleware::class])->group(function () {
         Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-        // Rutas de Administración - Definiciones SST (Glosario para Aprendices)
-        Route::prefix('admin/definiciones')->name('admin.definiciones.')->group(function () {
-            Route::get('/accidentes', [AdminDefinicionesController::class, 'accidentes'])->name('accidentes');
-            Route::get('/incidentes', [AdminDefinicionesController::class, 'incidentes'])->name('incidentes');
-            Route::get('/riesgos', [AdminDefinicionesController::class, 'riesgos'])->name('riesgos');
-            Route::get('/actos-inseguros', [AdminDefinicionesController::class, 'actosInseguros'])->name('actos_inseguros');
-            Route::get('/condiciones-inseguras', [AdminDefinicionesController::class, 'condicionesInseguras'])->name('condiciones_inseguras');
-            Route::get('/lesiones', [AdminDefinicionesController::class, 'lesiones'])->name('lesiones');
-            Route::get('/tipos-emergencias', [AdminDefinicionesController::class, 'tiposEmergencias'])->name('tipos_emergencias');
-            Route::post('/store', [AdminDefinicionesController::class, 'store'])->name('store');
-            Route::put('/update/{id}', [AdminDefinicionesController::class, 'update'])->name('update');
-            Route::patch('/toggle-estado/{id}', [AdminDefinicionesController::class, 'toggleEstado'])->name('toggle_estado');
-            Route::delete('/destroy/{id}', [AdminDefinicionesController::class, 'destroy'])->name('destroy');
-        });
-
         // Rutas de Administración - Tipos de Eventos
         Route::prefix('admin/tipos-eventos')->name('admin.tipos_eventos.')->group(function () {
             Route::resource('accidentes', AccidentesController::class)->names('accidentes')->only(['index', 'store', 'update', 'destroy']);
@@ -69,6 +52,7 @@ Route::prefix('Sst')->name('SST.')->group(function () {
         // Rutas de Administración - Información Básica
         Route::prefix('admin/informacion-basica')->name('admin.informacion_basica.')->group(function () {
             Route::post('respuesta-eventos/{id}/atender', [RespuestaEventoController::class, 'atender'])->name('respuesta_eventos.atender');
+            Route::post('respuesta-eventos/{id}/finalizar', [RespuestaEventoController::class, 'finalizar'])->name('respuesta_eventos.finalizar');
             Route::resource('respuesta-eventos', RespuestaEventoController::class)->names('respuesta_eventos')->only(['index', 'store', 'update', 'destroy']);
             Route::resource('lugar-informacion', LugarInformacionController::class)->names('lugar_informacion')->only(['index', 'store', 'update', 'destroy']);
             Route::resource('contacto-emergencia', ContactoEmergenciaController::class)->names('contacto_emergencia')->only(['index', 'store', 'update', 'destroy']);
@@ -122,12 +106,11 @@ Route::prefix('Sst')->name('SST.')->group(function () {
             Route::get('/calendario', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\CalendarioController::class, 'index'])->name('calendario.index');
         });
 
-        // Rutas de Administración - Indicadores SST
+        // Compatibilidad de rutas anteriores de Indicadores hacia el Dashboard Principal
         Route::prefix('admin/indicadores')->name('admin.indicadores.')->group(function () {
-            Route::get('/ver-indicadores', [\Modules\SST\Http\Controllers\Admin\Indicadores\VerIndicadoresController::class, 'index'])->name('index');
-            Route::post('/store', [\Modules\SST\Http\Controllers\Admin\Indicadores\VerIndicadoresController::class, 'store'])->name('store');
-            Route::put('/update/{id}', [\Modules\SST\Http\Controllers\Admin\Indicadores\VerIndicadoresController::class, 'update'])->name('update');
-            Route::delete('/destroy/{id}', [\Modules\SST\Http\Controllers\Admin\Indicadores\VerIndicadoresController::class, 'destroy'])->name('destroy');
+            Route::get('/ver-indicadores', function () {
+                return redirect()->route('SST.admin.dashboard');
+            })->name('index');
         });
 
         // Rutas de Administración - Gestión de Usuarios SST
@@ -144,7 +127,6 @@ Route::prefix('Sst')->name('SST.')->group(function () {
     Route::middleware([\Modules\SST\Http\Middleware\SSTAprendizMiddleware::class])->group(function () {
         Route::prefix('aprendiz')->name('aprendiz.')->group(function () {
         Route::get('/dashboard', [AprendizController::class, 'dashboard'])->name('dashboard');
-        Route::get('/definiciones', [AprendizDefinicionesController::class, 'index'])->name('definiciones');
         Route::put('/cambiar-clave', [\Modules\SST\Http\Controllers\Admin\Usuarios\RegistrarUsuarioController::class, 'updateMyPassword'])->name('cambiar_clave');
 
         // Tipos de Eventos para Aprendiz
@@ -200,9 +182,11 @@ Route::prefix('Sst')->name('SST.')->group(function () {
             Route::get('/historial', [SeguimientoController::class, 'historial'])->name('historial');
         });
 
-        // Actividades SST para Aprendiz
+        // Actividades SST para Aprendiz (Módulo Unificado)
         Route::prefix('actividades-sst')->name('actividades_sst.')->group(function () {
-            Route::get('/aprendices-por-ficha', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\CharlasController::class, 'getAprendicesPorFicha'])->name('aprendices_por_ficha');
+            Route::get('/', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\ActividadesSSTController::class, 'index'])->name('index');
+            Route::post('/{id}/asistencia', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\ActividadesSSTController::class, 'asistencia'])->name('asistencia');
+            Route::get('/aprendices-por-ficha', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\ActividadesSSTController::class, 'getAprendicesPorFicha'])->name('aprendices_por_ficha');
 
             Route::get('/pausas-activas', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\PausasActivasController::class, 'index'])->name('pausas_activas.index');
             Route::post('/pausas-activas/{id}/asistencia', [\Modules\SST\Http\Controllers\Aprendiz\ActividadesSST\PausasActivasController::class, 'asistencia'])->name('pausas_activas.asistencia');

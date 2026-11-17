@@ -31,12 +31,12 @@ class SSTController extends Controller
 
         // 2. Si tiene el rol de Aprendiz (o Funcionario por compatibilidad)
         if ($user->roles->contains('slug', 'sst.aprendiz') || $user->roles->contains('slug', 'sst.funcionario')) {
-            return redirect()->route('SST.aprendiz.definiciones');
+            return redirect()->route('SST.aprendiz.dashboard');
         }
 
         // 3. Si tiene el rol de Administrador o es Superadmin
         if ($user->roles->contains('slug', 'sst.admin') || $user->hasSuperAdmin()) {
-            return redirect()->route('SST.admin.definiciones.accidentes');
+            return redirect()->route('SST.admin.dashboard');
         }
 
         // 4. Si no tiene rol asignado en SST

@@ -15,6 +15,9 @@
     <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Chart.js CDN (Para Gráficas de Gestión SST) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
@@ -171,11 +174,15 @@
         <!-- Top Navbar del Aprendiz (Estilo Ejecutivo Dirección) -->
         <header class="h-16 bg-gradient-to-r from-[#0A2333] via-[#0F3247] to-[#0A2333] border-b-[3px] border-[#39A900] sticky top-0 z-20 px-4 sm:px-6 flex items-center justify-between shadow-lg text-white">
             
-            <!-- Botón Hamburguesa y Título -->
-            <div class="flex items-center gap-3">
+            <!-- Botón Hamburguesa, Acceso a Gráficas y Título (Idéntico a Admin) -->
+            <div class="flex items-center gap-2.5 sm:gap-3">
                 <button id="toggleSidebarBtn" class="w-10 h-10 rounded-xl bg-white/10 text-white hover:text-[#62E31D] hover:bg-white/20 flex items-center justify-center transition focus:outline-none border border-white/15 cursor-pointer shadow-xs" title="Contraer / Expandir Menú">
                     <i class="fa-solid fa-bars text-base"></i>
                 </button>
+
+                <a href="{{ route('SST.aprendiz.dashboard') }}" class="w-10 h-10 rounded-xl bg-white/10 text-white hover:text-[#62E31D] hover:bg-white/20 flex items-center justify-center transition border border-white/15 cursor-pointer shadow-xs group" title="Ver Gráficas y Métricas">
+                    <i class="fa-solid fa-chart-pie text-sm group-hover:scale-110 transition-transform"></i>
+                </a>
 
                 <h2 class="font-extrabold text-white text-sm sm:text-base tracking-tight flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-[#62E31D] animate-pulse"></span>
@@ -227,6 +234,11 @@
 
                         <!-- Opciones de Navegación -->
                         <div class="py-1">
+                            <a href="{{ route('SST.aprendiz.dashboard') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10 hover:text-[#62E31D] transition">
+                                <i class="fa-solid fa-chart-pie text-[#39A900]"></i>
+                                <span>Ver Gráficas y Métricas</span>
+                            </a>
+
                             <a href="{{ route('SST.welcome') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10 hover:text-[#62E31D] transition">
                                 <i class="fa-solid fa-house text-[#39A900]"></i>
                                 <span>Inicio SST</span>

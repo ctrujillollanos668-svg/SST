@@ -15,6 +15,9 @@
     <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Chart.js CDN (Para Gráficas de Gestión SST) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
@@ -166,11 +169,15 @@
         <!-- Top Navbar del Admin (Estilo Ejecutivo Dirección) -->
         <header class="h-16 bg-gradient-to-r from-[#0A2333] via-[#0F3247] to-[#0A2333] border-b-[3px] border-[#39A900] sticky top-0 z-20 px-4 sm:px-6 flex items-center justify-between shadow-lg text-white">
             
-            <!-- Botón Hamburguesa y Título -->
-            <div class="flex items-center gap-3">
+            <!-- Botón Hamburguesa, Acceso a Gráficas y Título -->
+            <div class="flex items-center gap-2.5 sm:gap-3">
                 <button id="toggleSidebarBtn" class="w-10 h-10 rounded-xl bg-white/10 text-white hover:text-[#62E31D] hover:bg-white/20 flex items-center justify-center transition focus:outline-none border border-white/15 cursor-pointer shadow-xs" title="Contraer / Expandir Menú">
                     <i class="fa-solid fa-bars text-base"></i>
                 </button>
+
+                <a href="{{ route('SST.admin.dashboard') }}" class="w-10 h-10 rounded-xl bg-white/10 text-white hover:text-[#62E31D] hover:bg-white/20 flex items-center justify-center transition border border-white/15 cursor-pointer shadow-xs group" title="Ver Gráficas y Métricas">
+                    <i class="fa-solid fa-chart-pie text-sm group-hover:scale-110 transition-transform"></i>
+                </a>
 
                 <h2 class="font-extrabold text-white text-sm sm:text-base tracking-tight flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-[#62E31D] animate-pulse"></span>
@@ -212,6 +219,11 @@
 
                     <!-- Opciones de Navegación -->
                     <div class="py-1">
+                        <a href="{{ route('SST.admin.dashboard') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10 hover:text-[#62E31D] transition">
+                            <i class="fa-solid fa-chart-pie text-[#62E31D]"></i>
+                            <span>Ver Gráficas y Métricas</span>
+                        </a>
+
                         <a href="{{ route('SST.welcome') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10 hover:text-[#62E31D] transition">
                             <i class="fa-solid fa-house text-[#39A900]"></i>
                             <span>Inicio SST</span>
@@ -356,7 +368,18 @@
                 // Cerrar flyouts abiertos
                 document.querySelectorAll('.menu-wrapper').forEach(w => w.classList.remove('flyout-open'));
 
+                // El logo NUNCA debe tener clases activas ni fondo blanco
+                document.querySelectorAll('.logo-full, .logo-mini').forEach(logo => {
+                    logo.classList.remove('bg-white', 'text-[#39A900]', 'shadow-xs', 'font-bold');
+                });
+
                 document.querySelectorAll('#sidebarMenu a').forEach(a => {
+                    // Ignorar enlaces del logo o del header
+                    if (a.classList.contains('logo-full') || a.classList.contains('logo-mini') || a.closest('.logo-full') || a.closest('.logo-mini')) {
+                        a.classList.remove('bg-white', 'text-[#39A900]', 'shadow-xs', 'font-bold');
+                        return;
+                    }
+
                     const href = a.getAttribute('href');
                     if (!href || href === '#' || href.startsWith('javascript:')) return;
                     
@@ -366,30 +389,16 @@
                     if (a.closest('.sidebar-flyout')) {
                         // Elemento dentro de tarjeta flotante
                         if (isMatch) {
-                            a.classList.add('bg-emerald-50', 'text-[#39A900]', 'font-bold');
-                            a.classList.remove('text-slate-600');
+                            a.classList.add('bg-white/15', 'text-white', 'font-bold');
                         } else {
-                            a.classList.remove('bg-emerald-50', 'text-[#39A900]', 'font-bold');
-                            a.classList.add('text-slate-600');
+                            a.classList.remove('bg-white/15', 'text-white', 'font-bold');
                         }
-                    } else {
-                        // Elemento de lista en menú normal
+                    } else if (a.classList.contains('submenu-item')) {
+                        // Elemento de lista en submenú normal
                         if (isMatch) {
-                            a.classList.add('text-[#39A900]', 'bg-white', 'shadow-xs', 'font-bold');
-                            a.classList.remove('text-slate-600');
-                            const dot = a.querySelector('.fa-circle');
-                            if (dot && dot.parentElement) {
-                                dot.parentElement.classList.add('text-[#39A900]', 'scale-125');
-                                dot.parentElement.classList.remove('text-slate-400');
-                            }
+                            a.classList.add('active-sub');
                         } else {
-                            a.classList.remove('text-[#39A900]', 'bg-white', 'shadow-xs', 'font-bold');
-                            a.classList.add('text-slate-600');
-                            const dot = a.querySelector('.fa-circle');
-                            if (dot && dot.parentElement) {
-                                dot.parentElement.classList.remove('text-[#39A900]', 'scale-125');
-                                dot.parentElement.classList.add('text-slate-400');
-                            }
+                            a.classList.remove('active-sub');
                         }
                     }
                 });
@@ -432,6 +441,9 @@
                             mainEl.innerHTML = newMain.innerHTML;
                             executeScripts(mainEl);
                             initSSTAutoDismissAlerts(mainEl);
+                            if (typeof window.initSSTCharts === 'function') {
+                                setTimeout(window.initSSTCharts, 50);
+                            }
                             mainEl.style.opacity = '1';
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                         }, 100);
@@ -624,9 +636,7 @@
                     msg = match[1];
                 }
 
-                if (msg.toLowerCase().includes('definición') || (form.action || '').includes('definiciones')) {
-                    title = '¿Eliminar Definición?';
-                } else if (msg.toLowerCase().includes('pausa') || (form.action || '').includes('pausas')) {
+                if (msg.toLowerCase().includes('pausa') || (form.action || '').includes('pausas')) {
                     title = '¿Eliminar Pausa Activa?';
                 } else if (msg.toLowerCase().includes('charla') || (form.action || '').includes('charlas')) {
                     title = '¿Eliminar Charla?';

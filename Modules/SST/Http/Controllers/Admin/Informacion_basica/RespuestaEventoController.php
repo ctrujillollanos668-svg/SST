@@ -128,17 +128,25 @@ class RespuestaEventoController extends Controller
     }
 
     /**
-     * Registrar la atención y respuesta del Administrador SST al reporte.
+     * Registrar un nuevo seguimiento/atención del Administrador SST al reporte.
      */
     public function atender(Request $request, $id)
     {
         $respuesta = RespuestaEvento::findOrFail($id);
 
         $validated = $request->validate([
-            'protocolo' => 'required|string|max:200',
-            'medidas_tomadas' => 'required|string|max:1000',
-            'estado' => 'nullable|string|max:50',
+            'proceso' => ['nullable', 'string', 'max:2000', 'regex:/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ\s.,;:()\-]+$/u'],
+            'medidas_tomadas' => 'nullable|string|max:2000',
+            'foto_proceso' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'accion' => 'nullable|string|in:guardar,finalizar',
+        ], [
+            'proceso.regex' => 'El campo Proceso no permite caracteres especiales. Solo se admiten letras, números, espacios y signos de puntuación básicos (. , : ; - ()).',
         ]);
+
+        $procesoTexto = trim($validated['proceso'] ?? $validated['medidas_tomadas'] ?? '');
+        if (empty($procesoTexto)) {
+            return back()->with('error', 'El campo Proceso es obligatorio.');
+        }
 
         $data = json_decode($respuesta->descripcion, true);
         if (!is_array($data)) {
@@ -147,24 +155,86 @@ class RespuestaEventoController extends Controller
             ];
         }
 
-        $adminName = 'Administrador SST';
-        if (auth()->check()) {
-            $adminName = auth()->user()->name ?? (auth()->user()->nombres ?? 'Administrador SST');
+        // Subir foto opcional de evidencia del proceso
+        $fotoUrl = null;
+        if ($request->hasFile('foto_proceso') && $request->file('foto_proceso')->isValid()) {
+            $path = $request->file('foto_proceso')->store('sst_seguimientos', 'public');
+            $fotoUrl = asset('storage/' . $path);
         }
 
-        $data['respuesta_admin'] = [
+        $adminName = 'Administrador SST';
+        if (auth()->check()) {
+            $adminName = auth()->user()->full_name ?? auth()->user()->name ?? (auth()->user()->nombres ?? 'Administrador SST');
+        }
+
+        // Recuperar seguimientos existentes
+        $seguimientos = $data['seguimientos'] ?? [];
+
+        // Si existía una respuesta antigua pero aún no estaba en el array de seguimientos, la migramos
+        if (empty($seguimientos) && !empty($data['respuesta_admin'])) {
+            $seguimientos[] = [
+                'id' => 1,
+                'fecha' => $data['respuesta_admin']['fecha_atencion'] ?? now()->format('d/m/Y - h:i A'),
+                'atendido_por' => $data['respuesta_admin']['atendido_por'] ?? 'Administrador SST',
+                'proceso' => $data['respuesta_admin']['medidas_tomadas'] ?? ($data['respuesta_admin']['proceso'] ?? 'Atención inicial'),
+                'foto' => $data['respuesta_admin']['foto'] ?? null,
+            ];
+        }
+
+        $nuevoSeguimiento = [
+            'id' => count($seguimientos) + 1,
+            'fecha' => now()->format('d/m/Y - h:i A'),
             'atendido_por' => $adminName,
-            'protocolo' => $validated['protocolo'],
-            'medidas_tomadas' => $validated['medidas_tomadas'],
-            'fecha_atencion' => now()->format('d/m/Y - h:i A'),
-            'estado' => $validated['estado'] ?? 'atendido',
+            'proceso' => $procesoTexto,
+            'foto' => $fotoUrl,
         ];
 
+        $seguimientos[] = $nuevoSeguimiento;
+        $data['seguimientos'] = $seguimientos;
+
+        $esFinalizado = ($request->input('accion') === 'finalizar');
+
+        $data['estado_caso'] = $esFinalizado ? 'atendido' : 'en_proceso';
+
+        // Mantenemos respuesta_admin actualizada con el último estado para compatibilidad
+        $data['respuesta_admin'] = [
+            'atendido_por' => $adminName,
+            'protocolo' => 'Seguimiento SST #' . count($seguimientos),
+            'medidas_tomadas' => $procesoTexto,
+            'fecha_atencion' => now()->format('d/m/Y - h:i A'),
+            'estado' => $esFinalizado ? 'atendido' : 'en_proceso',
+            'foto' => $fotoUrl,
+        ];
+
+        // Mantenemos el registro activo en BD (la columna estado es enum('activo', 'inactivo'))
+        $respuesta->estado = 'activo';
         $respuesta->descripcion = json_encode($data, JSON_UNESCAPED_UNICODE);
-        $respuesta->estado = $validated['estado'] ?? 'atendido';
+        $respuesta->save();
+
+        $msg = $esFinalizado 
+            ? '¡Caso finalizado y resuelto exitosamente!' 
+            : '¡Seguimiento #' . count($seguimientos) . ' guardado exitosamente!';
+
+        return redirect()->route('SST.admin.informacion_basica.respuesta_eventos.index')->with('success', $msg);
+    }
+
+    /**
+     * Finalizar y cerrar directamente un caso SST
+     */
+    public function finalizar(Request $request, $id)
+    {
+        $respuesta = RespuestaEvento::findOrFail($id);
+        $data = json_decode($respuesta->descripcion, true) ?: [];
+
+        $data['estado_caso'] = 'atendido';
+        if (isset($data['respuesta_admin'])) {
+            $data['respuesta_admin']['estado'] = 'atendido';
+        }
+        $respuesta->estado = 'activo';
+        $respuesta->descripcion = json_encode($data, JSON_UNESCAPED_UNICODE);
         $respuesta->save();
 
         return redirect()->route('SST.admin.informacion_basica.respuesta_eventos.index')
-            ->with('success', '¡Atención y respuesta registrada exitosamente! El aprendiz ya puede visualizar las medidas tomadas.');
+            ->with('success', '¡El caso ha sido marcado como Finalizado / Resuelto con éxito!');
     }
 }

@@ -740,21 +740,13 @@
                         <span class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-[11px] shadow-2xs">
                             <i class="fa-solid fa-clipboard-check"></i>
                         </span>
-                        <span>Respuesta y Medidas Tomadas por SST</span>
+                        <span>Seguimiento y Proceso SST</span>
                     </div>
                     <span id="modalDetalleRespuestaFecha" class="text-[10px] font-bold text-emerald-700 bg-emerald-100/90 px-2.5 py-0.5 rounded-lg border border-emerald-200"></span>
                 </div>
 
-                <div class="space-y-2 text-xs">
-                    <div>
-                        <span class="text-[10px] uppercase font-bold text-emerald-800/80 block">Protocolo de Atención Aplicado:</span>
-                        <p id="modalDetalleRespuestaProtocolo" class="font-extrabold text-emerald-950 text-xs"></p>
-                    </div>
-                    <div>
-                        <span class="text-[10px] uppercase font-bold text-emerald-800/80 block">Medidas y Procedimientos Ejecutados:</span>
-                        <p id="modalDetalleRespuestaMedidas" class="text-slate-700 whitespace-pre-line bg-white/70 p-2.5 rounded-xl border border-emerald-200/60"></p>
-                    </div>
-                </div>
+                <!-- Lista de Seguimientos del Administrador -->
+                <div id="modalDetalleSeguimientosLista" class="space-y-2 pt-1"></div>
             </div>
 
         </div>
@@ -1185,17 +1177,60 @@
             galContainer.classList.add('hidden');
         }
 
-        // Respuesta SST
-        const resp = data.respuesta_admin;
+        // Seguimientos y Respuesta SST (Solo Lectura)
+        let seguimientos = Array.isArray(data.seguimientos) ? data.seguimientos : [];
+        if (seguimientos.length === 0 && data.respuesta_admin) {
+            seguimientos = [{
+                id: 1,
+                fecha: data.respuesta_admin.fecha_atencion || data.respuesta_admin.fecha || 'Atendido',
+                atendido_por: data.respuesta_admin.atendido_por || data.respuesta_admin.admin_nombre || 'Administrador SST',
+                proceso: data.respuesta_admin.medidas_tomadas || data.respuesta_admin.medidas || data.respuesta_admin.proceso || 'Medidas registradas',
+                foto: data.respuesta_admin.foto || null
+            }];
+        }
+
         const respContainer = document.getElementById('modalDetalleRespuestaContainer');
         const sinRespContainer = document.getElementById('modalDetalleSinRespuestaContainer');
-        if (resp && (resp.protocolo || resp.medidas)) {
+        const listaSeguimientos = document.getElementById('modalDetalleSeguimientosLista');
+
+        if (seguimientos.length > 0) {
             respContainer.classList.remove('hidden');
             sinRespContainer.classList.add('hidden');
-            document.getElementById('modalDetalleRespuestaFecha').textContent = resp.fecha || 'Atendido';
-            document.getElementById('modalDetalleRespuestaProtocolo').textContent = resp.protocolo || 'Protocolo de Atención Estándar';
-            document.getElementById('modalDetalleRespuestaMedidas').textContent = resp.medidas || 'Revisión y verificación preventiva ejecutada.';
-            document.getElementById('modalDetalleRespuestaAdmin').textContent = resp.admin_nombre || 'Coordinador SST';
+            const ultimo = seguimientos[seguimientos.length - 1];
+            document.getElementById('modalDetalleRespuestaFecha').textContent = `${seguimientos.length} seguimiento(s) • Último: ${ultimo.fecha || ''}`;
+
+            if (listaSeguimientos) {
+                listaSeguimientos.innerHTML = '';
+                seguimientos.forEach((seg, idx) => {
+                    const num = seg.id || (idx + 1);
+                    const fotoHtml = seg.foto ? `
+                        <div class="mt-2 pt-2 border-t border-slate-100 flex items-center gap-2.5">
+                            <div class="w-12 h-12 rounded-lg overflow-hidden border border-slate-200 bg-slate-900/5 shrink-0 cursor-pointer" onclick="abrirVisorImagen('${seg.foto}', ['${seg.foto}'], 0)">
+                                <img src="${seg.foto}" alt="Foto Seguimiento" class="w-full h-full object-cover hover:scale-105 transition">
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-emerald-800 font-bold block">Foto del proceso</span>
+                                <span class="text-[9px] text-slate-400">Click para ver grande</span>
+                            </div>
+                        </div>
+                    ` : '';
+
+                    const cardEl = document.createElement('div');
+                    cardEl.className = 'bg-white/95 rounded-xl border border-emerald-200/80 p-3 shadow-2xs space-y-1';
+                    cardEl.innerHTML = `
+                        <div class="flex items-center justify-between text-[11px] pb-1 border-b border-slate-100">
+                            <div class="flex items-center gap-1.5">
+                                <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-[#064e3b] text-[9px] font-black">Seguimiento #${num}</span>
+                                <span class="font-bold text-slate-800">${seg.atendido_por || 'SST'}</span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-semibold">${seg.fecha || ''}</span>
+                        </div>
+                        <p class="text-xs text-slate-700 whitespace-pre-line leading-relaxed font-medium pt-1">${seg.proceso || ''}</p>
+                        ${fotoHtml}
+                    `;
+                    listaSeguimientos.appendChild(cardEl);
+                });
+            }
         } else {
             respContainer.classList.add('hidden');
             sinRespContainer.classList.remove('hidden');

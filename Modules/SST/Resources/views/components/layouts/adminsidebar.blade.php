@@ -3,10 +3,22 @@
     .submenu-transition {
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        margin-top: 0 !important;
+        opacity: 0;
+        pointer-events: none;
+        transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
     }
     .menu-wrapper.open .submenu-transition {
-        max-height: 440px;
+        max-height: 480px;
+        border: 1px solid #1A4B69 !important;
+        padding-top: 0.375rem !important;
+        padding-bottom: 0.375rem !important;
+        margin-top: 0.25rem !important;
+        opacity: 1;
+        pointer-events: auto;
     }
     .arrow-icon {
         transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -18,6 +30,18 @@
     /* Estilos del Sidebar */
     #sidebarMenu {
         transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .logo-full, .logo-mini {
+        background-color: transparent !important;
+        box-shadow: none !important;
+        text-decoration: none !important;
+        outline: none !important;
+    }
+    .logo-full:hover, .logo-full:active, .logo-full:focus,
+    .logo-mini:hover, .logo-mini:active, .logo-mini:focus {
+        background-color: transparent !important;
+        box-shadow: none !important;
+        outline: none !important;
     }
         /* Estilo de submódulos idéntico a la referencia con movimiento interactivo */
     .submenu-item {
@@ -130,78 +154,28 @@
     <!-- Logo & Header -->
     <div class="flex flex-col items-center pt-5 pb-4 px-3 border-b border-[#1A4B69] shrink-0">
         <!-- Logo Grande -->
-        <div class="logo-full flex flex-col items-center">
-            <div class="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-2xl p-1.5 border border-white/20 flex items-center justify-center mb-2 shadow-lg overflow-hidden">
+        <a href="{{ route('SST.admin.dashboard') }}" class="logo-full flex flex-col items-center hover:opacity-95 transition group cursor-pointer" title="Ir al Panel de Gráficas y Métricas">
+            <div class="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-2xl p-1.5 border border-white/20 flex items-center justify-center mb-2 shadow-lg overflow-hidden group-hover:scale-105 group-hover:border-[#62E31D]/50 transition-all duration-200">
                 <img src="{{ asset('img/logodesst.jpeg') }}" alt="Logo SENA SST" class="max-w-full max-h-full object-contain rounded-xl">
             </div>
-            <div class="text-[11px] text-center font-extrabold uppercase tracking-widest text-white leading-tight sidebar-text-full">
+            <div class="text-[11px] text-center font-extrabold uppercase tracking-widest text-white leading-tight sidebar-text-full group-hover:text-[#62E31D] transition-colors">
                 Sistema de Gestión <span class="text-[#62E31D]">SST</span>
             </div>
-            <div class="inline-flex items-center gap-1.5 mt-1.5 px-2.5 py-0.5 rounded-full bg-[#1A4B69] border border-[#39A900]/40 text-[10px] font-bold text-[#62E31D] sidebar-text-full">
+            <div class="inline-flex items-center gap-1.5 mt-1.5 px-2.5 py-0.5 rounded-full bg-[#1A4B69] border border-[#39A900]/40 text-[10px] font-bold text-[#62E31D] sidebar-text-full group-hover:border-[#62E31D] transition-colors">
                 <span class="w-1.5 h-1.5 rounded-full bg-[#62E31D] animate-pulse"></span>
                 La Angostura
             </div>
-        </div>
+        </a>
 
         <!-- Logo Mini (Modo Compacto) -->
-        <div class="logo-mini hidden w-11 h-11 bg-white/10 backdrop-blur-sm rounded-xl p-1 border border-white/20 items-center justify-center shadow-md overflow-hidden cursor-pointer" title="SG-SST • La Angostura">
+        <a href="{{ route('SST.admin.dashboard') }}" class="logo-mini hidden w-11 h-11 bg-white/10 backdrop-blur-sm rounded-xl p-1 border border-white/20 items-center justify-center shadow-md overflow-hidden cursor-pointer hover:scale-105 hover:border-[#62E31D]/50 transition-all duration-200" title="SG-SST • Ir a Gráficas">
             <img src="{{ asset('img/logodesst.jpeg') }}" alt="Logo SST" class="max-w-full max-h-full object-contain rounded-lg">
-        </div>
+        </a>
     </div>
 
     <!-- Navigation Menu -->
     <nav class="py-3 flex-grow overflow-y-auto space-y-1.5 px-2.5 text-xs font-semibold">
 
-        <!-- 1. DEFINICIONES -->
-        @php
-            $isDefiniciones = request()->routeIs('SST.admin.definiciones.*');
-        @endphp
-        <div class="flex flex-col menu-wrapper relative {{ $isDefiniciones ? 'open' : '' }}" id="definicionesWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isDefiniciones ? 'bg-white/10 text-white font-bold border border-white/10 shadow-xs' : 'text-white hover:text-white hover:bg-white/10' }} transition cursor-pointer group" id="btnToggleDefiniciones">
-                <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl {{ $isDefiniciones ? 'bg-[#39A900] text-white shadow-md shadow-[#39A900]/30 border border-[#62E31D]/40' : 'bg-white/10 text-white group-hover:bg-[#39A900] group-hover:text-white border border-white/5' }} flex items-center justify-center transition shrink-0">
-                        <i class="fa-solid fa-book text-xs"></i>
-                    </span>
-                    <span class="font-bold text-[13px] sidebar-text-full">Definiciones</span>
-                </div>
-                <span class="text-[10px] {{ $isDefiniciones ? 'text-[#62E31D]' : 'text-white/70 group-hover:text-white' }} arrow-icon" id="arrowDefiniciones">
-                    <i class="fa-solid fa-chevron-down"></i>
-                </span>
-            </div>
-            <!-- Acordeón Normal -->
-            <ul class="submenu-transition bg-[#071D2B]/95 rounded-xl mt-1 mx-1 p-1.5 border border-[#1A4B69] space-y-0.5">
-                @php $actDefAcc = request()->routeIs('SST.admin.definiciones.accidentes*'); @endphp
-                <li><a href="{{ route('SST.admin.definiciones.accidentes') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actDefAcc ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Accidentes</a></li>
-                @php $actDefInc = request()->routeIs('SST.admin.definiciones.incidentes*'); @endphp
-                <li><a href="{{ route('SST.admin.definiciones.incidentes') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actDefInc ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Incidentes</a></li>
-                @php $actDefRie = request()->routeIs('SST.admin.definiciones.riesgos*'); @endphp
-                <li><a href="{{ route('SST.admin.definiciones.riesgos') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actDefRie ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Riesgos</a></li>
-                @php $actDefAct = request()->routeIs('SST.admin.definiciones.actos_inseguros*'); @endphp
-                <li><a href="{{ route('SST.admin.definiciones.actos_inseguros') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actDefAct ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Actos Inseguros</a></li>
-                @php $actDefCond = request()->routeIs('SST.admin.definiciones.condiciones_inseguras*'); @endphp
-                <li><a href="{{ route('SST.admin.definiciones.condiciones_inseguras') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actDefCond ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Condiciones Inseguras</a></li>
-                @php $actDefLes = request()->routeIs('SST.admin.definiciones.lesiones*'); @endphp
-                <li><a href="{{ route('SST.admin.definiciones.lesiones') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actDefLes ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Lesiones</a></li>
-                @php $actDefEme = request()->routeIs('SST.admin.definiciones.tipos_emergencias*'); @endphp
-                <li><a href="{{ route('SST.admin.definiciones.tipos_emergencias') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actDefEme ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Condiciones de Emergencias</a></li>
-            </ul>
-            <!-- Tarjeta Flotante (Flyout Mini) -->
-            <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-[#1A4B69] flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-[#62E31D]"></span>
-                    <span class="font-extrabold text-xs text-white">Definiciones</span>
-                </div>
-                <div class="py-1 space-y-0.5">
-                    <a href="{{ route('SST.admin.definiciones.accidentes') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actDefAcc ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Accidentes</span> @if($actDefAcc)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
-                    <a href="{{ route('SST.admin.definiciones.incidentes') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actDefInc ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Incidentes</span> @if($actDefInc)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
-                    <a href="{{ route('SST.admin.definiciones.riesgos') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actDefRie ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Riesgos</span> @if($actDefRie)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
-                    <a href="{{ route('SST.admin.definiciones.actos_inseguros') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actDefAct ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Actos Inseguros</span> @if($actDefAct)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
-                    <a href="{{ route('SST.admin.definiciones.condiciones_inseguras') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actDefCond ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Condiciones Inseguras</span> @if($actDefCond)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
-                    <a href="{{ route('SST.admin.definiciones.lesiones') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actDefLes ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Lesiones</span> @if($actDefLes)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
-                    <a href="{{ route('SST.admin.definiciones.tipos_emergencias') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actDefEme ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Condiciones Emergencias</span> @if($actDefEme)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
-                </div>
-            </div>
-        </div>
 
         <!-- 2. TIPOS DE EVENTOS -->
         @php
@@ -371,38 +345,6 @@
             </div>
         </div>
 
-        <!-- 6. INDICADORES SST -->
-        @php
-            $isIndicadores = request()->routeIs('SST.admin.indicadores.*');
-        @endphp
-        <div class="flex flex-col menu-wrapper relative {{ $isIndicadores ? 'open' : '' }}" id="indicadoresWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isIndicadores ? 'bg-white/10 text-white font-bold border border-white/10 shadow-xs' : 'text-white hover:text-white hover:bg-white/10' }} transition cursor-pointer group" id="btnToggleIndicadores">
-                <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl {{ $isIndicadores ? 'bg-[#39A900] text-white shadow-md shadow-[#39A900]/30 border border-[#62E31D]/40' : 'bg-white/10 text-white group-hover:bg-[#39A900] group-hover:text-white border border-white/5' }} flex items-center justify-center transition shrink-0">
-                        <i class="fa-solid fa-chart-pie text-xs"></i>
-                    </span>
-                    <span class="font-bold text-[13px] sidebar-text-full">Indicadores SST</span>
-                </div>
-                <span class="text-[10px] {{ $isIndicadores ? 'text-[#62E31D]' : 'text-white/70 group-hover:text-white' }} arrow-icon" id="arrowIndicadores">
-                    <i class="fa-solid fa-chevron-down"></i>
-                </span>
-            </div>
-            <!-- Acordeón Normal -->
-            <ul class="submenu-transition bg-[#071D2B]/95 rounded-xl mt-1 mx-1 p-1.5 border border-[#1A4B69] space-y-0.5">
-                @php $actIndVer = request()->routeIs('SST.admin.indicadores.index'); @endphp
-                <li><a href="{{ route('SST.admin.indicadores.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actIndVer ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Ver Indicadores</a></li>
-            </ul>
-            <!-- Tarjeta Flotante (Flyout Mini) -->
-            <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-[#1A4B69] flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-[#62E31D]"></span>
-                    <span class="font-extrabold text-xs text-white">Indicadores SST</span>
-                </div>
-                <div class="py-1 space-y-0.5">
-                    <a href="{{ route('SST.admin.indicadores.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actIndVer ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Ver Indicadores</span> @if($actIndVer)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
-                </div>
-            </div>
-        </div>
 
         <!-- 7. GESTIÓN USUARIOS -->
         @php
@@ -471,12 +413,10 @@
             }
         };
 
-        toggleMenu('btnToggleDefiniciones', 'definicionesWrapper');
         toggleMenu('btnToggleTiposEventos', 'tiposEventosWrapper');
         toggleMenu('btnToggleInformacionBasica', 'informacionBasicaWrapper');
         toggleMenu('btnToggleInspecciones', 'inspeccionesWrapper');
         toggleMenu('btnTogglePausas', 'pausasWrapper');
-        toggleMenu('btnToggleIndicadores', 'indicadoresWrapper');
         toggleMenu('btnToggleUsuarios', 'usuariosWrapper');
 
         // Mover instantáneamente el efecto activo al hacer clic en cualquier submódulo

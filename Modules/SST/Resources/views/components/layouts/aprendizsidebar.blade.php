@@ -2,10 +2,22 @@
     .submenu-transition {
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        margin-top: 0 !important;
+        opacity: 0;
+        pointer-events: none;
+        transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
     }
     .menu-wrapper.open .submenu-transition {
-        max-height: 420px;
+        max-height: 480px;
+        border: 1px solid #1A4B69 !important;
+        padding-top: 0.375rem !important;
+        padding-bottom: 0.375rem !important;
+        margin-top: 0.25rem !important;
+        opacity: 1;
+        pointer-events: auto;
     }
     .arrow-icon {
         transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -15,6 +27,18 @@
     }
     #sidebarMenu {
         transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .logo-full, .logo-mini {
+        background-color: transparent !important;
+        box-shadow: none !important;
+        text-decoration: none !important;
+        outline: none !important;
+    }
+    .logo-full:hover, .logo-full:active, .logo-full:focus,
+    .logo-mini:hover, .logo-mini:active, .logo-mini:focus {
+        background-color: transparent !important;
+        box-shadow: none !important;
+        outline: none !important;
     }
         /* Estilo de submódulos idéntico a la referencia */
     /* Estilo de submódulos idéntico a la referencia con movimiento interactivo */
@@ -128,8 +152,8 @@
     <!-- Logo & Header -->
     <div class="flex flex-col items-center pt-5 pb-4 px-3 border-b border-[#1A4B69] shrink-0">
         <!-- Logo Grande -->
-        <div class="logo-full flex flex-col items-center">
-            <div class="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-2xl p-1.5 border border-white/20 flex items-center justify-center mb-2 shadow-lg overflow-hidden">
+        <a href="{{ route('SST.aprendiz.dashboard') }}" class="logo-full flex flex-col items-center hover:opacity-95 transition group cursor-pointer" title="Ir al Panel de Gráficas y Métricas">
+            <div class="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-2xl p-1.5 border border-white/20 flex items-center justify-center mb-2 shadow-lg overflow-hidden group-hover:scale-105 group-hover:border-[#62E31D]/50 transition-all duration-200">
                 <img src="{{ asset('img/logodesst.jpeg') }}" alt="Logo SENA SST" class="max-w-full max-h-full object-contain rounded-xl">
             </div>
             <div class="text-[11px] text-center font-extrabold uppercase tracking-widest text-white leading-tight sidebar-text-full">
@@ -139,42 +163,17 @@
                 <span class="w-1.5 h-1.5 rounded-full bg-[#62E31D] animate-pulse"></span>
                 La Angostura
             </div>
-        </div>
+        </a>
 
         <!-- Logo Mini -->
-        <div class="logo-mini hidden w-11 h-11 bg-white/10 backdrop-blur-sm rounded-xl p-1 border border-white/20 items-center justify-center shadow-md overflow-hidden cursor-pointer" title="SG-SST • La Angostura">
+        <a href="{{ route('SST.aprendiz.dashboard') }}" class="logo-mini hidden w-11 h-11 bg-white/10 backdrop-blur-sm rounded-xl p-1 border border-white/20 items-center justify-center shadow-md overflow-hidden cursor-pointer hover:scale-105 hover:border-[#62E31D]/50 transition-all duration-200" title="SG-SST • Ir a Gráficas">
             <img src="{{ asset('img/logodesst.jpeg') }}" alt="Logo SST" class="max-w-full max-h-full object-contain rounded-lg">
-        </div>
+        </a>
     </div>
 
     <!-- Navigation Menu -->
     <nav class="py-3 flex-grow overflow-y-auto space-y-1.5 px-2.5 text-xs font-semibold">
 
-        <!-- DEFINICIONES (Enlace Único Directo al Glosario Completo) -->
-        @php
-            $isDefiniciones = request()->routeIs('SST.aprendiz.definiciones*');
-        @endphp
-        <div class="relative menu-wrapper">
-            <a href="{{ route('SST.aprendiz.definiciones') }}" 
-               class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isDefiniciones ? 'bg-white/10 text-white font-bold border border-white/10 shadow-xs' : 'text-white hover:text-white hover:bg-white/10' }} transition group cursor-pointer"
-               title="Definiciones SST">
-                <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl {{ $isDefiniciones ? 'bg-[#39A900] text-white shadow-md shadow-[#39A900]/30 border border-[#62E31D]/40' : 'bg-white/10 text-white group-hover:bg-[#39A900] group-hover:text-white border border-white/5' }} flex items-center justify-center transition shrink-0">
-                        <i class="fa-solid fa-book text-xs"></i>
-                    </span>
-                    <span class="font-bold text-[13px] sidebar-text-full">Definiciones</span>
-                </div>
-            </a>
-            <!-- Tarjeta Flotante (Flyout Mini) -->
-            <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-[#1A4B69]">
-                    <a href="{{ route('SST.aprendiz.definiciones') }}" class="font-extrabold text-xs text-white hover:text-[#62E31D] flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-[#62E31D]"></span>
-                        <span>Definiciones SST</span>
-                    </a>
-                </div>
-            </div>
-        </div>
 
         <!-- TIPOS DE EVENTOS -->
         @php
@@ -375,66 +374,27 @@
             </div>
         </div>
 
-        <!-- ACTIVIDADES SST -->
+        <!-- ACTIVIDADES SST (Enlace Único Directo) -->
         @php
             $isActividades = request()->routeIs('SST.aprendiz.actividades_sst.*');
         @endphp
-        <div class="flex flex-col menu-wrapper relative {{ $isActividades ? 'open' : '' }}" id="pausasWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isActividades ? 'bg-white/10 text-white font-bold border border-white/10 shadow-xs' : 'text-white hover:text-white hover:bg-white/10' }} transition cursor-pointer group" id="btnTogglePausas">
+        <div class="relative menu-wrapper">
+            <a href="{{ route('SST.aprendiz.actividades_sst.index') }}" 
+               class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isActividades ? 'bg-white/10 text-white font-bold border border-white/10 shadow-xs' : 'text-white hover:text-white hover:bg-white/10' }} transition group cursor-pointer"
+               title="Actividades SST">
                 <div class="flex items-center gap-3">
                     <span class="w-8 h-8 rounded-xl {{ $isActividades ? 'bg-[#39A900] text-white shadow-md shadow-[#39A900]/30 border border-[#62E31D]/40' : 'bg-white/10 text-white group-hover:bg-[#39A900] group-hover:text-white border border-white/5' }} flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-person-chalkboard text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Actividades SST</span>
                 </div>
-                <span class="text-[10px] {{ $isActividades ? 'text-[#62E31D]' : 'text-white/70 group-hover:text-white' }} arrow-icon" id="arrowPausas">
-                    <i class="fa-solid fa-chevron-down"></i>
-                </span>
-            </div>
-            <!-- Acordeón Normal -->
-            <ul class="submenu-transition bg-[#071D2B]/95 rounded-xl mt-1 mx-1 p-1.5 border border-[#1A4B69] space-y-0.5">
-                @php $actPausas = request()->routeIs('SST.aprendiz.actividades_sst.pausas_activas.*'); @endphp
-                <li>
-                    <a href="{{ route('SST.aprendiz.actividades_sst.pausas_activas.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actPausas ? 'active-sub' : '' }}">
-                        <span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> 
-                        Pausas Activas
-                    </a>
-                </li>
-                @php $actCharlas = request()->routeIs('SST.aprendiz.actividades_sst.charlas.*'); @endphp
-                <li>
-                    <a href="{{ route('SST.aprendiz.actividades_sst.charlas.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actCharlas ? 'active-sub' : '' }}">
-                        <span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> 
-                        Charlas
-                    </a>
-                </li>
-                @php $actSensib = request()->routeIs('SST.aprendiz.actividades_sst.sensibilizacion.*'); @endphp
-                <li>
-                    <a href="{{ route('SST.aprendiz.actividades_sst.sensibilizacion.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actSensib ? 'active-sub' : '' }}">
-                        <span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> 
-                        Sensibilización
-                    </a>
-                </li>
-            </ul>
+            </a>
             <!-- Tarjeta Flotante (Flyout Mini) -->
             <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-[#1A4B69] flex items-center justify-between">
-                    <span class="font-extrabold text-xs text-white flex items-center gap-1.5">
+                <div class="px-3 py-2 border-b border-[#1A4B69]">
+                    <a href="{{ route('SST.aprendiz.actividades_sst.index') }}" class="font-extrabold text-xs text-white hover:text-[#62E31D] flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-[#62E31D]"></span>
                         <span>Actividades SST</span>
-                    </span>
-                </div>
-                <div class="py-1 space-y-0.5">
-                    <a href="{{ route('SST.aprendiz.actividades_sst.pausas_activas.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actPausas ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}">
-                        <span>Pausas Activas</span>
-                        @if($actPausas)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif
-                    </a>
-                    <a href="{{ route('SST.aprendiz.actividades_sst.charlas.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actCharlas ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}">
-                        <span>Charlas</span>
-                        @if($actCharlas)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif
-                    </a>
-                    <a href="{{ route('SST.aprendiz.actividades_sst.sensibilizacion.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actSensib ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}">
-                        <span>Sensibilización</span>
-                        @if($actSensib)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif
                     </a>
                 </div>
             </div>
@@ -500,7 +460,6 @@
 
         toggleMenu('btnToggleTiposEventos', 'tiposEventosWrapper');
         toggleMenu('btnToggleInspecciones', 'inspeccionesWrapper');
-        toggleMenu('btnTogglePausas', 'pausasWrapper');
 
         // Mover instantáneamente el efecto activo al hacer clic en cualquier submódulo
         document.querySelectorAll('.submenu-item').forEach(function(item) {
