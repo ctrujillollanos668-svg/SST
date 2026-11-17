@@ -52,13 +52,17 @@ class CharlasController extends Controller
         $actividad = ActividadSST::where('tipo_actividad', 'Charla')->findOrFail($id);
 
         $validated = $request->validate([
-            'ficha_programa' => 'nullable|string|max:150',
-            'instructor' => 'nullable|string|max:150',
-            'responsable' => 'nullable|string|max:150',
+            'ficha_programa' => ['nullable', 'string', 'max:20', 'regex:/^[0-9]+$/'],
+            'instructor' => ['nullable', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'responsable' => ['nullable', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
             'numero_asistentes' => 'nullable|integer|min:0',
             'participantes' => 'nullable|string',
-            'observaciones' => 'nullable|string',
+            'observaciones' => 'nullable|string|max:500',
             'estado' => 'required|in:Programada,Realizada,Cancelada'
+        ], [
+            'ficha_programa.regex' => 'El código de la ficha solo debe contener números sin espacios ni caracteres especiales.',
+            'instructor.regex' => 'El nombre del instructor o instructora solo debe contener letras y espacios.',
+            'responsable.regex' => 'El nombre del responsable de SST solo debe contener letras y espacios.',
         ]);
 
         $validated['numero_asistentes'] = !empty($validated['numero_asistentes']) ? (int) $validated['numero_asistentes'] : 0;

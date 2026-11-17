@@ -30,7 +30,7 @@
     @endif
 
     <!-- Tarjeta Principal Unificada -->
-    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs min-h-[460px] flex flex-col justify-between">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs min-h-[460px] flex flex-col justify-between border-t-4 border-t-[#39A900]">
         
         <div>
             <!-- Encabezado Superior -->
@@ -71,7 +71,7 @@
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
                         <input type="text" id="inputBuscarInspeccion" onkeyup="filtrarInspecciones()" placeholder="Buscar en seguimiento..." 
-                            class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
+                            class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition">
                     </div>
                 </div>
 
@@ -120,7 +120,7 @@
                         @endphp
                         
                         <!-- Tarjeta de Inspección -->
-                        <div class="item-card bg-slate-50/70 hover:bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-orange-300 transition-all flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 cursor-pointer group"
+                        <div class="item-card bg-slate-50/70 hover:bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-emerald-300 transition-all flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 cursor-pointer group"
                              onclick="abrirModalDetalle(this)"
                              data-raw="{{ $encodedItem }}"
                              data-item="{{ htmlspecialchars(json_encode($payloadItem, JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8') }}"
@@ -130,11 +130,11 @@
                             @if(!empty($fotoPrincipal))
                                 <div onclick="event.stopPropagation(); abrirVisorImagen('{{ $fotoPrincipal }}', {{ json_encode($evidencias) }}, 0)"
                                      title="Ver fotografía de evidencia"
-                                     class="relative w-16 h-16 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 border-orange-200 bg-slate-900/5 shrink-0 group-hover:border-orange-500 transition shadow-2xs cursor-pointer group/thumb">
+                                     class="relative w-16 h-16 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 border-emerald-200 bg-slate-900/5 shrink-0 group-hover:border-[#39A900] transition shadow-2xs cursor-pointer group/thumb">
                                     <img src="{{ $fotoPrincipal }}" alt="Evidencia" class="w-full h-full object-cover group-hover/thumb:scale-110 transition duration-300">
                                     @if($totalFotos > 1)
                                         <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-slate-900/85 text-white text-[8px] font-extrabold flex items-center gap-0.5 shadow-xs">
-                                            <i class="fa-solid fa-camera text-orange-400 text-[7px]"></i> +{{ $totalFotos }}
+                                            <i class="fa-solid fa-camera text-[#39A900] text-[7px]"></i> +{{ $totalFotos }}
                                         </span>
                                     @endif
                                     <div class="absolute inset-0 bg-slate-900/25 opacity-0 group-hover/thumb:opacity-100 transition flex items-center justify-center">
@@ -142,8 +142,8 @@
                                     </div>
                                 </div>
                             @else
-                                <div class="w-16 h-16 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200/80 flex flex-col items-center justify-center text-orange-500 shrink-0 shadow-2xs group-hover:border-orange-400 transition">
-                                    <i class="fa-solid fa-clipboard-check text-2xl text-orange-500"></i>
+                                <div class="w-16 h-16 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200/80 flex flex-col items-center justify-center text-[#39A900] shrink-0 shadow-2xs group-hover:border-[#39A900]/60 transition">
+                                    <i class="fa-solid fa-clipboard-check text-2xl text-[#39A900]"></i>
                                 </div>
                             @endif
 
@@ -153,8 +153,8 @@
                                 <!-- Fila 1: Título (Tipo de Hallazgo) y En Seguimiento -->
                                 <div class="flex flex-wrap items-center justify-between gap-2">
                                     <h3 class="font-extrabold text-slate-900 text-sm sm:text-base flex items-center gap-2">
-                                        <span class="w-2.5 h-2.5 rounded-full {{ str_contains(strtolower($item->tipo_inspeccion), 'condici') ? 'bg-rose-500' : 'bg-orange-500' }} shrink-0"></span>
-                                        <span class="group-hover:text-orange-600 transition-colors">{{ $item->tipo_inspeccion }}</span>
+                                        <span class="w-2.5 h-2.5 rounded-full {{ str_contains(strtolower($item->tipo_inspeccion), 'condici') ? 'bg-rose-500' : 'bg-emerald-500' }} shrink-0"></span>
+                                        <span class="group-hover:text-[#39A900] transition-colors">{{ $item->tipo_inspeccion }}</span>
                                     </h3>
 
                                     <div class="flex items-center gap-2">
@@ -168,27 +168,27 @@
                                 <!-- Fila 2: Chips informativos con TODOS los campos del formulario -->
                                 <div class="flex flex-wrap items-center gap-2 text-[11px] font-medium text-slate-600">
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Lugar de Formación">
-                                        <i class="fa-solid fa-location-dot text-orange-500 text-[10px]"></i>
+                                        <i class="fa-solid fa-location-dot text-[#39A900] text-[10px]"></i>
                                         <span class="text-slate-400 font-semibold">Lugar de Formación:</span>
                                         <strong class="font-bold text-slate-700">{{ $lugarNombre }}</strong>
                                     </span>
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Fecha de Inspección">
-                                        <i class="fa-regular fa-calendar text-orange-500 text-[10px]"></i>
+                                        <i class="fa-regular fa-calendar text-[#39A900] text-[10px]"></i>
                                         <span class="text-slate-400 font-semibold">Fecha de Inspección:</span>
                                         <strong class="font-bold text-slate-700">{{ $fechaSolo }}</strong>
                                     </span>
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Nombre del Responsable">
-                                        <i class="fa-solid fa-user text-orange-500 text-[10px]"></i>
+                                        <i class="fa-solid fa-user text-[#39A900] text-[10px]"></i>
                                         <span class="text-slate-400 font-semibold">Responsable:</span>
                                         <strong class="font-bold text-slate-700">{{ $responsable }}</strong>
                                     </span>
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Líder de Unidad">
-                                        <i class="fa-solid fa-building-user text-orange-500 text-[10px]"></i>
+                                        <i class="fa-solid fa-building-user text-[#39A900] text-[10px]"></i>
                                         <span class="text-slate-400 font-semibold">Líder de Unidad:</span>
                                         <strong class="font-bold text-slate-700">{{ (!empty($unidad) && $unidad !== 'Coordinación SST') ? $unidad : 'Sin asignar' }}</strong>
                                     </span>
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Evidencia Fotográfica">
-                                        <i class="fa-solid fa-camera text-orange-500 text-[10px]"></i>
+                                        <i class="fa-solid fa-camera text-[#39A900] text-[10px]"></i>
                                         <span class="text-slate-400 font-semibold">Evidencia Fotográfica:</span>
                                         <strong class="font-bold text-slate-700">{{ $totalFotos > 0 ? $totalFotos . ' foto(s)' : 'Sin fotografías' }}</strong>
                                     </span>
@@ -201,7 +201,7 @@
                                     </p>
                                     
                                     <div class="flex items-center gap-1.5 shrink-0" onclick="event.stopPropagation()">
-                                        <button type="button" onclick="event.stopPropagation(); abrirModalEdicion(this.closest('.item-card'))" class="w-8 h-8 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-600 border border-orange-200/80 flex items-center justify-center transition cursor-pointer shadow-2xs" title="Editar reporte">
+                                        <button type="button" onclick="event.stopPropagation(); abrirModalEdicion(this.closest('.item-card'))" class="w-8 h-8 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#39A900] border border-emerald-200/80 flex items-center justify-center transition cursor-pointer shadow-2xs" title="Editar reporte">
                                             <i class="fa-solid fa-pen-to-square text-xs"></i>
                                         </button>
                                         <form action="{{ route('SST.aprendiz.inspecciones.destroy', $item->id_inspeccion) }}" method="POST" class="inline-block">
@@ -228,8 +228,8 @@
                                 Todas las inspecciones se encuentran atendidas o sin seguimiento pendiente en este momento.
                             </p>
                             <div class="mt-4">
-                                <a href="{{ route('SST.aprendiz.inspecciones.registrar') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:text-orange-600 hover:border-orange-300 transition shadow-2xs">
-                                    <i class="fa-solid fa-plus text-orange-500"></i> Registrar nueva inspección
+                                <a href="{{ route('SST.aprendiz.inspecciones.registrar') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:text-[#39A900] hover:border-emerald-300 transition shadow-2xs">
+                                    <i class="fa-solid fa-plus text-[#39A900]"></i> Registrar nueva inspección
                                 </a>
                             </div>
                         </div>
@@ -251,7 +251,7 @@
         <!-- Encabezado del Modal -->
         <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 shrink-0">
             <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-orange-50 border border-orange-200/80 text-orange-600 flex items-center justify-center text-sm shadow-2xs shrink-0">
+                <div class="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200/80 text-[#39A900] flex items-center justify-center text-sm shadow-2xs shrink-0">
                     <i class="fa-solid fa-file-shield"></i>
                 </div>
                 <div>
@@ -275,7 +275,7 @@
             <!-- Fila 1: Título y Badges -->
             <div class="flex flex-wrap items-center justify-between gap-2">
                 <h3 id="detalleTipo" class="text-base sm:text-lg font-extrabold text-slate-900 flex items-center gap-2">
-                    <span id="detalleDotTipo" class="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0"></span>
+                    <span id="detalleDotTipo" class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
                     <span id="detalleTipoTexto"></span>
                 </h3>
 
@@ -288,28 +288,28 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200/80">
                 <div class="space-y-0.5">
                     <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-                        <i class="fa-solid fa-location-dot text-orange-500 text-[9px]"></i> Lugar de Formación
+                        <i class="fa-solid fa-location-dot text-[#39A900] text-[9px]"></i> Lugar de Formación
                     </span>
                     <p id="detalleLugar" class="font-extrabold text-slate-800 text-xs sm:text-sm"></p>
                 </div>
 
                 <div class="space-y-0.5">
                     <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-                        <i class="fa-regular fa-calendar text-orange-500 text-[9px]"></i> Fecha de Inspección
+                        <i class="fa-regular fa-calendar text-[#39A900] text-[9px]"></i> Fecha de Inspección
                     </span>
                     <p id="detalleFecha" class="font-semibold text-slate-800 text-xs sm:text-sm"></p>
                 </div>
 
                 <div class="space-y-0.5 pt-1 border-t border-slate-200/50 sm:border-0 sm:pt-0">
                     <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-                        <i class="fa-solid fa-user text-orange-500 text-[9px]"></i> Responsable
+                        <i class="fa-solid fa-user text-[#39A900] text-[9px]"></i> Responsable
                     </span>
-                    <p id="detalleResponsable" class="font-bold text-orange-600 text-xs sm:text-sm"></p>
+                    <p id="detalleResponsable" class="font-bold text-[#39A900] text-xs sm:text-sm"></p>
                 </div>
 
                 <div class="space-y-0.5 pt-1 border-t border-slate-200/50 sm:border-0 sm:pt-0">
                     <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-                        <i class="fa-solid fa-building-user text-orange-500 text-[9px]"></i> Líder de Unidad
+                        <i class="fa-solid fa-building-user text-[#39A900] text-[9px]"></i> Líder de Unidad
                     </span>
                     <p id="detalleLider" class="font-semibold text-slate-700 text-xs sm:text-sm"></p>
                 </div>
@@ -341,7 +341,7 @@
             <div id="detalleFotosContainer" class="space-y-1.5 hidden">
                 <div class="flex items-center justify-between">
                     <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                        <i class="fa-solid fa-camera text-orange-500"></i> Evidencias Fotográficas
+                        <i class="fa-solid fa-camera text-[#39A900]"></i> Evidencias Fotográficas
                     </label>
                     <span id="detalleTotalFotosTexto" class="text-[10px] font-bold text-slate-400"></span>
                 </div>
@@ -357,7 +357,7 @@
                 Cerrar
             </button>
 
-            <button type="button" id="btnEditarDesdeDetalle" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200 text-orange-700 border border-orange-200/90 text-xs font-bold shadow-xs transition cursor-pointer">
+            <button type="button" id="btnEditarDesdeDetalle" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-[#2d8500] border border-emerald-200 text-xs font-bold shadow-xs transition cursor-pointer">
                 <i class="fa-solid fa-pen-to-square text-xs"></i>
                 <span>Editar Inspección</span>
             </button>
@@ -375,7 +375,7 @@
         <!-- Header del Visor -->
         <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100 shrink-0 bg-white">
             <div class="flex items-center gap-2">
-                <div class="w-7 h-7 rounded-lg bg-orange-50 border border-orange-200 text-orange-600 flex items-center justify-center text-xs">
+                <div class="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200 text-[#39A900] flex items-center justify-center text-xs">
                     <i class="fa-solid fa-camera"></i>
                 </div>
                 <div>
@@ -408,7 +408,7 @@
         <!-- Footer del Visor -->
         <div class="flex items-center justify-between px-4 py-2.5 border-t border-slate-100 bg-slate-50/70 shrink-0">
             <span class="text-[10px] text-slate-400 font-medium flex items-center gap-1">
-                <i class="fa-regular fa-eye text-orange-500 text-[10px]"></i> Visualización en pantalla
+                <i class="fa-regular fa-eye text-[#39A900] text-[10px]"></i> Visualización en pantalla
             </span>
             <button type="button" onclick="cerrarVisorImagen()" class="px-4 py-1.5 rounded-xl bg-white border border-slate-200/80 hover:bg-slate-100 text-slate-700 text-xs font-bold transition shadow-2xs cursor-pointer">
                 Cerrar
@@ -422,12 +422,12 @@
 <!-- MODAL DE EDICIÓN                                                  -->
 <!-- ================================================================= -->
 <div id="modalEdicion" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center hidden p-3 sm:p-4 overflow-y-auto" onclick="closeModalEdicion()">
-    <div class="bg-white rounded-3xl shadow-2xl border-t-[6px] border-orange-500 border-x border-b border-slate-100 w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-150 my-auto relative" onclick="event.stopPropagation()">
+    <div class="bg-white rounded-3xl shadow-2xl border-t-[6px] border-[#39A900] border-x border-b border-slate-100 w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-150 my-auto relative" onclick="event.stopPropagation()">
 
         <div class="p-5 sm:p-6">
             <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200/80 text-orange-600 flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200/80 text-[#39A900] flex items-center justify-center shrink-0">
                         <i class="fa-solid fa-pen-to-square text-sm"></i>
                     </div>
                     <div>
@@ -457,7 +457,7 @@
                         <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                             <i class="fa-solid fa-user text-[11px]"></i>
                         </span>
-                        <input type="text" name="responsable" id="editInputResponsable" required class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-xs font-semibold text-slate-800 placeholder:text-slate-400">
+                        <input type="text" name="responsable" id="editInputResponsable" required maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-[#39A900]/20 transition text-xs font-semibold text-slate-800 placeholder:text-slate-400">
                     </div>
                 </div>
 
@@ -470,7 +470,7 @@
                             <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                                 <i class="fa-solid fa-location-dot text-[11px]"></i>
                             </span>
-                            <select name="lugar_id" id="editInputLugar" required class="w-full pl-8 pr-7 py-2 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-xs font-semibold text-slate-800 appearance-none cursor-pointer">
+                            <select name="lugar_id" id="editInputLugar" required class="w-full pl-8 pr-7 py-2 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-[#39A900]/20 transition text-xs font-semibold text-slate-800 appearance-none cursor-pointer">
                                 <option value="" disabled>Ambiente...</option>
                                 @forelse($lugares as $lug)
                                     <option value="{{ $lug->id_lugar }}">{{ $lug->nombre }}</option>
@@ -491,7 +491,7 @@
                             <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                                 <i class="fa-solid fa-building-user text-[11px]"></i>
                             </span>
-                            <input type="text" name="lider_unidad" id="editInputLiderUnidad" placeholder="Ej: Ing. Carlos / TIC" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-xs font-semibold text-slate-800 placeholder:text-slate-400">
+                            <input type="text" name="lider_unidad" id="editInputLiderUnidad" maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Ej: Ing. Carlos / TIC" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-[#39A900]/20 transition text-xs font-semibold text-slate-800 placeholder:text-slate-400">
                         </div>
                     </div>
                 </div>
@@ -503,7 +503,7 @@
                         <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                             <i class="fa-regular fa-calendar text-[11px]"></i>
                         </span>
-                        <input type="date" name="fecha_inspeccion" id="editInputFechaInspeccion" required class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-xs font-semibold text-slate-800">
+                        <input type="date" name="fecha_inspeccion" id="editInputFechaInspeccion" required class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-[#39A900]/20 transition text-xs font-semibold text-slate-800">
                     </div>
                 </div>
 
@@ -511,7 +511,7 @@
                 <div class="space-y-1">
                     <label class="block text-[11px] font-bold text-slate-700">Tipo de Hallazgo *</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div id="editCardActos" onclick="toggleEditReporte('Actos')" class="p-2 rounded-xl border border-slate-200 bg-white hover:border-orange-300 transition-all cursor-pointer select-none flex items-center justify-between">
+                        <div id="editCardActos" onclick="toggleEditReporte('Actos')" class="p-2 rounded-xl border border-slate-200 bg-white hover:border-emerald-300 transition-all cursor-pointer select-none flex items-center justify-between">
                             <span class="text-[11px] font-bold text-slate-800">Actos Inseguros</span>
                             <div id="editCheckIndicatorActos" class="w-4 h-4 rounded border border-slate-300 flex items-center justify-center shrink-0">
                                 <i class="fa-solid fa-check text-[9px] text-white opacity-0"></i>
@@ -519,7 +519,7 @@
                             <input type="checkbox" name="check_actos" id="editCheckActos" value="1" class="hidden">
                         </div>
 
-                        <div id="editCardCondiciones" onclick="toggleEditReporte('Condiciones')" class="p-2 rounded-xl border border-slate-200 bg-white hover:border-orange-300 transition-all cursor-pointer select-none flex items-center justify-between">
+                        <div id="editCardCondiciones" onclick="toggleEditReporte('Condiciones')" class="p-2 rounded-xl border border-slate-200 bg-white hover:border-emerald-300 transition-all cursor-pointer select-none flex items-center justify-between">
                             <span class="text-[11px] font-bold text-slate-800">Condiciones Inseguras</span>
                             <div id="editCheckIndicatorCondiciones" class="w-4 h-4 rounded border border-slate-300 flex items-center justify-center shrink-0">
                                 <i class="fa-solid fa-check text-[9px] text-white opacity-0"></i>
@@ -535,40 +535,40 @@
                         <label class="block text-[11px] font-bold text-slate-700">Descripción *</label>
                         <span class="text-[10px] font-bold text-slate-400 font-mono" id="editContadorPalabras">0/700 palabras</span>
                     </div>
-                    <textarea name="descripcion" id="editInputDescripcion" rows="2" required oninput="contarPalabrasEdit(this)" placeholder="Describa el hallazgo..." class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-xs font-medium text-slate-800 resize-none leading-snug"></textarea>
+                    <textarea name="descripcion" id="editInputDescripcion" rows="2" required maxlength="1000" oninput="contarPalabrasEdit(this)" placeholder="Describa el hallazgo..." class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-[#39A900]/20 transition text-xs font-medium text-slate-800 resize-none leading-snug"></textarea>
                 </div>
 
                 <!-- 6. Evidencia Fotográfica -->
                 <div class="space-y-1">
                     <div class="flex items-center justify-between">
                         <label class="block text-[11px] font-bold text-slate-700">Evidencia Fotográfica</label>
-                        <span class="text-[10px] font-bold text-orange-600 font-mono" id="editContadorFotos">0/3 imágenes</span>
+                        <span class="text-[10px] font-bold text-[#39A900] font-mono" id="editContadorFotos">0/3 imágenes</span>
                     </div>
                     <input type="file" name="fotos[]" id="editInputFotosFiles" accept="image/*" multiple onchange="manejarFotosEdit(event)" class="hidden">
                     <input type="hidden" name="fotos_base64" id="editInputFotosBase64">
                     
-                    <label for="editInputFotosFiles" class="border border-dashed border-slate-300 hover:border-orange-400 hover:bg-orange-50/30 rounded-xl px-3 py-2 flex items-center justify-between cursor-pointer bg-slate-50/40 transition">
-                        <span class="text-[11px] font-semibold text-slate-700"><i class="fa-solid fa-camera mr-1 text-orange-500"></i> Cambiar / Añadir fotografías</span>
+                    <label for="editInputFotosFiles" class="border border-dashed border-slate-300 hover:border-[#39A900]/60 hover:bg-emerald-50/30 rounded-xl px-3 py-2 flex items-center justify-between cursor-pointer bg-slate-50/40 transition">
+                        <span class="text-[11px] font-semibold text-slate-700"><i class="fa-solid fa-camera mr-1 text-[#39A900]"></i> Cambiar / Añadir fotografías</span>
                         <span class="text-[10px] text-slate-400">Máx. 3</span>
                     </label>
                     <div id="editFotosPreviewContainer" class="flex flex-wrap gap-2 pt-1 hidden"></div>
                 </div>
 
                 <!-- 7. Sección Condicional: Fecha de Seguimiento -->
-                <div id="editSeccionFechaSeguimiento" class="p-3 rounded-2xl bg-orange-50/80 border border-orange-200/80 space-y-1.5 transition-all">
+                <div id="editSeccionFechaSeguimiento" class="p-3 rounded-2xl bg-emerald-50/80 border border-emerald-200/80 space-y-1.5 transition-all">
                     <div class="flex items-center justify-between">
-                        <label class="block text-[11px] font-bold text-orange-800">
-                            <i class="fa-regular fa-calendar-check mr-1 text-orange-600"></i> Fecha Límite de Seguimiento *
+                        <label class="block text-[11px] font-bold text-emerald-800">
+                            <i class="fa-regular fa-calendar-check mr-1 text-[#39A900]"></i> Fecha Límite de Seguimiento *
                         </label>
-                        <span class="text-[10px] text-orange-600 font-semibold">Plazo de verificación</span>
+                        <span class="text-[10px] text-[#39A900] font-semibold">Plazo de verificación</span>
                     </div>
-                    <input type="date" name="fecha_seguimiento" id="editInputFechaSeguimiento" class="w-full px-3 py-1.5 rounded-xl border border-orange-200 bg-white focus:outline-none focus:border-orange-500 text-xs font-semibold text-slate-800">
+                    <input type="date" name="fecha_seguimiento" id="editInputFechaSeguimiento" class="w-full px-3 py-1.5 rounded-xl border border-emerald-200 bg-white focus:outline-none focus:border-[#39A900] text-xs font-semibold text-slate-800">
                 </div>
 
                 <!-- 8. Fila Inferior: Toggle Seguimiento y Botones -->
                 <div class="flex items-center justify-between pt-2.5 border-t border-slate-100">
                     <label class="flex items-center gap-2 cursor-pointer select-none">
-                        <input type="checkbox" name="seguimiento" id="editCheckSeguimiento" value="1" onchange="toggleEditSeguimientoCalendario(this)" class="w-4 h-4 rounded text-orange-500 focus:ring-orange-400 border-slate-300 accent-orange-500 cursor-pointer">
+                        <input type="checkbox" name="seguimiento" id="editCheckSeguimiento" value="1" onchange="toggleEditSeguimientoCalendario(this)" class="w-4 h-4 rounded text-[#39A900] focus:ring-[#39A900]/20 focus:border-[#39A900] border-slate-300 accent-[#39A900] cursor-pointer">
                         <span class="text-[11px] font-bold text-slate-700">En Seguimiento</span>
                     </label>
 
@@ -576,7 +576,7 @@
                         <button type="button" onclick="closeModalEdicion()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold transition cursor-pointer">
                             Cancelar
                         </button>
-                        <button type="submit" class="inline-flex items-center justify-center gap-1.5 px-5 py-2 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs font-bold shadow-xs transition cursor-pointer">
+                        <button type="submit" class="inline-flex items-center justify-center gap-1.5 px-5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200/70 text-[#2d8500] border border-emerald-200 hover:border-emerald-300 text-xs font-bold shadow-xs transition cursor-pointer">
                             <i class="fa-solid fa-check text-xs"></i>
                             <span>Guardar</span>
                         </button>
@@ -704,7 +704,7 @@
         if (tipo.toLowerCase().includes('condici')) {
             dot.className = 'w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0';
         } else {
-            dot.className = 'w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0';
+            dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0';
         }
 
         // Estado Badge
@@ -861,15 +861,15 @@
 
         checkbox.checked = activo;
         if (activo) {
-            card.classList.add('border-orange-500', 'bg-orange-50/50');
+            card.classList.add('border-[#39A900]', 'bg-emerald-50/50');
             card.classList.remove('border-slate-200', 'bg-white');
-            indicator.classList.add('border-orange-500', 'bg-orange-500');
+            indicator.classList.add('border-[#39A900]', 'bg-emerald-500');
             indicator.classList.remove('border-slate-300');
             if (icon) icon.classList.remove('opacity-0');
         } else {
-            card.classList.remove('border-orange-500', 'bg-orange-50/50');
+            card.classList.remove('border-[#39A900]', 'bg-emerald-50/50');
             card.classList.add('border-slate-200', 'bg-white');
-            indicator.classList.remove('border-orange-500', 'bg-orange-500');
+            indicator.classList.remove('border-[#39A900]', 'bg-emerald-500');
             indicator.classList.add('border-slate-300');
             if (icon) icon.classList.add('opacity-0');
         }
@@ -998,7 +998,7 @@
         let btnsHtml = '';
         for (let i = 1; i <= totalPaginas; i++) {
             if (i === paginaActualInspeccion) {
-                btnsHtml += `<button type="button" class="w-8 h-8 rounded-xl bg-orange-600 text-white font-bold text-xs shadow-xs">${i}</button>`;
+                btnsHtml += `<button type="button" class="w-8 h-8 rounded-xl bg-[#39A900] text-white font-bold text-xs shadow-xs">${i}</button>`;
             } else {
                 btnsHtml += `<button type="button" onclick="irPaginaInspeccion(${i})" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition cursor-pointer">${i}</button>`;
             }

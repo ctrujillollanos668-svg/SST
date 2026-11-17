@@ -59,21 +59,24 @@
         </div>
     @endif
 
-    <!-- 1. Encabezado de la Sección -->
-    <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
+    <!-- 1. Encabezado de la Sección (Estilo Dirección Ejecutivo) -->
+    <div class="bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#002D44] p-6 sm:p-7 rounded-2xl border-l-4 border-l-[#39A900] text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-xs">
-                    <i class="fa-solid fa-spa text-xl"></i>
+            <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-white/10 text-[#62E31D] flex items-center justify-center border border-white/20 shadow-inner">
+                    <i class="fa-solid fa-person-running text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Pausas Activas Programadas</h1>
-                    <p class="text-sm text-slate-500 font-medium mt-0.5">Programación, registro y control de pausas ergonómicas, visuales y osteomusculares.</p>
+                    <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/10 border border-white/15 text-[10px] font-bold text-[#62E31D] mb-1">
+                        <i class="fa-solid fa-heart-pulse"></i> Prevención de Fatiga Laboral
+                    </div>
+                    <h1 class="text-2xl font-extrabold text-white tracking-tight">Pausas Activas <span class="text-[#62E31D]">Programadas</span></h1>
+                    <p class="text-xs sm:text-sm text-white/80 font-normal mt-0.5">Programación, registro y control de pausas ergonómicas, visuales y osteomusculares.</p>
                 </div>
             </div>
         </div>
 
-        <button onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 text-sm font-bold shadow-xs transition-all duration-200 cursor-pointer group border border-orange-200/90 hover:border-orange-300">
+        <button onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#39A900] hover:bg-[#2d8500] text-white text-sm font-bold shadow-md shadow-[#39A900]/30 transition-all duration-200 cursor-pointer group border border-[#62E31D]/40 hover:-translate-y-0.5">
             <i class="fa-solid fa-plus text-xs group-hover:rotate-90 transition-transform duration-300"></i>
             <span>Programar Nueva Pausa</span>
         </button>
@@ -81,40 +84,40 @@
 
     <!-- 2. Resumen de Estado -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-11 h-11 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold text-lg shrink-0">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5 border-l-4 border-l-[#001A29]">
+            <div class="w-11 h-11 rounded-xl bg-[#001A29]/10 text-[#001A29] flex items-center justify-center font-bold text-lg shrink-0">
                 <i class="fa-solid fa-calendar-days"></i>
             </div>
             <div>
-                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Programadas</p>
-                <h4 class="text-xl font-extrabold text-slate-800">{{ $stats['total'] }}</h4>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Programadas</p>
+                <h4 class="text-xl font-black text-slate-900">{{ $stats['total'] }}</h4>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-lg shrink-0">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5 border-l-4 border-l-amber-500">
+            <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center font-bold text-lg shrink-0">
                 <i class="fa-solid fa-clock"></i>
             </div>
             <div>
-                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Pendientes / En Espera</p>
-                <h4 class="text-xl font-extrabold text-slate-800">{{ $stats['programadas'] }}</h4>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Pendientes / En Espera</p>
+                <h4 class="text-xl font-black text-slate-900">{{ $stats['programadas'] }}</h4>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-lg shrink-0">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5 border-l-4 border-l-[#39A900]">
+            <div class="w-11 h-11 rounded-xl bg-emerald-50 text-[#39A900] flex items-center justify-center font-bold text-lg shrink-0">
                 <i class="fa-solid fa-circle-check"></i>
             </div>
             <div>
-                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Sesiones Realizadas</p>
-                <h4 class="text-xl font-extrabold text-slate-800">{{ $stats['realizadas'] }}</h4>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Sesiones Realizadas</p>
+                <h4 class="text-xl font-black text-slate-900">{{ $stats['realizadas'] }}</h4>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-lg shrink-0">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5 border-l-4 border-l-rose-500">
+            <div class="w-11 h-11 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center font-bold text-lg shrink-0">
                 <i class="fa-solid fa-ban"></i>
             </div>
             <div>
-                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Canceladas</p>
-                <h4 class="text-xl font-extrabold text-slate-800">{{ $stats['canceladas'] }}</h4>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Canceladas</p>
+                <h4 class="text-xl font-black text-slate-900">{{ $stats['canceladas'] }}</h4>
             </div>
         </div>
     </div>
@@ -126,18 +129,18 @@
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                     <i class="fa-solid fa-magnifying-glass text-xs"></i>
                 </span>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por título, lugar, instructor o ficha..." class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por título, lugar, instructor o ficha..." class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-medium">
             </div>
 
             <div class="flex items-center gap-2">
-                <select name="estado" onchange="this.form.submit()" class="w-full px-3 py-2 text-xs font-bold rounded-xl bg-slate-50 border border-slate-200 text-slate-600 focus:outline-none focus:border-orange-500 cursor-pointer">
+                <select name="estado" onchange="this.form.submit()" class="w-full px-3 py-2 text-xs font-bold rounded-xl bg-slate-50 border border-slate-200 text-slate-600 focus:outline-none focus:border-[#39A900] cursor-pointer">
                     <option value="todos">Todos los estados</option>
                     <option value="Programada" {{ request('estado') == 'Programada' ? 'selected' : '' }}>Programadas</option>
                     <option value="Realizada" {{ request('estado') == 'Realizada' ? 'selected' : '' }}>Realizadas</option>
                     <option value="Cancelada" {{ request('estado') == 'Cancelada' ? 'selected' : '' }}>Canceladas</option>
                 </select>
 
-                <button type="submit" class="px-4 py-2 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl shadow-xs transition cursor-pointer">
+                <button type="submit" class="px-4 py-2 text-xs font-bold bg-[#39A900] hover:bg-[#2d8500] text-white rounded-xl shadow-xs transition cursor-pointer">
                     <i class="fa-solid fa-filter"></i>
                 </button>
                 @if(request()->hasAny(['search', 'estado']))
@@ -154,7 +157,7 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-slate-50/90 border-b border-slate-200/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider">
+                    <tr class="bg-[#001A29] text-white text-[11px] font-extrabold uppercase tracking-wider border-b-2 border-[#39A900]">
                         <th class="py-3.5 px-4">TÍTULO / ACTIVIDAD</th>
                         <th class="py-3.5 px-4">INSTRUCTOR / RESPONSABLE</th>
                         <th class="py-3.5 px-4">FICHA O PROGRAMA</th>
@@ -169,7 +172,7 @@
                         <tr class="hover:bg-slate-50/60 transition-colors">
                             <td class="py-3.5 px-4">
                                 <div class="font-bold text-slate-900 flex items-center gap-2">
-                                    <span class="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center text-xs shrink-0">
+                                    <span class="w-7 h-7 rounded-lg bg-emerald-50 text-[#39A900] flex items-center justify-center text-xs shrink-0">
                                         <i class="fa-solid fa-spa"></i>
                                     </span>
                                     <div>
@@ -205,7 +208,7 @@
                             </td>
 
                             <td class="py-3.5 px-4 text-slate-700">
-                                <i class="fa-solid fa-location-dot text-orange-500 mr-1 text-[11px]"></i>
+                                <i class="fa-solid fa-location-dot text-[#39A900] mr-1 text-[11px]"></i>
                                 {{ $item->lugar }}
                             </td>
 
@@ -230,7 +233,7 @@
                                     <button type="button" onclick='openDetailModal(@json($item))' class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition cursor-pointer" title="Ver Detalle">
                                         <i class="fa-solid fa-eye text-xs"></i>
                                     </button>
-                                    <button type="button" onclick='openEditModal(@json($item))' class="w-8 h-8 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-600 flex items-center justify-center transition cursor-pointer" title="Editar">
+                                    <button type="button" onclick='openEditModal(@json($item))' class="w-8 h-8 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#39A900] flex items-center justify-center transition cursor-pointer" title="Editar">
                                         <i class="fa-solid fa-pen text-xs"></i>
                                     </button>
                                     <form action="{{ route('SST.admin.pausas_activas.destroy', $item->id_actividad) }}" method="POST" class="inline-block">
@@ -271,7 +274,7 @@
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 animate-modal-pop max-h-[92vh] overflow-y-auto">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
             <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-                <i class="fa-solid fa-spa text-orange-600"></i>
+                <i class="fa-solid fa-spa text-[#39A900]"></i>
                 <span>Programar Nueva Pausa Activa</span>
             </h3>
             <button onclick="closeRegisterModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
@@ -285,35 +288,40 @@
             <!-- Actividad en Realizar / Dinámica -->
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Actividad en Realizar / Dinámica *</label>
-                <input type="text" name="titulo" required placeholder="Ej: Rutina de 10 ejercicios de estiramiento articular y parpadeo guiado" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                <input type="text" name="titulo" required 
+                       placeholder="Ej: Rutina de estiramiento articular y parpadeo guiado" 
+                       pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$"
+                       title="Solo se permiten letras y espacios (sin números ni caracteres especiales)"
+                       oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')"
+                       class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold">
             </div>
 
             <!-- Descripción de la Actividad -->
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Descripción de la Actividad</label>
-                <textarea name="descripcion" rows="2" placeholder="Ej: Ejercicios de cuello, hombros y muñecas para prevenir fatiga laboral..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium"></textarea>
+                <textarea name="descripcion" rows="2" maxlength="500" placeholder="Ej: Ejercicios de cuello, hombros y muñecas para prevenir fatiga laboral..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-medium"></textarea>
             </div>
 
             <!-- Fecha, Hora Inicio, Hora Fin (En 3 Columnas) -->
             <div class="grid grid-cols-3 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Fecha *</label>
-                    <input type="date" name="fecha" id="register_fecha" value="{{ \Carbon\Carbon::now('America/Bogota')->format('Y-m-d') }}" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                    <input type="date" name="fecha" id="register_fecha" value="{{ \Carbon\Carbon::now('America/Bogota')->format('Y-m-d') }}" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Hora Inicio *</label>
-                    <input type="time" name="hora_inicio" value="10:00" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                    <input type="time" name="hora_inicio" value="10:00" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Hora Fin</label>
-                    <input type="time" name="hora_fin" value="10:15" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                    <input type="time" name="hora_fin" value="10:15" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold">
                 </div>
             </div>
 
             <!-- Ambiente / Unidad -->
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Ambiente / Unidad *</label>
-                <select name="lugar" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold cursor-pointer">
+                <select name="lugar" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold cursor-pointer">
                     <option value="" disabled selected>Selecciona un ambiente o unidad...</option>
                     @foreach($lugares as $lug)
                         <option value="{{ $lug->nombre }}">{{ $lug->nombre }}</option>
@@ -325,11 +333,19 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Instructor o Instructora</label>
-                    <input type="text" name="instructor" placeholder="Ej: Ing. Carlos Pérez" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                    <input type="text" name="instructor" placeholder="Ej: Carlos Pérez" 
+                           pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$"
+                           title="Solo se permiten letras y espacios"
+                           oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')"
+                           class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-medium">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Responsable SST</label>
-                    <input type="text" name="responsable" placeholder="Ej: Líder Brigada SST" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                    <input type="text" name="responsable" placeholder="Ej: Líder Brigada SST" 
+                           pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$"
+                           title="Solo se permiten letras y espacios"
+                           oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')"
+                           class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-medium">
                 </div>
             </div>
 
@@ -341,12 +357,16 @@
                         <input type="text" 
                                name="ficha_programa" 
                                id="create_ficha_programa"
-                               placeholder="Selecciona o escribe la ficha (Ej: 2847386 - ADSO)" 
+                               placeholder="Ej: 2847386" 
                                autocomplete="off" 
-                               class="w-full pl-3.5 pr-10 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                               inputmode="numeric"
+                               pattern="^[0-9]+$"
+                               title="Solo se permiten números"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                               class="w-full pl-3.5 pr-10 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-medium">
                         <button type="button" 
                                 onclick="toggleAdminFichasDropdown(event, 'create_ficha_combo_container')"
-                                class="absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-orange-600 transition cursor-pointer"
+                                class="absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-[#2d8500] transition cursor-pointer"
                                 title="Desplegar fichas activas">
                             <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200 icon-arrow-ficha"></i>
                         </button>
@@ -358,15 +378,15 @@
                                     @php
                                         $fichaTexto = $c->code . ' - ' . ($c->program->name ?? 'Programa de Formación');
                                     @endphp
-                                    <div class="ficha-option px-3.5 py-2.5 hover:bg-orange-50 cursor-pointer flex items-center justify-between text-xs transition group"
+                                    <div class="ficha-option px-3.5 py-2.5 hover:bg-emerald-50 cursor-pointer flex items-center justify-between text-xs transition group"
                                          data-text="{{ strtolower($fichaTexto) }}"
-                                         data-value="{{ $fichaTexto }}"
+                                         data-value="{{ $c->code }}"
                                          onclick="selectAdminFicha('create_ficha_programa', this.getAttribute('data-value'), 'create_ficha_combo_container')">
                                         <div class="truncate">
-                                            <strong class="font-extrabold text-slate-800 group-hover:text-orange-600">{{ $c->code }}</strong>
+                                             <strong class="font-extrabold text-slate-800 group-hover:text-[#2d8500]">{{ $c->code }}</strong>
                                             <span class="text-slate-500 text-[11px] ml-1.5">{{ $c->program->name ?? '' }}</span>
                                         </div>
-                                        <span class="text-[10px] font-bold text-orange-500 opacity-0 group-hover:opacity-100 transition shrink-0 ml-2">Seleccionar</span>
+                                        <span class="text-[10px] font-bold text-[#39A900] opacity-0 group-hover:opacity-100 transition shrink-0 ml-2">Seleccionar</span>
                                     </div>
                                 @endforeach
                                 <div class="no-fichas-match px-4 py-3 text-xs text-slate-400 text-center hidden">No se encontraron fichas coincidentes</div>
@@ -378,7 +398,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Estado *</label>
-                    <select name="estado" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold cursor-pointer">
+                    <select name="estado" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold cursor-pointer">
                         <option value="Programada" selected>Programada</option>
                         <option value="Realizada">Realizada</option>
                         <option value="Cancelada">Cancelada</option>
@@ -389,7 +409,7 @@
             <!-- Observación -->
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Observación</label>
-                <textarea name="observaciones" rows="2" placeholder="Notas adicionales o conclusiones de la actividad..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium"></textarea>
+                <textarea name="observaciones" rows="2" maxlength="500" placeholder="Notas adicionales o conclusiones de la actividad..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-medium"></textarea>
             </div>
 
             <!-- Botones idénticos a la imagen -->
@@ -397,7 +417,7 @@
                 <button type="button" onclick="closeRegisterModal()" class="px-4 py-2.5 text-xs font-bold text-slate-600 rounded-xl hover:bg-slate-100 transition cursor-pointer">
                     Cancelar
                 </button>
-                <button type="submit" class="px-5 py-2.5 text-xs font-bold bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 rounded-xl shadow-xs transition cursor-pointer flex items-center gap-2">
+                <button type="submit" class="px-5 py-2.5 text-xs font-bold bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200/70 text-[#064e3b] border border-emerald-200/90 hover:border-emerald-300 rounded-xl shadow-xs transition cursor-pointer flex items-center gap-2">
                     <i class="fa-solid fa-check text-xs"></i>
                     <span>Programar Sesión</span>
                 </button>
@@ -411,7 +431,7 @@
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 animate-modal-pop max-h-[92vh] overflow-y-auto">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
             <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-                <i class="fa-solid fa-pen text-orange-600"></i>
+                <i class="fa-solid fa-pen text-[#39A900]"></i>
                 <span>Editar Pausa Activa</span>
             </h3>
             <button onclick="closeEditModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
@@ -425,32 +445,36 @@
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Actividad en Realizar / Dinámica *</label>
-                <input type="text" name="titulo" id="edit_titulo" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                <input type="text" name="titulo" id="edit_titulo" required 
+                       pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$"
+                       title="Solo se permiten letras y espacios (sin números ni caracteres especiales)"
+                       oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')"
+                       class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold">
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Descripción de la Actividad</label>
-                <textarea name="descripcion" id="edit_descripcion" rows="2" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium"></textarea>
+                <textarea name="descripcion" id="edit_descripcion" rows="2" maxlength="500" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-medium"></textarea>
             </div>
 
             <div class="grid grid-cols-3 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Fecha *</label>
-                    <input type="date" name="fecha" id="edit_fecha" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                    <input type="date" name="fecha" id="edit_fecha" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Hora Inicio *</label>
-                    <input type="time" name="hora_inicio" id="edit_hora_inicio" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                    <input type="time" name="hora_inicio" id="edit_hora_inicio" required class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Hora Fin</label>
-                    <input type="time" name="hora_fin" id="edit_hora_fin" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                    <input type="time" name="hora_fin" id="edit_hora_fin" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold">
                 </div>
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Ambiente / Unidad *</label>
-                <select name="lugar" id="edit_lugar" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold cursor-pointer">
+                <select name="lugar" id="edit_lugar" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold cursor-pointer">
                     <option value="" disabled>Selecciona un ambiente o unidad...</option>
                     @foreach($lugares as $lug)
                         <option value="{{ $lug->nombre }}">{{ $lug->nombre }}</option>
@@ -461,11 +485,19 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Instructor o Instructora</label>
-                    <input type="text" name="instructor" id="edit_instructor" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                    <input type="text" name="instructor" id="edit_instructor" 
+                           pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$"
+                           title="Solo se permiten letras y espacios"
+                           oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')"
+                           class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-medium">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Responsable SST</label>
-                    <input type="text" name="responsable" id="edit_responsable" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                    <input type="text" name="responsable" id="edit_responsable" 
+                           pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$"
+                           title="Solo se permiten letras y espacios"
+                           oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')"
+                           class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-medium">
                 </div>
             </div>
 
@@ -476,12 +508,16 @@
                         <input type="text" 
                                name="ficha_programa" 
                                id="edit_ficha_programa" 
-                               placeholder="Selecciona o escribe la ficha..." 
+                               placeholder="Ej: 2847386" 
                                autocomplete="off" 
-                               class="w-full pl-3.5 pr-10 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+                               inputmode="numeric"
+                               pattern="^[0-9]+$"
+                               title="Solo se permiten números"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                               class="w-full pl-3.5 pr-10 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-medium">
                         <button type="button" 
                                 onclick="toggleAdminFichasDropdown(event, 'edit_ficha_combo_container')"
-                                class="absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-orange-600 transition cursor-pointer"
+                                class="absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-[#2d8500] transition cursor-pointer"
                                 title="Desplegar fichas activas">
                             <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200 icon-arrow-ficha"></i>
                         </button>
@@ -493,15 +529,15 @@
                                     @php
                                         $fichaTexto = $c->code . ' - ' . ($c->program->name ?? 'Programa de Formación');
                                     @endphp
-                                    <div class="ficha-option px-3.5 py-2.5 hover:bg-orange-50 cursor-pointer flex items-center justify-between text-xs transition group"
+                                    <div class="ficha-option px-3.5 py-2.5 hover:bg-emerald-50 cursor-pointer flex items-center justify-between text-xs transition group"
                                          data-text="{{ strtolower($fichaTexto) }}"
-                                         data-value="{{ $fichaTexto }}"
+                                         data-value="{{ $c->code }}"
                                          onclick="selectAdminFicha('edit_ficha_programa', this.getAttribute('data-value'), 'edit_ficha_combo_container')">
                                         <div class="truncate">
-                                            <strong class="font-extrabold text-slate-800 group-hover:text-orange-600">{{ $c->code }}</strong>
+                                            <strong class="font-extrabold text-slate-800 group-hover:text-[#2d8500]">{{ $c->code }}</strong>
                                             <span class="text-slate-500 text-[11px] ml-1.5">{{ $c->program->name ?? '' }}</span>
                                         </div>
-                                        <span class="text-[10px] font-bold text-orange-500 opacity-0 group-hover:opacity-100 transition shrink-0 ml-2">Seleccionar</span>
+                                        <span class="text-[10px] font-bold text-[#39A900] opacity-0 group-hover:opacity-100 transition shrink-0 ml-2">Seleccionar</span>
                                     </div>
                                 @endforeach
                                 <div class="no-fichas-match px-4 py-3 text-xs text-slate-400 text-center hidden">No se encontraron fichas coincidentes</div>
@@ -513,7 +549,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Estado *</label>
-                    <select name="estado" id="edit_estado" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold cursor-pointer">
+                    <select name="estado" id="edit_estado" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold cursor-pointer">
                         <option value="Programada">Programada</option>
                         <option value="Realizada">Realizada</option>
                         <option value="Cancelada">Cancelada</option>
@@ -523,14 +559,14 @@
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Observación</label>
-                <textarea name="observaciones" id="edit_observaciones" rows="2" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium"></textarea>
+                <textarea name="observaciones" id="edit_observaciones" rows="2" maxlength="500" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-medium"></textarea>
             </div>
 
             <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
                 <button type="button" onclick="closeEditModal()" class="px-4 py-2 text-xs font-bold text-slate-600 rounded-xl hover:bg-slate-100 transition cursor-pointer">
                     Cancelar
                 </button>
-                <button type="submit" class="px-5 py-2 text-xs font-bold bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 rounded-xl shadow-xs transition cursor-pointer flex items-center gap-1.5">
+                <button type="submit" class="px-5 py-2 text-xs font-bold bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200/70 text-[#064e3b] border border-emerald-200/90 hover:border-emerald-300 rounded-xl shadow-xs transition cursor-pointer flex items-center gap-1.5">
                     <i class="fa-solid fa-floppy-disk text-xs"></i>
                     <span>Guardar Cambios</span>
                 </button>
@@ -544,7 +580,7 @@
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 animate-modal-pop">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
             <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-                <i class="fa-solid fa-circle-info text-orange-600"></i>
+                <i class="fa-solid fa-circle-info text-[#39A900]"></i>
                 <span>Detalle de la Pausa Activa</span>
             </h3>
             <button onclick="closeDetailModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
@@ -554,7 +590,7 @@
 
         <div class="space-y-3.5 text-xs">
             <div>
-                <span class="text-orange-600 font-bold uppercase tracking-wider text-[10px] block">Actividad en Realizar / Dinámica</span>
+                <span class="text-[#39A900] font-bold uppercase tracking-wider text-[10px] block">Actividad en Realizar / Dinámica</span>
                 <p id="detail_titulo" class="text-base font-extrabold text-slate-900 mt-0.5"></p>
             </div>
 

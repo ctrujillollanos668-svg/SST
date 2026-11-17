@@ -65,7 +65,7 @@ class HistorialController extends Controller
 
         $validated = $request->validate([
             'estado' => 'required|in:pendiente,en_proceso,completada,con_hallazgos',
-            'observacion_admin' => 'nullable|string',
+            'observacion_admin' => 'nullable|string|max:1000',
         ]);
 
         $meta = json_decode($inspeccion->observaciones, true);

@@ -6,31 +6,31 @@
 
 <div class="max-w-5xl mx-auto space-y-6">
 
-    {{-- Encabezado --}}
-    <div class="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-5">
+    {{-- Encabezado (Estilo Dirección Ejecutivo) --}}
+    <div class="bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#002D44] p-6 sm:p-7 rounded-2xl border-l-4 border-l-[#39A900] text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-xs text-2xl shrink-0">
+            <div class="w-14 h-14 rounded-2xl bg-white/10 text-[#62E31D] flex items-center justify-center border border-white/20 shadow-inner text-2xl shrink-0">
                 <i class="fa-solid fa-phone-volume"></i>
             </div>
             <div>
                 <div class="flex items-center gap-2">
-                    <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">Contactos de Emergencia</h1>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-orange-100/70 text-orange-700 border border-orange-200/60">
+                    <h1 class="text-2xl font-extrabold text-white tracking-tight">Contactos de <span class="text-[#62E31D]">Emergencia</span></h1>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-white/10 text-[#62E31D] border border-white/15">
                         SST
                     </span>
                 </div>
-                <p class="text-sm text-slate-500 font-medium mt-0.5">
+                <p class="text-sm text-white/80 font-normal mt-0.5">
                     Números y personas clave ante una emergencia en tu lugar de formación.
                 </p>
             </div>
         </div>
 
         {{-- Contador de contactos --}}
-        <div class="flex items-center gap-2 bg-orange-50 border border-orange-200/60 rounded-2xl px-4 py-3">
-            <i class="fa-solid fa-address-book text-orange-500 text-lg"></i>
+        <div class="flex items-center gap-2 bg-white/10 border border-white/15 rounded-2xl px-4 py-3 text-white">
+            <i class="fa-solid fa-address-book text-[#62E31D] text-lg"></i>
             <div>
-                <p class="text-[11px] font-semibold text-orange-500 uppercase tracking-wide">Total Contactos</p>
-                <p class="text-xl font-extrabold text-orange-700 leading-tight">{{ $contactos->count() }}</p>
+                <p class="text-[11px] font-semibold text-white/70 uppercase tracking-wide">Total Contactos</p>
+                <p class="text-xl font-extrabold text-[#62E31D] leading-tight">{{ $contactos->count() }}</p>
             </div>
         </div>
     </div>
@@ -39,11 +39,11 @@
     @if($contactos->count() > 0)
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach($contactos as $contacto)
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md hover:border-orange-300 transition-all p-5 flex flex-col gap-3">
+                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md hover:border-emerald-300 transition-all p-5 flex flex-col gap-3">
 
                     {{-- Icono y nombre --}}
                     <div class="flex items-center gap-3">
-                        <div class="w-11 h-11 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center border border-orange-200/60 text-lg shrink-0">
+                        <div class="w-11 h-11 rounded-xl bg-emerald-50 text-[#39A900] flex items-center justify-center border border-emerald-200/60 text-lg shrink-0">
                             <i class="fa-solid fa-user-shield"></i>
                         </div>
                         <div class="min-w-0">

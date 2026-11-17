@@ -5,18 +5,18 @@
 @section('content')
 <div class="space-y-6 max-w-7xl mx-auto">
 
-    <!-- 1. Encabezado de la Sección -->
-    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all">
+    <!-- 1. Encabezado de la Sección (Estilo Dirección Ejecutivo) -->
+    <div class="bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#002D44] p-6 sm:p-7 rounded-2xl border-l-4 border-l-[#39A900] text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-100 shadow-2xs shrink-0 text-2xl">
+            <div class="w-14 h-14 rounded-2xl bg-white/10 text-[#62E31D] flex items-center justify-center border border-white/20 shadow-inner shrink-0 text-2xl">
                 <i class="fa-solid fa-bullhorn"></i>
             </div>
             <div>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-xs font-bold mb-1 border border-purple-200/60">
-                    <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> Actividades SST
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-[#62E31D] text-xs font-bold mb-1 border border-white/15">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#62E31D] animate-pulse"></span> Actividades SST
                 </span>
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Jornadas de Sensibilización</h1>
-                <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">Campañas formativas y jornadas de concientización sobre autocuidado, salud y bienestar.</p>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Jornadas de <span class="text-[#62E31D]">Sensibilización</span></h1>
+                <p class="text-xs sm:text-sm text-white/80 font-normal mt-0.5">Campañas formativas y jornadas de concientización sobre autocuidado, salud y bienestar.</p>
             </div>
         </div>
     </div>
@@ -37,8 +37,8 @@
 
     <!-- 2. Tarjetas de Resumen KPI -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-xl shrink-0">
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 border-l-4 border-l-[#001A29] shadow-xs flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-[#001A29]/10 text-[#001A29] flex items-center justify-center font-bold text-xl shrink-0">
                 <i class="fa-solid fa-calendar-check"></i>
             </div>
             <div>
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4">
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 border-l-4 border-l-amber-500 shadow-xs flex items-center gap-4">
             <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xl shrink-0">
                 <i class="fa-solid fa-clock"></i>
             </div>
@@ -57,8 +57,8 @@
             </div>
         </div>
 
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xl shrink-0">
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 border-l-4 border-l-[#39A900] shadow-xs flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-[#39A900] flex items-center justify-center font-bold text-xl shrink-0">
                 <i class="fa-solid fa-circle-check"></i>
             </div>
             <div>
@@ -269,7 +269,12 @@
                                id="asistencia_ficha_programa" 
                                required 
                                autocomplete="off"
-                               placeholder="Selecciona o busca la ficha (Ej: 32300026 o código de curso)" 
+                               placeholder="Selecciona o escribe la ficha (solo números, Ej: 2711894)" 
+                               inputmode="numeric"
+                               maxlength="20"
+                               pattern="^[0-9]+$"
+                               title="Solo números sin espacios ni caracteres especiales"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                class="w-full pl-3.5 pr-10 py-2.5 text-xs font-semibold text-slate-800 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition">
                         
                         <button type="button" 
@@ -292,7 +297,7 @@
                                 @endphp
                                 <div class="ficha-option px-3.5 py-2.5 hover:bg-purple-50 cursor-pointer flex items-center justify-between text-xs transition group"
                                      data-text="{{ strtolower($fichaTexto) }}"
-                                     data-value="{{ $fichaTexto }}"
+                                     data-value="{{ $c->code }}"
                                      onclick="selectFichaOption(this.getAttribute('data-value'))">
                                     <div class="truncate">
                                         <strong class="font-extrabold text-slate-800 group-hover:text-purple-600">{{ $c->code }}</strong>
@@ -315,7 +320,7 @@
                             <i class="fa-solid fa-chalkboard-user text-purple-500 text-xs"></i>
                             Instructora a Cargo <span class="text-rose-500">*</span>
                         </label>
-                        <input type="text" name="instructor" id="asistencia_instructor" required placeholder="Nombre de la instructora" class="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition">
+                        <input type="text" name="instructor" id="asistencia_instructor" required maxlength="150" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Nombre de la instructora" class="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition">
                     </div>
 
                     <div class="space-y-1">
@@ -323,7 +328,7 @@
                             <i class="fa-solid fa-shield-heart text-purple-500 text-xs"></i>
                             Encargada de SST <span class="text-rose-500">*</span>
                         </label>
-                        <input type="text" name="responsable" id="asistencia_responsable" required placeholder="Responsable / Aprendiz SST" class="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition">
+                        <input type="text" name="responsable" id="asistencia_responsable" required maxlength="150" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Responsable / Aprendiz SST" class="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition">
                     </div>
                 </div>
 
@@ -334,7 +339,7 @@
                             <i class="fa-solid fa-user-check text-purple-500 text-xs"></i>
                             Número de Asistentes
                         </label>
-                        <input type="number" min="0" name="numero_asistentes" id="asistencia_numero_asistentes" placeholder="0" class="w-full px-3.5 py-2.5 text-xs font-bold text-slate-800 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition">
+                        <input type="number" min="0" name="numero_asistentes" id="asistencia_numero_asistentes" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="0" class="w-full px-3.5 py-2.5 text-xs font-bold text-slate-800 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition">
                     </div>
 
                     <div class="space-y-1">

@@ -51,16 +51,18 @@ class SeguimientoController extends Controller
 
         $request->validate([
             'lugar_id' => 'required|exists:lugares_formacion,id_lugar',
-            'responsable' => 'required|string|max:100',
-            'lider_unidad' => 'nullable|string|max:100',
+            'responsable' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'lider_unidad' => ['nullable', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
             'fecha_inspeccion' => 'nullable|date',
             'fecha_seguimiento' => 'nullable|date',
-            'descripcion' => 'nullable|string',
+            'descripcion' => 'nullable|string|max:1000',
             'fotos.*' => 'nullable|image|max:5120'
         ], [
             'lugar_id.required' => 'Debe seleccionar un lugar de formación registrado.',
             'lugar_id.exists' => 'El lugar de formación seleccionado no es válido.',
-            'responsable.required' => 'El nombre del responsable es obligatorio.'
+            'responsable.required' => 'El nombre del responsable es obligatorio.',
+            'responsable.regex' => 'El nombre del responsable solo debe contener letras y espacios.',
+            'lider_unidad.regex' => 'El nombre del líder de unidad solo debe contener letras y espacios.',
         ]);
 
         $lugarId = $request->input('lugar_id');

@@ -26,11 +26,13 @@ class CondicionesInsegurasController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'descripcion' => 'nullable|string',
+            'nombre' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'descripcion' => 'nullable|string|max:500',
             'modulo_pertenece' => 'nullable|string|max:150',
             'notificaciones' => 'nullable|boolean',
             'estado' => 'nullable|in:activo,inactivo',
+        ], [
+            'nombre.regex' => 'El nombre solo debe contener letras y espacios.',
         ]);
 
         $validated['tipo_categoria'] = 'condicion_insegura';
@@ -51,11 +53,13 @@ class CondicionesInsegurasController extends Controller
         $condicion = TipoEvento::where('tipo_categoria', 'condicion_insegura')->findOrFail($id);
 
         $validated = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'descripcion' => 'nullable|string',
+            'nombre' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'descripcion' => 'nullable|string|max:500',
             'modulo_pertenece' => 'nullable|string|max:150',
             'notificaciones' => 'nullable|boolean',
             'estado' => 'nullable|in:activo,inactivo',
+        ], [
+            'nombre.regex' => 'El nombre solo debe contener letras y espacios.',
         ]);
 
         $validated['notificaciones'] = $request->has('notificaciones');

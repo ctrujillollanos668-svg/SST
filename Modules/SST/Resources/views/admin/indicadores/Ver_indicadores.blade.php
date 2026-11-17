@@ -31,15 +31,15 @@
     @endif
 
     <!-- 1. Encabezado de la Sección -->
-    <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
+    <div class="bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#002D44] p-6 sm:p-7 rounded-2xl border-l-4 border-l-[#39A900] text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-xs">
+                <div class="w-12 h-12 rounded-2xl bg-white/10 text-[#62E31D] flex items-center justify-center border border-white/20 shadow-inner shrink-0">
                     <i class="fa-solid fa-chart-line text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Indicadores de Gestión SG-SST</h1>
-                    <p class="text-sm text-slate-500 font-medium mt-0.5">Monitoreo de estructura, proceso y resultado según Decreto 1072 y Res. 0312.</p>
+                    <h1 class="text-2xl font-black text-white tracking-tight">Indicadores de Gestión SG-SST</h1>
+                    <p class="text-xs sm:text-sm text-white/80 font-normal mt-0.5">Monitoreo de estructura, proceso y resultado según Decreto 1072 y Res. 0312.</p>
                 </div>
             </div>
         </div>
@@ -58,7 +58,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
                 <h2 class="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
-                    <span class="w-2.5 h-6 rounded-full bg-orange-500 inline-block"></span>
+                    <span class="w-2.5 h-6 rounded-full bg-emerald-500 inline-block"></span>
                     <span>Dashboard Gráfico de Gestión SST</span>
                 </h2>
                 <p class="text-xs text-slate-500 font-medium">Análisis visual en tiempo real de actividades, tipos de eventos e inspecciones de seguridad.</p>

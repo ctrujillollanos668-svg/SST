@@ -45,13 +45,13 @@
     @endif
 
     <!-- Tarjeta Principal Unificada -->
-    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs min-h-[460px] flex flex-col justify-between">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs min-h-[460px] flex flex-col justify-between border-t-4 border-t-[#39A900]">
         
         <div>
             <!-- Encabezado Superior -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
                 <div class="flex items-center gap-3.5">
-                    <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-500 flex items-center justify-center text-xl border border-orange-100/80 shadow-2xs shrink-0">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-[#39A900] flex items-center justify-center text-xl border border-emerald-200/80 shadow-2xs shrink-0">
                         <i class="fa-solid fa-person-falling-burst"></i>
                     </div>
                     <div>
@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="flex items-center gap-3 self-start sm:self-auto">
-                    <button type="button" onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-2xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
+                    <button type="button" onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-2xl bg-[#39A900] hover:bg-[#2d8500] text-white border border-[#62E31D]/40 shadow-md shadow-[#39A900]/25 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
                         <i class="fa-solid fa-plus text-xs"></i>
                         <span>Registrar</span>
                     </button>
@@ -78,7 +78,7 @@
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </div>
                             <input type="text" id="inputBuscarEvento" placeholder="Buscar acto o condición insegura..." 
-                                class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
+                                class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition">
                         </div>
                         <span class="text-xs font-bold text-slate-400 self-end sm:self-auto">
                             <span id="conteoEventos" class="text-slate-700">{{ $actosInseguros->count() }}</span> {{ $actosInseguros->count() == 1 ? 'reporte registrado' : 'reportes registrados' }}
@@ -115,7 +115,7 @@
                                 $grav = strtolower($data['gravedad'] ?? 'leve');
                                 $badgeGrav = match(true) {
                                     str_contains($grav, 'fatal') || str_contains($grav, 'crítico') => 'bg-rose-100 text-rose-800 border-rose-200',
-                                    str_contains($grav, 'grave') => 'bg-orange-100 text-orange-800 border-orange-200',
+                                    str_contains($grav, 'grave') => 'bg-emerald-100 text-emerald-800 border-emerald-200',
                                     str_contains($grav, 'moderado') => 'bg-amber-100 text-amber-800 border-amber-200',
                                     default => 'bg-emerald-100 text-emerald-800 border-emerald-200'
                                 };
@@ -149,7 +149,7 @@
                                 $lugarEspecifico = $data['lugar_especifico'] ?? '';
                                 $tituloCard = !empty($lugarEspecifico) ? "{$lugarFormacion} — {$lugarEspecifico}" : $lugarFormacion;
                             @endphp
-                            <div class="item-card bg-slate-50/70 hover:bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-orange-300 transition-all flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 cursor-pointer group"
+                            <div class="item-card bg-slate-50/70 hover:bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-emerald-300 transition-all flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 cursor-pointer group"
                                  onclick="openDetailModal(this)"
                                  data-id="{{ $item->id_respuesta }}"
                                  data-raw="{{ base64_encode(json_encode($data, JSON_UNESCAPED_UNICODE)) }}"
@@ -162,11 +162,11 @@
                                 @if(!empty($fotoPrincipal))
                                     <div onclick="event.stopPropagation(); abrirVisorImagen('{{ $fotoPrincipal }}', {{ json_encode($evidencias) }}, 0)"
                                          title="Ver fotografía de evidencia"
-                                         class="relative w-16 h-16 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 border-orange-200 bg-slate-900/5 shrink-0 group-hover:border-orange-500 transition shadow-2xs cursor-pointer group/thumb">
+                                         class="relative w-16 h-16 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 border-emerald-200 bg-slate-900/5 shrink-0 group-hover:border-[#39A900] transition shadow-2xs cursor-pointer group/thumb">
                                         <img src="{{ $fotoPrincipal }}" alt="Evidencia Fotográfica" class="w-full h-full object-cover group-hover/thumb:scale-110 transition duration-300">
                                         @if($totalFotos > 1)
                                             <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-slate-900/85 text-white text-[8px] font-extrabold flex items-center gap-0.5 shadow-xs">
-                                                <i class="fa-solid fa-camera text-orange-400 text-[7px]"></i> +{{ $totalFotos }}
+                                                <i class="fa-solid fa-camera text-[#39A900] text-[7px]"></i> +{{ $totalFotos }}
                                             </span>
                                         @endif
                                         <div class="absolute inset-0 bg-slate-900/25 opacity-0 group-hover/thumb:opacity-100 transition flex items-center justify-center">
@@ -174,7 +174,7 @@
                                         </div>
                                     </div>
                                 @else
-                                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100 flex flex-col items-center justify-center text-orange-500 shrink-0 shadow-2xs">
+                                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-100 flex flex-col items-center justify-center text-[#39A900] shrink-0 shadow-2xs">
                                         <i class="fa-solid fa-person-falling-burst text-2xl"></i>
                                     </div>
                                 @endif
@@ -184,8 +184,8 @@
                                     <!-- Fila 1: Título, Estado SST y Gravedad -->
                                     <div class="flex flex-wrap items-center justify-between gap-2">
                                         <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-                                            <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0"></span>
-                                            <span class="group-hover:text-orange-600 transition-colors">{{ $tituloCard }}</span>
+                                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
+                                            <span class="group-hover:text-[#39A900] transition-colors">{{ $tituloCard }}</span>
                                         </h3>
                                         <div class="flex items-center gap-1.5 shrink-0">
                                             @if($estadoItem === 'atendido' || $tieneRespuesta)
@@ -206,7 +206,7 @@
                                     <!-- Fila 2: Etiquetas de Lugar, Punto Específico, Fecha, Persona e Instructor -->
                                     <div class="flex flex-wrap items-center gap-2 text-xs text-slate-600 font-medium">
                                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 text-slate-700 border border-slate-200/80">
-                                            <i class="fa-solid fa-location-dot text-orange-500"></i>
+                                            <i class="fa-solid fa-location-dot text-[#39A900]"></i>
                                             <span>{{ $lugarFormacion }}</span>
                                         </span>
 
@@ -218,18 +218,18 @@
                                         @endif
 
                                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 text-slate-700 border border-slate-200/80">
-                                            <i class="fa-regular fa-calendar-days text-orange-500"></i>
+                                            <i class="fa-regular fa-calendar-days text-[#39A900]"></i>
                                             <span>{{ $fechaFormateada }}</span>
                                         </span>
 
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-orange-50 text-orange-700 border border-orange-200/80 font-bold">
-                                            <i class="fa-solid fa-user-injured text-orange-500"></i>
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-50 text-[#2d8500] border border-emerald-200/80 font-bold">
+                                            <i class="fa-solid fa-user-injured text-[#39A900]"></i>
                                             <span>Afectado: {{ $data['persona_afectada'] ?? $data['personas_involucradas'] ?? 'Persona Afectada' }}</span>
                                         </span>
 
                                         @if(!empty($data['instructor_responsable']) && $data['instructor_responsable'] !== 'N/A')
                                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 text-slate-700 border border-slate-200/80">
-                                                <i class="fa-solid fa-chalkboard-user text-orange-500"></i>
+                                                <i class="fa-solid fa-chalkboard-user text-[#39A900]"></i>
                                                 <span>Instructor: {{ $data['instructor_responsable'] }}</span>
                                             </span>
                                         @endif
@@ -243,7 +243,7 @@
 
                                         <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
                                             <!-- Botón Editar -->
-                                            <button type="button" onclick="event.stopPropagation(); openEditModal(this)" class="w-8 h-8 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 flex items-center justify-center text-xs font-bold shadow-2xs transition cursor-pointer" title="Editar reporte">
+                                            <button type="button" onclick="event.stopPropagation(); openEditModal(this)" class="w-8 h-8 rounded-xl bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200/70 text-[#2d8500] border border-emerald-200 hover:border-emerald-300 flex items-center justify-center text-xs font-bold shadow-2xs transition cursor-pointer" title="Editar reporte">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
 
@@ -288,7 +288,7 @@
         <!-- Header del Modal -->
         <div class="p-5 sm:p-6 pb-4 border-b border-slate-100 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-3.5">
-                <div class="w-11 h-11 rounded-2xl bg-orange-50 text-orange-500 flex items-center justify-center text-lg border border-orange-100/80 shadow-2xs shrink-0">
+                <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-[#39A900] flex items-center justify-center text-lg border border-emerald-200/80 shadow-2xs shrink-0">
                     <i class="fa-solid fa-person-falling-burst"></i>
                 </div>
                 <div>
@@ -313,7 +313,7 @@
                         FECHA Y HORA DEL SUCESO <span class="text-rose-500">*</span>
                     </label>
                     <input type="datetime-local" name="fecha_hora" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs">
                 </div>
 
                 <div class="space-y-1">
@@ -321,7 +321,7 @@
                         LUGAR DE FORMACIÓN <span class="text-rose-500">*</span>
                     </label>
                     <select name="lugar_formacion" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
                         <option value="">Seleccione el lugar...</option>
                         @if(isset($lugares) && $lugares->count() > 0)
                             @foreach($lugares as $lugar)
@@ -345,7 +345,7 @@
                         TIPO DE ACTO INSEGURO <span class="text-rose-500">*</span>
                     </label>
                     <select name="tipo_acto" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
                         <option value="">Seleccione el tipo de acto...</option>
                         @if(isset($catalogoActos) && $catalogoActos->count() > 0)
                             @foreach($catalogoActos as $acto)
@@ -366,7 +366,7 @@
                         GRAVEDAD <span class="text-rose-500">*</span>
                     </label>
                     <select name="gravedad" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
                         <option value="">Seleccione la gravedad...</option>
                         <option value="Leve">Leve (Riesgo potencial bajo)</option>
                         <option value="Moderado">Moderado (Riesgo potencial medio)</option>
@@ -382,7 +382,7 @@
                     LUGAR EN ESPECÍFICO DEL SUCESO <span class="text-rose-500">*</span>
                 </label>
                 <input type="text" name="lugar_especifico" required placeholder="Ej: Al lado de la puerta, junto al torno..." 
-                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs">
             </div>
 
             <!-- Fila 3: Persona Afectada y Personas Involucradas -->
@@ -391,16 +391,16 @@
                     <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
                         PERSONA AFECTADA <span class="text-rose-500">*</span>
                     </label>
-                    <input type="text" name="persona_afectada" required placeholder="Nombre de la persona afectada..." 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                    <input type="text" name="persona_afectada" required maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Nombre de la persona afectada..." 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs">
                 </div>
 
                 <div class="space-y-1">
                     <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
                         PERSONAS INVOLUCRADAS
                     </label>
-                    <input type="text" name="personas_involucradas" placeholder="Otras personas involucradas o presentes..." 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                    <input type="text" name="personas_involucradas" maxlength="255" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s,]+$" title="Solo letras, espacios y comas" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s,]/g, '')" placeholder="Otras personas involucradas o presentes..." 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs">
                 </div>
             </div>
 
@@ -409,8 +409,8 @@
                 <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
                     INSTRUCTOR RESPONSABLE
                 </label>
-                <input type="text" name="instructor_responsable" placeholder="Nombre del instructor a cargo..." 
-                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                <input type="text" name="instructor_responsable" maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Nombre del instructor a cargo..." 
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs">
             </div>
 
             <!-- Descripción Detallada -->
@@ -418,8 +418,8 @@
                 <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
                     DESCRIPCIÓN DETALLADA <span class="text-rose-500">*</span>
                 </label>
-                <textarea name="descripcion" rows="3" required placeholder="Describe la situación observada o el acto inseguro cometido..." 
-                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs resize-none"></textarea>
+                <textarea name="descripcion" rows="3" required maxlength="1000" placeholder="Describe la situación observada o el acto inseguro cometido..." 
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs resize-none"></textarea>
             </div>
 
             <!-- Evidencia Fotográfica (Hasta 3 imágenes) -->
@@ -431,18 +431,18 @@
                     <span id="conteoFotosRegistrar" class="text-[10px] font-bold text-slate-400">0 / 3 seleccionadas</span>
                 </div>
                 
-                <div id="dropZoneRegistrar" class="relative border-2 border-dashed border-slate-200 rounded-2xl p-5 text-center hover:border-orange-500 hover:bg-orange-50/20 transition-all bg-slate-50/50 cursor-pointer group" onclick="document.getElementById('inputEvidenciaFile').click()">
+                <div id="dropZoneRegistrar" class="relative border-2 border-dashed border-slate-200 rounded-2xl p-5 text-center hover:border-[#39A900] hover:bg-emerald-50/20 transition-all bg-slate-50/50 cursor-pointer group" onclick="document.getElementById('inputEvidenciaFile').click()">
                     <input type="file" id="inputEvidenciaFile" name="evidencias[]" multiple accept="image/*" class="hidden" onchange="handleRegistrarFiles(this.files)">
                     <div class="flex flex-col items-center justify-center space-y-2">
-                        <div class="w-11 h-11 rounded-2xl bg-white text-slate-400 group-hover:text-orange-500 group-hover:scale-105 flex items-center justify-center text-xl shadow-2xs transition-all border border-slate-200/60">
+                        <div class="w-11 h-11 rounded-2xl bg-white text-slate-400 group-hover:text-[#39A900] group-hover:scale-105 flex items-center justify-center text-xl shadow-2xs transition-all border border-slate-200/60">
                             <i class="fa-solid fa-images"></i>
                         </div>
                         <div>
-                            <p id="labelEvidenciaTexto" class="text-xs font-bold text-slate-700 group-hover:text-orange-600 transition-colors">
+                            <p id="labelEvidenciaTexto" class="text-xs font-bold text-slate-700 group-hover:text-[#39A900] transition-colors">
                                 Selecciona hasta 3 fotos de una vez o arrástralas aquí
                             </p>
                             <p class="text-[11px] text-slate-400 mt-1 font-medium flex items-center justify-center gap-1">
-                                <i class="fa-solid fa-circle-info text-orange-400 text-[10px]"></i>
+                                <i class="fa-solid fa-circle-info text-[#39A900] text-[10px]"></i>
                                 Puedes seleccionar las 3 al mismo tiempo manteniendo presionado <kbd class="px-1.5 py-0.5 rounded bg-slate-200 text-slate-700 font-bold text-[9px]">Ctrl</kbd> o <kbd class="px-1.5 py-0.5 rounded bg-slate-200 text-slate-700 font-bold text-[9px]">Shift</kbd>
                             </p>
                         </div>
@@ -454,7 +454,7 @@
 
             <!-- Botones de Acción Inferiores -->
             <div class="flex items-center gap-3 pt-3 border-t border-slate-100">
-                <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
+                <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200/70 text-[#2d8500] border border-emerald-200 hover:border-emerald-300 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
                     <i class="fa-solid fa-paper-plane text-xs"></i>
                     <span>Enviar Reporte</span>
                 </button>
@@ -476,7 +476,7 @@
         <!-- Header del Modal -->
         <div class="p-5 sm:p-6 pb-4 border-b border-slate-100 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-3.5">
-                <div class="w-11 h-11 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center text-lg border border-orange-200/80 shadow-2xs shrink-0">
+                <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-[#39A900] flex items-center justify-center text-lg border border-emerald-200/80 shadow-2xs shrink-0">
                     <i class="fa-solid fa-pen-to-square"></i>
                 </div>
                 <div>
@@ -502,7 +502,7 @@
                         FECHA Y HORA DEL SUCESO <span class="text-rose-500">*</span>
                     </label>
                     <input type="datetime-local" id="editFechaHora" name="fecha_hora" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs">
                 </div>
 
                 <div class="space-y-1">
@@ -510,7 +510,7 @@
                         LUGAR DE FORMACIÓN <span class="text-rose-500">*</span>
                     </label>
                     <select id="editLugarFormacion" name="lugar_formacion" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
                         <option value="">Seleccione el lugar...</option>
                         @if(isset($lugares) && $lugares->count() > 0)
                             @foreach($lugares as $lugar)
@@ -534,7 +534,7 @@
                         TIPO DE ACTO INSEGURO <span class="text-rose-500">*</span>
                     </label>
                     <select id="editTipoActo" name="tipo_acto" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
                         <option value="">Seleccione el tipo de acto...</option>
                         @if(isset($catalogoActos) && $catalogoActos->count() > 0)
                             @foreach($catalogoActos as $acto)
@@ -555,7 +555,7 @@
                         GRAVEDAD <span class="text-rose-500">*</span>
                     </label>
                     <select id="editGravedad" name="gravedad" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs cursor-pointer">
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
                         <option value="">Seleccione la gravedad...</option>
                         <option value="Leve">Leve (Riesgo potencial bajo)</option>
                         <option value="Moderado">Moderado (Riesgo potencial medio)</option>
@@ -571,7 +571,7 @@
                     LUGAR EN ESPECÍFICO DEL SUCESO <span class="text-rose-500">*</span>
                 </label>
                 <input type="text" id="editLugarEspecifico" name="lugar_especifico" required placeholder="Ej: Al lado de la puerta, junto al torno..." 
-                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs">
             </div>
 
             <!-- Fila 3: Persona Afectada y Personas Involucradas -->
@@ -580,16 +580,16 @@
                     <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
                         PERSONA AFECTADA <span class="text-rose-500">*</span>
                     </label>
-                    <input type="text" id="editPersonaAfectada" name="persona_afectada" required placeholder="Nombre de la persona afectada..." 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                    <input type="text" id="editPersonaAfectada" name="persona_afectada" required maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Nombre de la persona afectada..." 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs">
                 </div>
 
                 <div class="space-y-1">
                     <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
                         PERSONAS INVOLUCRADAS
                     </label>
-                    <input type="text" id="editPersonasInvolucradas" name="personas_involucradas" placeholder="Otras personas involucradas o presentes..." 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                    <input type="text" id="editPersonasInvolucradas" name="personas_involucradas" maxlength="255" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s,]+$" title="Solo letras, espacios y comas" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s,]/g, '')" placeholder="Otras personas involucradas o presentes..." 
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs">
                 </div>
             </div>
 
@@ -598,8 +598,8 @@
                 <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
                     INSTRUCTOR RESPONSABLE
                 </label>
-                <input type="text" id="editInstructorResponsable" name="instructor_responsable" 
-                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                <input type="text" id="editInstructorResponsable" name="instructor_responsable" maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Nombre del instructor a cargo..." 
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs">
             </div>
 
             <!-- Descripción Detallada -->
@@ -607,8 +607,8 @@
                 <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
                     DESCRIPCIÓN DETALLADA <span class="text-rose-500">*</span>
                 </label>
-                <textarea id="editDescripcion" name="descripcion" rows="3" required 
-                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs resize-none"></textarea>
+                <textarea id="editDescripcion" name="descripcion" rows="3" required maxlength="1000" 
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs resize-none"></textarea>
             </div>
 
             <!-- Fotos existentes y Nuevas Evidencias -->
@@ -625,14 +625,14 @@
                     <div id="editExistingPhotosGrid" class="grid grid-cols-3 gap-2.5"></div>
                 </div>
 
-                <div id="editUploadArea" class="relative border-2 border-dashed border-slate-200 rounded-2xl p-4 text-center hover:border-orange-500 hover:bg-orange-50/20 transition-all bg-slate-50/50 cursor-pointer group" onclick="document.getElementById('inputEditEvidenciaFiles').click()">
+                <div id="editUploadArea" class="relative border-2 border-dashed border-slate-200 rounded-2xl p-4 text-center hover:border-[#39A900] hover:bg-emerald-50/20 transition-all bg-slate-50/50 cursor-pointer group" onclick="document.getElementById('inputEditEvidenciaFiles').click()">
                     <input type="file" id="inputEditEvidenciaFiles" name="evidencias[]" multiple accept="image/*" class="hidden" onchange="handleEditFiles(this.files)">
                     <div class="flex items-center justify-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-white text-slate-400 group-hover:text-orange-500 flex items-center justify-center text-base shadow-2xs transition-all border border-slate-200/60">
+                        <div class="w-9 h-9 rounded-xl bg-white text-slate-400 group-hover:text-[#39A900] flex items-center justify-center text-base shadow-2xs transition-all border border-slate-200/60">
                             <i class="fa-solid fa-cloud-arrow-up"></i>
                         </div>
                         <div class="text-left">
-                            <p id="editLabelUploadTexto" class="text-xs font-bold text-slate-700 group-hover:text-orange-600 transition-colors">
+                            <p id="editLabelUploadTexto" class="text-xs font-bold text-slate-700 group-hover:text-[#39A900] transition-colors">
                                 Agregar fotos nuevas (hasta completar 3)
                             </p>
                             <p class="text-[10px] text-slate-400 font-medium">Haz clic aquí para seleccionar imágenes adicionales</p>
@@ -645,7 +645,7 @@
 
             <!-- Botones de Acción Inferiores -->
             <div class="flex items-center gap-3 pt-3 border-t border-slate-100">
-                <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
+                <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200/70 text-[#2d8500] border border-emerald-200 hover:border-emerald-300 text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
                     <i class="fa-solid fa-floppy-disk text-xs"></i>
                     <span>Actualizar Reporte</span>
                 </button>
@@ -697,7 +697,7 @@
         
         <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 shrink-0">
             <div class="flex items-center gap-2.5 text-slate-800">
-                <div class="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center text-xs">
+                <div class="w-8 h-8 rounded-xl bg-emerald-50 text-[#39A900] flex items-center justify-center text-xs">
                     <i class="fa-solid fa-person-falling-burst"></i>
                 </div>
                 <h3 class="font-bold text-sm tracking-tight">Detalle del Acto / Condición Insegura</h3>
@@ -711,14 +711,14 @@
         <div class="pt-4 space-y-3.5 overflow-y-auto pr-1 flex-1">
             <div class="flex items-center justify-between gap-2">
                 <h4 id="modalDetalleTitulo" class="font-extrabold text-slate-900 text-base"></h4>
-                <span id="modalDetalleModulo" class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-orange-50 text-orange-700 border border-orange-200 shrink-0"></span>
+                <span id="modalDetalleModulo" class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-emerald-50 text-[#2d8500] border border-emerald-200 shrink-0"></span>
             </div>
 
             <!-- Galería de Evidencias Fotográficas -->
             <div id="modalDetalleGaleriaContainer" class="hidden space-y-1.5">
                 <div class="flex items-center justify-between">
                     <span class="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-camera text-orange-500"></i> Evidencias Registradas
+                        <i class="fa-solid fa-camera text-[#39A900]"></i> Evidencias Registradas
                     </span>
                     <span id="modalDetalleTotalFotos" class="text-[10px] font-bold text-slate-400"></span>
                 </div>
@@ -745,7 +745,7 @@
                 </div>
                 <div>
                     <span class="text-slate-400 font-bold block text-[10px] uppercase">Persona Afectada</span>
-                    <span id="modalDetalleAfectado" class="font-bold text-orange-600 truncate block"></span>
+                    <span id="modalDetalleAfectado" class="font-bold text-[#39A900] truncate block"></span>
                 </div>
                 <div>
                     <span class="text-slate-400 font-bold block text-[10px] uppercase">Instructor</span>
@@ -812,7 +812,7 @@
         <!-- Header del Visor -->
         <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100 shrink-0 bg-white">
             <div class="flex items-center gap-2">
-                <div class="w-7 h-7 rounded-lg bg-orange-50 border border-orange-200 text-orange-600 flex items-center justify-center text-xs">
+                <div class="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200 text-[#39A900] flex items-center justify-center text-xs">
                     <i class="fa-solid fa-camera"></i>
                 </div>
                 <div>
@@ -845,7 +845,7 @@
         <!-- Footer del Visor -->
         <div class="flex items-center justify-between px-4 py-2.5 border-t border-slate-100 bg-slate-50/70 shrink-0">
             <span class="text-[10px] text-slate-400 font-medium flex items-center gap-1">
-                <i class="fa-regular fa-eye text-orange-500 text-[10px]"></i> Visualización en pantalla
+                <i class="fa-regular fa-eye text-[#39A900] text-[10px]"></i> Visualización en pantalla
             </span>
             <button type="button" onclick="cerrarVisorImagen()" class="px-4 py-1.5 rounded-xl bg-white border border-slate-200/80 hover:bg-slate-100 text-slate-700 text-xs font-bold transition shadow-2xs cursor-pointer">
                 Cerrar
@@ -999,21 +999,21 @@
         if (regFiles.length === 0) {
             grid.classList.add('hidden');
             label.textContent = 'Selecciona hasta 3 fotos de una vez o arrástralas aquí';
-            label.classList.remove('text-orange-600');
-            conteo.classList.remove('text-orange-600');
+            label.classList.remove('text-[#39A900]');
+            conteo.classList.remove('text-[#39A900]');
             return;
         }
 
         label.textContent = regFiles.length + ' foto(s) lista(s) para enviar';
-        label.classList.add('text-orange-600');
-        conteo.classList.add('text-orange-600');
+        label.classList.add('text-[#39A900]');
+        conteo.classList.add('text-[#39A900]');
         grid.classList.remove('hidden');
 
         regFiles.forEach((file, idx) => {
             const reader = new FileReader();
             reader.onload = (e) => {
                 const div = document.createElement('div');
-                div.className = 'relative rounded-2xl overflow-hidden border-2 border-orange-400 aspect-square shadow-2xs group bg-slate-900';
+                div.className = 'relative rounded-2xl overflow-hidden border-2 border-[#39A900] aspect-square shadow-2xs group bg-slate-900';
                 div.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">' +
                     '<span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-slate-900/80 text-white text-[9px] font-extrabold">#' + (idx + 1) + '</span>' +
                     '<button type="button" class="btn-del absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-[11px] shadow-sm cursor-pointer"><i class="fa-solid fa-xmark"></i></button>';
@@ -1029,13 +1029,13 @@
         ['dragenter', 'dragover'].forEach(evt => {
             dropZoneReg.addEventListener(evt, e => {
                 e.preventDefault();
-                dropZoneReg.classList.add('border-orange-500', 'bg-orange-50/40');
+                dropZoneReg.classList.add('border-[#39A900]', 'bg-emerald-50/40');
             });
         });
         ['dragleave', 'drop'].forEach(evt => {
             dropZoneReg.addEventListener(evt, e => {
                 e.preventDefault();
-                dropZoneReg.classList.remove('border-orange-500', 'bg-orange-50/40');
+                dropZoneReg.classList.remove('border-[#39A900]', 'bg-emerald-50/40');
             });
         });
         dropZoneReg.addEventListener('drop', e => {
@@ -1154,9 +1154,9 @@
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const card = document.createElement('div');
-                    card.className = 'relative rounded-2xl overflow-hidden border-2 border-orange-400 aspect-square shadow-2xs group bg-slate-900';
+                    card.className = 'relative rounded-2xl overflow-hidden border-2 border-[#39A900] aspect-square shadow-2xs group bg-slate-900';
                     card.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">' +
-                        '<span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-orange-600 text-white text-[8px] font-extrabold uppercase">Nueva</span>' +
+                        '<span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-[#39A900] text-white text-[8px] font-extrabold uppercase">Nueva</span>' +
                         '<button type="button" class="btn-del absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-[11px] shadow-sm cursor-pointer"><i class="fa-solid fa-xmark"></i></button>';
                     card.querySelector('.btn-del').onclick = (ev) => { ev.stopPropagation(); removeEditNewFile(idx); };
                     gridNew.appendChild(card);
@@ -1283,7 +1283,7 @@
         let btnsHtml = '';
         for (let i = 1; i <= totalPaginas; i++) {
             if (i === paginaActualEvento) {
-                btnsHtml += `<button type="button" class="w-8 h-8 rounded-xl bg-orange-600 text-white font-bold text-xs shadow-xs">${i}</button>`;
+                btnsHtml += `<button type="button" class="w-8 h-8 rounded-xl bg-[#39A900] text-white font-bold text-xs shadow-xs">${i}</button>`;
             } else {
                 btnsHtml += `<button type="button" onclick="irPaginaEvento(${i})" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition cursor-pointer">${i}</button>`;
             }

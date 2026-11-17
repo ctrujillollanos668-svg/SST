@@ -35,21 +35,21 @@
         <div class="flex items-center gap-2 text-xs font-semibold text-slate-400">
             <span class="text-slate-500">Información Básica</span>
             <i class="fa-solid fa-chevron-right text-[9px]"></i>
-            <span class="text-orange-600 font-bold">Contacto de Emergencia</span>
+            <span class="text-[#39A900] font-bold">Contacto de Emergencia</span>
         </div>
 
-        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
+        <div class="bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#002D44] p-6 sm:p-7 rounded-2xl border-l-4 border-l-[#39A900] text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-xs">
+                <div class="w-12 h-12 rounded-2xl bg-white/10 text-[#62E31D] flex items-center justify-center border border-white/20 shadow-inner shrink-0">
                     <i class="fa-solid fa-phone-volume text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Contactos de Emergencia</h1>
-                    <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">Configuración y administración de catálogos en base de datos.</p>
+                    <h1 class="text-2xl font-black text-white tracking-tight">Contactos de <span class="text-[#62E31D]">Emergencia</span></h1>
+                    <p class="text-xs sm:text-sm text-white/80 font-normal mt-0.5">Configuración y administración de catálogos en base de datos.</p>
                 </div>
             </div>
 
-            <button onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 text-sm font-bold shadow-xs transition-all duration-200 cursor-pointer group border border-orange-200/90 hover:border-orange-300 shrink-0">
+            <button onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#39A900] hover:bg-[#2d8500] text-white text-sm font-bold shadow-lg shadow-[#39A900]/30 transition-all duration-200 cursor-pointer group border border-[#62E31D]/40 shrink-0">
                 <i class="fa-solid fa-plus text-xs group-hover:rotate-90 transition-transform duration-300"></i>
                 <span>Registrar Contacto de Emergencia</span>
             </button>
@@ -60,7 +60,7 @@
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
         <div class="relative w-full md:w-80">
             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Buscar por entidad o teléfono..." class="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 focus:bg-white transition font-medium">
+            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Buscar por entidad o teléfono..." class="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] focus:bg-white transition font-medium">
         </div>
     </div>
 
@@ -69,7 +69,7 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse" id="contactsTable">
                 <thead>
-                    <tr class="bg-slate-50/80 border-b border-slate-200/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider">
+                    <tr class="bg-[#001A29] text-white text-[11px] font-extrabold uppercase tracking-wider border-b-2 border-[#39A900]">
                         <th class="py-4 px-6 w-1/3">NOMBRE / ENTIDAD</th>
                         <th class="py-4 px-6 w-1/4">TELÉFONO</th>
                         <th class="py-4 px-6 w-1/4">DESCRIPCIÓN</th>
@@ -82,7 +82,7 @@
                         <tr class="hover:bg-slate-50/60 transition-colors">
                             <td class="py-4 px-6 font-bold text-slate-900 break-words">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold shrink-0 border border-orange-100">
+                                    <div class="w-9 h-9 rounded-xl bg-emerald-50 text-[#39A900] flex items-center justify-center font-bold shrink-0 border border-emerald-100">
                                         <i class="fa-solid fa-phone text-xs"></i>
                                     </div>
                                     <span class="font-bold text-slate-900">{{ $contacto->nombre }}</span>
@@ -91,7 +91,7 @@
                             <td class="py-4 px-6 font-semibold text-slate-700 whitespace-nowrap">
                                 <div class="flex items-center gap-2">
                                     <span class="text-sm font-extrabold text-slate-800">{{ $contacto->telefono }}</span>
-                                    <button onclick="copyNumber({{ json_encode($contacto->telefono) }})" class="text-slate-400 hover:text-orange-600 transition" title="Copiar número">
+                                    <button onclick="copyNumber({{ json_encode($contacto->telefono) }})" class="text-slate-400 hover:text-[#2d8500] transition" title="Copiar número">
                                         <i class="fa-regular fa-copy text-xs"></i>
                                     </button>
                                 </div>
@@ -114,7 +114,7 @@
                             </td>
                             <td class="py-4 px-6 text-center whitespace-nowrap">
                                 <div class="flex items-center justify-center gap-1.5">
-                                    <button onclick="openEditModal({{ $contacto->id_contacto }}, {{ json_encode($contacto->nombre) }}, {{ json_encode($contacto->telefono) }}, {{ json_encode($contacto->descripcion ?? '') }}, {{ json_encode($contacto->estado) }})" class="w-8 h-8 rounded-xl flex items-center justify-center text-orange-600 bg-orange-50 hover:bg-orange-500 hover:text-white border border-orange-200/80 shadow-2xs transition-all cursor-pointer" title="Editar">
+                                    <button onclick="openEditModal({{ $contacto->id_contacto }}, {{ json_encode($contacto->nombre) }}, {{ json_encode($contacto->telefono) }}, {{ json_encode($contacto->descripcion ?? '') }}, {{ json_encode($contacto->estado) }})" class="w-8 h-8 rounded-xl flex items-center justify-center text-[#39A900] bg-emerald-50 hover:bg-emerald-500 hover:text-white border border-emerald-200/80 shadow-2xs transition-all cursor-pointer" title="Editar">
                                         <i class="fa-regular fa-pen-to-square text-xs"></i>
                                     </button>
                                     <button onclick="openDeleteModal({{ $contacto->id_contacto }}, {{ json_encode($contacto->nombre) }})" class="w-8 h-8 rounded-xl flex items-center justify-center text-rose-600 bg-rose-50 hover:bg-rose-500 hover:text-white border border-rose-200/80 shadow-2xs transition-all cursor-pointer" title="Eliminar">
@@ -150,7 +150,7 @@
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 space-y-5 animate-modal-pop">
         <div class="flex items-center justify-between border-b border-slate-100 pb-4">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold border border-orange-200/80 shadow-xs">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-[#39A900] flex items-center justify-center font-bold border border-emerald-200/80 shadow-xs">
                     <i class="fa-solid fa-phone-volume text-lg"></i>
                 </div>
                 <div>
@@ -167,17 +167,17 @@
             @csrf
             <div>
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nombre Entidad / Persona *</label>
-                <input type="text" name="nombre" required placeholder="Ej: Bomberos Voluntarios / Cruz Roja" class="w-full px-3.5 py-2.5 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-slate-50/30">
+                <input type="text" name="nombre" required maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Ej: Bomberos Voluntarios / Cruz Roja" class="w-full px-3.5 py-2.5 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition bg-slate-50/30">
             </div>
 
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Teléfono *</label>
-                    <input type="text" name="telefono" required placeholder="Ej: 119 / 3158901234" class="w-full px-3.5 py-2.5 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-slate-50/30">
+                    <input type="text" name="telefono" required inputmode="numeric" maxlength="20" pattern="^[0-9]+$" title="Solo números sin espacios ni caracteres especiales" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="Ej: 119 / 3158901234" class="w-full px-3.5 py-2.5 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition bg-slate-50/30">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Estado</label>
-                    <select name="estado" class="w-full px-3.5 py-2.5 text-xs font-bold rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 bg-white cursor-pointer">
+                    <select name="estado" class="w-full px-3.5 py-2.5 text-xs font-bold rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] bg-white cursor-pointer">
                         <option value="activo" selected>Activo</option>
                         <option value="inactivo">Inactivo</option>
                     </select>
@@ -186,12 +186,12 @@
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Descripción</label>
-                <textarea name="descripcion" rows="2" placeholder="Observaciones o indicaciones adicionales..." class="w-full px-3.5 py-2.5 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-slate-50/30"></textarea>
+                <textarea name="descripcion" rows="2" maxlength="500" placeholder="Observaciones o indicaciones adicionales..." class="w-full px-3.5 py-2.5 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition bg-slate-50/30"></textarea>
             </div>
 
             <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
                 <button type="button" onclick="closeRegisterModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 transition cursor-pointer">Cancelar</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 font-bold text-xs shadow-xs transition cursor-pointer">Guardar Registro</button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200/70 text-[#064e3b] border border-emerald-200/90 hover:border-emerald-300 font-bold text-xs shadow-xs transition cursor-pointer">Guardar Registro</button>
             </div>
         </form>
     </div>
@@ -202,7 +202,7 @@
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 space-y-5 animate-modal-pop">
         <div class="flex items-center justify-between border-b border-slate-100 pb-4">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold border border-orange-200/80 shadow-xs">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-[#39A900] flex items-center justify-center font-bold border border-emerald-200/80 shadow-xs">
                     <i class="fa-regular fa-pen-to-square"></i>
                 </div>
                 <div>
@@ -220,17 +220,17 @@
             @method('PUT')
             <div>
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nombre Entidad / Persona *</label>
-                <input type="text" id="editNombre" name="nombre" required class="w-full px-3.5 py-2.5 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-slate-50/30">
+                <input type="text" id="editNombre" name="nombre" required maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" class="w-full px-3.5 py-2.5 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition bg-slate-50/30">
             </div>
 
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Teléfono *</label>
-                    <input type="text" id="editTelefono" name="telefono" required class="w-full px-3.5 py-2.5 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-slate-50/30">
+                    <input type="text" id="editTelefono" name="telefono" required inputmode="numeric" maxlength="20" pattern="^[0-9]+$" title="Solo números sin espacios ni caracteres especiales" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full px-3.5 py-2.5 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition bg-slate-50/30">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Estado</label>
-                    <select id="editEstado" name="estado" class="w-full px-3.5 py-2.5 text-xs font-bold rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 bg-white cursor-pointer">
+                    <select id="editEstado" name="estado" class="w-full px-3.5 py-2.5 text-xs font-bold rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] bg-white cursor-pointer">
                         <option value="activo">Activo</option>
                         <option value="inactivo">Inactivo</option>
                     </select>
@@ -239,12 +239,12 @@
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Descripción</label>
-                <textarea id="editDescripcion" name="descripcion" rows="2" class="w-full px-3.5 py-2.5 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition bg-slate-50/30"></textarea>
+                <textarea id="editDescripcion" name="descripcion" rows="2" maxlength="500" class="w-full px-3.5 py-2.5 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition bg-slate-50/30"></textarea>
             </div>
 
             <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
                 <button type="button" onclick="closeEditModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 transition cursor-pointer">Cancelar</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 font-bold text-xs shadow-xs transition cursor-pointer">Actualizar Registro</button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200/70 text-[#064e3b] border border-emerald-200/90 hover:border-emerald-300 font-bold text-xs shadow-xs transition cursor-pointer">Actualizar Registro</button>
             </div>
         </form>
     </div>

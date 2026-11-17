@@ -29,20 +29,20 @@
         </div>
     @endif
 
-    <!-- 1. Encabezado de la Sección -->
-    <div class="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
+    <!-- 1. Encabezado de la Sección (Estilo Dirección Ejecutivo) -->
+    <div class="bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#002D44] p-6 sm:p-7 rounded-2xl border-l-4 border-l-[#39A900] text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex items-center gap-3.5">
-            <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-xs">
+            <div class="w-12 h-12 rounded-2xl bg-white/10 text-[#62E31D] flex items-center justify-center border border-white/20 shadow-inner shrink-0">
                 <i class="fa-solid fa-triangle-exclamation text-xl"></i>
             </div>
             <div>
-                <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Tipos de Condiciones Inseguras</h1>
-                <p class="text-sm text-slate-500 font-medium mt-0.5">Configuración y administración de factores ambientales y estructurales peligrosos.</p>
+                <h1 class="text-2xl font-black text-white tracking-tight">Tipos de <span class="text-[#62E31D]">Condiciones Inseguras</span></h1>
+                <p class="text-xs sm:text-sm text-white/80 font-normal mt-0.5">Configuración y administración de factores ambientales y estructurales peligrosos.</p>
             </div>
         </div>
 
         <div class="flex items-center gap-3">
-            <button onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 text-sm font-bold shadow-xs transition-all duration-200 cursor-pointer group border border-orange-200/90 hover:border-orange-300">
+            <button onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#39A900] hover:bg-[#2d8500] text-white text-sm font-bold shadow-lg shadow-[#39A900]/30 transition-all duration-200 cursor-pointer group border border-[#62E31D]/40 shrink-0">
                 <i class="fa-solid fa-plus text-xs group-hover:rotate-90 transition-transform duration-300"></i>
                 <span>Registrar Condición Insegura</span>
             </button>
@@ -54,7 +54,7 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse table-fixed">
                 <thead>
-                    <tr class="bg-slate-50/90 border-b border-slate-200/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider">
+                    <tr class="bg-[#001A29] text-white text-[11px] font-extrabold uppercase tracking-wider border-b-2 border-[#39A900]">
                         <th class="py-4 px-6 w-1/4">NOMBRE</th>
                         <th class="py-4 px-6 w-1/2">DESCRIPCIÓN</th>
                         <th class="py-4 px-6 text-center w-32">ESTADO</th>
@@ -69,7 +69,7 @@
                             </td>
                             <td class="py-4 px-6 text-slate-600 max-w-md">
                                 @if($condicion->descripcion)
-                                    <p class="line-clamp-2 cursor-pointer hover:text-orange-600 transition-colors" onclick="showFullDesc(event, {{ json_encode($condicion->descripcion) }})" title="Haz clic para ver la descripción completa">
+                                    <p class="line-clamp-2 cursor-pointer hover:text-[#2d8500] transition-colors" onclick="showFullDesc(event, {{ json_encode($condicion->descripcion) }})" title="Haz clic para ver la descripción completa">
                                         {{ $condicion->descripcion }}
                                     </p>
                                 @else
@@ -123,7 +123,7 @@
 <div id="descPopover" class="fixed z-50 hidden bg-white border border-slate-200 text-slate-800 p-4 rounded-2xl shadow-xl max-w-md text-xs leading-relaxed animate-in fade-in zoom-in duration-150">
     <div class="flex items-center justify-between gap-3 pb-2 mb-2 border-b border-slate-100">
         <span class="font-bold text-slate-900 flex items-center gap-1.5">
-            <i class="fa-solid fa-align-left text-orange-500"></i> Descripción Completa
+            <i class="fa-solid fa-align-left text-[#39A900]"></i> Descripción Completa
         </span>
         <button onclick="closeDescPopover()" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
             <i class="fa-solid fa-xmark text-xs"></i>
@@ -141,7 +141,7 @@
     <div class="bg-white rounded-2xl shadow-xl border border-slate-100 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
             <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                <i class="fa-solid fa-plus text-orange-500"></i>
+                <i class="fa-solid fa-plus text-[#39A900]"></i>
                 <span>Registrar Tipo de Condición Insegura</span>
             </h3>
             <button onclick="closeRegisterModal()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
@@ -153,15 +153,15 @@
             <div class="p-6 space-y-4 text-xs">
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Nombre de la Condición Insegura *</label>
-                    <input type="text" name="nombre" required placeholder="Ej. Piso resbaladizo, cables expuestos, iluminación deficiente" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm">
+                    <input type="text" name="nombre" required maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Ej. Piso resbaladizo, cables expuestos, iluminación deficiente" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition text-sm">
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Descripción</label>
-                    <textarea name="descripcion" rows="3" placeholder="Describa la condición física o ambiental peligrosa..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm"></textarea>
+                    <textarea name="descripcion" rows="3" maxlength="500" placeholder="Describa la condición física o ambiental peligrosa..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition text-sm"></textarea>
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Estado</label>
-                    <select name="estado" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm bg-white">
+                    <select name="estado" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition text-sm bg-white">
                         <option value="activo" selected>Activo</option>
                         <option value="inactivo">Inactivo</option>
                     </select>
@@ -169,7 +169,7 @@
             </div>
             <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex justify-end gap-2">
                 <button type="button" onclick="closeRegisterModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200/70 transition cursor-pointer">Cancelar</button>
-                <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 shadow-xs transition cursor-pointer">Guardar Registro</button>
+                <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200/70 text-[#064e3b] border border-emerald-200/90 hover:border-emerald-300 shadow-xs transition cursor-pointer">Guardar Registro</button>
             </div>
         </form>
     </div>
@@ -180,7 +180,7 @@
     <div class="bg-white rounded-2xl shadow-xl border border-slate-100 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
             <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                <i class="fa-regular fa-pen-to-square text-orange-600"></i>
+                <i class="fa-regular fa-pen-to-square text-[#39A900]"></i>
                 <span>Editar Tipo de Condición Insegura</span>
             </h3>
             <button onclick="closeEditModal()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
@@ -193,15 +193,15 @@
             <div class="p-6 space-y-4 text-xs">
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Nombre de la Condición Insegura *</label>
-                    <input type="text" id="editNombreInput" name="nombre" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm">
+                    <input type="text" id="editNombreInput" name="nombre" required maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition text-sm">
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Descripción</label>
-                    <textarea id="editDescInput" name="descripcion" rows="3" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm"></textarea>
+                    <textarea id="editDescInput" name="descripcion" rows="3" maxlength="500" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition text-sm"></textarea>
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Estado</label>
-                    <select id="editEstadoSelect" name="estado" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm bg-white">
+                    <select id="editEstadoSelect" name="estado" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition text-sm bg-white">
                         <option value="activo">Activo</option>
                         <option value="inactivo">Inactivo</option>
                     </select>
@@ -209,7 +209,7 @@
             </div>
             <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex justify-end gap-2">
                 <button type="button" onclick="closeEditModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200/70 transition cursor-pointer">Cancelar</button>
-                <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-700 border border-orange-200/90 hover:border-orange-300 shadow-xs transition cursor-pointer">Actualizar Registro</button>
+                <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200/70 text-[#064e3b] border border-emerald-200/90 hover:border-emerald-300 shadow-xs transition cursor-pointer">Actualizar Registro</button>
             </div>
         </form>
     </div>

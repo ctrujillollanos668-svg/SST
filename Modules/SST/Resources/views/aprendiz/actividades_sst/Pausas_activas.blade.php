@@ -5,18 +5,18 @@
 @section('content')
 <div class="space-y-6 max-w-7xl mx-auto">
 
-    <!-- 1. Encabezado de la Sección -->
-    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all">
+    <!-- 1. Encabezado de la Sección (Estilo Dirección Ejecutivo) -->
+    <div class="bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#002D44] p-6 sm:p-7 rounded-2xl border-l-4 border-l-[#39A900] text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-orange-50 text-orange-500 flex items-center justify-center border border-orange-100 shadow-2xs shrink-0 text-2xl">
+            <div class="w-14 h-14 rounded-2xl bg-white/10 text-[#62E31D] flex items-center justify-center border border-white/20 shadow-inner shrink-0 text-2xl">
                 <i class="fa-solid fa-spa"></i>
             </div>
             <div>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 text-orange-700 text-xs font-bold mb-1 border border-orange-200/60">
-                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span> Actividades SST
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-[#62E31D] text-xs font-bold mb-1 border border-white/15">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#62E31D] animate-pulse"></span> Actividades SST
                 </span>
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Pausas Activas Programadas</h1>
-                <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">Consulta las jornadas ergonómicas, visuales y osteomusculares para tu bienestar.</p>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Pausas Activas <span class="text-[#62E31D]">Programadas</span></h1>
+                <p class="text-xs sm:text-sm text-white/80 font-normal mt-0.5">Consulta las jornadas ergonómicas, visuales y osteomusculares para tu bienestar.</p>
             </div>
         </div>
     </div>
@@ -37,8 +37,8 @@
 
     <!-- 2. Tarjetas de Resumen KPI -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold text-xl shrink-0">
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 border-l-4 border-l-[#001A29] shadow-xs flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-[#001A29]/10 text-[#001A29] flex items-center justify-center font-bold text-xl shrink-0">
                 <i class="fa-solid fa-calendar-days"></i>
             </div>
             <div>
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4">
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 border-l-4 border-l-amber-500 shadow-xs flex items-center gap-4">
             <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xl shrink-0">
                 <i class="fa-solid fa-clock"></i>
             </div>
@@ -57,8 +57,8 @@
             </div>
         </div>
 
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xl shrink-0">
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 border-l-4 border-l-[#39A900] shadow-xs flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-[#39A900] flex items-center justify-center font-bold text-xl shrink-0">
                 <i class="fa-solid fa-circle-check"></i>
             </div>
             <div>
@@ -76,12 +76,12 @@
                     <i class="fa-solid fa-magnifying-glass text-xs"></i>
                 </span>
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por título, lugar, instructor o ficha..."
-                    class="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
+                    class="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition">
             </div>
 
             <div class="flex items-center gap-2">
                 <select name="estado" onchange="this.form.submit()"
-                    class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
+                    class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition">
                     <option value="todos" {{ request('estado') == 'todos' ? 'selected' : '' }}>Todos los estados</option>
                     <option value="Programada" {{ request('estado') == 'Programada' ? 'selected' : '' }}>Programadas</option>
                     <option value="Realizada" {{ request('estado') == 'Realizada' ? 'selected' : '' }}>Realizadas</option>
@@ -114,13 +114,13 @@
                         default => 'bg-slate-50 text-slate-700 border-slate-300'
                     };
                 @endphp
-                <div class="item-card bg-slate-50/70 hover:bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-orange-300 transition-all flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 cursor-pointer group"
+                <div class="item-card bg-slate-50/70 hover:bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-emerald-300 transition-all flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 cursor-pointer group"
                      onclick="openDetailModal(this)"
                      data-raw="{{ $rawData }}">
 
                     <!-- Ícono de la Actividad -->
-                    <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200/80 flex flex-col items-center justify-center text-orange-500 shrink-0 shadow-2xs group-hover:border-orange-400 group-hover:scale-105 transition">
-                        <i class="fa-solid fa-spa text-2xl text-orange-500"></i>
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200/80 flex flex-col items-center justify-center text-[#39A900] shrink-0 shadow-2xs group-hover:border-[#39A900]/60 group-hover:scale-105 transition">
+                        <i class="fa-solid fa-spa text-2xl text-[#39A900]"></i>
                     </div>
 
                     <!-- Contenido Central Estructurado -->
@@ -128,8 +128,8 @@
                         <!-- Fila 1: Título y Estado -->
                         <div class="flex flex-wrap items-center justify-between gap-2">
                             <h3 class="font-extrabold text-slate-900 text-sm sm:text-base flex items-center gap-2">
-                                <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0"></span>
-                                <span class="group-hover:text-orange-600 transition-colors">{{ $item->titulo }}</span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
+                                <span class="group-hover:text-[#39A900] transition-colors">{{ $item->titulo }}</span>
                             </h3>
 
                             <div class="flex items-center gap-2">
@@ -143,20 +143,20 @@
                         <!-- Fila 2: Chips informativos -->
                         <div class="flex flex-wrap items-center gap-2 text-[11px] font-medium text-slate-600">
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Fecha Programada">
-                                <i class="fa-regular fa-calendar text-orange-500 text-[10px]"></i>
+                                <i class="fa-regular fa-calendar text-[#39A900] text-[10px]"></i>
                                 <span class="text-slate-400 font-semibold">Fecha:</span>
                                 <strong class="font-bold text-slate-700">{{ $fechaObj->isoFormat('D MMM, Y') }}</strong>
                             </span>
 
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Horario">
-                                <i class="fa-regular fa-clock text-orange-500 text-[10px]"></i>
+                                <i class="fa-regular fa-clock text-[#39A900] text-[10px]"></i>
                                 <span class="text-slate-400 font-semibold">Horario:</span>
                                 <strong class="font-bold text-slate-700">{{ $horaIni }} @if($horaFin) - {{ $horaFin }} @endif</strong>
                             </span>
 
                             @if($item->lugar)
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Lugar / Ubicación">
-                                <i class="fa-solid fa-location-dot text-orange-500 text-[10px]"></i>
+                                <i class="fa-solid fa-location-dot text-[#39A900] text-[10px]"></i>
                                 <span class="text-slate-400 font-semibold">Lugar:</span>
                                 <strong class="font-bold text-slate-700">{{ $item->lugar }}</strong>
                             </span>
@@ -164,7 +164,7 @@
 
                             @if($item->instructor)
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Instructor / Responsable">
-                                <i class="fa-solid fa-chalkboard-user text-orange-500 text-[10px]"></i>
+                                <i class="fa-solid fa-chalkboard-user text-[#39A900] text-[10px]"></i>
                                 <span class="text-slate-400 font-semibold">Responsable:</span>
                                 <strong class="font-bold text-slate-700">{{ $item->instructor }}</strong>
                             </span>
@@ -172,7 +172,7 @@
 
                             @if($item->ficha_programa)
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 shadow-2xs" title="Ficha / Programa">
-                                <i class="fa-solid fa-users-rectangle text-orange-500 text-[10px]"></i>
+                                <i class="fa-solid fa-users-rectangle text-[#39A900] text-[10px]"></i>
                                 <span class="text-slate-400 font-semibold">Ficha:</span>
                                 <strong class="font-bold text-slate-700">{{ $item->ficha_programa }}</strong>
                             </span>
@@ -189,7 +189,7 @@
                                 <button type="button" onclick="event.stopPropagation(); openDetailModal(this.closest('.item-card'))" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs transition cursor-pointer" title="Ver Ficha Técnica">
                                     <i class="fa-solid fa-eye"></i>
                                 </button>
-                                <button type="button" onclick="event.stopPropagation(); openAsistenciaModal(this.closest('.item-card'))" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold shadow-xs hover:shadow-md transition cursor-pointer">
+                                <button type="button" onclick="event.stopPropagation(); openAsistenciaModal(this.closest('.item-card'))" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#39A900] hover:bg-[#2d8500] text-white text-xs font-bold shadow-xs hover:shadow-md transition cursor-pointer">
                                     <i class="fa-solid fa-clipboard-user text-xs"></i>
                                     <span>Asistencia</span>
                                 </button>
@@ -208,7 +208,7 @@
     @else
         <!-- Estado Vacío -->
         <div class="bg-white rounded-3xl border border-slate-200/80 p-12 text-center flex flex-col items-center justify-center">
-            <div class="w-16 h-16 rounded-2xl bg-orange-50 text-orange-400 flex items-center justify-center text-2xl mb-3 shadow-2xs">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-[#39A900] flex items-center justify-center text-2xl mb-3 shadow-2xs">
                 <i class="fa-solid fa-spa"></i>
             </div>
             <h3 class="font-extrabold text-slate-800 text-base">No hay pausas activas registradas</h3>
@@ -225,7 +225,7 @@
         <!-- Header del Modal Asistencia -->
         <div class="p-5 sm:p-6 pb-4 border-b border-slate-100 flex items-center justify-between shrink-0 bg-white">
             <div class="flex items-center gap-3.5">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 text-orange-600 border border-orange-200/80 flex items-center justify-center text-xl shadow-2xs shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 text-[#39A900] border border-emerald-200/80 flex items-center justify-center text-xl shadow-2xs shrink-0">
                     <i class="fa-solid fa-clipboard-user"></i>
                 </div>
                 <div>
@@ -245,9 +245,9 @@
             <div class="p-5 sm:p-6 space-y-4 overflow-y-auto flex-1">
                 
                 <!-- Resumen Compacto de la Pausa Activa -->
-                <div class="p-3 bg-orange-50/60 rounded-2xl border border-orange-100 flex items-center justify-between gap-3 text-xs">
+                <div class="p-3 bg-emerald-50/60 rounded-2xl border border-emerald-100 flex items-center justify-between gap-3 text-xs">
                     <div class="truncate">
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-orange-500 block">Pausa Activa Convocada</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-[#39A900] block">Pausa Activa Convocada</span>
                         <h4 id="asistenciaPausaTitulo" class="font-extrabold text-slate-800 text-xs sm:text-sm truncate"></h4>
                     </div>
                     <div class="text-right shrink-0">
@@ -259,7 +259,7 @@
                 <!-- Campo 1: Ficha y Programa Formativo (Llamado a lista con Flecha y Desplegable) -->
                 <div class="space-y-1 relative" id="ficha_combo_container">
                     <label for="asistencia_ficha_programa" class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                        <i class="fa-solid fa-users-rectangle text-orange-500 text-xs"></i>
+                        <i class="fa-solid fa-users-rectangle text-[#39A900] text-xs"></i>
                         Ficha y Programa Formativo <span class="text-rose-500">*</span>
                     </label>
                     
@@ -269,13 +269,18 @@
                                id="asistencia_ficha_programa" 
                                required 
                                autocomplete="off"
-                               placeholder="Selecciona o busca la ficha (Ej: 32300026 o código de curso)" 
-                               class="w-full pl-3.5 pr-10 py-2.5 text-xs font-semibold text-slate-800 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
+                               placeholder="Selecciona o escribe la ficha (solo números, Ej: 2711894)" 
+                               inputmode="numeric"
+                               maxlength="20"
+                               pattern="^[0-9]+$"
+                               title="Solo números sin espacios ni caracteres especiales"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                               class="w-full pl-3.5 pr-10 py-2.5 text-xs font-semibold text-slate-800 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition">
                         
                         <button type="button" 
                                 id="btnToggleFichas" 
                                 onclick="toggleFichasDropdown(event)"
-                                class="absolute inset-y-0 right-0 px-3.5 flex items-center text-slate-400 hover:text-orange-600 transition cursor-pointer"
+                                class="absolute inset-y-0 right-0 px-3.5 flex items-center text-slate-400 hover:text-[#39A900] transition cursor-pointer"
                                 title="Desplegar lista de fichas">
                             <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200" id="iconArrowFicha"></i>
                         </button>
@@ -290,15 +295,15 @@
                                 @php
                                     $fichaTexto = $c->code . ' - ' . ($c->program->name ?? 'Programa de Formación');
                                 @endphp
-                                <div class="ficha-option px-3.5 py-2.5 hover:bg-orange-50 cursor-pointer flex items-center justify-between text-xs transition group"
+                                <div class="ficha-option px-3.5 py-2.5 hover:bg-emerald-50 cursor-pointer flex items-center justify-between text-xs transition group"
                                      data-text="{{ strtolower($fichaTexto) }}"
-                                     data-value="{{ $fichaTexto }}"
+                                     data-value="{{ $c->code }}"
                                      onclick="selectFichaOption(this.getAttribute('data-value'))">
                                     <div class="truncate">
-                                        <strong class="font-extrabold text-slate-800 group-hover:text-orange-600">{{ $c->code }}</strong>
+                                        <strong class="font-extrabold text-slate-800 group-hover:text-[#39A900]">{{ $c->code }}</strong>
                                         <span class="text-slate-500 text-[11px] ml-1.5">{{ $c->program->name ?? '' }}</span>
                                     </div>
-                                    <span class="text-[10px] font-bold text-orange-500 opacity-0 group-hover:opacity-100 transition shrink-0 ml-2">Seleccionar</span>
+                                    <span class="text-[10px] font-bold text-[#39A900] opacity-0 group-hover:opacity-100 transition shrink-0 ml-2">Seleccionar</span>
                                 </div>
                             @endforeach
                             <div id="no_fichas_match" class="px-4 py-3 text-xs text-slate-400 text-center hidden">No se encontraron fichas coincidentes</div>
@@ -312,18 +317,18 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div class="space-y-1">
                         <label for="asistencia_instructor" class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                            <i class="fa-solid fa-chalkboard-user text-orange-500 text-xs"></i>
+                            <i class="fa-solid fa-chalkboard-user text-[#39A900] text-xs"></i>
                             Instructora a Cargo <span class="text-rose-500">*</span>
                         </label>
-                        <input type="text" name="instructor" id="asistencia_instructor" required placeholder="Nombre de la instructora" class="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
+                        <input type="text" name="instructor" id="asistencia_instructor" required maxlength="150" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Nombre de la instructora" class="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition">
                     </div>
 
                     <div class="space-y-1">
                         <label for="asistencia_responsable" class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                            <i class="fa-solid fa-shield-heart text-orange-500 text-xs"></i>
+                            <i class="fa-solid fa-shield-heart text-[#39A900] text-xs"></i>
                             Encargada de SST <span class="text-rose-500">*</span>
                         </label>
-                        <input type="text" name="responsable" id="asistencia_responsable" required placeholder="Responsable / Aprendiz SST" class="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
+                        <input type="text" name="responsable" id="asistencia_responsable" required maxlength="150" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Responsable / Aprendiz SST" class="w-full px-3.5 py-2.5 text-xs font-semibold text-slate-800 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition">
                     </div>
                 </div>
 
@@ -331,18 +336,18 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div class="space-y-1">
                         <label for="asistencia_numero_asistentes" class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                            <i class="fa-solid fa-user-check text-orange-500 text-xs"></i>
+                            <i class="fa-solid fa-user-check text-[#39A900] text-xs"></i>
                             Número de Asistentes
                         </label>
-                        <input type="number" min="0" name="numero_asistentes" id="asistencia_numero_asistentes" placeholder="0" class="w-full px-3.5 py-2.5 text-xs font-bold text-slate-800 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
+                        <input type="number" min="0" name="numero_asistentes" id="asistencia_numero_asistentes" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="0" class="w-full px-3.5 py-2.5 text-xs font-bold text-slate-800 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition">
                     </div>
 
                     <div class="space-y-1">
                         <label for="asistencia_estado" class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                            <i class="fa-solid fa-tag text-orange-500 text-xs"></i>
+                            <i class="fa-solid fa-tag text-[#39A900] text-xs"></i>
                             Estado de la Pausa Activa
                         </label>
-                        <select name="estado" id="asistencia_estado" class="w-full px-3.5 py-2.5 text-xs font-bold text-slate-700 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 cursor-pointer">
+                        <select name="estado" id="asistencia_estado" class="w-full px-3.5 py-2.5 text-xs font-bold text-slate-700 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] cursor-pointer">
                             <option value="Realizada" selected>Realizada (Asistencia Completada)</option>
                             <option value="Programada">Programada</option>
                             <option value="Cancelada">Cancelada</option>
@@ -355,15 +360,15 @@
                     <!-- Header de la sección de aprendices -->
                     <div class="flex items-center justify-between gap-2 flex-wrap">
                         <label class="text-[11px] font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-                            <i class="fa-solid fa-clipboard-check text-orange-500 text-xs"></i>
+                            <i class="fa-solid fa-clipboard-check text-[#39A900] text-xs"></i>
                             <span>Llamado a Lista</span>
-                            <span id="badge_conteo_asistentes" class="ml-1.5 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-orange-100 text-orange-700 hidden">
+                            <span id="badge_conteo_asistentes" class="ml-1.5 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-[#2d8500] hidden">
                                 <span id="txt_asistentes_count">0</span> seleccionados
                             </span>
                         </label>
 
                         <div class="flex items-center gap-1.5" id="controles_marcado_asistencia" style="display: none;">
-                            <button type="button" onclick="marcarTodosAprendices(true)" class="px-2.5 py-1 text-[10px] font-bold rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 transition cursor-pointer flex items-center gap-1">
+                            <button type="button" onclick="marcarTodosAprendices(true)" class="px-2.5 py-1 text-[10px] font-bold rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#2d8500] border border-emerald-200 transition cursor-pointer flex items-center gap-1">
                                 <i class="fa-solid fa-check-double text-[9px]"></i> Marcar todos
                             </button>
                             <button type="button" onclick="marcarTodosAprendices(false)" class="px-2.5 py-1 text-[10px] font-bold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition cursor-pointer">
@@ -378,11 +383,11 @@
                     <!-- Buscador interno de aprendiz (solo visible si hay lista cargada) -->
                     <div id="contenedor_buscador_aprendices" class="relative hidden">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
-                        <input type="text" id="filtro_buscador_aprendiz" placeholder="Buscar aprendiz por nombre o cédula..." class="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-1 focus:ring-orange-500 transition">
+                        <input type="text" id="filtro_buscador_aprendiz" placeholder="Buscar aprendiz por nombre o cédula..." class="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#39A900]/20 focus:border-[#39A900] transition">
                     </div>
 
                     <!-- Indicador de Carga (Spinner) -->
-                    <div id="loading_aprendices" class="p-4 rounded-2xl bg-orange-50/50 border border-orange-100 text-center text-xs text-orange-600 font-semibold hidden">
+                    <div id="loading_aprendices" class="p-4 rounded-2xl bg-emerald-50/50 border border-emerald-100 text-center text-xs text-[#39A900] font-semibold hidden">
                         <i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Consultando aprendices matriculados en la ficha...
                     </div>
 
@@ -403,17 +408,17 @@
                             <span>Listado / Nombres de Asistentes</span>
                             <span class="text-[9px] text-slate-400 normal-case font-normal">(Sincronizado automáticamente al chulear)</span>
                         </label>
-                        <textarea name="participantes" id="asistencia_participantes" rows="2" placeholder="Ingresa los nombres o números de documento de los aprendices que respondieron al llamado..." class="w-full p-2.5 text-xs font-medium text-slate-700 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition leading-relaxed"></textarea>
+                        <textarea name="participantes" id="asistencia_participantes" rows="2" placeholder="Ingresa los nombres o números de documento de los aprendices que respondieron al llamado..." class="w-full p-2.5 text-xs font-medium text-slate-700 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition leading-relaxed"></textarea>
                     </div>
                 </div>
 
                 <!-- Observaciones Adicionales -->
                 <div class="space-y-1">
                     <label for="asistencia_observaciones" class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                        <i class="fa-regular fa-comment-dots text-orange-500 text-xs"></i>
+                        <i class="fa-regular fa-comment-dots text-[#39A900] text-xs"></i>
                         Observaciones de la Jornada
                     </label>
-                    <textarea name="observaciones" id="asistencia_observaciones" rows="2" placeholder="Novedades, observaciones o acuerdos durante la asistencia..." class="w-full p-3 text-xs font-medium text-slate-700 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition"></textarea>
+                    <textarea name="observaciones" id="asistencia_observaciones" rows="2" placeholder="Novedades, observaciones o acuerdos durante la asistencia..." class="w-full p-3 text-xs font-medium text-slate-700 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition"></textarea>
                 </div>
 
             </div>
@@ -423,7 +428,7 @@
                 <button type="button" onclick="closeAsistenciaModal()" class="px-5 py-2.5 rounded-2xl bg-white border border-slate-200/90 hover:bg-slate-100 text-slate-700 text-xs font-bold transition shadow-2xs cursor-pointer">
                     Cancelar
                 </button>
-                <button type="submit" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-extrabold shadow-sm hover:shadow-md transition cursor-pointer">
+                <button type="submit" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-2xl bg-[#39A900] hover:bg-[#2d8500] text-white text-xs font-extrabold shadow-sm hover:shadow-md transition cursor-pointer">
                     <i class="fa-solid fa-check text-xs"></i>
                     <span>Guardar Asistencia</span>
                 </button>
@@ -440,7 +445,7 @@
         <!-- Header del Modal -->
         <div class="p-5 sm:p-6 pb-4 border-b border-slate-100 flex items-center justify-between shrink-0 bg-white">
             <div class="flex items-center gap-3.5">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 text-orange-500 border border-orange-200/80 flex items-center justify-center text-xl shadow-2xs shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 text-[#39A900] border border-emerald-200/80 flex items-center justify-center text-xl shadow-2xs shrink-0">
                     <i class="fa-solid fa-spa"></i>
                 </div>
                 <div>
@@ -463,35 +468,35 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200/80">
                 <div class="space-y-0.5">
                     <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                        <i class="fa-regular fa-calendar text-orange-500 text-[10px]"></i> Fecha Programada
+                        <i class="fa-regular fa-calendar text-[#39A900] text-[10px]"></i> Fecha Programada
                     </span>
                     <p id="modalFechaTexto" class="font-extrabold text-slate-800 text-xs sm:text-sm"></p>
                 </div>
 
                 <div class="space-y-0.5">
                     <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                        <i class="fa-regular fa-clock text-orange-500 text-[10px]"></i> Horario
+                        <i class="fa-regular fa-clock text-[#39A900] text-[10px]"></i> Horario
                     </span>
                     <p id="modalHorarioTexto" class="font-bold text-slate-800 text-xs sm:text-sm"></p>
                 </div>
 
                 <div class="space-y-0.5 pt-1.5 border-t border-slate-200/60 sm:border-0 sm:pt-0">
                     <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                        <i class="fa-solid fa-location-dot text-orange-500 text-[10px]"></i> Lugar / Salón
+                        <i class="fa-solid fa-location-dot text-[#39A900] text-[10px]"></i> Lugar / Salón
                     </span>
                     <p id="modalLugar" class="font-bold text-slate-700 text-xs sm:text-sm truncate"></p>
                 </div>
 
                 <div class="space-y-0.5 pt-1.5 border-t border-slate-200/60 sm:border-0 sm:pt-0">
                     <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                        <i class="fa-solid fa-chalkboard-user text-orange-500 text-[10px]"></i> Responsable / Instructor
+                        <i class="fa-solid fa-chalkboard-user text-[#39A900] text-[10px]"></i> Responsable / Instructor
                     </span>
-                    <p id="modalInstructor" class="font-bold text-orange-600 text-xs sm:text-sm truncate"></p>
+                    <p id="modalInstructor" class="font-bold text-[#39A900] text-xs sm:text-sm truncate"></p>
                 </div>
 
                 <div class="space-y-0.5 sm:col-span-2 pt-1.5 border-t border-slate-200/60">
                     <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                        <i class="fa-solid fa-users-rectangle text-orange-500 text-[10px]"></i> Ficha / Programa Convocado
+                        <i class="fa-solid fa-users-rectangle text-[#39A900] text-[10px]"></i> Ficha / Programa Convocado
                     </span>
                     <p id="modalFicha" class="font-bold text-slate-700 text-xs sm:text-sm"></p>
                 </div>
@@ -500,7 +505,7 @@
             <!-- Tema y Actividad a Realizar -->
             <div class="space-y-1.5">
                 <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                    <i class="fa-solid fa-align-left text-orange-500 text-[10px]"></i> Descripción y Ejercicios Guiados
+                    <i class="fa-solid fa-align-left text-[#39A900] text-[10px]"></i> Descripción y Ejercicios Guiados
                 </label>
                 <div id="modalDescripcion" class="p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs leading-relaxed text-slate-700 whitespace-pre-line text-xs font-medium min-h-[60px]">
                 </div>
@@ -522,7 +527,7 @@
         <!-- Footer del Modal -->
         <div class="p-4 sm:p-5 border-t border-slate-100 flex items-center justify-between bg-slate-50/60 shrink-0">
             <span class="text-[11px] font-semibold text-slate-400 flex items-center gap-1.5">
-                <i class="fa-solid fa-shield-heart text-orange-500"></i> Pausa Activa y Bienestar SST
+                <i class="fa-solid fa-shield-heart text-[#39A900]"></i> Pausa Activa y Bienestar SST
             </span>
             <button type="button" onclick="closeDetailModal()" class="px-5 py-2.5 rounded-xl bg-white border border-slate-200/90 hover:bg-slate-100 text-slate-700 text-xs font-bold transition shadow-2xs cursor-pointer">
                 Cerrar
@@ -714,15 +719,15 @@
             );
 
             html += `
-                <label class="item-aprendiz-row flex items-center justify-between p-2.5 rounded-xl border transition cursor-pointer select-none group ${yaMarcado ? 'bg-orange-50/80 border-orange-300' : 'bg-slate-50 hover:bg-slate-100 border-slate-200/80'}" data-name="${a.full_name.toLowerCase()}" data-doc="${a.document_number}">
+                <label class="item-aprendiz-row flex items-center justify-between p-2.5 rounded-xl border transition cursor-pointer select-none group ${yaMarcado ? 'bg-emerald-50/80 border-emerald-300' : 'bg-slate-50 hover:bg-slate-100 border-slate-200/80'}" data-name="${a.full_name.toLowerCase()}" data-doc="${a.document_number}">
                     <div class="flex items-center gap-2.5 truncate flex-1 min-w-0 pr-2">
                         <input type="checkbox" 
                                value="${a.full_name} (${a.document_number})" 
                                ${yaMarcado ? 'checked' : ''} 
                                onchange="onCambioAsistenciaAprendiz(this)" 
-                               class="chk-aprendiz-asistencia w-4 h-4 rounded text-orange-600 focus:ring-orange-500 border-slate-300 transition cursor-pointer shrink-0">
+                               class="chk-aprendiz-asistencia w-4 h-4 rounded text-[#39A900] focus:ring-[#39A900]/20 focus:border-[#39A900] border-slate-300 transition cursor-pointer shrink-0">
                         <div class="truncate">
-                            <div class="font-extrabold text-xs text-slate-800 group-hover:text-orange-700 truncate">${a.full_name}</div>
+                            <div class="font-extrabold text-xs text-slate-800 group-hover:text-[#2d8500] truncate">${a.full_name}</div>
                             <div class="text-[10px] text-slate-400 font-medium">CC/TI: <span class="font-semibold text-slate-600">${a.document_number}</span> · <span class="text-slate-500 font-semibold">${a.status}</span></div>
                         </div>
                     </div>
@@ -743,7 +748,7 @@
         if (chk.checked) {
             if (row) {
                 row.classList.remove('bg-slate-50', 'hover:bg-slate-100', 'border-slate-200/80');
-                row.classList.add('bg-orange-50/80', 'border-orange-300');
+                row.classList.add('bg-emerald-50/80', 'border-emerald-300');
             }
             if (badge) {
                 badge.className = 'badge-estado-asistencia shrink-0 text-[10px] font-extrabold px-2 py-0.5 rounded-lg transition bg-emerald-100 text-emerald-700';
@@ -751,7 +756,7 @@
             }
         } else {
             if (row) {
-                row.classList.remove('bg-orange-50/80', 'border-orange-300');
+                row.classList.remove('bg-emerald-50/80', 'border-emerald-300');
                 row.classList.add('bg-slate-50', 'hover:bg-slate-100', 'border-slate-200/80');
             }
             if (badge) {
@@ -772,7 +777,7 @@
                 if (marcar) {
                     if (row) {
                         row.classList.remove('bg-slate-50', 'hover:bg-slate-100', 'border-slate-200/80');
-                        row.classList.add('bg-orange-50/80', 'border-orange-300');
+                        row.classList.add('bg-emerald-50/80', 'border-emerald-300');
                     }
                     if (badge) {
                         badge.className = 'badge-estado-asistencia shrink-0 text-[10px] font-extrabold px-2 py-0.5 rounded-lg transition bg-emerald-100 text-emerald-700';
@@ -780,7 +785,7 @@
                     }
                 } else {
                     if (row) {
-                        row.classList.remove('bg-orange-50/80', 'border-orange-300');
+                        row.classList.remove('bg-emerald-50/80', 'border-emerald-300');
                         row.classList.add('bg-slate-50', 'hover:bg-slate-100', 'border-slate-200/80');
                     }
                     if (badge) {

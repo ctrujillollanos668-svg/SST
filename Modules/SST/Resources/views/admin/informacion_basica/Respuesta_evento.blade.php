@@ -68,10 +68,10 @@
             'title' => 'Actos Inseguros',
             'subtitle' => 'Comportamientos o prácticas inseguras observadas',
             'icon' => 'fa-person-falling-burst',
-            'color' => 'orange',
-            'border_color' => 'border-l-orange-500',
-            'icon_bg' => 'bg-orange-50 text-orange-600',
-            'badge_bg' => 'bg-orange-100 text-orange-800',
+            'color' => 'emerald',
+            'border_color' => 'border-l-[#39A900]',
+            'icon_bg' => 'bg-emerald-50 text-[#39A900]',
+            'badge_bg' => 'bg-emerald-100 text-[#064e3b]',
             'items' => $actosInseguros ?? collect(),
             'tipo_key' => 'tipo_acto',
             'tipo_label' => 'TIPO ACTO INSEGURO',
@@ -141,21 +141,21 @@
         </div>
     @endif
 
-    <!-- 1. Encabezado General -->
-    <div class="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
+    <!-- 1. Encabezado General (Estilo Dirección Ejecutivo) -->
+    <div class="bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#002D44] p-6 sm:p-7 rounded-2xl border-l-4 border-l-[#39A900] text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex items-center gap-3.5">
-            <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-xs shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-white/10 text-[#62E31D] flex items-center justify-center border border-white/20 shadow-inner shrink-0">
                 <i class="fa-solid fa-clipboard-check text-xl"></i>
             </div>
             <div>
-                <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Gestión y Respuesta a Eventos</h1>
-                <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">Seguimiento en tiempo real a los 7 tipos de reportes de aprendices, evidencias fotográficas y protocolos correctivos.</p>
+                <h1 class="text-2xl font-black text-white tracking-tight">Gestión y Respuesta a <span class="text-[#62E31D]">Eventos</span></h1>
+                <p class="text-xs sm:text-sm text-white/80 font-normal mt-0.5">Seguimiento en tiempo real a los 7 tipos de reportes de aprendices, evidencias fotográficas y protocolos correctivos.</p>
             </div>
         </div>
 
         <div class="flex items-center gap-2 shrink-0">
-            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-orange-50 text-orange-700 text-xs font-extrabold border border-orange-200">
-                <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/10 text-[#62E31D] text-xs font-extrabold border border-white/20">
+                <span class="w-2 h-2 rounded-full bg-[#62E31D] animate-pulse"></span>
                 <span>{{ $totalGeneral }} Reportes en Total</span>
             </span>
         </div>
@@ -213,7 +213,7 @@
                                    id="buscar_{{ $slug }}" 
                                    onkeyup="filterTableRows('buscar_{{ $slug }}', 'tabla_{{ $slug }}')" 
                                    placeholder="Buscar en {{ strtolower($cat['title']) }}..." 
-                                   class="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition">
+                                   class="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition">
                         </div>
 
                         <span class="text-xs font-black tracking-widest text-slate-400 uppercase text-right sm:text-left self-center">
@@ -309,7 +309,7 @@
                                     $gravVal = strtolower($data['gravedad'] ?? $data['prioridad'] ?? 'media');
                                     $badgeGrav = match(true) {
                                         str_contains($gravVal, 'fatal') || str_contains($gravVal, 'crítico') || str_contains($gravVal, 'alta') || str_contains($gravVal, 'urgente') => 'bg-rose-100 text-rose-800 border-rose-200',
-                                        str_contains($gravVal, 'grave') => 'bg-orange-100 text-orange-800 border-orange-200',
+                                        str_contains($gravVal, 'grave') => 'bg-emerald-100 text-[#064e3b] border-emerald-200',
                                         str_contains($gravVal, 'moderado') || str_contains($gravVal, 'media') => 'bg-amber-100 text-amber-800 border-amber-200',
                                         default => 'bg-emerald-100 text-emerald-800 border-emerald-200'
                                     };
@@ -364,7 +364,7 @@
                                     <!-- 4. Tipo Específico -->
                                     <td class="py-3 px-2.5 whitespace-nowrap">
                                         <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-extrabold border bg-slate-50 text-slate-800 border-slate-200">
-                                            <i class="fa-solid {{ $cat['icon'] }} text-orange-500 text-[10px]"></i>
+                                            <i class="fa-solid {{ $cat['icon'] }} text-[#39A900] text-[10px]"></i>
                                             <span>{{ $tipoEspecifico }}</span>
                                         </span>
                                     </td>
@@ -390,7 +390,7 @@
                                     <td class="py-3 px-2 whitespace-nowrap">
                                         @if(!empty($instructor) && $instructor !== 'N/A')
                                             <span class="inline-flex items-center gap-1 text-[11px] text-slate-700 font-semibold">
-                                                <i class="fa-solid fa-chalkboard-user text-orange-500 text-[10px]"></i>
+                                                <i class="fa-solid fa-chalkboard-user text-[#39A900] text-[10px]"></i>
                                                 <span>{{ $instructor }}</span>
                                             </span>
                                         @else
@@ -410,7 +410,7 @@
                                         @if($totalFotos > 0)
                                             <button type="button" 
                                                     onclick="showEvidencePhoto({{ json_encode($evidencias) }}, '{{ addslashes($tipoEspecifico) }}')"
-                                                    class="inline-flex items-center gap-1 px-2 py-1 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 text-[10px] font-black border border-orange-200/80 shadow-2xs transition cursor-pointer">
+                                                    class="inline-flex items-center gap-1 px-2 py-1 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#064e3b] text-[10px] font-black border border-emerald-200/80 shadow-2xs transition cursor-pointer">
                                                 <i class="fa-solid fa-camera text-[10px]"></i>
                                                 <span>{{ $totalFotos }} {{ $totalFotos == 1 ? 'Foto' : 'Fotos' }}</span>
                                             </button>
@@ -436,7 +436,7 @@
                                     <td class="py-3 px-2.5 text-center whitespace-nowrap">
                                         <button type="button"
                                                 onclick="openResponseModal({{ $item->id_respuesta }}, '{{ addslashes($tipoEspecifico) }}', '{{ addslashes($afectadoStr) }}', '{{ addslashes(json_encode($data, JSON_UNESCAPED_UNICODE)) }}', '{{ $item->estado }}')" 
-                                                class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-orange-50 hover:bg-orange-100 active:bg-orange-200/70 text-orange-800 text-[11px] font-bold border border-orange-200 shadow-2xs transition cursor-pointer">
+                                                class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200/70 text-[#064e3b] text-[11px] font-bold border border-emerald-200 shadow-2xs transition cursor-pointer">
                                             <i class="fa-solid fa-reply text-[9px]"></i>
                                             <span>{{ $tieneRespuesta ? 'Ver / Editar' : 'Responder' }}</span>
                                         </button>
@@ -476,7 +476,7 @@
     <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 animate-modal-pop overflow-hidden max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
         <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-4 shrink-0">
             <h3 class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
-                <i class="fa-solid fa-camera text-orange-600"></i>
+                <i class="fa-solid fa-camera text-[#39A900]"></i>
                 <span id="photoModalTitle">Evidencias Fotográficas Adjuntas</span>
             </h3>
             <button onclick="closeEvidencePhoto()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
@@ -499,7 +499,7 @@
         <!-- Header del Modal -->
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-3 shrink-0">
             <div class="flex items-center gap-2.5">
-                <div class="w-10 h-10 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-2xs">
+                <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-[#39A900] flex items-center justify-center border border-emerald-200/80 shadow-2xs">
                     <i class="fa-solid fa-clipboard-check text-base"></i>
                 </div>
                 <div>
@@ -542,7 +542,7 @@
                 <label class="block text-xs font-bold text-slate-700">
                     Protocolo de Atención Aplicado <span class="text-rose-500">*</span>
                 </label>
-                <select id="modalSelectProtocol" name="protocolo" required class="w-full px-3.5 py-2.5 text-xs rounded-xl bg-white border border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 font-semibold cursor-pointer shadow-2xs transition">
+                <select id="modalSelectProtocol" name="protocolo" required class="w-full px-3.5 py-2.5 text-xs rounded-xl bg-white border border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] font-semibold cursor-pointer shadow-2xs transition">
                     <option value="Primeros Auxilios Básicos y Remisión">Primeros Auxilios Básicos y Remisión</option>
                     <option value="Acción Correctiva Locativa / Mantenimiento">Acción Correctiva Locativa / Mantenimiento</option>
                     <option value="Capacitación y Refuerzo de Seguridad">Capacitación y Refuerzo de Seguridad</option>
@@ -558,7 +558,7 @@
                 <label class="block text-xs font-bold text-slate-700">
                     Estado del Caso <span class="text-rose-500">*</span>
                 </label>
-                <select id="modalSelectEstado" name="estado" required class="w-full px-3.5 py-2.5 text-xs rounded-xl bg-white border border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 font-semibold cursor-pointer shadow-2xs transition">
+                <select id="modalSelectEstado" name="estado" required class="w-full px-3.5 py-2.5 text-xs rounded-xl bg-white border border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] font-semibold cursor-pointer shadow-2xs transition">
                     <option value="atendido">Atendido / Resuelto (Visible para Aprendiz)</option>
                     <option value="en_proceso">En Proceso / Seguimiento</option>
                 </select>
@@ -569,7 +569,7 @@
                 <label class="block text-xs font-bold text-slate-700">
                     Observaciones y Medidas Tomadas <span class="text-rose-500">*</span>
                 </label>
-                <textarea id="modalResponseText" name="medidas_tomadas" required rows="3" placeholder="Describe claramente el procedimiento realizado, remitente o medidas preventivas que verá el aprendiz..." class="w-full px-3.5 py-2.5 text-xs rounded-xl bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 font-medium text-slate-800 shadow-2xs transition resize-none"></textarea>
+                <textarea id="modalResponseText" name="medidas_tomadas" required rows="3" maxlength="1000" placeholder="Describe claramente el procedimiento realizado, remitente o medidas preventivas que verá el aprendiz..." class="w-full px-3.5 py-2.5 text-xs rounded-xl bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] font-medium text-slate-800 shadow-2xs transition resize-none"></textarea>
             </div>
 
             <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">

@@ -30,26 +30,32 @@
 
 <div class="space-y-6 max-w-7xl mx-auto">
 
-    <!-- 1. Encabezado de la Sección -->
-    <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
+    <!-- 1. Encabezado de la Sección (Estilo Dirección Ejecutivo) -->
+    <div class="bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#002D44] p-6 sm:p-7 rounded-2xl border-l-4 border-l-[#39A900] text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex items-center gap-3.5">
-            <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-xs">
+            <div class="w-12 h-12 rounded-2xl bg-white/10 text-[#62E31D] flex items-center justify-center border border-white/20 shadow-inner shrink-0">
                 <i class="fa-solid fa-calendar-days text-xl"></i>
             </div>
             <div>
-                <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Cronograma SST</h1>
-                <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">Configuración y administración del calendario de actividades, capacitaciones, pausas activas y jornadas de SST.</p>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 border border-white/15 text-[10px] font-extrabold uppercase tracking-widest text-[#62E31D]">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#62E31D] animate-pulse"></span>
+                        Cronograma Operativo • SST
+                    </span>
+                </div>
+                <h1 class="text-2xl font-black text-white tracking-tight">Cronograma <span class="text-[#62E31D]">SST</span></h1>
+                <p class="text-xs sm:text-sm text-white/80 font-normal mt-0.5">Configuración y administración del calendario de actividades, capacitaciones, pausas activas y jornadas de SST.</p>
             </div>
         </div>
 
         <!-- Badges Informativos -->
         <div class="flex flex-wrap items-center gap-2 self-start md:self-auto">
-            <div class="px-3.5 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
-                <span>Vista Activa: <strong id="headerViewBadge" class="text-orange-600">Mes</strong></span>
+            <div class="px-3.5 py-1.5 rounded-xl bg-white/10 border border-white/15 text-xs font-bold text-white flex items-center gap-2 shadow-xs">
+                <span class="w-2 h-2 rounded-full bg-[#62E31D] animate-pulse"></span>
+                <span>Vista Activa: <strong id="headerViewBadge" class="text-[#62E31D]">Mes</strong></span>
             </div>
-            <div class="px-3.5 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-700 flex items-center gap-1.5">
-                <i class="fa-solid fa-circle-check text-xs"></i>
+            <div class="px-3.5 py-1.5 rounded-xl bg-[#39A900] border border-[#62E31D]/40 text-xs font-bold text-white flex items-center gap-1.5 shadow-xs">
+                <i class="fa-solid fa-circle-check text-xs text-white"></i>
                 <span id="activeEventsCount">0 Actividades</span>
             </div>
         </div>
@@ -61,13 +67,13 @@
         <!-- Navegación de Fecha + Selector de Fecha -->
         <div class="flex items-center flex-wrap gap-2">
             <div class="flex items-center gap-1">
-                <button id="btnPrev" onclick="navigate(-1)" class="w-9 h-9 rounded-xl border border-slate-200 text-slate-600 hover:text-orange-600 hover:bg-orange-50 hover:border-orange-200 flex items-center justify-center transition cursor-pointer" title="Anterior">
+                <button id="btnPrev" onclick="navigate(-1)" class="w-9 h-9 rounded-xl border border-slate-200 text-slate-600 hover:text-[#2d8500] hover:bg-emerald-50 hover:border-emerald-200 flex items-center justify-center transition cursor-pointer" title="Anterior">
                     <i class="fa-solid fa-chevron-left text-xs"></i>
                 </button>
-                <button id="btnToday" onclick="goToToday()" class="px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:text-orange-600 hover:bg-orange-50 hover:border-orange-200 transition cursor-pointer">
+                <button id="btnToday" onclick="goToToday()" class="px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:text-[#2d8500] hover:bg-emerald-50 hover:border-emerald-200 transition cursor-pointer">
                     Hoy
                 </button>
-                <button id="btnNext" onclick="navigate(1)" class="w-9 h-9 rounded-xl border border-slate-200 text-slate-600 hover:text-orange-600 hover:bg-orange-50 hover:border-orange-200 flex items-center justify-center transition cursor-pointer" title="Siguiente">
+                <button id="btnNext" onclick="navigate(1)" class="w-9 h-9 rounded-xl border border-slate-200 text-slate-600 hover:text-[#2d8500] hover:bg-emerald-50 hover:border-emerald-200 flex items-center justify-center transition cursor-pointer" title="Siguiente">
                     <i class="fa-solid fa-chevron-right text-xs"></i>
                 </button>
             </div>
@@ -75,8 +81,8 @@
             <!-- Botón / Input de Elección de Fecha -->
             <div class="relative">
                 <input type="date" id="datePickerHeader" onchange="onHeaderDateChange(this.value)" class="absolute opacity-0 w-0 h-0 pointer-events-none">
-                <button type="button" onclick="triggerDatePicker()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:text-orange-600 hover:bg-orange-50 hover:border-orange-200 transition cursor-pointer shadow-2xs">
-                    <i class="fa-regular fa-calendar-check text-orange-500 text-sm"></i>
+                <button type="button" onclick="triggerDatePicker()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:text-[#2d8500] hover:bg-emerald-50 hover:border-emerald-200 transition cursor-pointer shadow-2xs">
+                    <i class="fa-regular fa-calendar-check text-[#39A900] text-sm"></i>
                     <span>Escoger fecha</span>
                 </button>
             </div>
@@ -97,7 +103,7 @@
         <div class="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200/70 text-xs font-bold text-slate-600">
             <button onclick="switchView('day')" id="viewBtnDay" class="px-3.5 py-1.5 rounded-lg transition cursor-pointer hover:text-slate-900">Día</button>
             <button onclick="switchView('week')" id="viewBtnWeek" class="px-3.5 py-1.5 rounded-lg transition cursor-pointer hover:text-slate-900">Semana</button>
-            <button onclick="switchView('month')" id="viewBtnMonth" class="px-3.5 py-1.5 rounded-lg bg-white text-orange-600 shadow-xs font-extrabold border border-slate-200/60 transition cursor-pointer">Mes</button>
+            <button onclick="switchView('month')" id="viewBtnMonth" class="px-3.5 py-1.5 rounded-lg bg-white text-[#39A900] shadow-xs font-extrabold border border-slate-200/60 transition cursor-pointer">Mes</button>
         </div>
     </div>
 
@@ -160,7 +166,7 @@
         <div id="containerDayView" class="hidden flex-1 flex flex-col space-y-3">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 font-extrabold text-base flex items-center justify-center border border-orange-200/60 shrink-0">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-[#39A900] font-extrabold text-base flex items-center justify-center border border-emerald-200/60 shrink-0">
                         <i class="fa-regular fa-clock"></i>
                     </div>
                     <div>
@@ -169,7 +175,7 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
-                    <span id="dayEventsCountBadge" class="px-3 py-1 rounded-xl bg-orange-100/70 text-orange-800 border border-orange-200 text-xs font-extrabold">
+                    <span id="dayEventsCountBadge" class="px-3 py-1 rounded-xl bg-emerald-100/70 text-[#064e3b] border border-emerald-200 text-xs font-extrabold">
                         0 Eventos hoy
                     </span>
                 </div>
@@ -225,7 +231,7 @@
     <div class="bg-white rounded-2xl border border-slate-100 shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in duration-200">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold">
+                <div class="w-9 h-9 rounded-xl bg-emerald-50 text-[#39A900] flex items-center justify-center font-bold">
                     <i class="fa-solid fa-pen-to-square text-sm"></i>
                 </div>
                 <div>
@@ -244,7 +250,7 @@
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tipo de Actividad *</label>
-                    <select id="editTipoActividad" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 bg-white cursor-pointer">
+                    <select id="editTipoActividad" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 bg-white cursor-pointer">
                         @foreach($tiposActividades as $tipo)
                             <option value="{{ $tipo->nombre }}">{{ $tipo->nombre }}</option>
                         @endforeach
@@ -252,7 +258,7 @@
                 </div>
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Lugar / Ambiente</label>
-                    <select id="editLugar" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 bg-white cursor-pointer">
+                    <select id="editLugar" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 bg-white cursor-pointer">
                         <option value="">-- General / Ninguno --</option>
                         @foreach($lugares as $lugar)
                             <option value="{{ $lugar->id_lugar }}">{{ $lugar->nombre }}</option>
@@ -263,28 +269,36 @@
 
             <div>
                 <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Nombre de la Actividad *</label>
-                <input type="text" id="editNombre" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
+                <input type="text" id="editNombre" required 
+                       pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$"
+                       title="Solo se permiten letras y espacios"
+                       oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')"
+                       class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100">
             </div>
 
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Fecha de la Actividad *</label>
-                    <input type="date" id="editFecha" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 bg-white cursor-pointer">
+                    <input type="date" id="editFecha" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 bg-white cursor-pointer">
                 </div>
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Hora *</label>
-                    <input type="time" id="editHora" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
+                    <input type="time" id="editHora" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100">
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Responsable *</label>
-                    <input type="text" id="editResponsable" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
+                    <input type="text" id="editResponsable" required 
+                           pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$"
+                           title="Solo se permiten letras y espacios"
+                           oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')"
+                           class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100">
                 </div>
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Estado de la Actividad</label>
-                    <select id="editEstado" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 bg-white cursor-pointer">
+                    <select id="editEstado" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 bg-white cursor-pointer">
                         <option value="Programada">Programada</option>
                         <option value="Realizada">Realizada</option>
                         <option value="Cancelada">Cancelada</option>
@@ -294,14 +308,14 @@
 
             <div>
                 <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Descripción y Notas</label>
-                <textarea id="editDescripcion" rows="2.5" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 resize-none"></textarea>
+                <textarea id="editDescripcion" rows="2.5" maxlength="500" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 resize-none"></textarea>
             </div>
 
             <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-100">
                 <button type="button" onclick="closeEditModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 transition cursor-pointer">
                     Cancelar
                 </button>
-                <button type="submit" class="px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold shadow-xs transition cursor-pointer flex items-center gap-1.5">
+                <button type="submit" class="px-4 py-2 rounded-xl bg-[#39A900] hover:bg-[#1e5c00] text-white text-xs font-bold shadow-xs transition cursor-pointer flex items-center gap-1.5">
                     <i class="fa-solid fa-floppy-disk text-xs"></i>
                     <span>Guardar Cambios</span>
                 </button>
@@ -315,7 +329,7 @@
     <div class="bg-white rounded-2xl border border-slate-100 shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in duration-200">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold">
+                <div class="w-9 h-9 rounded-xl bg-emerald-50 text-[#39A900] flex items-center justify-center font-bold">
                     <i class="fa-solid fa-layer-group text-sm"></i>
                 </div>
                 <div>
@@ -331,20 +345,23 @@
         <!-- 1. Formulario de Creación Rápida -->
         <form onsubmit="handleSaveQuickTipoActividad(event)" class="space-y-3 bg-slate-50/70 p-3.5 rounded-2xl border border-slate-200/70">
             <div class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
-                <i class="fa-solid fa-plus text-orange-500 text-[10px]"></i>
+                <i class="fa-solid fa-plus text-[#39A900] text-[10px]"></i>
                 <span>Crear Nuevo Tipo</span>
             </div>
 
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Nombre del Tipo *</label>
                 <input type="text" id="quickTipoNombre" required placeholder="Ej: Auditoría Externa, Taller Ergonomía" 
-                    class="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 bg-white">
+                    pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$"
+                    title="Solo se permiten letras y espacios"
+                    oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')"
+                    class="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 bg-white">
             </div>
 
             <div class="grid grid-cols-2 gap-2.5">
                 <div>
                     <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Color</label>
-                    <select id="quickTipoColor" class="w-full px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 bg-white cursor-pointer">
+                    <select id="quickTipoColor" class="w-full px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 bg-white cursor-pointer">
                         <option value="blue">🔵 Azul</option>
                         <option value="emerald">🟢 Verde</option>
                         <option value="rose">🔴 Rojo</option>
@@ -357,7 +374,7 @@
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Icono</label>
-                    <select id="quickTipoIcono" class="w-full px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 bg-white cursor-pointer">
+                    <select id="quickTipoIcono" class="w-full px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 bg-white cursor-pointer">
                         <option value="fa-clipboard-list">📋 Lista</option>
                         <option value="fa-graduation-cap">🎓 Capacitación</option>
                         <option value="fa-shield-halved">🛡️ Seguridad</option>
@@ -373,7 +390,7 @@
             </div>
 
             <div class="pt-1 flex items-center justify-end">
-                <button type="submit" class="px-3.5 py-1.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold shadow-xs transition cursor-pointer flex items-center gap-1.5">
+                <button type="submit" class="px-3.5 py-1.5 rounded-xl bg-[#39A900] hover:bg-[#1e5c00] text-white text-xs font-bold shadow-xs transition cursor-pointer flex items-center gap-1.5">
                     <i class="fa-solid fa-check text-xs"></i>
                     <span>Guardar Tipo</span>
                 </button>
@@ -486,9 +503,9 @@
     function switchView(view) {
         currentView = view;
 
-        document.getElementById('viewBtnDay').className = view === 'day' ? 'px-3.5 py-1.5 rounded-lg bg-white text-orange-600 shadow-xs font-extrabold border border-slate-200/60 transition cursor-pointer' : 'px-3.5 py-1.5 rounded-lg transition cursor-pointer hover:text-slate-900';
-        document.getElementById('viewBtnWeek').className = view === 'week' ? 'px-3.5 py-1.5 rounded-lg bg-white text-orange-600 shadow-xs font-extrabold border border-slate-200/60 transition cursor-pointer' : 'px-3.5 py-1.5 rounded-lg transition cursor-pointer hover:text-slate-900';
-        document.getElementById('viewBtnMonth').className = view === 'month' ? 'px-3.5 py-1.5 rounded-lg bg-white text-orange-600 shadow-xs font-extrabold border border-slate-200/60 transition cursor-pointer' : 'px-3.5 py-1.5 rounded-lg transition cursor-pointer hover:text-slate-900';
+        document.getElementById('viewBtnDay').className = view === 'day' ? 'px-3.5 py-1.5 rounded-lg bg-white text-[#39A900] shadow-xs font-extrabold border border-slate-200/60 transition cursor-pointer' : 'px-3.5 py-1.5 rounded-lg transition cursor-pointer hover:text-slate-900';
+        document.getElementById('viewBtnWeek').className = view === 'week' ? 'px-3.5 py-1.5 rounded-lg bg-white text-[#39A900] shadow-xs font-extrabold border border-slate-200/60 transition cursor-pointer' : 'px-3.5 py-1.5 rounded-lg transition cursor-pointer hover:text-slate-900';
+        document.getElementById('viewBtnMonth').className = view === 'month' ? 'px-3.5 py-1.5 rounded-lg bg-white text-[#39A900] shadow-xs font-extrabold border border-slate-200/60 transition cursor-pointer' : 'px-3.5 py-1.5 rounded-lg transition cursor-pointer hover:text-slate-900';
 
         document.getElementById('headerViewBadge').innerText = view === 'month' ? 'Mes' : (view === 'week' ? 'Semana' : 'Día');
 
@@ -778,7 +795,7 @@
         if (isSelected) {
             numberBadgeHTML = `<span class="w-5 h-5 rounded-md bg-blue-600 text-white text-[11px] font-extrabold flex items-center justify-center shadow-xs">${dayNum}</span>`;
         } else if (isToday) {
-            numberBadgeHTML = `<span class="w-5 h-5 rounded-md bg-orange-500 text-white text-[11px] font-extrabold flex items-center justify-center shadow-xs">${dayNum}</span>`;
+            numberBadgeHTML = `<span class="w-5 h-5 rounded-md bg-emerald-500 text-white text-[11px] font-extrabold flex items-center justify-center shadow-xs">${dayNum}</span>`;
         } else if (isReadOnly) {
             numberBadgeHTML = `<span class="text-xs font-bold text-slate-500 pl-1">${dayNum}</span>`;
         } else {
@@ -844,7 +861,7 @@
 
             const headerCol = document.createElement('div');
             headerCol.className = `p-2 rounded-xl text-center border transition cursor-pointer ${
-                isSelected ? 'bg-orange-50 border-orange-300 text-orange-700 font-extrabold' : 'border-transparent text-slate-600 hover:bg-slate-50'
+                isSelected ? 'bg-emerald-50 border-emerald-300 text-[#064e3b] font-extrabold' : 'border-transparent text-slate-600 hover:bg-slate-50'
             }`;
             headerCol.setAttribute('onclick', `selectDay('${formattedDate}')`);
             if (isReadOnly) {
@@ -852,14 +869,14 @@
             }
             headerCol.innerHTML = `
                 <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">${shortDayNames[i]}</div>
-                <div class="text-base font-extrabold mt-0.5 ${isToday ? 'w-7 h-7 rounded-full bg-orange-500 text-white flex items-center justify-center mx-auto shadow-xs' : ''}">
+                <div class="text-base font-extrabold mt-0.5 ${isToday ? 'w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto shadow-xs' : ''}">
                     ${dayDate.getDate()}
                 </div>
             `;
             headersGrid.appendChild(headerCol);
 
             const dayCol = document.createElement('div');
-            dayCol.className = `min-h-[380px] p-2 rounded-2xl border border-slate-100 flex flex-col gap-2 ${isSelected ? 'bg-orange-50/20 border-orange-200/60' : (isReadOnly ? 'bg-slate-50/30' : 'bg-slate-50/40')}`;
+            dayCol.className = `min-h-[380px] p-2 rounded-2xl border border-slate-100 flex flex-col gap-2 ${isSelected ? 'bg-emerald-50/20 border-emerald-200/60' : (isReadOnly ? 'bg-slate-50/30' : 'bg-slate-50/40')}`;
 
             if (dayEvents.length === 0) {
                 dayCol.innerHTML = `
@@ -1049,7 +1066,7 @@
         grid.innerHTML = dayEvents.map(evt => {
             const typeInfo = getActivityTypeBadge(evt.tipo_actividad, evt.name);
 
-            let statusStyle = 'bg-orange-100 text-orange-700 border-orange-200';
+            let statusStyle = 'bg-emerald-100 text-[#064e3b] border-emerald-200';
             if (evt.estado === 'Completada' || evt.estado === 'Realizada') {
                 statusStyle = 'bg-emerald-100 text-emerald-700 border-emerald-200';
             } else if (evt.estado === 'En Ejecución') {
@@ -1092,7 +1109,7 @@
 
                         <div class="text-xs text-slate-600 space-y-1.5 pt-1 border-t border-slate-100">
                             <div class="flex items-center gap-1.5 font-semibold text-slate-700">
-                                <i class="fa-regular fa-clock text-orange-500"></i>
+                                <i class="fa-regular fa-clock text-[#39A900]"></i>
                                 <span>Hora: ${evt.time} hs</span>
                             </div>
                             <div class="flex items-center gap-1.5 font-medium text-slate-600">
@@ -1613,7 +1630,7 @@
         clearTimeout(toastTimeout);
         toastTimeout = setTimeout(() => {
             hideToastNotification();
-        }, 4000);
+        }, 1000);
     }
 
     function hideToastNotification() {

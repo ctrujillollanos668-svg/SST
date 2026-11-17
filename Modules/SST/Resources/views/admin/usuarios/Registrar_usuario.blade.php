@@ -53,20 +53,20 @@
     @endif
 
     <!-- 1. Encabezado de la Sección -->
-    <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
+    <div class="bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#002D44] p-6 sm:p-7 rounded-2xl border-l-4 border-l-[#39A900] text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-xs">
+                <div class="w-12 h-12 rounded-2xl bg-white/10 text-[#62E31D] flex items-center justify-center border border-white/20 shadow-inner shrink-0">
                     <i class="fa-solid fa-user-graduate text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Gestión del Aprendiz SST</h1>
-                    <p class="text-sm text-slate-500 font-medium mt-0.5">Control de credenciales, acceso y relevo de fase del Aprendiz en SG-SST.</p>
+                    <h1 class="text-2xl font-black text-white tracking-tight">Gestión del Aprendiz SST</h1>
+                    <p class="text-xs sm:text-sm text-white/80 font-normal mt-0.5">Control de credenciales, acceso y relevo de fase del Aprendiz en SG-SST.</p>
                 </div>
             </div>
         </div>
 
-        <button onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 text-sm font-bold shadow-xs transition-all duration-200 cursor-pointer group border border-orange-200/90 hover:border-orange-300">
+        <button onclick="openRegisterModal()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#39A900] hover:bg-[#2d8500] text-white text-sm font-bold shadow-lg shadow-[#39A900]/30 transition-all duration-200 cursor-pointer group border border-[#62E31D]/40 shrink-0">
             <i class="fa-solid fa-plus text-xs group-hover:rotate-90 transition-transform duration-300"></i>
             <span>Vincular / Asignar Rol</span>
         </button>
@@ -75,7 +75,7 @@
     <!-- 2. Tarjetas de Resumen Dinámicas -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-11 h-11 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold text-lg shrink-0">
+            <div class="w-11 h-11 rounded-xl bg-emerald-50 text-[#39A900] flex items-center justify-center font-bold text-lg shrink-0">
                 <i class="fa-solid fa-user-graduate"></i>
             </div>
             <div>
@@ -119,11 +119,11 @@
         <div class="relative w-full md:w-96">
             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
             <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Buscar por nombre, correo o documento..." 
-                class="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium transition">
+                class="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-medium transition">
         </div>
 
         <div class="flex items-center gap-2 w-full md:w-auto">
-            <span class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-orange-50 border border-orange-200/80 text-orange-700 text-xs font-bold shadow-2xs">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200/80 text-[#064e3b] text-xs font-bold shadow-2xs">
                 <i class="fa-solid fa-user-graduate text-xs"></i>
                 <span>Listando únicamente: Aprendiz SST</span>
             </span>
@@ -135,7 +135,7 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse" id="usuariosTable">
                 <thead>
-                    <tr class="bg-slate-50/90 border-b border-slate-200/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider">
+                    <tr class="bg-[#001A29] text-white text-[11px] font-extrabold uppercase tracking-wider border-b-2 border-[#39A900]">
                         <th class="py-4 px-6">USUARIO / APRENDIZ SST</th>
                         <th class="py-4 px-6">CORREO INSTITUCIONAL</th>
                         <th class="py-4 px-6 text-center">DOCUMENTO</th>
@@ -153,7 +153,7 @@
                         @endphp
                         <tr class="hover:bg-slate-50/60 transition-colors user-row">
                             <td class="py-4 px-6 font-bold text-slate-900 flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-xl bg-orange-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+                                <div class="w-8 h-8 rounded-xl bg-[#39A900] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
                                     {{ $initials }}
                                 </div>
                                 <div class="truncate max-w-xs">
@@ -166,10 +166,10 @@
                             <td class="py-4 px-6 text-center">
                                 <div class="flex flex-wrap items-center justify-center gap-1.5 role-container">
                                     @forelse($user->roles as $r)
-                                        <span class="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-50 text-orange-800 border border-orange-200 shadow-2xs group">
-                                            <i class="fa-solid fa-shield-halved text-[8px] text-orange-600"></i>
+                                        <span class="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-[#064e3b] border border-emerald-200 shadow-2xs group">
+                                            <i class="fa-solid fa-shield-halved text-[8px] text-[#39A900]"></i>
                                             <span>{{ $r->name }}</span>
-                                            <button type="button" onclick="confirmRemoveRole({{ $user->id }}, {{ $r->id }}, '{{ addslashes($r->name) }}', '{{ addslashes($fullName) }}')" class="w-3.5 h-3.5 rounded-full bg-orange-200/70 hover:bg-rose-500 hover:text-white flex items-center justify-center transition cursor-pointer text-[8px]" title="Remover rol {{ $r->name }}">
+                                            <button type="button" onclick="confirmRemoveRole({{ $user->id }}, {{ $r->id }}, '{{ addslashes($r->name) }}', '{{ addslashes($fullName) }}')" class="w-3.5 h-3.5 rounded-full bg-emerald-200/70 hover:bg-rose-500 hover:text-white flex items-center justify-center transition cursor-pointer text-[8px]" title="Remover rol {{ $r->name }}">
                                                 <i class="fa-solid fa-xmark"></i>
                                             </button>
                                         </span>
@@ -200,7 +200,7 @@
                                     <button type="button" 
                                         data-user="{{ base64_encode(json_encode($credData)) }}"
                                         onclick="openCredentialsModal(this)" 
-                                        class="px-2.5 py-1.5 text-[11px] font-bold text-slate-700 bg-slate-100 hover:bg-orange-50 hover:text-orange-700 border border-slate-200 hover:border-orange-200 rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                                        class="px-2.5 py-1.5 text-[11px] font-bold text-slate-700 bg-slate-100 hover:bg-emerald-50 hover:text-[#1e5c00] border border-slate-200 hover:border-emerald-200 rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow-2xs"
                                         title="Editar correo, contraseña o traspasar el puesto al nuevo aprendiz">
                                         <i class="fa-solid fa-key text-[10px] text-amber-500"></i>
                                         <span>Credenciales / Relevo</span>
@@ -208,7 +208,7 @@
 
                                     <button type="button" 
                                         onclick="openAssignModalForUser({{ $user->id }}, '{{ addslashes($fullName) }}')" 
-                                        class="px-2.5 py-1.5 text-[11px] font-bold text-orange-700 bg-orange-50 hover:bg-orange-100 border border-orange-200 rounded-xl transition cursor-pointer flex items-center gap-1 shadow-2xs"
+                                        class="px-2.5 py-1.5 text-[11px] font-bold text-[#064e3b] bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition cursor-pointer flex items-center gap-1 shadow-2xs"
                                         title="Asignar rol en SST">
                                         <i class="fa-solid fa-plus text-[9px]"></i>
                                         <span>Rol</span>
@@ -245,7 +245,7 @@
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 animate-modal-pop">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
             <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-                <i class="fa-solid fa-user-plus text-orange-600"></i>
+                <i class="fa-solid fa-user-plus text-[#39A900]"></i>
                 <span id="modalTitle">Asignar Rol en SST</span>
             </h3>
             <button onclick="closeRegisterModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
@@ -259,7 +259,7 @@
             <!-- Selector de Usuario -->
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Usuario / Funcionario *</label>
-                <select name="user_id" id="modalUserId" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-orange-500 font-semibold cursor-pointer">
+                <select name="user_id" id="modalUserId" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-[#39A900] font-semibold cursor-pointer">
                     <option value="">-- Selecciona un usuario --</option>
                     @foreach($allUsers ?? $usuarios as $u)
                         <option value="{{ $u->id }}">{{ $u->full_name }} ({{ $u->email }})</option>
@@ -270,7 +270,7 @@
             <!-- Selector de Rol -->
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Rol a Asignar en SST *</label>
-                <select name="role_id" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-orange-500 font-semibold cursor-pointer">
+                <select name="role_id" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-[#39A900] font-semibold cursor-pointer">
                     <option value="">-- Selecciona un rol --</option>
                     @foreach($roles as $r)
                         <option value="{{ $r->id }}">{{ $r->name }} ({{ $r->slug }})</option>
@@ -282,7 +282,7 @@
                 <button type="button" onclick="closeRegisterModal()" class="px-4 py-2 text-xs font-bold text-slate-600 rounded-xl hover:bg-slate-100 transition cursor-pointer">
                     Cancelar
                 </button>
-                <button type="submit" class="px-4 py-2 text-xs font-bold text-white bg-orange-600 hover:bg-orange-700 active:bg-orange-800 rounded-xl shadow-xs transition cursor-pointer flex items-center gap-1.5">
+                <button type="submit" class="px-4 py-2 text-xs font-bold text-white bg-[#39A900] hover:bg-[#1e5c00] active:bg-[#1e5c00] rounded-xl shadow-xs transition cursor-pointer flex items-center gap-1.5">
                     <i class="fa-solid fa-check text-xs"></i>
                     <span>Guardar Asignación</span>
                 </button>
@@ -296,7 +296,7 @@
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 animate-modal-pop max-h-[92vh] overflow-y-auto">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
             <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-sm">
+                <div class="w-9 h-9 rounded-xl bg-emerald-100 text-[#39A900] flex items-center justify-center font-bold text-sm">
                     <i class="fa-solid fa-id-card-clip"></i>
                 </div>
                 <div>
@@ -325,11 +325,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Nombres del Aprendiz / Titular</label>
-                    <input type="text" name="first_name" id="cred_first_name" placeholder="Ej: CARLOS ANDRES" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold uppercase">
+                    <input type="text" name="first_name" id="cred_first_name" maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Ej: CARLOS ANDRES" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold uppercase">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Apellidos del Aprendiz</label>
-                    <input type="text" name="first_last_name" id="cred_first_last_name" placeholder="Ej: PEREZ GOMEZ" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold uppercase">
+                    <input type="text" name="first_last_name" id="cred_first_last_name" maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Ej: PEREZ GOMEZ" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold uppercase">
                 </div>
             </div>
 
@@ -337,11 +337,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Documento de Identidad (CC/TI)</label>
-                    <input type="text" name="document_number" id="cred_document_number" placeholder="Ej: 1075283921" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold font-mono">
+                    <input type="text" name="document_number" id="cred_document_number" inputmode="numeric" maxlength="30" pattern="^[0-9]+$" title="Solo números sin espacios" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="Ej: 1075283921" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold font-mono">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Nombre de Usuario (Nickname)</label>
-                    <input type="text" name="nickname" id="cred_nickname" placeholder="Ej: CarlosPerez" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                    <input type="text" name="nickname" id="cred_nickname" placeholder="Ej: CarlosPerez" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold">
                 </div>
             </div>
 
@@ -349,11 +349,11 @@
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
                     <span>Correo Electrónico de Inicio de Sesión *</span>
-                    <span class="text-[10px] text-orange-600 font-semibold">Credencial de Entrada</span>
+                    <span class="text-[10px] text-[#39A900] font-semibold">Credencial de Entrada</span>
                 </label>
                 <div class="relative">
                     <i class="fa-solid fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="email" name="email" id="cred_email" required placeholder="correo.aprendiz@sena.edu.co" class="w-full pl-9 pr-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold font-mono text-slate-800">
+                    <input type="email" name="email" id="cred_email" required placeholder="correo.aprendiz@sena.edu.co" class="w-full pl-9 pr-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold font-mono text-slate-800">
                 </div>
             </div>
 
@@ -361,13 +361,13 @@
             <div>
                 <div class="flex items-center justify-between mb-1">
                     <label class="block text-xs font-bold text-slate-700">Nueva Contraseña de Acceso</label>
-                    <button type="button" onclick="generateRandomPassword()" class="text-[11px] font-bold text-orange-600 hover:text-orange-700 flex items-center gap-1 cursor-pointer">
+                    <button type="button" onclick="generateRandomPassword()" class="text-[11px] font-bold text-[#39A900] hover:text-[#1e5c00] flex items-center gap-1 cursor-pointer">
                         <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i> Generar clave segura
                     </button>
                 </div>
                 <div class="relative">
                     <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="password" name="password" id="cred_password_input" placeholder="Ingresa mínimo 6 caracteres..." class="w-full pl-9 pr-10 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold text-slate-800 font-mono">
+                    <input type="password" name="password" id="cred_password_input" placeholder="Ingresa mínimo 6 caracteres..." class="w-full pl-9 pr-10 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold text-slate-800 font-mono">
                     <button type="button" onclick="togglePasswordVisibility('cred_password_input', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-1" title="Ver contraseña">
                         <i class="fa-solid fa-eye text-xs"></i>
                     </button>
@@ -380,7 +380,7 @@
                 <label class="block text-xs font-bold text-slate-700 mb-1">Confirmar Nueva Contraseña</label>
                 <div class="relative">
                     <i class="fa-solid fa-lock-open absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="password" name="password_confirmation" id="cred_password_confirmation" placeholder="Repite la nueva contraseña..." class="w-full pl-9 pr-10 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold text-slate-800 font-mono">
+                    <input type="password" name="password_confirmation" id="cred_password_confirmation" placeholder="Repite la nueva contraseña..." class="w-full pl-9 pr-10 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold text-slate-800 font-mono">
                     <button type="button" onclick="togglePasswordVisibility('cred_password_confirmation', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-1" title="Ver contraseña">
                         <i class="fa-solid fa-eye text-xs"></i>
                     </button>
@@ -395,7 +395,7 @@
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" name="assign_sst_aprendiz" value="1" id="cred_assign_sst_aprendiz" class="sr-only peer" checked>
-                    <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-orange-600"></div>
+                    <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#39A900]"></div>
                 </label>
             </div>
 
@@ -404,7 +404,7 @@
                 <button type="button" onclick="closeCredentialsModal()" class="px-4 py-2 text-xs font-bold text-slate-600 rounded-xl hover:bg-slate-100 transition cursor-pointer">
                     Cancelar
                 </button>
-                <button type="submit" class="px-5 py-2.5 text-xs font-bold text-white bg-orange-600 hover:bg-orange-700 active:bg-orange-800 rounded-xl shadow-xs transition cursor-pointer flex items-center gap-1.5">
+                <button type="submit" class="px-5 py-2.5 text-xs font-bold text-white bg-[#39A900] hover:bg-[#1e5c00] active:bg-[#1e5c00] rounded-xl shadow-xs transition cursor-pointer flex items-center gap-1.5">
                     <i class="fa-solid fa-floppy-disk text-xs"></i>
                     <span>Guardar Credenciales y Relevo</span>
                 </button>

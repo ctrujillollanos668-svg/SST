@@ -23,9 +23,11 @@ class LugarInformacionController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'descripcion' => 'nullable|string',
+            'nombre' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'descripcion' => 'nullable|string|max:500',
             'estado' => 'nullable|in:activo,inactivo,Activo,Inactivo',
+        ], [
+            'nombre.regex' => 'El nombre del ambiente o taller solo debe contener letras y espacios.',
         ]);
 
         $validated['estado'] = strtolower($validated['estado'] ?? 'activo');
@@ -44,9 +46,11 @@ class LugarInformacionController extends Controller
         $lugar = LugarFormacion::findOrFail($id);
 
         $validated = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'descripcion' => 'nullable|string',
+            'nombre' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'descripcion' => 'nullable|string|max:500',
             'estado' => 'nullable|in:activo,inactivo,Activo,Inactivo',
+        ], [
+            'nombre.regex' => 'El nombre del ambiente o taller solo debe contener letras y espacios.',
         ]);
 
         $validated['estado'] = strtolower($validated['estado'] ?? 'activo');

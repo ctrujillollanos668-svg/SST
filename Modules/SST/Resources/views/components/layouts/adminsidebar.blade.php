@@ -6,7 +6,7 @@
         transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .menu-wrapper.open .submenu-transition {
-        max-height: 420px;
+        max-height: 440px;
     }
     .arrow-icon {
         transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -19,6 +19,33 @@
     #sidebarMenu {
         transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
+        /* Estilo de submódulos idéntico a la referencia con movimiento interactivo */
+    .submenu-item {
+        color: #ffffff !important;
+        text-decoration: none;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        border-left: 3px solid transparent;
+        background-color: transparent;
+    }
+    .submenu-item:hover {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        color: #ffffff !important;
+        transform: translateX(4px);
+    }
+    .submenu-item.active-sub {
+        background-color: #1E4E70 !important;
+        border-left: 3px solid #62E31D !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        transform: translateX(3px);
+    }
+    .submenu-item .sub-dot {
+        color: rgba(255, 255, 255, 0.45);
+        transition: color 0.15s ease;
+    }
+    .submenu-item.active-sub .sub-dot {
+        color: #ffffff !important;
+    }
     #sidebarMenu.sidebar-hidden {
         left: -270px;
     }
@@ -29,8 +56,11 @@
         background: transparent;
     }
     #sidebarMenu nav::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
+        background: rgba(255, 255, 255, 0.15);
         border-radius: 9999px;
+    }
+    #sidebarMenu nav::-webkit-scrollbar-thumb:hover {
+        background: #39A900;
     }
 
     /* MODO MINI SIDEBAR (COMPACTO) */
@@ -73,10 +103,10 @@
         left: 70px;
         top: 0;
         width: 230px;
-        background: #ffffff;
+        background: #0F3247;
         border-radius: 1rem;
-        border: 1px solid rgba(226, 232, 240, 0.95);
-        box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.16), 0 4px 12px -2px rgba(0, 0, 0, 0.06);
+        border: 1px solid #1A4B69;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
         padding: 0.5rem;
         z-index: 100;
         opacity: 0;
@@ -94,81 +124,81 @@
     }
 </style>
 
-<!-- SIDEBAR ADMIN SG-SST -->
-<aside id="sidebarMenu" class="w-[270px] bg-white text-slate-600 flex flex-col h-screen fixed left-0 top-0 z-40 shadow-sm border-r border-slate-200/80 select-none">
+<!-- SIDEBAR ADMIN SG-SST (Estilo Ejecutivo Dirección más claro: Azul Petróleo #0A2333 / #0F3247, Verde SENA #39A900 y Neón #62E31D) -->
+<aside id="sidebarMenu" class="w-[270px] bg-gradient-to-b from-[#0A2333] via-[#0F3247] to-[#0A2333] text-slate-200 flex flex-col h-screen fixed left-0 top-0 z-40 shadow-2xl border-r border-[#1A4B69] select-none">
     
     <!-- Logo & Header -->
-    <div class="flex flex-col items-center pt-5 pb-4 px-3 border-b border-slate-100 shrink-0">
+    <div class="flex flex-col items-center pt-5 pb-4 px-3 border-b border-[#1A4B69] shrink-0">
         <!-- Logo Grande -->
         <div class="logo-full flex flex-col items-center">
-            <div class="w-14 h-14 bg-slate-50 rounded-2xl p-1.5 border border-slate-200/70 flex items-center justify-center mb-2 shadow-xs overflow-hidden">
+            <div class="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-2xl p-1.5 border border-white/20 flex items-center justify-center mb-2 shadow-lg overflow-hidden">
                 <img src="{{ asset('img/logodesst.jpeg') }}" alt="Logo SENA SST" class="max-w-full max-h-full object-contain rounded-xl">
             </div>
-            <div class="text-[11px] text-center font-extrabold uppercase tracking-widest text-slate-800 leading-tight sidebar-text-full">
-                Sistema de Gestión <span class="text-orange-600">SST</span>
+            <div class="text-[11px] text-center font-extrabold uppercase tracking-widest text-white leading-tight sidebar-text-full">
+                Sistema de Gestión <span class="text-[#62E31D]">SST</span>
             </div>
-            <div class="inline-flex items-center gap-1.5 mt-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200/80 text-[10px] font-bold text-slate-600 sidebar-text-full">
-                <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+            <div class="inline-flex items-center gap-1.5 mt-1.5 px-2.5 py-0.5 rounded-full bg-[#1A4B69] border border-[#39A900]/40 text-[10px] font-bold text-[#62E31D] sidebar-text-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#62E31D] animate-pulse"></span>
                 La Angostura
             </div>
         </div>
 
         <!-- Logo Mini (Modo Compacto) -->
-        <div class="logo-mini hidden w-11 h-11 bg-slate-50 rounded-xl p-1 border border-slate-200/80 items-center justify-center shadow-xs overflow-hidden cursor-pointer" title="SG-SST • La Angostura">
+        <div class="logo-mini hidden w-11 h-11 bg-white/10 backdrop-blur-sm rounded-xl p-1 border border-white/20 items-center justify-center shadow-md overflow-hidden cursor-pointer" title="SG-SST • La Angostura">
             <img src="{{ asset('img/logodesst.jpeg') }}" alt="Logo SST" class="max-w-full max-h-full object-contain rounded-lg">
         </div>
     </div>
 
     <!-- Navigation Menu -->
-    <nav class="py-3 flex-grow overflow-y-auto space-y-1 px-2.5 text-xs font-semibold">
+    <nav class="py-3 flex-grow overflow-y-auto space-y-1.5 px-2.5 text-xs font-semibold">
 
         <!-- 1. DEFINICIONES -->
         @php
             $isDefiniciones = request()->routeIs('SST.admin.definiciones.*');
         @endphp
         <div class="flex flex-col menu-wrapper relative {{ $isDefiniciones ? 'open' : '' }}" id="definicionesWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleDefiniciones">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isDefiniciones ? 'bg-white/10 text-white font-bold border border-white/10 shadow-xs' : 'text-white hover:text-white hover:bg-white/10' }} transition cursor-pointer group" id="btnToggleDefiniciones">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition shrink-0">
+                    <span class="w-8 h-8 rounded-xl {{ $isDefiniciones ? 'bg-[#39A900] text-white shadow-md shadow-[#39A900]/30 border border-[#62E31D]/40' : 'bg-white/10 text-white group-hover:bg-[#39A900] group-hover:text-white border border-white/5' }} flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-book text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Definiciones</span>
                 </div>
-                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowDefiniciones">
+                <span class="text-[10px] {{ $isDefiniciones ? 'text-[#62E31D]' : 'text-white/70 group-hover:text-white' }} arrow-icon" id="arrowDefiniciones">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
             <!-- Acordeón Normal -->
-            <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
-                @php $actDefAcc = request()->routeIs('SST.admin.definiciones.accidentes'); @endphp
-                <li><a href="{{ route('SST.admin.definiciones.accidentes') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actDefAcc ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}"><span class="text-[6px] mr-2.5 {{ $actDefAcc ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> Accidentes</a></li>
-                @php $actDefInc = request()->routeIs('SST.admin.definiciones.incidentes'); @endphp
-                <li><a href="{{ route('SST.admin.definiciones.incidentes') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actDefInc ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}"><span class="text-[6px] mr-2.5 {{ $actDefInc ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> Incidentes</a></li>
-                @php $actDefRie = request()->routeIs('SST.admin.definiciones.riesgos'); @endphp
-                <li><a href="{{ route('SST.admin.definiciones.riesgos') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actDefRie ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}"><span class="text-[6px] mr-2.5 {{ $actDefRie ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> Riesgos</a></li>
-                @php $actDefAct = request()->routeIs('SST.admin.definiciones.actos_inseguros'); @endphp
-                <li><a href="{{ route('SST.admin.definiciones.actos_inseguros') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actDefAct ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}"><span class="text-[6px] mr-2.5 {{ $actDefAct ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> Actos Inseguros</a></li>
-                @php $actDefCond = request()->routeIs('SST.admin.definiciones.condiciones_inseguras'); @endphp
-                <li><a href="{{ route('SST.admin.definiciones.condiciones_inseguras') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actDefCond ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}"><span class="text-[6px] mr-2.5 {{ $actDefCond ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> Condiciones Inseguras</a></li>
-                @php $actDefLes = request()->routeIs('SST.admin.definiciones.lesiones'); @endphp
-                <li><a href="{{ route('SST.admin.definiciones.lesiones') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actDefLes ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}"><span class="text-[6px] mr-2.5 {{ $actDefLes ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> Lesiones</a></li>
-                @php $actDefEme = request()->routeIs('SST.admin.definiciones.tipos_emergencias'); @endphp
-                <li><a href="{{ route('SST.admin.definiciones.tipos_emergencias') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actDefEme ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}"><span class="text-[6px] mr-2.5 {{ $actDefEme ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> Condiciones de Emergencias</a></li>
+            <ul class="submenu-transition bg-[#071D2B]/95 rounded-xl mt-1 mx-1 p-1.5 border border-[#1A4B69] space-y-0.5">
+                @php $actDefAcc = request()->routeIs('SST.admin.definiciones.accidentes*'); @endphp
+                <li><a href="{{ route('SST.admin.definiciones.accidentes') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actDefAcc ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Accidentes</a></li>
+                @php $actDefInc = request()->routeIs('SST.admin.definiciones.incidentes*'); @endphp
+                <li><a href="{{ route('SST.admin.definiciones.incidentes') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actDefInc ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Incidentes</a></li>
+                @php $actDefRie = request()->routeIs('SST.admin.definiciones.riesgos*'); @endphp
+                <li><a href="{{ route('SST.admin.definiciones.riesgos') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actDefRie ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Riesgos</a></li>
+                @php $actDefAct = request()->routeIs('SST.admin.definiciones.actos_inseguros*'); @endphp
+                <li><a href="{{ route('SST.admin.definiciones.actos_inseguros') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actDefAct ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Actos Inseguros</a></li>
+                @php $actDefCond = request()->routeIs('SST.admin.definiciones.condiciones_inseguras*'); @endphp
+                <li><a href="{{ route('SST.admin.definiciones.condiciones_inseguras') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actDefCond ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Condiciones Inseguras</a></li>
+                @php $actDefLes = request()->routeIs('SST.admin.definiciones.lesiones*'); @endphp
+                <li><a href="{{ route('SST.admin.definiciones.lesiones') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actDefLes ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Lesiones</a></li>
+                @php $actDefEme = request()->routeIs('SST.admin.definiciones.tipos_emergencias*'); @endphp
+                <li><a href="{{ route('SST.admin.definiciones.tipos_emergencias') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actDefEme ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Condiciones de Emergencias</a></li>
             </ul>
             <!-- Tarjeta Flotante (Flyout Mini) -->
             <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-slate-100 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                    <span class="font-extrabold text-xs text-slate-800">Definiciones</span>
+                <div class="px-3 py-2 border-b border-[#1A4B69] flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#62E31D]"></span>
+                    <span class="font-extrabold text-xs text-white">Definiciones</span>
                 </div>
                 <div class="py-1 space-y-0.5">
-                    <a href="{{ route('SST.admin.definiciones.accidentes') }}" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium {{ $actDefAcc ? 'bg-orange-50 text-orange-600 font-bold' : '' }}">Accidentes</a>
-                    <a href="{{ route('SST.admin.definiciones.incidentes') }}" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium {{ $actDefInc ? 'bg-orange-50 text-orange-600 font-bold' : '' }}">Incidentes</a>
-                    <a href="{{ route('SST.admin.definiciones.riesgos') }}" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium {{ $actDefRie ? 'bg-orange-50 text-orange-600 font-bold' : '' }}">Riesgos</a>
-                    <a href="{{ route('SST.admin.definiciones.actos_inseguros') }}" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium {{ $actDefAct ? 'bg-orange-50 text-orange-600 font-bold' : '' }}">Actos Inseguros</a>
-                    <a href="{{ route('SST.admin.definiciones.condiciones_inseguras') }}" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium {{ $actDefCond ? 'bg-orange-50 text-orange-600 font-bold' : '' }}">Condiciones Inseguras</a>
-                    <a href="{{ route('SST.admin.definiciones.lesiones') }}" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium {{ $actDefLes ? 'bg-orange-50 text-orange-600 font-bold' : '' }}">Lesiones</a>
-                    <a href="{{ route('SST.admin.definiciones.tipos_emergencias') }}" class="flex items-center px-3 py-1.5 text-slate-600 rounded-lg hover:text-orange-600 hover:bg-orange-50 transition text-xs font-medium {{ $actDefEme ? 'bg-orange-50 text-orange-600 font-bold' : '' }}">Condiciones de Emergencias</a>
+                    <a href="{{ route('SST.admin.definiciones.accidentes') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actDefAcc ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Accidentes</span> @if($actDefAcc)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.definiciones.incidentes') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actDefInc ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Incidentes</span> @if($actDefInc)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.definiciones.riesgos') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actDefRie ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Riesgos</span> @if($actDefRie)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.definiciones.actos_inseguros') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actDefAct ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Actos Inseguros</span> @if($actDefAct)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.definiciones.condiciones_inseguras') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actDefCond ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Condiciones Inseguras</span> @if($actDefCond)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.definiciones.lesiones') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actDefLes ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Lesiones</span> @if($actDefLes)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.definiciones.tipos_emergencias') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actDefEme ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Condiciones Emergencias</span> @if($actDefEme)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
                 </div>
             </div>
         </div>
@@ -178,113 +208,48 @@
             $isTiposEventos = request()->routeIs('SST.admin.tipos_eventos.*');
         @endphp
         <div class="flex flex-col menu-wrapper relative {{ $isTiposEventos ? 'open' : '' }}" id="tiposEventosWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleTiposEventos">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isTiposEventos ? 'bg-white/10 text-white font-bold border border-white/10 shadow-xs' : 'text-white hover:text-white hover:bg-white/10' }} transition cursor-pointer group" id="btnToggleTiposEventos">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600 flex items-center justify-center transition shrink-0">
+                    <span class="w-8 h-8 rounded-xl {{ $isTiposEventos ? 'bg-[#39A900] text-white shadow-md shadow-[#39A900]/30 border border-[#62E31D]/40' : 'bg-white/10 text-white group-hover:bg-[#39A900] group-hover:text-white border border-white/5' }} flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-list-check text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Tipos de Eventos</span>
                 </div>
-                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowTiposEventos">
+                <span class="text-[10px] {{ $isTiposEventos ? 'text-[#62E31D]' : 'text-white/70 group-hover:text-white' }} arrow-icon" id="arrowTiposEventos">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
             <!-- Acordeón Normal -->
-            <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
-                @php $actAcc = request()->routeIs('SST.admin.tipos_eventos.accidentes.*'); @endphp
-                <li>
-                    <a href="{{ route('SST.admin.tipos_eventos.accidentes.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actAcc ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actAcc ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Accidentes
-                    </a>
-                </li>
-
-                @php $actInc = request()->routeIs('SST.admin.tipos_eventos.incidentes.*'); @endphp
-                <li>
-                    <a href="{{ route('SST.admin.tipos_eventos.incidentes.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actInc ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actInc ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Incidentes
-                    </a>
-                </li>
-
-                @php $actRiesg = request()->routeIs('SST.admin.tipos_eventos.riesgos.*'); @endphp
-                <li>
-                    <a href="{{ route('SST.admin.tipos_eventos.riesgos.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actRiesg ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actRiesg ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Riesgos
-                    </a>
-                </li>
-
-                @php $actActos = request()->routeIs('SST.admin.tipos_eventos.actos_inseguros.*'); @endphp
-                <li>
-                    <a href="{{ route('SST.admin.tipos_eventos.actos_inseguros.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actActos ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actActos ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Actos Inseguros
-                    </a>
-                </li>
-
-                @php $actCond = request()->routeIs('SST.admin.tipos_eventos.condiciones_inseguras.*'); @endphp
-                <li>
-                    <a href="{{ route('SST.admin.tipos_eventos.condiciones_inseguras.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actCond ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actCond ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Condiciones Inseguras
-                    </a>
-                </li>
-
-                @php $actLes = request()->routeIs('SST.admin.tipos_eventos.lesiones.*'); @endphp
-                <li>
-                    <a href="{{ route('SST.admin.tipos_eventos.lesiones.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actLes ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actLes ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Lesiones
-                    </a>
-                </li>
-
-                @php $actEmerg = request()->routeIs('SST.admin.tipos_eventos.tipos_emergencias.*'); @endphp
-                <li>
-                    <a href="{{ route('SST.admin.tipos_eventos.tipos_emergencias.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actEmerg ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actEmerg ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Condiciones de Emergencias
-                    </a>
-                </li>
+            <ul class="submenu-transition bg-[#071D2B]/95 rounded-xl mt-1 mx-1 p-1.5 border border-[#1A4B69] space-y-0.5">
+                @php $actEvAcc = request()->routeIs('SST.admin.tipos_eventos.accidentes*'); @endphp
+                <li><a href="{{ route('SST.admin.tipos_eventos.accidentes.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actEvAcc ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Accidentes</a></li>
+                @php $actEvInc = request()->routeIs('SST.admin.tipos_eventos.incidentes*'); @endphp
+                <li><a href="{{ route('SST.admin.tipos_eventos.incidentes.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actEvInc ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Incidentes</a></li>
+                @php $actEvRie = request()->routeIs('SST.admin.tipos_eventos.riesgos*'); @endphp
+                <li><a href="{{ route('SST.admin.tipos_eventos.riesgos.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actEvRie ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Riesgos</a></li>
+                @php $actEvAct = request()->routeIs('SST.admin.tipos_eventos.actos_inseguros*'); @endphp
+                <li><a href="{{ route('SST.admin.tipos_eventos.actos_inseguros.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actEvAct ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Actos Inseguros</a></li>
+                @php $actEvCond = request()->routeIs('SST.admin.tipos_eventos.condiciones_inseguras*'); @endphp
+                <li><a href="{{ route('SST.admin.tipos_eventos.condiciones_inseguras.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actEvCond ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Condiciones Inseguras</a></li>
+                @php $actEvLes = request()->routeIs('SST.admin.tipos_eventos.lesiones*'); @endphp
+                <li><a href="{{ route('SST.admin.tipos_eventos.lesiones.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actEvLes ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Lesiones</a></li>
+                @php $actEvEme = request()->routeIs('SST.admin.tipos_eventos.tipos_emergencias*'); @endphp
+                <li><a href="{{ route('SST.admin.tipos_eventos.tipos_emergencias.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actEvEme ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Condiciones de Emergencias</a></li>
             </ul>
             <!-- Tarjeta Flotante (Flyout Mini) -->
             <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-slate-100 flex items-center justify-between">
-                    <span class="font-extrabold text-xs text-slate-800 flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                        <span>Tipos de Eventos</span>
-                    </span>
-                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-100 text-orange-700">7</span>
+                <div class="px-3 py-2 border-b border-[#1A4B69] flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#62E31D]"></span>
+                    <span class="font-extrabold text-xs text-white">Tipos de Eventos</span>
                 </div>
                 <div class="py-1 space-y-0.5">
-                    <a href="{{ route('SST.admin.tipos_eventos.accidentes.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actAcc ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Accidentes</span>
-                        @if($actAcc)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
-                    <a href="{{ route('SST.admin.tipos_eventos.incidentes.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInc ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Incidentes</span>
-                        @if($actInc)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
-                    <a href="{{ route('SST.admin.tipos_eventos.riesgos.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actRiesg ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Riesgos</span>
-                        @if($actRiesg)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
-                    <a href="{{ route('SST.admin.tipos_eventos.actos_inseguros.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actActos ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Actos Inseguros</span>
-                        @if($actActos)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
-                    <a href="{{ route('SST.admin.tipos_eventos.condiciones_inseguras.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actCond ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Condiciones Inseguras</span>
-                        @if($actCond)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
-                    <a href="{{ route('SST.admin.tipos_eventos.lesiones.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actLes ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Lesiones</span>
-                        @if($actLes)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
-                    <a href="{{ route('SST.admin.tipos_eventos.tipos_emergencias.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actEmerg ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Condiciones de Emergencias</span>
-                        @if($actEmerg)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
+                    <a href="{{ route('SST.admin.tipos_eventos.accidentes.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actEvAcc ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Accidentes</span> @if($actEvAcc)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.tipos_eventos.incidentes.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actEvInc ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Incidentes</span> @if($actEvInc)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.tipos_eventos.riesgos.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actEvRie ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Riesgos</span> @if($actEvRie)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.tipos_eventos.actos_inseguros.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actEvAct ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Actos Inseguros</span> @if($actEvAct)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.tipos_eventos.condiciones_inseguras.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actEvCond ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Condiciones Inseguras</span> @if($actEvCond)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.tipos_eventos.lesiones.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actEvLes ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Lesiones</span> @if($actEvLes)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.tipos_eventos.tipos_emergencias.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actEvEme ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Condiciones Emergencias</span> @if($actEvEme)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
                 </div>
             </div>
         </div>
@@ -294,65 +259,36 @@
             $isInfoBasica = request()->routeIs('SST.admin.informacion_basica.*');
         @endphp
         <div class="flex flex-col menu-wrapper relative {{ $isInfoBasica ? 'open' : '' }}" id="informacionBasicaWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleInformacionBasica">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isInfoBasica ? 'bg-white/10 text-white font-bold border border-white/10 shadow-xs' : 'text-white hover:text-white hover:bg-white/10' }} transition cursor-pointer group" id="btnToggleInformacionBasica">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600 flex items-center justify-center transition shrink-0">
-                        <i class="fa-solid fa-info-circle text-xs"></i>
+                    <span class="w-8 h-8 rounded-xl {{ $isInfoBasica ? 'bg-[#39A900] text-white shadow-md shadow-[#39A900]/30 border border-[#62E31D]/40' : 'bg-white/10 text-white group-hover:bg-[#39A900] group-hover:text-white border border-white/5' }} flex items-center justify-center transition shrink-0">
+                        <i class="fa-solid fa-circle-info text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Información Básica</span>
                 </div>
-                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowInformacionBasica">
+                <span class="text-[10px] {{ $isInfoBasica ? 'text-[#62E31D]' : 'text-white/70 group-hover:text-white' }} arrow-icon" id="arrowInformacionBasica">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
             <!-- Acordeón Normal -->
-            <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
-                @php $actResp = request()->routeIs('SST.admin.informacion_basica.respuesta_eventos.*'); @endphp
-                <li>
-                    <a href="{{ route('SST.admin.informacion_basica.respuesta_eventos.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actResp ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actResp ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Respuesta de Eventos
-                    </a>
-                </li>
-
-                @php $actLugar = request()->routeIs('SST.admin.informacion_basica.lugar_informacion.*'); @endphp
-                <li>
-                    <a href="{{ route('SST.admin.informacion_basica.lugar_informacion.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actLugar ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actLugar ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Lugar de Información
-                    </a>
-                </li>
-
-                @php $actContacto = request()->routeIs('SST.admin.informacion_basica.contacto_emergencia.*'); @endphp
-                <li>
-                    <a href="{{ route('SST.admin.informacion_basica.contacto_emergencia.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actContacto ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actContacto ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Contacto de Emergencia
-                    </a>
-                </li>
+            <ul class="submenu-transition bg-[#071D2B]/95 rounded-xl mt-1 mx-1 p-1.5 border border-[#1A4B69] space-y-0.5">
+                @php $actInfCont = request()->routeIs('SST.admin.informacion_basica.contacto_emergencia*'); @endphp
+                <li><a href="{{ route('SST.admin.informacion_basica.contacto_emergencia.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actInfCont ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Contactos de Emergencia</a></li>
+                @php $actInfLug = request()->routeIs('SST.admin.informacion_basica.lugar_informacion*'); @endphp
+                <li><a href="{{ route('SST.admin.informacion_basica.lugar_informacion.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actInfLug ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Lugares e Instalaciones</a></li>
+                @php $actInfResp = request()->routeIs('SST.admin.informacion_basica.respuesta_evento*'); @endphp
+                <li><a href="{{ route('SST.admin.informacion_basica.respuesta_eventos.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actInfResp ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Respuesta a Eventos</a></li>
             </ul>
             <!-- Tarjeta Flotante (Flyout Mini) -->
             <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-slate-100 flex items-center justify-between">
-                    <span class="font-extrabold text-xs text-slate-800 flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                        <span>Información Básica</span>
-                    </span>
-                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-100 text-orange-700">3</span>
+                <div class="px-3 py-2 border-b border-[#1A4B69] flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#62E31D]"></span>
+                    <span class="font-extrabold text-xs text-white">Información Básica</span>
                 </div>
                 <div class="py-1 space-y-0.5">
-                    <a href="{{ route('SST.admin.informacion_basica.respuesta_eventos.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actResp ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Respuesta de Eventos</span>
-                        @if($actResp)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
-                    <a href="{{ route('SST.admin.informacion_basica.lugar_informacion.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actLugar ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Lugar de Información</span>
-                        @if($actLugar)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
-                    <a href="{{ route('SST.admin.informacion_basica.contacto_emergencia.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actContacto ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Contacto de Emergencia</span>
-                        @if($actContacto)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
+                    <a href="{{ route('SST.admin.informacion_basica.contacto_emergencia.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInfCont ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Contactos Emergencia</span> @if($actInfCont)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.informacion_basica.lugar_informacion.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInfLug ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Lugares e Instalaciones</span> @if($actInfLug)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.informacion_basica.respuesta_eventos.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInfResp ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Respuesta a Eventos</span> @if($actInfResp)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
                 </div>
             </div>
         </div>
@@ -362,236 +298,141 @@
             $isInspecciones = request()->routeIs('SST.admin.inspecciones.*');
         @endphp
         <div class="flex flex-col menu-wrapper relative {{ $isInspecciones ? 'open' : '' }}" id="inspeccionesWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleInspecciones">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isInspecciones ? 'bg-white/10 text-white font-bold border border-white/10 shadow-xs' : 'text-white hover:text-white hover:bg-white/10' }} transition cursor-pointer group" id="btnToggleInspecciones">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600 flex items-center justify-center transition shrink-0">
-                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    <span class="w-8 h-8 rounded-xl {{ $isInspecciones ? 'bg-[#39A900] text-white shadow-md shadow-[#39A900]/30 border border-[#62E31D]/40' : 'bg-white/10 text-white group-hover:bg-[#39A900] group-hover:text-white border border-white/5' }} flex items-center justify-center transition shrink-0">
+                        <i class="fa-solid fa-magnifying-glass-chart text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Inspecciones</span>
                 </div>
-                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowInspecciones">
+                <span class="text-[10px] {{ $isInspecciones ? 'text-[#62E31D]' : 'text-white/70 group-hover:text-white' }} arrow-icon" id="arrowInspecciones">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
             <!-- Acordeón Normal -->
-            <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
-                @php $actInspHistorial = request()->routeIs('SST.admin.inspecciones.historial'); @endphp
-                <li>
-                    <a href="{{ route('SST.admin.inspecciones.historial') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actInspHistorial ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actInspHistorial ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Historial
-                    </a>
-                </li>
+            <ul class="submenu-transition bg-[#071D2B]/95 rounded-xl mt-1 mx-1 p-1.5 border border-[#1A4B69] space-y-0.5">
+                @php $actInspHist = request()->routeIs('SST.admin.inspecciones.historial*'); @endphp
+                <li><a href="{{ route('SST.admin.inspecciones.historial') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actInspHist ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Historial</a></li>
+                @php $actInspReal = request()->routeIs('SST.admin.inspecciones.realizar*'); @endphp
+                <li><a href="{{ route('SST.admin.inspecciones.realizar') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actInspReal ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Realizar Inspección</a></li>
             </ul>
             <!-- Tarjeta Flotante (Flyout Mini) -->
             <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-slate-100 flex items-center justify-between">
-                    <span class="font-extrabold text-xs text-slate-800 flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                        <span>Inspecciones</span>
-                    </span>
+                <div class="px-3 py-2 border-b border-[#1A4B69] flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#62E31D]"></span>
+                    <span class="font-extrabold text-xs text-white">Inspecciones</span>
                 </div>
                 <div class="py-1 space-y-0.5">
-                    <a href="{{ route('SST.admin.inspecciones.historial') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInspHistorial ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Historial</span>
-                        @if($actInspHistorial)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
+                    <a href="{{ route('SST.admin.inspecciones.historial') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInspHist ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Historial</span> @if($actInspHist)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.inspecciones.realizar') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInspReal ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Realizar Inspección</span> @if($actInspReal)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
                 </div>
             </div>
         </div>
 
         <!-- 5. ACTIVIDADES SST -->
         @php
-            $isPausas = request()->routeIs('SST.admin.actividades_sst.*') || request()->routeIs('SST.admin.pausas_activas.*') || request()->routeIs('SST.admin.charlas.*') || request()->routeIs('SST.admin.sensibilizacion.*');
+            $isPausas = request()->routeIs('SST.admin.actividades_sst.*') || request()->routeIs('SST.admin.pausas_activas.*') || request()->routeIs('SST.admin.charlas.*') || request()->routeIs('SST.admin.sensibilizacion.*') || request()->routeIs('SST.admin.cronograma.*');
         @endphp
         <div class="flex flex-col menu-wrapper relative {{ $isPausas ? 'open' : '' }}" id="pausasWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnTogglePausas">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isPausas ? 'bg-white/10 text-white font-bold border border-white/10 shadow-xs' : 'text-white hover:text-white hover:bg-white/10' }} transition cursor-pointer group" id="btnTogglePausas">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600 flex items-center justify-center transition shrink-0">
-                        <i class="fa-solid fa-person-chalkboard text-xs"></i>
+                    <span class="w-8 h-8 rounded-xl {{ $isPausas ? 'bg-[#39A900] text-white shadow-md shadow-[#39A900]/30 border border-[#62E31D]/40' : 'bg-white/10 text-white group-hover:bg-[#39A900] group-hover:text-white border border-white/5' }} flex items-center justify-center transition shrink-0">
+                        <i class="fa-solid fa-person-running text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Actividades SST</span>
                 </div>
-                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowPausas">
+                <span class="text-[10px] {{ $isPausas ? 'text-[#62E31D]' : 'text-white/70 group-hover:text-white' }} arrow-icon" id="arrowPausas">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
             <!-- Acordeón Normal -->
-            <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100">
-                @php 
-                    $actPausas = request()->routeIs('SST.admin.pausas_activas.*'); 
-                    $actCharlas = request()->routeIs('SST.admin.charlas.*');
-                    $actSensibilizacion = request()->routeIs('SST.admin.sensibilizacion.*');
-                @endphp
-                <li>
-                    <a href="{{ route('SST.admin.pausas_activas.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actPausas ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actPausas ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Pausas Activas
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('SST.admin.charlas.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actCharlas ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actCharlas ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Charlas
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('SST.admin.sensibilizacion.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actSensibilizacion ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actSensibilizacion ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Sensibilización
-                    </a>
-                </li>
+            <ul class="submenu-transition bg-[#071D2B]/95 rounded-xl mt-1 mx-1 p-1.5 border border-[#1A4B69] space-y-0.5">
+                @php $actPausas = request()->routeIs('SST.admin.pausas_activas.*'); @endphp
+                <li><a href="{{ route('SST.admin.pausas_activas.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actPausas ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Pausas Activas</a></li>
+                @php $actCharlas = request()->routeIs('SST.admin.charlas.*'); @endphp
+                <li><a href="{{ route('SST.admin.charlas.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actCharlas ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Charlas</a></li>
+                @php $actSens = request()->routeIs('SST.admin.sensibilizacion.*'); @endphp
+                <li><a href="{{ route('SST.admin.sensibilizacion.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actSens ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Sensibilización</a></li>
+                @php $actCron = request()->routeIs('SST.admin.cronograma.*'); @endphp
+                <li><a href="{{ route('SST.admin.cronograma.calendario') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actCron ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Calendario</a></li>
             </ul>
             <!-- Tarjeta Flotante (Flyout Mini) -->
             <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-slate-100">
-                    <span class="font-extrabold text-xs text-slate-800 flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                        <span>Actividades SST</span>
-                    </span>
+                <div class="px-3 py-2 border-b border-[#1A4B69] flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#62E31D]"></span>
+                    <span class="font-extrabold text-xs text-white">Actividades SST</span>
                 </div>
-                <div class="py-1">
-                    <a href="{{ route('SST.admin.pausas_activas.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actPausas ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Pausas Activas</span>
-                        @if($actPausas)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
-                    <a href="{{ route('SST.admin.charlas.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actCharlas ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Charlas</span>
-                        @if($actCharlas)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
-                    <a href="{{ route('SST.admin.sensibilizacion.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actSensibilizacion ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Sensibilización</span>
-                        @if($actSensibilizacion)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
+                <div class="py-1 space-y-0.5">
+                    <a href="{{ route('SST.admin.pausas_activas.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actPausas ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Pausas Activas</span> @if($actPausas)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.charlas.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actCharlas ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Charlas</span> @if($actCharlas)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.sensibilizacion.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actSens ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Sensibilización</span> @if($actSens)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                    <a href="{{ route('SST.admin.cronograma.calendario') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actCron ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Calendario</span> @if($actCron)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
                 </div>
             </div>
         </div>
 
-        <!-- 6. CRONOGRAMA SST -->
-        @php
-            $isCronograma = request()->routeIs('SST.admin.cronograma.*');
-        @endphp
-        <div class="flex flex-col menu-wrapper relative {{ $isCronograma ? 'open' : '' }}" id="cronogramaWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleCronograma">
-                <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600 flex items-center justify-center transition shrink-0">
-                        <i class="fa-solid fa-calendar-days text-xs"></i>
-                    </span>
-                    <span class="font-bold text-[13px] sidebar-text-full">Cronograma SST</span>
-                </div>
-                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowCronograma">
-                    <i class="fa-solid fa-chevron-down"></i>
-                </span>
-            </div>
-            <!-- Acordeón Normal -->
-            <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100">
-                @php $actCal = request()->routeIs('SST.admin.cronograma.calendario'); @endphp
-                <li>
-                    <a href="{{ route('SST.admin.cronograma.calendario') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actCal ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actCal ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Calendario
-                    </a>
-                </li>
-            </ul>
-            <!-- Tarjeta Flotante (Flyout Mini) -->
-            <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-slate-100">
-                    <span class="font-extrabold text-xs text-slate-800 flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                        <span>Cronograma SST</span>
-                    </span>
-                </div>
-                <div class="py-1">
-                    <a href="{{ route('SST.admin.cronograma.calendario') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actCal ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Calendario</span>
-                        @if($actCal)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- 7. INDICADORES SST -->
+        <!-- 6. INDICADORES SST -->
         @php
             $isIndicadores = request()->routeIs('SST.admin.indicadores.*');
         @endphp
         <div class="flex flex-col menu-wrapper relative {{ $isIndicadores ? 'open' : '' }}" id="indicadoresWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleIndicadores">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isIndicadores ? 'bg-white/10 text-white font-bold border border-white/10 shadow-xs' : 'text-white hover:text-white hover:bg-white/10' }} transition cursor-pointer group" id="btnToggleIndicadores">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600 flex items-center justify-center transition shrink-0">
-                        <i class="fa-solid fa-chart-line text-xs"></i>
+                    <span class="w-8 h-8 rounded-xl {{ $isIndicadores ? 'bg-[#39A900] text-white shadow-md shadow-[#39A900]/30 border border-[#62E31D]/40' : 'bg-white/10 text-white group-hover:bg-[#39A900] group-hover:text-white border border-white/5' }} flex items-center justify-center transition shrink-0">
+                        <i class="fa-solid fa-chart-pie text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Indicadores SST</span>
                 </div>
-                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowIndicadores">
+                <span class="text-[10px] {{ $isIndicadores ? 'text-[#62E31D]' : 'text-white/70 group-hover:text-white' }} arrow-icon" id="arrowIndicadores">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
             <!-- Acordeón Normal -->
-            <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100">
-                @php $actInd = request()->routeIs('SST.admin.indicadores.index'); @endphp
-                <li>
-                    <a href="{{ route('SST.admin.indicadores.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actInd ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actInd ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Ver Indicadores
-                    </a>
-                </li>
+            <ul class="submenu-transition bg-[#071D2B]/95 rounded-xl mt-1 mx-1 p-1.5 border border-[#1A4B69] space-y-0.5">
+                @php $actIndVer = request()->routeIs('SST.admin.indicadores.index'); @endphp
+                <li><a href="{{ route('SST.admin.indicadores.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actIndVer ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Ver Indicadores</a></li>
             </ul>
             <!-- Tarjeta Flotante (Flyout Mini) -->
             <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-slate-100">
-                    <span class="font-extrabold text-xs text-slate-800 flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                        <span>Indicadores SST</span>
-                    </span>
+                <div class="px-3 py-2 border-b border-[#1A4B69] flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#62E31D]"></span>
+                    <span class="font-extrabold text-xs text-white">Indicadores SST</span>
                 </div>
-                <div class="py-1">
-                    <a href="{{ route('SST.admin.indicadores.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInd ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Ver Indicadores</span>
-                        @if($actInd)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
+                <div class="py-1 space-y-0.5">
+                    <a href="{{ route('SST.admin.indicadores.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actIndVer ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Ver Indicadores</span> @if($actIndVer)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
                 </div>
             </div>
         </div>
 
-        <!-- 8. USUARIOS -->
+        <!-- 7. GESTIÓN USUARIOS -->
         @php
             $isUsuarios = request()->routeIs('SST.admin.usuarios.*');
         @endphp
         <div class="flex flex-col menu-wrapper relative {{ $isUsuarios ? 'open' : '' }}" id="usuariosWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:text-orange-600 hover:bg-slate-50 transition cursor-pointer group" id="btnToggleUsuarios">
+            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isUsuarios ? 'bg-white/10 text-white font-bold border border-white/10 shadow-xs' : 'text-white hover:text-white hover:bg-white/10' }} transition cursor-pointer group" id="btnToggleUsuarios">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600 flex items-center justify-center transition shrink-0">
-                        <i class="fa-solid fa-users text-xs"></i>
+                    <span class="w-8 h-8 rounded-xl {{ $isUsuarios ? 'bg-[#39A900] text-white shadow-md shadow-[#39A900]/30 border border-[#62E31D]/40' : 'bg-white/10 text-white group-hover:bg-[#39A900] group-hover:text-white border border-white/5' }} flex items-center justify-center transition shrink-0">
+                        <i class="fa-solid fa-users-gear text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Usuarios</span>
                 </div>
-                <span class="text-[10px] text-slate-400 group-hover:text-orange-600 arrow-icon" id="arrowUsuarios">
+                <span class="text-[10px] {{ $isUsuarios ? 'text-[#62E31D]' : 'text-white/70 group-hover:text-white' }} arrow-icon" id="arrowUsuarios">
                     <i class="fa-solid fa-chevron-down"></i>
                 </span>
             </div>
             <!-- Acordeón Normal -->
-            <ul class="submenu-transition bg-slate-50/70 rounded-xl mt-1 mx-1 p-1 border border-slate-100 space-y-0.5">
+            <ul class="submenu-transition bg-[#071D2B]/95 rounded-xl mt-1 mx-1 p-1.5 border border-[#1A4B69] space-y-0.5">
                 @php $actUserReg = request()->routeIs('SST.admin.usuarios.index'); @endphp
-                <li>
-                    <a href="{{ route('SST.admin.usuarios.index') }}" class="flex items-center pl-7 pr-3 py-1.5 rounded-lg transition font-medium {{ $actUserReg ? 'text-orange-600 bg-white shadow-xs font-bold' : 'text-slate-600 hover:text-orange-600 hover:bg-white hover:shadow-xs' }}">
-                        <span class="text-[6px] mr-2.5 {{ $actUserReg ? 'text-orange-500 scale-125' : 'text-slate-400' }}"><i class="fa-solid fa-circle"></i></span> 
-                        Registrar Usuario
-                    </a>
-                </li>
+                <li><a href="{{ route('SST.admin.usuarios.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actUserReg ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Registrar Usuario</a></li>
             </ul>
             <!-- Tarjeta Flotante (Flyout Mini) -->
             <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-slate-100">
-                    <span class="font-extrabold text-xs text-slate-800 flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                        <span>Usuarios</span>
-                    </span>
+                <div class="px-3 py-2 border-b border-[#1A4B69] flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#62E31D]"></span>
+                    <span class="font-extrabold text-xs text-white">Usuarios</span>
                 </div>
-                <div class="py-1">
-                    <a href="{{ route('SST.admin.usuarios.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actUserReg ? 'bg-orange-50 text-orange-600 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600' }}">
-                        <span>Registrar Usuario</span>
-                        @if($actUserReg)<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-                    </a>
+                <div class="py-1 space-y-0.5">
+                    <a href="{{ route('SST.admin.usuarios.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actUserReg ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Registrar Usuario</span> @if($actUserReg)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
                 </div>
             </div>
         </div>
@@ -599,8 +440,8 @@
     </nav>
 
     <!-- Footer Sidebar -->
-    <div class="p-3.5 border-t border-slate-100 bg-slate-50/50 text-center sidebar-text-full shrink-0">
-        <div class="text-[11px] font-bold text-slate-600">SG-SST v2.5</div>
+    <div class="p-3.5 border-t border-[#1A4B69] bg-[#0A2333] text-center sidebar-text-full shrink-0">
+        <div class="text-[11px] font-bold text-slate-200">SG-SST <span class="text-[#62E31D]">v2.5</span></div>
         <div class="text-[10px] text-slate-400">Ambiente Administrativo Seguro</div>
     </div>
 </aside>
@@ -635,9 +476,18 @@
         toggleMenu('btnToggleInformacionBasica', 'informacionBasicaWrapper');
         toggleMenu('btnToggleInspecciones', 'inspeccionesWrapper');
         toggleMenu('btnTogglePausas', 'pausasWrapper');
-        toggleMenu('btnToggleCronograma', 'cronogramaWrapper');
         toggleMenu('btnToggleIndicadores', 'indicadoresWrapper');
         toggleMenu('btnToggleUsuarios', 'usuariosWrapper');
+
+        // Mover instantáneamente el efecto activo al hacer clic en cualquier submódulo
+        document.querySelectorAll('.submenu-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.submenu-item').forEach(function(el) {
+                    el.classList.remove('active-sub');
+                });
+                this.classList.add('active-sub');
+            });
+        });
 
         // Cerrar menú flotante al hacer clic afuera
         document.addEventListener('click', function(e) {

@@ -148,14 +148,17 @@ class RegistrarUsuarioController extends Controller
         $validated = $request->validate([
             'email' => 'required|email|unique:users,email,' . $user->id,
             'nickname' => 'nullable|string|max:50',
-            'first_name' => 'nullable|string|max:100',
-            'first_last_name' => 'nullable|string|max:100',
-            'document_number' => 'nullable|string|max:30',
+            'first_name' => ['nullable', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'first_last_name' => ['nullable', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'document_number' => ['nullable', 'string', 'max:30', 'regex:/^[0-9]+$/'],
             'password' => 'nullable|string|min:6|confirmed',
         ], [
             'email.required' => 'El correo electrónico es obligatorio.',
             'email.email' => 'El correo electrónico ingresado no es válido.',
             'email.unique' => 'Este correo ya pertenece a otro usuario registrado.',
+            'first_name.regex' => 'Los nombres solo deben contener letras y espacios.',
+            'first_last_name.regex' => 'Los apellidos solo deben contener letras y espacios.',
+            'document_number.regex' => 'El número de documento solo debe contener números sin espacios.',
             'password.min' => 'La nueva contraseña debe tener como mínimo 6 caracteres.',
             'password.confirmed' => 'La confirmación de la contraseña no coincide.',
         ]);

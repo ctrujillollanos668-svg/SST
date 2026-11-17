@@ -57,10 +57,10 @@ class RolesTableSeeder extends Seeder
         $pension = PensionEntity::firstOrCreate(['name' => 'NO REGISTRA']);
         $population = PopulationGroup::firstOrCreate(['name' => 'NINGUNA']);
 
-        // 3. ADMINISTRADOR SST (Únicamente Olga Lucía)
+        // 3. ADMINISTRADOR SST (Únicamente Olga Patricia)
         $person_olga = Person::firstOrCreate(['document_number' => 1234567890], [
             'document_type' => 'Cédula de ciudadanía',
-            'first_name' => 'OLGA LUCIA',
+            'first_name' => 'OLGA PATRICIA',
             'first_last_name' => 'ADMINISTRADORA',
             'eps_id' => $eps->id,
             'population_group_id' => $population->id,

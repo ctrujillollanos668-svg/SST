@@ -116,13 +116,13 @@
             padding: 2px;
             border-radius: 6px;
             transition: all 0.2s ease;
-            filter: invert(42%) sepia(85%) saturate(1450%) hue-rotate(360deg) brightness(97%) contrast(98%);
+            filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(65deg) brightness(98%) contrast(106%);
         }
         input[type="date"]::-webkit-calendar-picker-indicator:hover,
         input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
             opacity: 1;
             transform: scale(1.15);
-            background-color: rgba(254, 243, 199, 0.5);
+            background-color: rgba(220, 252, 231, 0.5);
         }
         
         #mainContentWrapper {
@@ -163,69 +163,70 @@
     <!-- 2. Contenedor Principal -->
     <div id="mainContentWrapper" class="flex-1 ml-[270px] min-h-screen flex flex-col w-full">
         
-        <!-- Top Navbar del Admin -->
-        <header class="h-16 bg-white border-b border-slate-200/80 sticky top-0 z-20 px-4 sm:px-6 flex items-center justify-between shadow-xs">
+        <!-- Top Navbar del Admin (Estilo Ejecutivo Dirección) -->
+        <header class="h-16 bg-gradient-to-r from-[#0A2333] via-[#0F3247] to-[#0A2333] border-b-[3px] border-[#39A900] sticky top-0 z-20 px-4 sm:px-6 flex items-center justify-between shadow-lg text-white">
             
             <!-- Botón Hamburguesa y Título -->
             <div class="flex items-center gap-3">
-                <button id="toggleSidebarBtn" class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 hover:text-orange-600 hover:bg-orange-50 flex items-center justify-center transition focus:outline-none border border-slate-200 cursor-pointer" title="Contraer / Expandir Menú">
+                <button id="toggleSidebarBtn" class="w-10 h-10 rounded-xl bg-white/10 text-white hover:text-[#62E31D] hover:bg-white/20 flex items-center justify-center transition focus:outline-none border border-white/15 cursor-pointer shadow-xs" title="Contraer / Expandir Menú">
                     <i class="fa-solid fa-bars text-base"></i>
                 </button>
 
-                <h2 class="font-bold text-slate-800 text-sm sm:text-base tracking-tight">
-                    @yield('title', 'Panel Administrativo')
+                <h2 class="font-extrabold text-white text-sm sm:text-base tracking-tight flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#62E31D] animate-pulse"></span>
+                    @yield('title', 'Panel Administrativo • SST')
                 </h2>
             </div>
             
             <!-- Menú de Usuario con Dropdown Desplegable -->
             <div class="relative">
                 <!-- Botón de Perfil interactivo -->
-                <button id="userMenuBtn" class="flex items-center gap-3 p-1.5 sm:px-3 sm:py-2 rounded-2xl hover:bg-slate-100/80 transition focus:outline-none cursor-pointer border border-transparent hover:border-slate-200">
+                <button id="userMenuBtn" class="flex items-center gap-3 p-1.5 sm:px-3 sm:py-2 rounded-2xl hover:bg-white/10 text-white transition focus:outline-none cursor-pointer border border-transparent hover:border-white/15">
                     
-                    <!-- Avatar con Iniciales -->
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 text-white flex items-center justify-center text-xs font-extrabold shadow-sm">
-                        {{ Auth::user()->initials ?? 'AD' }}
+                    <!-- Avatar con Iniciales (Circular Verde) -->
+                    <div class="w-9 h-9 rounded-full bg-[#39A900] text-white flex items-center justify-center text-xs font-black shadow-md ring-2 ring-[#62E31D]/40">
+                        {{ Auth::user()->initials ?? 'OP' }}
                     </div>
 
                     <!-- Datos del Usuario -->
                     <div class="text-left hidden sm:block leading-tight">
-                        <div class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                        <div class="text-xs font-bold text-white flex items-center gap-1.5 uppercase">
                             {{ Auth::user()->full_name ?? Auth::user()->name ?? 'Administrador SST' }}
-                            <i class="fa-solid fa-chevron-down text-[9px] text-slate-400 transition-transform duration-200" id="userMenuChevron"></i>
+                            <i class="fa-solid fa-chevron-down text-[9px] text-slate-300 transition-transform duration-200" id="userMenuChevron"></i>
                         </div>
-                        <span class="inline-block text-[10px] text-orange-600 font-semibold">Administrador SST</span>
+                        <span class="inline-block text-[10px] text-[#62E31D] font-bold">Administrador SST</span>
                     </div>
                 </button>
 
                 <!-- Menú Desplegable (Dropdown) -->
-                <div id="userDropdown" class="dropdown-menu hidden-dropdown absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50">
+                <div id="userDropdown" class="dropdown-menu hidden-dropdown absolute right-0 mt-2 w-64 bg-[#0F3247] rounded-2xl shadow-2xl border border-[#1A4B69] py-2 z-50 text-slate-200 divide-y divide-[#1A4B69]">
                     
                     <!-- Encabezado del Dropdown -->
-                    <div class="px-4 py-3 border-b border-slate-100 bg-slate-50/50 rounded-t-2xl">
-                        <p class="text-xs font-bold text-slate-800 truncate">{{ Auth::user()->full_name ?? 'Administrador SST' }}</p>
-                        <p class="text-[11px] text-slate-500 truncate">{{ Auth::user()->email ?? 'admin.sst@sena.edu.co' }}</p>
-                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-orange-100 text-orange-700 mt-1.5">
+                    <div class="px-4 py-3 bg-[#0A2333] rounded-t-2xl">
+                        <p class="text-xs font-bold text-white truncate">{{ Auth::user()->full_name ?? 'Administrador SST' }}</p>
+                        <p class="text-[11px] text-slate-400 truncate">{{ Auth::user()->email ?? 'admin.sst@sena.edu.co' }}</p>
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#1A4B69] text-[#62E31D] border border-[#39A900]/40 mt-1.5">
                             <i class="fa-solid fa-shield-halved text-[8px]"></i> Administrador SST
                         </span>
                     </div>
 
                     <!-- Opciones de Navegación -->
                     <div class="py-1">
-                        <a href="{{ route('SST.welcome') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-600 transition">
-                            <i class="fa-solid fa-house text-slate-400"></i>
+                        <a href="{{ route('SST.welcome') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10 hover:text-[#62E31D] transition">
+                            <i class="fa-solid fa-house text-[#39A900]"></i>
                             <span>Inicio SST</span>
                         </a>
 
-                        <a href="{{ route('home') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-600 transition">
-                            <i class="fa-solid fa-grid-horizontal text-slate-400"></i>
+                        <a href="{{ route('home') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10 hover:text-[#62E31D] transition">
+                            <i class="fa-solid fa-grid-horizontal text-[#39A900]"></i>
                             <span>Portal General ERP</span>
                         </a>
                     </div>
 
                     <!-- Botón Cerrar Sesión -->
-                    <div class="pt-1 border-t border-slate-100">
-                        <a href="{{ route('logout', ['redirect' => route('SST.welcome')]) }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 transition">
-                            <i class="fa-solid fa-power-off text-red-500"></i>
+                    <div class="pt-1">
+                        <a href="{{ route('logout', ['redirect' => route('SST.welcome')]) }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-rose-400 hover:bg-rose-950/40 hover:text-rose-300 transition">
+                            <i class="fa-solid fa-power-off text-rose-500"></i>
                             <span>Cerrar Sesión</span>
                         </a>
                     </div>
@@ -242,7 +243,7 @@
     </div>
 
     <!-- Barra de progreso para carga dinámica SPA -->
-    <div id="spaProgressBar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 z-50 transition-all duration-300 w-0 opacity-0 pointer-events-none"></div>
+    <div id="spaProgressBar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-[#0A2333] via-[#39A900] to-[#62E31D] z-50 transition-all duration-300 w-0 opacity-0 pointer-events-none"></div>
 
     <!-- Scripts de Interacción y SPA -->
     <script>
@@ -365,28 +366,28 @@
                     if (a.closest('.sidebar-flyout')) {
                         // Elemento dentro de tarjeta flotante
                         if (isMatch) {
-                            a.classList.add('bg-orange-50', 'text-orange-600', 'font-bold');
+                            a.classList.add('bg-emerald-50', 'text-[#39A900]', 'font-bold');
                             a.classList.remove('text-slate-600');
                         } else {
-                            a.classList.remove('bg-orange-50', 'text-orange-600', 'font-bold');
+                            a.classList.remove('bg-emerald-50', 'text-[#39A900]', 'font-bold');
                             a.classList.add('text-slate-600');
                         }
                     } else {
                         // Elemento de lista en menú normal
                         if (isMatch) {
-                            a.classList.add('text-orange-600', 'bg-white', 'shadow-xs', 'font-bold');
+                            a.classList.add('text-[#39A900]', 'bg-white', 'shadow-xs', 'font-bold');
                             a.classList.remove('text-slate-600');
                             const dot = a.querySelector('.fa-circle');
                             if (dot && dot.parentElement) {
-                                dot.parentElement.classList.add('text-orange-500', 'scale-125');
+                                dot.parentElement.classList.add('text-[#39A900]', 'scale-125');
                                 dot.parentElement.classList.remove('text-slate-400');
                             }
                         } else {
-                            a.classList.remove('text-orange-600', 'bg-white', 'shadow-xs', 'font-bold');
+                            a.classList.remove('text-[#39A900]', 'bg-white', 'shadow-xs', 'font-bold');
                             a.classList.add('text-slate-600');
                             const dot = a.querySelector('.fa-circle');
                             if (dot && dot.parentElement) {
-                                dot.parentElement.classList.remove('text-orange-500', 'scale-125');
+                                dot.parentElement.classList.remove('text-[#39A900]', 'scale-125');
                                 dot.parentElement.classList.add('text-slate-400');
                             }
                         }
@@ -430,6 +431,7 @@
                         setTimeout(() => {
                             mainEl.innerHTML = newMain.innerHTML;
                             executeScripts(mainEl);
+                            initSSTAutoDismissAlerts(mainEl);
                             mainEl.style.opacity = '1';
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                         }, 100);
@@ -478,6 +480,9 @@
                 }
             });
 
+            // Inicializar autodismiss de alertas flash (3 segundos)
+            initSSTAutoDismissAlerts(document);
+
             // Abrir calendario automáticamente al hacer clic en inputs de fecha/hora
             document.addEventListener('click', function (e) {
                 const target = e.target;
@@ -491,6 +496,77 @@
             });
 
         });
+
+        // =========================================================================
+        // =========================================================================
+        // SST • AUTO-DESAPARECER ALERTAS FLASH TRAS 3 SEGUNDOS
+        // =========================================================================
+        function dismissAlertWithAnimation(alertEl) {
+            if (!alertEl || alertEl.dataset.dismissing === 'true') return;
+            alertEl.dataset.dismissing = 'true';
+
+            alertEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease, max-height 0.4s ease, margin 0.4s ease, padding 0.4s ease';
+            alertEl.style.opacity = '0';
+            alertEl.style.transform = 'translateY(-8px)';
+
+            setTimeout(function () {
+                alertEl.style.maxHeight = '0';
+                alertEl.style.marginTop = '0';
+                alertEl.style.marginBottom = '0';
+                alertEl.style.paddingTop = '0';
+                alertEl.style.paddingBottom = '0';
+                setTimeout(function () {
+                    if (alertEl.parentElement) {
+                        alertEl.remove();
+                    }
+                }, 400);
+            }, 200);
+        }
+
+        function initSSTAutoDismissAlerts(container) {
+            const root = container || document;
+            const elements = root.querySelectorAll ? root.querySelectorAll('.sst-flash-alert, .sst-auto-dismiss, .bg-emerald-50, .bg-rose-50, .bg-amber-50, .bg-sky-50') : [];
+
+            elements.forEach(function (el) {
+                const closeBtn = el.querySelector('button[onclick*="remove"]') || el.querySelector('button.close-alert');
+                const isAlertBanner = el.classList.contains('sst-flash-alert') || 
+                                     el.classList.contains('sst-auto-dismiss') || 
+                                     closeBtn !== null ||
+                                     (el.classList.contains('p-4') && el.classList.contains('rounded-2xl') && (el.classList.contains('bg-emerald-50') || el.classList.contains('bg-rose-50')));
+
+                if (isAlertBanner && !el.dataset.dismissTimerSet) {
+                    el.dataset.dismissTimerSet = 'true';
+
+                    // Desaparecer después de 1 segundo exacto
+                    const timer = setTimeout(function () {
+                        dismissAlertWithAnimation(el);
+                    }, 1000);
+
+                    // Si el usuario da clic en la 'x' manualmente antes de los 3 segundos
+                    if (closeBtn) {
+                        closeBtn.onclick = function (e) {
+                            e.preventDefault();
+                            clearTimeout(timer);
+                            dismissAlertWithAnimation(el);
+                        };
+                    }
+                }
+            });
+        }
+
+        // Observer para capturar alertas inyectadas dinámicamente en el DOM
+        try {
+            const alertObserver = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    mutation.addedNodes.forEach(function (node) {
+                        if (node.nodeType === 1) {
+                            initSSTAutoDismissAlerts(node);
+                        }
+                    });
+                });
+            });
+            alertObserver.observe(document.body, { childList: true, subtree: true });
+        } catch (e) {}
 
         // =========================================================================
         // SST • MODAL ELEGANTE DE CONFIRMACIÓN DE ELIMINACIÓN (SWEETALERT2)

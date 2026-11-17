@@ -30,20 +30,20 @@
     @endif
 
     <!-- 1. Encabezado General (Idéntico a Respuesta a Eventos) -->
-    <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
+    <div class="bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#002D44] p-6 sm:p-7 rounded-2xl border-l-4 border-l-[#39A900] text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex items-center gap-3.5">
-            <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-xs">
+            <div class="w-12 h-12 rounded-2xl bg-white/10 text-[#62E31D] flex items-center justify-center border border-white/20 shadow-inner shrink-0">
                 <i class="fa-solid fa-clipboard-check text-xl"></i>
             </div>
             <div>
-                <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Historial de Inspecciones SST</h1>
-                <p class="text-sm text-slate-500 font-medium mt-0.5">Seguimiento en tiempo real a inspecciones realizadas por aprendices, evidencias y hallazgos.</p>
+                <h1 class="text-2xl font-black text-white tracking-tight">Historial de Inspecciones SST</h1>
+                <p class="text-xs sm:text-sm text-white/80 font-normal mt-0.5">Seguimiento en tiempo real a inspecciones realizadas por aprendices, evidencias y hallazgos.</p>
             </div>
         </div>
 
         <div class="flex items-center gap-2">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-50 text-orange-700 text-xs font-bold border border-orange-200">
-                <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-[#064e3b] text-xs font-bold border border-emerald-200">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 Conectado con Aprendices
             </span>
         </div>
@@ -52,12 +52,12 @@
     <!-- ========================================================================= -->
     <!-- BLOQUE PRINCIPAL: INSPECCIONES DE SEGURIDAD REPORTADAS                   -->
     <!-- ========================================================================= -->
-    <div class="bg-white rounded-2xl border border-slate-200/80 border-l-[6px] border-l-orange-500 shadow-xs overflow-hidden">
+    <div class="bg-white rounded-2xl border border-slate-200/80 border-l-[6px] border-l-[#39A900] shadow-xs overflow-hidden">
         
         <!-- Header del Bloque -->
         <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div class="flex items-center gap-3.5">
-                <div class="w-11 h-11 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold text-lg shrink-0">
+                <div class="w-11 h-11 rounded-xl bg-emerald-50 text-[#39A900] flex items-center justify-center font-bold text-lg shrink-0">
                     <i class="fa-solid fa-magnifying-glass-location"></i>
                 </div>
                 <div>
@@ -68,7 +68,7 @@
 
             <div class="flex items-center gap-3">
                 <span class="text-xs font-black tracking-widest text-slate-400 uppercase">
-                    <span class="text-base text-orange-600 font-extrabold">{{ $inspecciones->count() }}</span> REGISTROS
+                    <span class="text-base text-[#39A900] font-extrabold">{{ $inspecciones->count() }}</span> REGISTROS
                 </span>
             </div>
         </div>
@@ -86,7 +86,7 @@
                            oninput="filtrarInspecciones()" 
                            value="{{ request('search') }}"
                            placeholder="Buscar por lugar, responsable, líder o hallazgo..." 
-                           class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-white border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition font-medium">
+                           class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-white border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition font-medium">
                 </div>
 
                 <!-- 2. Fecha -->
@@ -99,7 +99,7 @@
                            onchange="filtrarInspecciones()" 
                            value="{{ request('fecha') }}"
                            title="Filtrar por fecha de inspección"
-                           class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-700 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition font-medium cursor-pointer">
+                           class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-700 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition font-medium cursor-pointer">
                 </div>
 
                 <!-- 3. Estado -->
@@ -109,7 +109,7 @@
                     </span>
                     <select id="filtroEstado" 
                             onchange="filtrarInspecciones()" 
-                            class="w-full pl-9 pr-3 py-2 text-xs font-semibold rounded-xl bg-white border border-slate-200 text-slate-700 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition cursor-pointer">
+                            class="w-full pl-9 pr-3 py-2 text-xs font-semibold rounded-xl bg-white border border-slate-200 text-slate-700 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition cursor-pointer">
                         <option value="todos" {{ request('estado') == 'todos' || !request('estado') ? 'selected' : '' }}>Todos los estados</option>
                         <option value="pendiente" {{ request('estado') == 'pendiente' ? 'selected' : '' }}>Pendiente (Requiere Revisión)</option>
                         <option value="en_proceso" {{ request('estado') == 'en_proceso' ? 'selected' : '' }}>En Proceso (En Ejecución)</option>
@@ -191,7 +191,7 @@
                             <!-- 2. Lugar -->
                             <td class="py-3.5 px-3">
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-bold text-[11px] border border-slate-200/80">
-                                    <i class="fa-solid fa-location-dot text-orange-500 text-[10px]"></i>
+                                    <i class="fa-solid fa-location-dot text-[#39A900] text-[10px]"></i>
                                     {{ $lugarNombre }}
                                 </span>
                             </td>
@@ -221,7 +221,7 @@
                             <!-- 6. Descripción / Hallazgos -->
                             <td class="py-3.5 px-3 max-w-[160px]">
                                 @if(!empty($desc) && $desc !== 'Sin descripción')
-                                    <p class="line-clamp-2 text-slate-600 cursor-pointer hover:text-orange-600 transition-colors" onclick="showFullDesc(event, {{ json_encode($desc) }})" title="Clic para ver descripción completa">
+                                    <p class="line-clamp-2 text-slate-600 cursor-pointer hover:text-[#2d8500] transition-colors" onclick="showFullDesc(event, {{ json_encode($desc) }})" title="Clic para ver descripción completa">
                                         {{ $desc }}
                                     </p>
                                 @else
@@ -257,7 +257,7 @@
 
                             <!-- 9. Gestión -->
                             <td class="py-3.5 px-3 text-center whitespace-nowrap">
-                                <button onclick="openManageModal({{ json_encode($insp) }}, {{ json_encode($obs) }})" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 font-bold text-xs border border-orange-200/90 shadow-xs transition cursor-pointer hover:scale-105">
+                                <button onclick="openManageModal({{ json_encode($insp) }}, {{ json_encode($obs) }})" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#064e3b] font-bold text-xs border border-emerald-200/90 shadow-xs transition cursor-pointer hover:scale-105">
                                     <i class="fa-regular fa-comment-dots text-xs"></i>
                                     <span>Gestionar</span>
                                 </button>
@@ -287,7 +287,7 @@
     <div class="bg-white rounded-2xl shadow-xl border border-slate-100 w-full max-w-xl overflow-hidden animate-in fade-in zoom-in duration-200">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
             <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                <i class="fa-solid fa-clipboard-check text-orange-500"></i>
+                <i class="fa-solid fa-clipboard-check text-[#39A900]"></i>
                 <span>Gestión y Seguimiento a Inspección</span>
             </h3>
             <button onclick="closeManageModal()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
@@ -302,7 +302,7 @@
                 <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-2">
                     <div class="flex justify-between items-center">
                         <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Detalle del Reporte</span>
-                        <span id="detailTipoBadge" class="px-2 py-0.5 rounded font-bold text-[10px] bg-orange-100 text-orange-700"></span>
+                        <span id="detailTipoBadge" class="px-2 py-0.5 rounded font-bold text-[10px] bg-emerald-100 text-[#064e3b]"></span>
                     </div>
                     <div class="grid grid-cols-2 gap-3 text-slate-700">
                         <div>
@@ -344,7 +344,7 @@
                 <div class="space-y-3 pt-2">
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">Estado de la Inspección *</label>
-                        <select name="estado" id="manageEstadoSelect" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-xs font-semibold bg-white">
+                        <select name="estado" id="manageEstadoSelect" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition text-xs font-semibold bg-white">
                             <option value="pendiente">Pendiente (Requiere Revisión)</option>
                             <option value="en_proceso">En Proceso (Medidas en Ejecución)</option>
                             <option value="con_hallazgos">Con Hallazgos (Crítico / No Conforme)</option>
@@ -354,14 +354,14 @@
 
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">Medidas Correctivas / Observación del Administrador</label>
-                        <textarea name="observacion_admin" id="manageObservacionInput" rows="3" placeholder="Escriba las acciones tomadas, compromisos asignados o recomendaciones para este hallazgo..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-xs"></textarea>
+                        <textarea name="observacion_admin" id="manageObservacionInput" rows="3" maxlength="1000" placeholder="Escriba las acciones tomadas, compromisos asignados o recomendaciones para este hallazgo..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition text-xs"></textarea>
                     </div>
                 </div>
             </div>
 
             <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex justify-end gap-2">
                 <button type="button" onclick="closeManageModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200/70 transition cursor-pointer">Cerrar</button>
-                <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white shadow-xs transition cursor-pointer">Guardar Respuesta / Estado</button>
+                <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-[#39A900] hover:bg-[#1e5c00] active:bg-[#1e5c00] text-white shadow-xs transition cursor-pointer">Guardar Respuesta / Estado</button>
             </div>
         </form>
     </div>
@@ -385,7 +385,7 @@
 <div id="descPopover" class="fixed z-50 hidden bg-white border border-slate-200 text-slate-800 p-4 rounded-2xl shadow-xl max-w-md text-xs leading-relaxed animate-in fade-in zoom-in duration-150">
     <div class="flex items-center justify-between gap-3 pb-2 mb-2 border-b border-slate-100">
         <span class="font-bold text-slate-900 flex items-center gap-1.5">
-            <i class="fa-solid fa-align-left text-orange-500"></i> Descripción Completa
+            <i class="fa-solid fa-align-left text-[#39A900]"></i> Descripción Completa
         </span>
         <button onclick="closeDescPopover()" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
             <i class="fa-solid fa-xmark text-xs"></i>

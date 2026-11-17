@@ -81,14 +81,14 @@ Route::prefix('Sst')->name('SST.')->group(function () {
             Route::redirect('/realizar', '/Sst/admin/inspecciones/historial')->name('realizar');
         });
 
-        // Rutas de Administración - Cronograma SST
+        // Rutas de Administración - Actividades SST (Calendario)
         Route::prefix('admin/cronograma')->name('admin.cronograma.')->group(function () {
-            Route::get('/calendario', [\Modules\SST\Http\Controllers\Admin\Cronograma\CalendarioController::class, 'index'])->name('calendario');
-            Route::post('/calendario', [\Modules\SST\Http\Controllers\Admin\Cronograma\CalendarioController::class, 'store'])->name('calendario.store');
-            Route::post('/calendario/tipo-actividad', [\Modules\SST\Http\Controllers\Admin\Cronograma\CalendarioController::class, 'storeTipoActividad'])->name('calendario.tipo_actividad.store');
-            Route::delete('/calendario/tipo-actividad/{id}', [\Modules\SST\Http\Controllers\Admin\Cronograma\CalendarioController::class, 'destroyTipoActividad'])->name('calendario.tipo_actividad.destroy');
-            Route::put('/calendario/{id}', [\Modules\SST\Http\Controllers\Admin\Cronograma\CalendarioController::class, 'update'])->name('calendario.update');
-            Route::delete('/calendario/{id}', [\Modules\SST\Http\Controllers\Admin\Cronograma\CalendarioController::class, 'destroy'])->name('calendario.destroy');
+            Route::get('/calendario', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\CalendarioController::class, 'index'])->name('calendario');
+            Route::post('/calendario', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\CalendarioController::class, 'store'])->name('calendario.store');
+            Route::post('/calendario/tipo-actividad', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\CalendarioController::class, 'storeTipoActividad'])->name('calendario.tipo_actividad.store');
+            Route::delete('/calendario/tipo-actividad/{id}', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\CalendarioController::class, 'destroyTipoActividad'])->name('calendario.tipo_actividad.destroy');
+            Route::put('/calendario/{id}', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\CalendarioController::class, 'update'])->name('calendario.update');
+            Route::delete('/calendario/{id}', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\CalendarioController::class, 'destroy'])->name('calendario.destroy');
         });
 
         // Rutas de Administración - Actividades SST
@@ -119,6 +119,7 @@ Route::prefix('Sst')->name('SST.')->group(function () {
             Route::get('/pausas-activas', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\PausasActivasController::class, 'index'])->name('pausas_activas.index');
             Route::get('/charlas', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\CharlasController::class, 'index'])->name('charlas.index');
             Route::get('/sensibilizacion', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\SensibilizacionController::class, 'index'])->name('sensibilizacion.index');
+            Route::get('/calendario', [\Modules\SST\Http\Controllers\Admin\ActividadesSST\CalendarioController::class, 'index'])->name('calendario.index');
         });
 
         // Rutas de Administración - Indicadores SST

@@ -66,13 +66,17 @@ class ActosInsegurosController extends Controller
             'lugar_formacion' => 'nullable|string|max:150',
             'lugar_especifico' => 'nullable|string|max:255',
             'gravedad' => 'nullable|string|max:50',
-            'persona_afectada' => 'nullable|string|max:255',
-            'personas_involucradas' => 'nullable|string|max:255',
-            'instructor_responsable' => 'nullable|string|max:255',
-            'descripcion' => 'nullable|string',
+            'persona_afectada' => ['nullable', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'personas_involucradas' => ['nullable', 'string', 'max:255', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s,]+$/u'],
+            'instructor_responsable' => ['nullable', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'descripcion' => 'nullable|string|max:1000',
             'evidencias' => 'nullable|array|max:3',
             'evidencias.*' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:10240',
             'evidencia' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:10240',
+        ], [
+            'persona_afectada.regex' => 'El nombre de la persona afectada solo debe contener letras y espacios.',
+            'personas_involucradas.regex' => 'Las personas involucradas solo deben contener letras, espacios y comas.',
+            'instructor_responsable.regex' => 'El nombre del instructor responsable solo debe contener letras y espacios.',
         ]);
 
         $tipoActo = !empty($validated['tipo_acto']) ? $validated['tipo_acto'] : 'Acto Inseguro General';
@@ -155,13 +159,17 @@ class ActosInsegurosController extends Controller
             'lugar_formacion' => 'nullable|string|max:150',
             'lugar_especifico' => 'nullable|string|max:255',
             'gravedad' => 'nullable|string|max:50',
-            'persona_afectada' => 'nullable|string|max:255',
-            'personas_involucradas' => 'nullable|string|max:255',
-            'instructor_responsable' => 'nullable|string|max:255',
-            'descripcion' => 'nullable|string',
+            'persona_afectada' => ['nullable', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'personas_involucradas' => ['nullable', 'string', 'max:255', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s,]+$/u'],
+            'instructor_responsable' => ['nullable', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'descripcion' => 'nullable|string|max:1000',
             'evidencias' => 'nullable|array|max:3',
             'evidencias.*' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:10240',
             'evidencia' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:10240',
+        ], [
+            'persona_afectada.regex' => 'El nombre de la persona afectada solo debe contener letras y espacios.',
+            'personas_involucradas.regex' => 'Las personas involucradas solo deben contener letras, espacios y comas.',
+            'instructor_responsable.regex' => 'El nombre del instructor responsable solo debe contener letras y espacios.',
         ]);
 
         $existingData = json_decode($evento->descripcion, true);

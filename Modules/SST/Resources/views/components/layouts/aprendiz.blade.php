@@ -157,7 +157,7 @@
         .modal.active { display: flex !important; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex relative overflow-x-hidden">
+<body class="bg-[#f4f7f6] text-slate-800 antialiased min-h-screen flex relative overflow-x-hidden">
 
     <!-- Backdrop oscuro para móviles cuando el sidebar esté abierto -->
     <div id="sidebarBackdrop" class="fixed inset-0 bg-slate-900/40 z-30 hidden lg:hidden backdrop-blur-xs transition-opacity"></div>
@@ -168,79 +168,80 @@
     <!-- 2. Contenedor Principal -->
     <div id="mainContentWrapper" class="flex-1 ml-[270px] min-h-screen flex flex-col w-full">
         
-        <!-- Top Navbar del Aprendiz -->
-        <header class="h-16 bg-white border-b border-slate-200/80 sticky top-0 z-20 px-4 sm:px-6 flex items-center justify-between shadow-xs">
+        <!-- Top Navbar del Aprendiz (Estilo Ejecutivo Dirección) -->
+        <header class="h-16 bg-gradient-to-r from-[#0A2333] via-[#0F3247] to-[#0A2333] border-b-[3px] border-[#39A900] sticky top-0 z-20 px-4 sm:px-6 flex items-center justify-between shadow-lg text-white">
             
             <!-- Botón Hamburguesa y Título -->
             <div class="flex items-center gap-3">
-                <button id="toggleSidebarBtn" class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 hover:text-orange-600 hover:bg-orange-50 flex items-center justify-center transition focus:outline-none border border-slate-200 cursor-pointer" title="Contraer / Expandir Menú">
+                <button id="toggleSidebarBtn" class="w-10 h-10 rounded-xl bg-white/10 text-white hover:text-[#62E31D] hover:bg-white/20 flex items-center justify-center transition focus:outline-none border border-white/15 cursor-pointer shadow-xs" title="Contraer / Expandir Menú">
                     <i class="fa-solid fa-bars text-base"></i>
                 </button>
 
-                <h2 class="font-bold text-slate-800 text-sm sm:text-base tracking-tight">
-                    @yield('title', 'Panel Aprendiz - SST')
+                <h2 class="font-extrabold text-white text-sm sm:text-base tracking-tight flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#62E31D] animate-pulse"></span>
+                    @yield('title', 'Portal Aprendiz • SST')
                 </h2>
             </div>
             
             <div class="flex items-center gap-4">
                 <!-- Notificaciones -->
-                <button class="cursor-pointer text-slate-500 hover:text-orange-600 transition text-base relative p-2 hover:bg-orange-50 rounded-xl" title="Notificaciones">
+                <button class="cursor-pointer text-slate-300 hover:text-[#62E31D] hover:bg-white/10 transition text-base relative p-2 rounded-xl" title="Notificaciones">
                     <i class="fa-regular fa-bell"></i>
-                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-orange-500 rounded-full animate-ping"></span>
-                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-orange-500 rounded-full"></span>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-[#62E31D] rounded-full animate-ping"></span>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-[#62E31D] rounded-full"></span>
                 </button>
 
-                <span class="h-6 w-px bg-slate-200"></span>
+                <span class="h-6 w-px bg-white/20"></span>
 
                 <!-- Menú de Usuario con Dropdown Desplegable -->
                 <div class="relative">
                     <!-- Botón de Perfil interactivo -->
-                    <button id="userMenuBtn" class="flex items-center gap-3 p-1.5 sm:px-3 sm:py-2 rounded-2xl hover:bg-slate-100/80 transition focus:outline-none cursor-pointer border border-transparent hover:border-slate-200">
+                    <button id="userMenuBtn" class="flex items-center gap-3 p-1.5 sm:px-3 sm:py-2 rounded-2xl hover:bg-white/10 text-white transition focus:outline-none cursor-pointer border border-transparent hover:border-white/15">
                         
                         <!-- Avatar con Iniciales -->
-                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 text-white flex items-center justify-center text-xs font-extrabold shadow-sm">
+                        <div class="w-9 h-9 rounded-full bg-[#39A900] text-white flex items-center justify-center text-xs font-black shadow-md ring-2 ring-[#62E31D]/40">
                             {{ Auth::user()->initials ?? 'AP' }}
                         </div>
 
                         <!-- Datos del Usuario -->
                         <div class="text-left hidden sm:block leading-tight">
-                            <div class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                            <div class="text-xs font-bold text-white flex items-center gap-1.5 uppercase">
                                 {{ Auth::user()->full_name ?? Auth::user()->name ?? 'Aprendiz SST' }}
-                                <i class="fa-solid fa-chevron-down text-[9px] text-slate-400 transition-transform duration-200" id="userMenuChevron"></i>
+                                <i class="fa-solid fa-chevron-down text-[9px] text-slate-300 transition-transform duration-200" id="userMenuChevron"></i>
                             </div>
-                            <span class="inline-block text-[10px] text-orange-600 font-semibold">Aprendiz SST</span>
+                            <span class="inline-block text-[10px] text-[#62E31D] font-bold">Aprendiz SST</span>
                         </div>
                     </button>
 
                     <!-- Menú Desplegable (Dropdown) -->
-                    <div id="userDropdown" class="dropdown-menu hidden-dropdown absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50">
+                    <div id="userDropdown" class="dropdown-menu hidden-dropdown absolute right-0 mt-2 w-64 bg-[#0F3247] rounded-2xl shadow-2xl border border-[#1A4B69] py-2 z-50 text-slate-200 divide-y divide-[#1A4B69]">
                         
                         <!-- Encabezado del Dropdown -->
-                        <div class="px-4 py-3 border-b border-slate-100 bg-slate-50/50 rounded-t-2xl">
-                            <p class="text-xs font-bold text-slate-800 truncate">{{ Auth::user()->full_name ?? 'Aprendiz SST' }}</p>
-                            <p class="text-[11px] text-slate-500 truncate">{{ Auth::user()->email ?? 'aprendiz.sst@sena.edu.co' }}</p>
-                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-orange-100 text-orange-700 mt-1.5">
+                        <div class="px-4 py-3 bg-[#0A2333] rounded-t-2xl">
+                            <p class="text-xs font-bold text-white truncate">{{ Auth::user()->full_name ?? 'Aprendiz SST' }}</p>
+                            <p class="text-[11px] text-slate-400 truncate">{{ Auth::user()->email ?? 'aprendiz.sst@sena.edu.co' }}</p>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#1A4B69] text-[#62E31D] border border-[#39A900]/40 mt-1.5">
                                 <i class="fa-solid fa-user-check text-[8px]"></i> Aprendiz SST
                             </span>
                         </div>
 
                         <!-- Opciones de Navegación -->
                         <div class="py-1">
-                            <a href="{{ route('SST.welcome') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-600 transition">
-                                <i class="fa-solid fa-house text-slate-400"></i>
+                            <a href="{{ route('SST.welcome') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10 hover:text-[#62E31D] transition">
+                                <i class="fa-solid fa-house text-[#39A900]"></i>
                                 <span>Inicio SST</span>
                             </a>
 
-                            <a href="{{ route('home') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-600 transition">
-                                <i class="fa-solid fa-grid-horizontal text-slate-400"></i>
+                            <a href="{{ route('home') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10 hover:text-[#62E31D] transition">
+                                <i class="fa-solid fa-grid-horizontal text-[#39A900]"></i>
                                 <span>Portal General ERP</span>
                             </a>
                         </div>
 
                         <!-- Botón Cerrar Sesión -->
-                        <div class="pt-1 border-t border-slate-100">
-                            <a href="{{ route('logout', ['redirect' => route('SST.welcome')]) }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 transition">
-                                <i class="fa-solid fa-power-off text-red-500"></i>
+                        <div class="pt-1">
+                            <a href="{{ route('logout', ['redirect' => route('SST.welcome')]) }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-rose-400 hover:bg-rose-950/40 hover:text-rose-300 transition">
+                                <i class="fa-solid fa-power-off text-rose-500"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
                         </div>
@@ -377,7 +378,78 @@
                 }
             });
 
+            // Inicializar autodismiss de alertas flash (3 segundos)
+            initSSTAutoDismissAlerts(document);
         });
+
+        // =========================================================================
+        // SST • AUTO-DESAPARECER ALERTAS FLASH TRAS 3 SEGUNDOS
+        // =========================================================================
+        function dismissAlertWithAnimation(alertEl) {
+            if (!alertEl || alertEl.dataset.dismissing === 'true') return;
+            alertEl.dataset.dismissing = 'true';
+
+            alertEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease, max-height 0.4s ease, margin 0.4s ease, padding 0.4s ease';
+            alertEl.style.opacity = '0';
+            alertEl.style.transform = 'translateY(-8px)';
+
+            setTimeout(function () {
+                alertEl.style.maxHeight = '0';
+                alertEl.style.marginTop = '0';
+                alertEl.style.marginBottom = '0';
+                alertEl.style.paddingTop = '0';
+                alertEl.style.paddingBottom = '0';
+                setTimeout(function () {
+                    if (alertEl.parentElement) {
+                        alertEl.remove();
+                    }
+                }, 400);
+            }, 200);
+        }
+
+        function initSSTAutoDismissAlerts(container) {
+            const root = container || document;
+            const elements = root.querySelectorAll ? root.querySelectorAll('.sst-flash-alert, .sst-auto-dismiss, .bg-emerald-50, .bg-rose-50, .bg-amber-50, .bg-sky-50') : [];
+
+            elements.forEach(function (el) {
+                const closeBtn = el.querySelector('button[onclick*="remove"]') || el.querySelector('button.close-alert');
+                const isAlertBanner = el.classList.contains('sst-flash-alert') || 
+                                     el.classList.contains('sst-auto-dismiss') || 
+                                     closeBtn !== null ||
+                                     (el.classList.contains('p-4') && el.classList.contains('rounded-2xl') && (el.classList.contains('bg-emerald-50') || el.classList.contains('bg-rose-50')));
+
+                if (isAlertBanner && !el.dataset.dismissTimerSet) {
+                    el.dataset.dismissTimerSet = 'true';
+
+                    // Desaparecer después de 1 segundo exacto
+                    const timer = setTimeout(function () {
+                        dismissAlertWithAnimation(el);
+                    }, 1000);
+
+                    if (closeBtn) {
+                        closeBtn.onclick = function (e) {
+                            e.preventDefault();
+                            clearTimeout(timer);
+                            dismissAlertWithAnimation(el);
+                        };
+                    }
+                }
+            });
+        }
+
+        // Observer para capturar alertas inyectadas dinámicamente en el DOM
+        try {
+            const alertObserver = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    mutation.addedNodes.forEach(function (node) {
+                        if (node.nodeType === 1) {
+                            initSSTAutoDismissAlerts(node);
+                        }
+                    });
+                });
+            });
+            alertObserver.observe(document.body, { childList: true, subtree: true });
+        } catch (e) {}
 
         // =========================================================================
         // SST • MODAL ELEGANTE DE CONFIRMACIÓN DE ELIMINACIÓN (SWEETALERT2)

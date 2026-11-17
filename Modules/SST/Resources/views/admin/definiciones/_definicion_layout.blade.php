@@ -20,25 +20,23 @@
         </div>
     @endif
 
-    <!-- 1. Encabezado de la Sección -->
-    <div class="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-200">
+    <!-- 1. Encabezado de la Sección (Estilo Dirección Ejecutivo) -->
+    <div class="bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#002D44] p-6 sm:p-7 rounded-2xl border-l-4 border-l-[#39A900] text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex items-center gap-3.5">
-            <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-xs">
+            <div class="w-12 h-12 rounded-2xl bg-white/10 text-[#62E31D] flex items-center justify-center border border-white/20 shadow-inner">
                 <i class="fa-solid {{ $icono }} text-xl"></i>
             </div>
             <div>
-                <div class="flex items-center gap-2">
-                    <span class="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-orange-100 text-orange-700 border border-orange-200">
-                        Glosario para Aprendices
-                    </span>
+                <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/10 border border-white/15 text-[10px] font-bold text-[#62E31D] mb-1">
+                    <i class="fa-solid fa-graduation-cap"></i> Glosario para Aprendices
                 </div>
-                <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight mt-1">Definiciones de {{ $titulo }}</h1>
-                <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">Administra los conceptos técnicos y descripciones que los aprendices consultan en su módulo.</p>
+                <h1 class="text-2xl font-extrabold text-white tracking-tight">Definiciones de <span class="text-[#62E31D]">{{ $titulo }}</span></h1>
+                <p class="text-xs sm:text-sm text-white/80 font-normal mt-0.5">Administra los conceptos técnicos y descripciones que los aprendices consultan en su módulo.</p>
             </div>
         </div>
 
         <div class="flex items-center gap-3">
-            <button onclick="openModalCreate()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 text-sm font-bold shadow-xs transition-all duration-200 cursor-pointer group border border-orange-200/90 hover:border-orange-300">
+            <button onclick="openModalCreate()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#39A900] hover:bg-[#2d8500] text-white text-sm font-bold shadow-md shadow-[#39A900]/30 transition-all duration-200 cursor-pointer group border border-[#62E31D]/40 hover:-translate-y-0.5">
                 <i class="fa-solid fa-plus text-xs group-hover:rotate-90 transition-transform duration-300"></i>
                 <span>Nueva Definición</span>
             </button>
@@ -52,18 +50,18 @@
         $inactivas = $definiciones->where('estado', 'inactivo')->count();
     @endphp
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between border-l-4 border-l-[#001A29]">
             <div>
                 <p class="text-[11px] font-bold text-slate-400 uppercase">Total Definiciones</p>
                 <p class="text-2xl font-black text-slate-800">{{ $total }}</p>
                 <p class="text-[11px] text-slate-500 font-medium mt-0.5">En la categoría {{ $titulo }}</p>
             </div>
-            <div class="w-11 h-11 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center text-lg">
+            <div class="w-11 h-11 rounded-xl bg-[#001A29]/10 text-[#001A29] flex items-center justify-center text-lg">
                 <i class="fa-solid fa-book-bookmark"></i>
             </div>
         </div>
 
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between border-l-4 border-l-[#39A900]">
             <div>
                 <p class="text-[11px] font-bold text-emerald-600 uppercase">Visibles para Aprendices</p>
                 <p class="text-2xl font-black text-emerald-700">{{ $activas }}</p>
@@ -74,7 +72,7 @@
             </div>
         </div>
 
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between border-l-4 border-l-slate-400">
             <div>
                 <p class="text-[11px] font-bold text-slate-400 uppercase">Ocultas / En Borrador</p>
                 <p class="text-2xl font-black text-slate-700">{{ $inactivas }}</p>
@@ -92,10 +90,10 @@
             <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                 <i class="fa-solid fa-magnifying-glass text-xs"></i>
             </span>
-            <input type="text" id="inputBusquedaDefinicion" onkeyup="filtrarDefiniciones()" placeholder="Buscar concepto o descripción..." class="w-full pl-9 pr-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+            <input type="text" id="inputBusquedaDefinicion" onkeyup="filtrarDefiniciones()" placeholder="Buscar concepto o descripción..." class="w-full pl-9 pr-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-medium">
         </div>
         <div class="text-xs text-slate-400 font-medium flex items-center gap-1.5 self-end sm:self-center">
-            <i class="fa-solid fa-info-circle text-orange-500"></i>
+            <i class="fa-solid fa-info-circle text-[#39A900]"></i>
             <span>Los aprendices ven los conceptos ordenados alfabéticamente</span>
         </div>
     </div>
@@ -105,7 +103,7 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse" id="tablaDefiniciones">
                 <thead>
-                    <tr class="bg-slate-50/90 border-b border-slate-200/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider">
+                    <tr class="bg-[#001A29] text-white text-[11px] font-extrabold uppercase tracking-wider border-b-2 border-[#39A900]">
                         <th class="py-4 px-6 w-1/4">TÉRMINO / CONCEPTO</th>
                         <th class="py-4 px-6 w-1/4">DEFINICIÓN</th>
                         <th class="py-4 px-6 w-1/4">CÓMO PREVENIR</th>
@@ -120,7 +118,7 @@
                         <tr class="fila-definicion hover:bg-slate-50/60 transition">
                             <td class="py-4 px-6 align-top">
                                 <div class="font-bold text-slate-900 text-[13px] flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full {{ $isActivo ? 'bg-orange-500' : 'bg-slate-300' }} shrink-0"></span>
+                                    <span class="w-2 h-2 rounded-full {{ $isActivo ? 'bg-emerald-500' : 'bg-slate-300' }} shrink-0"></span>
                                     <span class="col-nombre">{{ $item->nombre }}</span>
                                 </div>
                             </td>
@@ -148,7 +146,7 @@
                                         } elseif (str_contains($grav, 'moderado')) {
                                             $badgeClass = 'bg-amber-50 text-amber-700 border-amber-200';
                                         } elseif (str_contains($grav, 'grave')) {
-                                            $badgeClass = 'bg-orange-50 text-orange-700 border-orange-200';
+                                            $badgeClass = 'bg-emerald-50 text-[#064e3b] border-emerald-200';
                                         } elseif (str_contains($grav, 'mortal') || str_contains($grav, 'muy')) {
                                             $badgeClass = 'bg-rose-50 text-rose-700 border-rose-200';
                                         } elseif ($gravValor) {
@@ -187,7 +185,7 @@
                                             @js($item->tipo_otro), 
                                             @js($item->estado)
                                         )" 
-                                        class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-orange-50 hover:text-orange-600 text-slate-500 flex items-center justify-center transition cursor-pointer" 
+                                        class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-[#2d8500] text-slate-500 flex items-center justify-center transition cursor-pointer" 
                                         title="Editar definición">
                                         <i class="fa-solid fa-pen-to-square text-xs"></i>
                                     </button>
@@ -208,7 +206,7 @@
                                     <i class="fa-regular fa-folder-open"></i>
                                 </div>
                                 <p class="text-xs">No hay definiciones registradas en la categoría {{ $titulo }}.</p>
-                                <button onclick="openModalCreate()" class="mt-3 text-xs font-bold text-orange-600 hover:text-orange-700 underline cursor-pointer">
+                                <button onclick="openModalCreate()" class="mt-3 text-xs font-bold text-[#39A900] hover:text-[#1e5c00] underline cursor-pointer">
                                     Crear la primera definición ahora
                                 </button>
                             </td>
@@ -226,7 +224,7 @@
     <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200 my-8">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
             <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold text-sm border border-orange-100">
+                <div class="w-9 h-9 rounded-xl bg-emerald-50 text-[#39A900] flex items-center justify-center font-bold text-sm border border-emerald-100">
                     <i class="fa-solid {{ $icono }}"></i>
                 </div>
                 <div>
@@ -245,12 +243,12 @@
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Nombre / Término de la Definición *</label>
-                <input type="text" name="nombre" required placeholder="Ej: {{ $categoria === 'accidente' ? 'Caída a distinto nivel / Atrapamiento' : 'Nombre del concepto' }}" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                <input type="text" name="nombre" required maxlength="150" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Ej: {{ $categoria === 'accidente' ? 'Caída a distinto nivel / Atrapamiento' : 'Nombre del concepto' }}" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold">
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Definición Técnica para el Aprendiz *</label>
-                <textarea name="descripcion" required rows="3" placeholder="Escribe aquí la definición clara y detallada según la normativa técnica..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-normal leading-relaxed"></textarea>
+                <textarea name="descripcion" required rows="3" maxlength="1000" placeholder="Escribe aquí la definición clara y detallada según la normativa técnica..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-normal leading-relaxed"></textarea>
             </div>
 
             <div>
@@ -258,12 +256,12 @@
                     <i class="fa-solid fa-shield-halved text-emerald-500"></i>
                     <span>¿Cómo Prevenir? (Medidas de Prevención)</span>
                 </label>
-                <textarea name="como_prevenir" rows="3" placeholder="Describe las medidas preventivas, precauciones y recomendaciones para evitar que ocurra..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-normal leading-relaxed"></textarea>
+                <textarea name="como_prevenir" rows="3" maxlength="1000" placeholder="Describe las medidas preventivas, precauciones y recomendaciones para evitar que ocurra..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-normal leading-relaxed"></textarea>
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Tipo de Gravedad</label>
-                <select name="tipo_gravedad" id="createTipoGravedad" onchange="toggleGravedadOtro(this, 'create')" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                <select name="tipo_gravedad" id="createTipoGravedad" onchange="toggleGravedadOtro(this, 'create')" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold">
                     <option value="">-- Seleccionar gravedad --</option>
                     <option value="Leve">Leve</option>
                     <option value="Moderado">Moderado</option>
@@ -275,13 +273,13 @@
 
             <!-- Campo Especifique Gravedad (Condicional para Otro) -->
             <div id="contenedorGravedadOtroCreate" class="hidden">
-                <label class="block text-xs font-bold text-orange-600 mb-1">Especifique el nivel de gravedad *</label>
-                <input type="text" name="tipo_otro" id="createGravedadOtro" placeholder="Ej: Crítico, Catastrófico, Severo..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-orange-50/50 border border-orange-200 focus:outline-none focus:border-orange-500 font-semibold text-slate-800">
+                <label class="block text-xs font-bold text-[#39A900] mb-1">Especifique el nivel de gravedad *</label>
+                <input type="text" name="tipo_otro" id="createGravedadOtro" maxlength="150" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Ej: Crítico, Catastrófico, Severo..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-emerald-50/50 border border-emerald-200 focus:outline-none focus:border-[#39A900] font-semibold text-slate-800">
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Visibilidad para el Aprendiz *</label>
-                <select name="estado" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                <select name="estado" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold">
                     <option value="activo" selected>Activo (Visible en el glosario del aprendiz)</option>
                     <option value="inactivo">Inactivo (Oculto / En borrador)</option>
                 </select>
@@ -291,7 +289,7 @@
                 <button type="button" onclick="closeModalCreate()" class="px-4 py-2 text-xs font-bold text-slate-600 rounded-xl hover:bg-slate-100 transition cursor-pointer">
                     Cancelar
                 </button>
-                <button type="submit" class="px-4 py-2 text-xs font-bold text-white bg-orange-600 hover:bg-orange-700 active:bg-orange-800 rounded-xl shadow-xs transition cursor-pointer flex items-center gap-1.5">
+                <button type="submit" class="px-4 py-2 text-xs font-bold text-white bg-[#39A900] hover:bg-[#1e5c00] active:bg-[#1e5c00] rounded-xl shadow-xs transition cursor-pointer flex items-center gap-1.5">
                     <i class="fa-solid fa-check text-xs"></i>
                     <span>Guardar y Publicar</span>
                 </button>
@@ -305,7 +303,7 @@
     <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200 my-8">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
             <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold text-sm border border-orange-100">
+                <div class="w-9 h-9 rounded-xl bg-emerald-50 text-[#39A900] flex items-center justify-center font-bold text-sm border border-emerald-100">
                     <i class="fa-solid fa-pen-to-square"></i>
                 </div>
                 <div>
@@ -324,12 +322,12 @@
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Nombre / Término de la Definición *</label>
-                <input type="text" id="editNombre" name="nombre" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                <input type="text" id="editNombre" name="nombre" required maxlength="150" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold">
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Definición Técnica para el Aprendiz *</label>
-                <textarea id="editDescripcion" name="descripcion" required rows="3" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-normal leading-relaxed"></textarea>
+                <textarea id="editDescripcion" name="descripcion" required rows="3" maxlength="1000" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-normal leading-relaxed"></textarea>
             </div>
 
             <div>
@@ -337,12 +335,12 @@
                     <i class="fa-solid fa-shield-halved text-emerald-500"></i>
                     <span>¿Cómo Prevenir? (Medidas de Prevención)</span>
                 </label>
-                <textarea id="editComoPrevenir" name="como_prevenir" rows="3" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-normal leading-relaxed"></textarea>
+                <textarea id="editComoPrevenir" name="como_prevenir" rows="3" maxlength="1000" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-normal leading-relaxed"></textarea>
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Tipo de Gravedad</label>
-                <select id="editTipoGravedad" name="tipo_gravedad" onchange="toggleGravedadOtro(this, 'edit')" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                <select id="editTipoGravedad" name="tipo_gravedad" onchange="toggleGravedadOtro(this, 'edit')" class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold">
                     <option value="">-- Seleccionar gravedad --</option>
                     <option value="Leve">Leve</option>
                     <option value="Moderado">Moderado</option>
@@ -354,13 +352,13 @@
 
             <!-- Campo Especifique Gravedad (Condicional para Otro en Edición) -->
             <div id="contenedorGravedadOtroEdit" class="hidden">
-                <label class="block text-xs font-bold text-orange-600 mb-1">Especifique el nivel de gravedad *</label>
-                <input type="text" name="tipo_otro" id="editGravedadOtro" placeholder="Ej: Crítico, Catastrófico, Severo..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-orange-50/50 border border-orange-200 focus:outline-none focus:border-orange-500 font-semibold text-slate-800">
+                <label class="block text-xs font-bold text-[#39A900] mb-1">Especifique el nivel de gravedad *</label>
+                <input type="text" name="tipo_otro" id="editGravedadOtro" maxlength="150" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Ej: Crítico, Catastrófico, Severo..." class="w-full px-3.5 py-2 text-xs rounded-xl bg-emerald-50/50 border border-emerald-200 focus:outline-none focus:border-[#39A900] font-semibold text-slate-800">
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Visibilidad para el Aprendiz *</label>
-                <select id="editEstado" name="estado" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-orange-500 font-semibold">
+                <select id="editEstado" name="estado" required class="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#39A900] font-semibold">
                     <option value="activo">Activo (Visible en el glosario del aprendiz)</option>
                     <option value="inactivo">Inactivo (Oculto / En borrador)</option>
                 </select>
@@ -370,7 +368,7 @@
                 <button type="button" onclick="closeModalEdit()" class="px-4 py-2 text-xs font-bold text-slate-600 rounded-xl hover:bg-slate-100 transition cursor-pointer">
                     Cancelar
                 </button>
-                <button type="submit" class="px-4 py-2 text-xs font-bold text-white bg-orange-600 hover:bg-orange-700 active:bg-orange-800 rounded-xl shadow-xs transition cursor-pointer flex items-center gap-1.5">
+                <button type="submit" class="px-4 py-2 text-xs font-bold text-white bg-[#39A900] hover:bg-[#1e5c00] active:bg-[#1e5c00] rounded-xl shadow-xs transition cursor-pointer flex items-center gap-1.5">
                     <i class="fa-solid fa-check text-xs"></i>
                     <span>Actualizar Definición</span>
                 </button>

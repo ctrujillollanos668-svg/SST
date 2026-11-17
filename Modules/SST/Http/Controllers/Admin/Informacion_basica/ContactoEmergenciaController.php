@@ -23,10 +23,15 @@ class ContactoEmergenciaController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:50',
-            'telefono' => 'required|string|max:15',
-            'descripcion' => 'nullable|string',
+            'nombre' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'telefono' => ['required', 'string', 'max:20', 'regex:/^[0-9]+$/'],
+            'descripcion' => 'nullable|string|max:500',
             'estado' => 'nullable|in:activo,inactivo',
+        ], [
+            'nombre.required' => 'El nombre de la entidad o persona es obligatorio.',
+            'nombre.regex' => 'El nombre solo debe contener letras y espacios.',
+            'telefono.required' => 'El teléfono es obligatorio.',
+            'telefono.regex' => 'El teléfono solo debe contener números.'
         ]);
 
         $validated['estado'] = $validated['estado'] ?? 'activo';
@@ -45,10 +50,15 @@ class ContactoEmergenciaController extends Controller
         $contacto = ContactoEmergencia::findOrFail($id);
 
         $validated = $request->validate([
-            'nombre' => 'required|string|max:50',
-            'telefono' => 'required|string|max:15',
-            'descripcion' => 'nullable|string',
+            'nombre' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'telefono' => ['required', 'string', 'max:20', 'regex:/^[0-9]+$/'],
+            'descripcion' => 'nullable|string|max:500',
             'estado' => 'nullable|in:activo,inactivo',
+        ], [
+            'nombre.required' => 'El nombre de la entidad o persona es obligatorio.',
+            'nombre.regex' => 'El nombre solo debe contener letras y espacios.',
+            'telefono.required' => 'El teléfono es obligatorio.',
+            'telefono.regex' => 'El teléfono solo debe contener números.'
         ]);
 
         $contacto->update($validated);

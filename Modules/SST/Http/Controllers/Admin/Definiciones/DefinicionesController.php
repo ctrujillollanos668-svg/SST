@@ -141,13 +141,16 @@ class DefinicionesController extends Controller
     {
         $validated = $request->validate([
             'tipo_categoria' => 'required|string|in:accidente,incidente,riesgo,acto_inseguro,condicion_insegura,lesion,tipo_emergencia',
-            'nombre' => 'required|string|max:150',
-            'descripcion' => 'required|string',
-            'como_prevenir' => 'nullable|string',
+            'nombre' => ['required', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'descripcion' => 'required|string|max:1000',
+            'como_prevenir' => 'nullable|string|max:1000',
             'tipo_gravedad' => 'nullable|string|max:50',
-            'tipo_otro' => 'nullable|string|max:150',
+            'tipo_otro' => ['nullable', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
             'modulo_pertenece' => 'nullable|string|max:150',
             'estado' => 'required|in:activo,inactivo',
+        ], [
+            'nombre.regex' => 'El título o término solo debe contener letras y espacios.',
+            'tipo_otro.regex' => 'La especificación de gravedad solo debe contener letras y espacios.',
         ]);
 
         if ($request->tipo_gravedad === 'Otro' && $request->filled('tipo_otro')) {
@@ -169,13 +172,16 @@ class DefinicionesController extends Controller
         $definicion = DefinicionSST::findOrFail($id);
 
         $validated = $request->validate([
-            'nombre' => 'required|string|max:150',
-            'descripcion' => 'required|string',
-            'como_prevenir' => 'nullable|string',
+            'nombre' => ['required', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'descripcion' => 'required|string|max:1000',
+            'como_prevenir' => 'nullable|string|max:1000',
             'tipo_gravedad' => 'nullable|string|max:50',
-            'tipo_otro' => 'nullable|string|max:150',
+            'tipo_otro' => ['nullable', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
             'modulo_pertenece' => 'nullable|string|max:150',
             'estado' => 'required|in:activo,inactivo',
+        ], [
+            'nombre.regex' => 'El título o término solo debe contener letras y espacios.',
+            'tipo_otro.regex' => 'La especificación de gravedad solo debe contener letras y espacios.',
         ]);
 
         if ($request->tipo_gravedad === 'Otro' && $request->filled('tipo_otro')) {

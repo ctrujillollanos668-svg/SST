@@ -32,20 +32,20 @@
 
 <div class="max-w-6xl mx-auto space-y-6">
 
-    <!-- 1. Encabezado Principal de la Sección -->
-    <div class="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-5 transition-all">
+    <!-- 1. Encabezado Principal de la Sección (Estilo Dirección Ejecutivo) -->
+    <div class="bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#002D44] p-6 sm:p-7 rounded-2xl border-l-4 border-l-[#39A900] text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-xs text-2xl shrink-0">
+            <div class="w-14 h-14 rounded-2xl bg-white/10 text-[#62E31D] flex items-center justify-center border border-white/20 shadow-inner text-2xl shrink-0">
                 <i class="fa-solid fa-book-open-reader"></i>
             </div>
             <div>
                 <div class="flex items-center gap-2">
-                    <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">Definiciones SST</h1>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-orange-100/70 text-orange-700 border border-orange-200/60">
+                    <h1 class="text-2xl font-extrabold text-white tracking-tight">Definiciones <span class="text-[#62E31D]">SST</span></h1>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-white/10 text-[#62E31D] border border-white/15">
                         Glosario Oficial
                     </span>
                 </div>
-                <p class="text-sm text-slate-500 font-medium mt-0.5">
+                <p class="text-sm text-white/80 font-normal mt-0.5">
                     Conceptos y términos clave en seguridad y salud en el trabajo.
                 </p>
             </div>
@@ -57,7 +57,7 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
             </div>
             <input type="text" id="inputBuscarDefinicion" placeholder="Buscar concepto o término..." 
-                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition shadow-2xs">
+                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs">
         </div>
     </div>
 
@@ -101,7 +101,7 @@
 
                     <!-- Lado Derecho: Botón de Acción y Flecha Desplegable -->
                     <div class="flex items-center gap-2">
-                        <a href="{{ $rutaEvento }}" onclick="event.stopPropagation()" class="w-9 h-9 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200/90 hover:border-orange-300 flex items-center justify-center shadow-xs transition active:scale-95 text-xs" title="Ver eventos de {{ $cat['titulo'] }}">
+                        <a href="{{ $rutaEvento }}" onclick="event.stopPropagation()" class="w-9 h-9 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#2d8500] border border-emerald-200 hover:border-emerald-300 flex items-center justify-center shadow-xs transition active:scale-95 text-xs" title="Ver eventos de {{ $cat['titulo'] }}">
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         </a>
                         <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center text-xs accordion-chevron">
@@ -126,14 +126,14 @@
                                         } elseif (str_contains($grav, 'moderado')) {
                                             $badgeGravedad = 'bg-amber-50 text-amber-700 border-amber-200';
                                         } elseif (str_contains($grav, 'grave')) {
-                                            $badgeGravedad = 'bg-orange-50 text-orange-700 border-orange-200';
+                                            $badgeGravedad = 'bg-emerald-50 text-[#2d8500] border-emerald-200';
                                         } elseif (str_contains($grav, 'mortal') || str_contains($grav, 'muy')) {
                                             $badgeGravedad = 'bg-rose-50 text-rose-700 border-rose-200';
                                         } elseif ($gravValor) {
                                             $badgeGravedad = 'bg-indigo-50 text-indigo-700 border-indigo-200';
                                         }
                                     @endphp
-                                    <div class="item-definicion bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-orange-300 transition-all space-y-3.5 min-w-0 w-full cursor-pointer relative group/card"
+                                    <div class="item-definicion bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-emerald-300 transition-all space-y-3.5 min-w-0 w-full cursor-pointer relative group/card"
                                          onclick="openDetailModal(this)"
                                          data-title="{{ $item->nombre }}"
                                          data-modulo="{{ $item->modulo_pertenece ?? 'General' }}"
@@ -146,8 +146,8 @@
                                         <!-- Encabezado de la Tarjeta: Título y Badges -->
                                         <div class="flex flex-wrap items-center justify-between gap-2.5 pb-2.5 border-b border-slate-100">
                                             <h4 class="font-bold text-slate-800 text-sm sm:text-base nombre-concepto flex items-center gap-2 min-w-0">
-                                                <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0"></span>
-                                                <span class="break-words group-hover/card:text-orange-600 transition-colors">{{ $item->nombre }}</span>
+                                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
+                                                <span class="break-words group-hover/card:text-[#39A900] transition-colors">{{ $item->nombre }}</span>
                                             </h4>
                                             
                                             <div class="flex items-center gap-2 shrink-0">
@@ -162,7 +162,7 @@
                                                         {{ $item->modulo_pertenece }}
                                                     </span>
                                                 @endif
-                                                <span class="text-[11px] text-orange-500 opacity-0 group-hover/card:opacity-100 transition-opacity font-semibold items-center gap-1 hidden sm:inline-flex">
+                                                <span class="text-[11px] text-[#39A900] opacity-0 group-hover/card:opacity-100 transition-opacity font-semibold items-center gap-1 hidden sm:inline-flex">
                                                     <i class="fa-regular fa-eye text-[10px]"></i> Ver detalle
                                                 </span>
                                             </div>
@@ -173,7 +173,7 @@
                                             <!-- Cuadrito 1: Definición Técnica -->
                                             <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-start">
                                                 <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 flex items-center gap-1.5 mb-1.5">
-                                                    <i class="fa-solid fa-book-open text-orange-500 text-[11px]"></i>
+                                                    <i class="fa-solid fa-book-open text-[#39A900] text-[11px]"></i>
                                                     Definición Técnica
                                                 </span>
                                                 <p class="text-xs text-slate-600 leading-relaxed descripcion-concepto break-words line-clamp-3">
@@ -222,7 +222,7 @@
         <!-- Encabezado con Icono Naranja, Título y Botón X -->
         <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
             <div class="flex items-center gap-2 text-slate-800">
-                <i class="fa-solid fa-book-bookmark text-orange-500 text-sm"></i>
+                <i class="fa-solid fa-book-bookmark text-[#39A900] text-sm"></i>
                 <h3 class="font-bold text-sm tracking-tight" id="modalConceptoCategory">Detalle de Definición</h3>
             </div>
             
@@ -246,7 +246,7 @@
                 <!-- Cuadrito 1 en Modal: Definición -->
                 <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
                     <span class="text-[11px] font-black uppercase tracking-wider text-slate-500 flex items-center gap-1.5 mb-2">
-                        <i class="fa-solid fa-book-open text-orange-500"></i>
+                        <i class="fa-solid fa-book-open text-[#39A900]"></i>
                         Definición Técnica
                     </span>
                     <p id="modalConceptoTexto" class="text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line break-words"></p>

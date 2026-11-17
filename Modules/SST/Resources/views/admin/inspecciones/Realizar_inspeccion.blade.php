@@ -3,14 +3,14 @@
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6 pb-12">
 
-    <!-- 1. Cabecera Principal -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs">
+    <!-- 1. Cabecera Principal (Banner suave con acento institucional Verde SENA) -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-gradient-to-r from-emerald-50/90 via-white to-slate-50 rounded-2xl p-6 border-l-4 border-l-[#39A900] border-t border-r border-b border-slate-200/80 shadow-xs">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200/80 shadow-xs">
+            <div class="w-12 h-12 rounded-2xl bg-white/10 text-[#62E31D] flex items-center justify-center border border-white/20 shadow-inner shrink-0">
                 <i class="fa-solid fa-clipboard-check text-xl"></i>
             </div>
             <div>
-                <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Registrar Nueva Inspección</h1>
+                <h1 class="text-2xl font-black text-white tracking-tight">Registrar Nueva Inspección</h1>
                 <p class="text-xs text-slate-500 font-medium mt-0.5">Diligencia los detalles de la inspección en los ambientes y sedes del SENA.</p>
             </div>
         </div>
@@ -32,13 +32,13 @@
                 <!-- Título / Nombre de la Inspección -->
                 <div class="md:col-span-2">
                     <label class="block font-bold text-slate-700 mb-1.5">Título / Nombre de la Inspección *</label>
-                    <input type="text" id="inspTitle" required placeholder="Ej: Inspección mensual de extintores - Ambiente Software" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm text-slate-800 placeholder:text-slate-400">
+                    <input type="text" id="inspTitle" required maxlength="150" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" placeholder="Ej: Inspección mensual de extintores - Ambiente Software" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition text-sm text-slate-800 placeholder:text-slate-400">
                 </div>
 
                 <!-- Tipo de Inspección -->
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Tipo de Inspección *</label>
-                    <select id="inspType" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm bg-white font-medium text-slate-700">
+                    <select id="inspType" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition text-sm bg-white font-medium text-slate-700">
                         <option value="Extintores">Extintores y Red Contra Incendios</option>
                         <option value="Botiquines">Botiquines de Primeros Auxilios</option>
                         <option value="EPP">Uso de EPP y Elementos de Seguridad</option>
@@ -50,13 +50,13 @@
                 <!-- Funcionario / Inspector -->
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Funcionario / Inspector Responsable *</label>
-                    <input type="text" id="inspInspector" value="{{ Auth::check() ? Auth::user()->name : 'Carlos Trujillo (Funcionario SST)' }}" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm font-medium text-slate-700">
+                    <input type="text" id="inspInspector" value="{{ Auth::check() ? Auth::user()->name : 'Carlos Trujillo (Funcionario SST)' }}" required maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\(\)]+$" title="Solo letras y espacios" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\(\)]/g, '')" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition text-sm font-medium text-slate-700">
                 </div>
 
                 <!-- Ambiente de Formación / Lugar SENA -->
                 <div>
                     <label class="block font-bold text-slate-700 mb-1.5">Ambiente de Formación / Sede SENA *</label>
-                    <select id="inspEnvironment" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm bg-white font-medium text-slate-700">
+                    <select id="inspEnvironment" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition text-sm bg-white font-medium text-slate-700">
                         <option value="Ambiente de Software y TIC">Ambiente de Software y TIC</option>
                         <option value="Taller de Mecanización Agrícola">Taller de Mecanización Agrícola</option>
                         <option value="Laboratorio de Calidad y Alimentos">Laboratorio de Calidad y Alimentos</option>
@@ -76,7 +76,7 @@
                            name="inspDate"
                            value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" 
                            required 
-                           class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm font-medium text-slate-700 bg-white">
+                           class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition text-sm font-medium text-slate-700 bg-white">
                 </div>
 
                 <!-- Resultado General -->
@@ -101,7 +101,7 @@
                 <!-- Observaciones y Hallazgos -->
                 <div class="md:col-span-2">
                     <label class="block font-bold text-slate-700 mb-1.5">Observaciones y Hallazgos</label>
-                    <textarea id="inspNotes" rows="4" placeholder="Describa cualquier hallazgo, anomalía o recomendación encontrada durante la revisión en el ambiente..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition text-sm text-slate-800 placeholder:text-slate-400"></textarea>
+                    <textarea id="inspNotes" rows="4" maxlength="500" placeholder="Describa cualquier hallazgo, anomalía o recomendación encontrada durante la revisión en el ambiente..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition text-sm text-slate-800 placeholder:text-slate-400"></textarea>
                 </div>
 
             </div>
@@ -111,7 +111,7 @@
                 <a href="{{ route('SST.admin.inspecciones.historial') }}" class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition cursor-pointer">
                     Cancelar
                 </a>
-                <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100/80 active:bg-orange-200/70 text-orange-700 text-sm font-bold shadow-xs transition-all duration-200 cursor-pointer group border border-orange-200/90 hover:border-orange-300">
+                <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100/80 active:bg-emerald-200/70 text-[#064e3b] text-sm font-bold shadow-xs transition-all duration-200 cursor-pointer group border border-emerald-200/90 hover:border-emerald-300">
                     <i class="fa-solid fa-check text-xs group-hover:scale-110 transition-transform"></i>
                     <span>Guardar Inspección</span>
                 </button>
@@ -132,7 +132,7 @@
                 <button onclick="resetAndClose()" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer">
                     Registrar Otra
                 </button>
-                <a href="{{ route('SST.admin.inspecciones.historial') }}" class="px-5 py-2 rounded-xl text-xs font-bold bg-orange-50 hover:bg-orange-100 active:bg-orange-200 text-orange-700 border border-orange-200 shadow-xs transition">
+                <a href="{{ route('SST.admin.inspecciones.historial') }}" class="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-[#064e3b] border border-emerald-200 shadow-xs transition">
                     Ir al Historial
                 </a>
             </div>

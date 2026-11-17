@@ -51,22 +51,36 @@ class CharlasController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'titulo' => 'required|string|max:150',
-            'descripcion' => 'nullable|string',
+        $rules = [
+            'titulo' => ['required', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'descripcion' => 'nullable|string|max:500',
             'actividad_a_realizar' => 'nullable|string',
             'fecha' => 'required|date',
             'hora_inicio' => 'required',
             'hora_fin' => 'nullable',
             'lugar' => 'required|string|max:150',
-            'instructor' => 'nullable|string|max:150',
-            'responsable' => 'nullable|string|max:150',
-            'ficha_programa' => 'nullable|string|max:150',
+            'instructor' => ['nullable', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'responsable' => ['nullable', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'ficha_programa' => ['nullable', 'string', 'max:20', 'regex:/^[0-9]+$/'],
             'participantes' => 'nullable|string|max:255',
             'numero_asistentes' => 'nullable|integer|min:0',
-            'observaciones' => 'nullable|string',
+            'observaciones' => 'nullable|string|max:500',
             'estado' => 'required|in:Programada,Realizada,Cancelada'
-        ]);
+        ];
+
+        $messages = [
+            'titulo.required' => 'El campo Tema de la Charla / Dinámica es obligatorio.',
+            'titulo.regex' => 'El campo Tema de la Charla / Dinámica solo debe contener letras y espacios (sin números ni caracteres especiales).',
+            'instructor.regex' => 'El campo Instructor o Capacitador solo debe contener letras y espacios.',
+            'responsable.regex' => 'El campo Responsable SST solo debe contener letras y espacios.',
+            'ficha_programa.regex' => 'El campo Ficha o Programa solo debe contener números.',
+            'fecha.required' => 'La fecha es obligatoria.',
+            'hora_inicio.required' => 'La hora de inicio es obligatoria.',
+            'lugar.required' => 'Debe seleccionar un ambiente o unidad.',
+            'estado.required' => 'Debe seleccionar un estado válido.',
+        ];
+
+        $validated = $request->validate($rules, $messages);
 
         $validated['tipo_actividad'] = 'Charla';
         $validated['numero_asistentes'] = $validated['numero_asistentes'] ?? 0;
@@ -85,22 +99,36 @@ class CharlasController extends Controller
     {
         $actividad = ActividadSST::where('tipo_actividad', 'Charla')->findOrFail($id);
 
-        $validated = $request->validate([
-            'titulo' => 'required|string|max:150',
-            'descripcion' => 'nullable|string',
+        $rules = [
+            'titulo' => ['required', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'descripcion' => 'nullable|string|max:500',
             'actividad_a_realizar' => 'nullable|string',
             'fecha' => 'required|date',
             'hora_inicio' => 'required',
             'hora_fin' => 'nullable',
             'lugar' => 'required|string|max:150',
-            'instructor' => 'nullable|string|max:150',
-            'responsable' => 'nullable|string|max:150',
-            'ficha_programa' => 'nullable|string|max:150',
+            'instructor' => ['nullable', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'responsable' => ['nullable', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'ficha_programa' => ['nullable', 'string', 'max:20', 'regex:/^[0-9]+$/'],
             'participantes' => 'nullable|string|max:255',
             'numero_asistentes' => 'nullable|integer|min:0',
-            'observaciones' => 'nullable|string',
+            'observaciones' => 'nullable|string|max:500',
             'estado' => 'required|in:Programada,Realizada,Cancelada'
-        ]);
+        ];
+
+        $messages = [
+            'titulo.required' => 'El campo Tema de la Charla / Dinámica es obligatorio.',
+            'titulo.regex' => 'El campo Tema de la Charla / Dinámica solo debe contener letras y espacios (sin números ni caracteres especiales).',
+            'instructor.regex' => 'El campo Instructor o Capacitador solo debe contener letras y espacios.',
+            'responsable.regex' => 'El campo Responsable SST solo debe contener letras y espacios.',
+            'ficha_programa.regex' => 'El campo Ficha o Programa solo debe contener números.',
+            'fecha.required' => 'La fecha es obligatoria.',
+            'hora_inicio.required' => 'La hora de inicio es obligatoria.',
+            'lugar.required' => 'Debe seleccionar un ambiente o unidad.',
+            'estado.required' => 'Debe seleccionar un estado válido.',
+        ];
+
+        $validated = $request->validate($rules, $messages);
 
         if (empty($validated['actividad_a_realizar']) && !empty($validated['titulo'])) {
             $validated['actividad_a_realizar'] = $validated['titulo'];

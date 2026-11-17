@@ -21,17 +21,26 @@
             theme: {
                 extend: {
                     colors: {
+                        sena: {
+                            dark: '#00131E',
+                            navy: '#001A29',
+                            navyLight: '#002D44',
+                            green: '#39A900',
+                            greenHover: '#2d8500',
+                            neon: '#62E31D',
+                        },
                         sst: {
-                            50: '#fff7ed',
-                            100: '#ffedd5',
-                            200: '#fed7aa',
-                            500: '#f97316',
-                            600: '#ea580c', /* Naranja refinado, sobrio */
-                            700: '#c2410c',
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#39A900',
+                            600: '#39A900', /* Verde Institucional SENA */
+                            700: '#2d8500',
+                            neon: '#62E31D',
                         },
                         slate: {
                             850: '#151f32',
-                            900: '#0f172a',
+                            900: '#001A29',
                         }
                     },
                     fontFamily: {
@@ -39,61 +48,59 @@
                         display: ['Outfit', 'sans-serif'],
                     },
                     boxShadow: {
-                        'subtle-orange': '0 10px 25px -5px rgba(234, 88, 12, 0.25)',
+                        'sena-glow': '0 10px 25px -5px rgba(57, 169, 0, 0.35)',
+                        'neon-glow': '0 0 20px rgba(98, 227, 29, 0.4)',
                         'card-clean': '0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02)',
-                        'card-hover': '0 12px 30px -4px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(234, 88, 12, 0.4)',
+                        'card-hover': '0 16px 32px -4px rgba(0, 26, 41, 0.12), 0 0 0 1px rgba(57, 169, 0, 0.35)',
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="font-sans bg-slate-50 text-slate-800 flex flex-col min-h-screen antialiased selection:bg-sst-600 selection:text-white">
-    <!-- Top Navigation Bar (Limpio, Elegante y Espacioso) -->
-    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-xs transition-all duration-200">
-        
-        <!-- Fina línea superior de acento naranja -->
-        <div class="h-1 w-full bg-gradient-to-r from-orange-600 via-amber-500 to-orange-600"></div>
+<body class="font-sans bg-[#f8faf9] text-slate-800 flex flex-col min-h-screen antialiased selection:bg-[#39A900] selection:text-white">
+    <!-- Top Navigation Bar (Estilo Dirección: Fondo Azul Noche / Dark con Línea Verde SENA) -->
+    <header class="sticky top-0 z-50 bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#00131E] border-b-[3px] border-[#39A900] shadow-lg transition-all duration-200">
 
         <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20 gap-4">
 
                 <!-- Logo & Marca -->
                 <a href="#inicio" class="flex items-center gap-3 group select-none shrink-0">
-                    <div class="w-11 h-11 rounded-xl bg-white border border-slate-200/80 p-1 flex items-center justify-center shadow-xs group-hover:border-orange-300 transition-all duration-300 overflow-hidden">
+                    <div class="w-11 h-11 rounded-xl bg-white p-1 flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300 overflow-hidden ring-2 ring-[#39A900]/30">
                         <img src="{{ asset('img/logodesst.jpeg') }}" alt="Logo SST" class="max-w-full max-h-full object-contain rounded-lg">
                     </div>
 
                     <!-- Textos Marca -->
                     <div class="flex flex-col whitespace-nowrap">
                         <div class="flex items-center gap-1.5">
-                            <span class="text-slate-900 font-display font-extrabold text-base lg:text-lg tracking-tight leading-none group-hover:text-sst-600 transition">
-                                SENA <span class="text-sst-600">EMPRESA</span>
+                            <span class="text-white font-display font-extrabold text-base lg:text-lg tracking-tight leading-none">
+                                SENA <span class="text-[#62E31D]">EMPRESA</span>
                             </span>
-                            <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-slate-100 text-slate-600 uppercase tracking-wider leading-none border border-slate-200">
+                            <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-white/10 text-white uppercase tracking-wider leading-none border border-white/20">
                                 ERP
                             </span>
                         </div>
-                        <p class="text-[11px] text-slate-500 font-medium tracking-normal mt-1 leading-none flex items-center gap-1.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-sst-600"></span>
-                            Gestión Integral • <span class="text-slate-700 font-bold">SG-SST</span>
+                        <p class="text-[11px] text-white/70 font-medium tracking-normal mt-1 leading-none flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#62E31D] animate-pulse"></span>
+                            Gestión Integral • <span class="text-[#62E31D] font-bold">SG-SST</span>
                         </p>
                     </div>
                 </a>
 
                 <!-- Desktop Navigation Links -->
                 <nav class="hidden xl:flex items-center space-x-1 lg:space-x-2 shrink-0">
-                    <a href="#inicio" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-slate-700 hover:text-sst-600 hover:bg-slate-100/80 transition whitespace-nowrap">
-                        <i class="fas fa-home me-1 text-sst-600"></i> Inicio
+                    <a href="#inicio" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
+                        <i class="fas fa-home me-1 text-[#62E31D]"></i> Inicio
                     </a>
-                    <a href="#pilares" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-slate-700 hover:text-sst-600 hover:bg-slate-100/80 transition whitespace-nowrap">
-                        <i class="fas fa-shield-heart me-1 text-sst-600"></i> Ejes SST
+                    <a href="#pilares" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
+                        <i class="fas fa-shield-heart me-1 text-[#62E31D]"></i> Ejes SST
                     </a>
-                    <a href="#matrices" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-slate-700 hover:text-sst-600 hover:bg-slate-100/80 transition whitespace-nowrap">
-                        <i class="fas fa-clipboard-list me-1 text-sst-600"></i> Matrices & Protocolos
+                    <a href="#matrices" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
+                        <i class="fas fa-clipboard-list me-1 text-[#62E31D]"></i> Matrices & Protocolos
                     </a>
-                    <a href="#brigadas" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-slate-700 hover:text-sst-600 hover:bg-slate-100/80 transition whitespace-nowrap">
-                        <i class="fas fa-fire-extinguisher me-1 text-sst-600"></i> Brigadas & Emergencias
+                    <a href="#brigadas" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
+                        <i class="fas fa-fire-extinguisher me-1 text-[#62E31D]"></i> Brigadas & Emergencias
                     </a>
                 </nav>
 
@@ -101,56 +108,56 @@
                 <div class="flex items-center gap-2.5 sm:gap-3 shrink-0">
                     
                     <!-- Botón Volver al ERP General -->
-                    <a href="{{ route('home') }}" class="hidden lg:inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all duration-200 whitespace-nowrap" title="Volver al Portal ERP Principal">
-                        <i class="fas fa-arrow-left text-slate-400 text-xs"></i>
+                    <a href="{{ route('home') }}" class="hidden lg:inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold text-white/90 hover:text-white bg-white/10 hover:bg-white/15 border border-white/20 shadow-xs transition-all duration-200 whitespace-nowrap" title="Volver al Portal ERP Principal">
+                        <i class="fas fa-arrow-left text-white/60 text-xs"></i>
                         <span>Portal ERP</span>
                     </a>
 
                     @guest
                         <!-- Si el usuario NO ha iniciado sesión -->
-                        <a href="{{ route('login', ['redirect' => route('SST.dashboard')]) }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 shadow-md shadow-orange-500/25 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer whitespace-nowrap">
+                        <a href="{{ route('login', ['redirect' => route('SST.dashboard')]) }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold text-white bg-[#39A900] hover:bg-[#2d8500] shadow-md shadow-[#39A900]/30 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer whitespace-nowrap">
                             <i class="fas fa-right-to-bracket"></i>
                             <span>Iniciar Sesión</span>
                         </a>
                     @else
                         <!-- Si el usuario YA inició sesión: Cápsula de Usuario Estilizada -->
                         <div class="relative">
-                            <button id="sstUserMenuBtn" type="button" class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200/90 shadow-xs hover:border-orange-300 transition-all duration-200 focus:outline-none cursor-pointer">
+                            <button id="sstUserMenuBtn" type="button" class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 shadow-xs transition-all duration-200 focus:outline-none cursor-pointer">
                                 <!-- Avatar con iniciales -->
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-600 to-amber-500 text-white flex items-center justify-center text-xs font-black shadow-xs shrink-0">
+                                <div class="w-8 h-8 rounded-full bg-[#39A900] text-white flex items-center justify-center text-xs font-black shadow-xs shrink-0 ring-2 ring-[#62E31D]/40">
                                     {{ Auth::user()->initials ?? 'US' }}
                                 </div>
                                 <!-- Nombre y Rol -->
                                 <div class="text-left hidden sm:block leading-tight">
-                                    <span class="text-xs font-bold text-slate-800 block truncate max-w-[150px]">
+                                    <span class="text-xs font-bold text-white block truncate max-w-[150px]">
                                         {{ Auth::user()->full_name }}
                                     </span>
-                                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-orange-700 bg-orange-50 border border-orange-200/70 px-2 py-0.5 rounded-full mt-0.5 whitespace-nowrap">
-                                        <i class="fas fa-user-shield text-[8px] text-orange-600"></i> {{ Auth::user()->primary_role }}
+                                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-[#62E31D] mt-0.5 whitespace-nowrap">
+                                        <i class="fas fa-user-shield text-[8px] text-[#62E31D]"></i> {{ Auth::user()->primary_role }}
                                     </span>
                                 </div>
-                                <i class="fas fa-chevron-down text-[9px] text-slate-400 ml-1 transition-transform duration-200" id="sstUserChevron"></i>
+                                <i class="fas fa-chevron-down text-[9px] text-white/60 ml-1 transition-transform duration-200" id="sstUserChevron"></i>
                             </button>
 
                             <!-- Dropdown flotante -->
                             <div id="sstUserDropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                                 <!-- Header -->
                                 <div class="px-4 py-3 border-b border-slate-100 bg-slate-50/70 rounded-t-2xl">
-                                    <p class="text-xs font-bold text-slate-800 truncate">{{ Auth::user()->full_name }}</p>
+                                    <p class="text-xs font-bold text-[#001A29] truncate">{{ Auth::user()->full_name }}</p>
                                     <p class="text-[11px] text-slate-500 truncate">{{ Auth::user()->email }}</p>
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-orange-100 text-orange-700 border border-orange-200/80 mt-1.5">
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-[#064e3b] border border-emerald-200 mt-1.5">
                                         <i class="fas fa-id-badge text-[8px]"></i> {{ Auth::user()->primary_role }}
                                     </span>
                                 </div>
 
                                 <!-- Links -->
                                 <div class="py-1">
-                                    <a href="{{ route('SST.dashboard') }}" class="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-600 transition">
-                                        <i class="fas fa-gauge-high text-orange-500 w-4 text-center"></i>
+                                    <a href="{{ route('SST.dashboard') }}" class="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-[#39A900] transition">
+                                        <i class="fas fa-gauge-high text-[#39A900] w-4 text-center"></i>
                                         <span>Mi Dashboard SST</span>
                                     </a>
 
-                                    <a href="{{ route('home') }}" class="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-600 transition">
+                                    <a href="{{ route('home') }}" class="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-[#39A900] transition">
                                         <i class="fas fa-grid-horizontal text-slate-400 w-4 text-center"></i>
                                         <span>Portal General ERP</span>
                                     </a>
@@ -166,15 +173,15 @@
                             </div>
                         </div>
 
-                        <!-- Botón Panel de Gestión Horizontal & Estilizado -->
-                        <a href="{{ route('SST.dashboard') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 shadow-md shadow-orange-500/25 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer whitespace-nowrap">
+                        <!-- Botón Panel de Gestión -->
+                        <a href="{{ route('SST.dashboard') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold text-white bg-[#39A900] hover:bg-[#2d8500] shadow-md shadow-[#39A900]/30 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer whitespace-nowrap">
                             <i class="fas fa-sliders text-xs"></i>
                             <span>Panel de Gestión</span>
                         </a>
                     @endguest
 
                     <!-- Mobile Menu Trigger -->
-                    <button id="mobileMenuBtn" class="xl:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer">
+                    <button id="mobileMenuBtn" class="xl:hidden p-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer">
                         <i class="fas fa-bars text-lg"></i>
                     </button>
 
@@ -184,22 +191,22 @@
         </div>
 
         <!-- Mobile Drawer -->
-        <div id="mobileMenu" class="hidden md:hidden px-4 pt-2 pb-6 bg-white border-t border-slate-200 space-y-2">
-            <a href="#inicio" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-sst-600">
-                <i class="fas fa-home me-2 text-sst-600"></i> Inicio
+        <div id="mobileMenu" class="hidden md:hidden px-4 pt-2 pb-6 bg-[#001A29] border-t border-white/10 space-y-2">
+            <a href="#inicio" class="block px-3 py-2 rounded-lg text-sm font-medium text-white/80 hover:bg-white/10 hover:text-[#62E31D]">
+                <i class="fas fa-home me-2 text-[#62E31D]"></i> Inicio
             </a>
-            <a href="#pilares" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-sst-600">
-                <i class="fas fa-shield-heart me-2 text-sst-600"></i> Ejes SST
+            <a href="#pilares" class="block px-3 py-2 rounded-lg text-sm font-medium text-white/80 hover:bg-white/10 hover:text-[#62E31D]">
+                <i class="fas fa-shield-heart me-2 text-[#62E31D]"></i> Ejes SST
             </a>
-            <a href="#matrices" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-sst-600">
-                <i class="fas fa-clipboard-list me-2 text-sst-600"></i> Matrices & Protocolos
+            <a href="#matrices" class="block px-3 py-2 rounded-lg text-sm font-medium text-white/80 hover:bg-white/10 hover:text-[#62E31D]">
+                <i class="fas fa-clipboard-list me-2 text-[#62E31D]"></i> Matrices & Protocolos
             </a>
-            <a href="#brigadas" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-sst-600">
-                <i class="fas fa-fire-extinguisher me-2 text-sst-600"></i> Brigadas & Emergencias
+            <a href="#brigadas" class="block px-3 py-2 rounded-lg text-sm font-medium text-white/80 hover:bg-white/10 hover:text-[#62E31D]">
+                <i class="fas fa-fire-extinguisher me-2 text-[#62E31D]"></i> Brigadas & Emergencias
             </a>
-            <div class="pt-2 border-t border-slate-100">
-                <a href="#" class="block px-3 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-50">
-                    <i class="fas fa-arrow-left me-2 text-slate-500"></i> Volver al Portal ERP
+            <div class="pt-2 border-t border-white/10">
+                <a href="{{ route('home') }}" class="block px-3 py-2 rounded-lg text-sm font-semibold text-white/70 hover:bg-white/10 hover:text-white">
+                    <i class="fas fa-arrow-left me-2 text-white/50"></i> Volver al Portal ERP
                 </a>
             </div>
         </div>
@@ -208,39 +215,39 @@
     <!-- Main Content -->
     <main class="flex-grow" id="inicio">
 
-        <!-- Hero Section (Fondo Gris Pizarra Muy Suave con Textos Carbón y Acento Naranja Puntual) -->
-        <section class="bg-gradient-to-b from-slate-100/90 via-slate-50 to-white pt-16 pb-20 border-b border-slate-200/80">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Hero Section (Estilo Dirección: Fondo Dark / Navy Ejecutivo con Textos Nítidos y Acentos Verde Institucional) -->
+        <section class="bg-gradient-to-br from-[#00131E] via-[#001A29] to-[#002D44] pt-20 pb-24 border-b-2 border-[#39A900]/30 relative overflow-hidden text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                     
                     <!-- Left Hero Text & CTA -->
                     <div class="lg:col-span-7 text-left space-y-6">
                         
-                        <!-- Badge Sobrio -->
-                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-slate-700 shadow-sm">
-                            <span class="w-2 h-2 rounded-full bg-sst-600"></span>
-                            <i class="fas fa-hard-hat text-sst-600 text-xs"></i>
-                            <span class="text-xs font-bold uppercase tracking-wider text-slate-600">Sistema de Gestión SG-SST</span>
+                        <!-- Badge Sobrio con Acento Verde Neón Institucional -->
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-white backdrop-blur-sm shadow-sm">
+                            <span class="w-2 h-2 rounded-full bg-[#62E31D] animate-pulse"></span>
+                            <i class="fas fa-shield-halved text-[#62E31D] text-xs"></i>
+                            <span class="text-xs font-bold uppercase tracking-wider text-white">Sistema de Gestión SG-SST</span>
                         </div>
 
                         <!-- Main Title -->
-                        <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                        <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight">
                             Seguridad y <br>
-                            <span class="text-sst-600">Salud en el Trabajo</span>
+                            <span class="text-[#62E31D]">Salud en el Trabajo</span>
                         </h1>
 
                         <!-- Description -->
-                        <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
+                        <p class="text-white/80 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
                             Administración integral de riesgos laborales, inspecciones preventivas, dotación técnica de EPP y cumplimiento normativo (Decreto 1072 & Resolución 0312).
                         </p>
 
                         <!-- Action Buttons -->
                         <div class="pt-2 flex flex-wrap gap-4 items-center">
-                            <a href="#matrices" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition-all duration-200 hover:-translate-y-0.5">
-                                <i class="fas fa-chart-pie"></i> Explorar Módulo SST
+                            <a href="#matrices" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-sm font-bold text-white bg-[#39A900] hover:bg-[#2d8500] shadow-lg shadow-[#39A900]/40 transition-all duration-200 hover:-translate-y-0.5">
+                                <i class="fas fa-chart-pie text-xs"></i> Explorar Módulo SST
                             </a>
-                            <a href="#pilares" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold text-slate-700 border border-slate-300 hover:border-slate-400 hover:bg-white transition bg-white shadow-sm">
-                                <i class="fas fa-shield-halved text-sst-600"></i> Ejes y Protocolos
+                            <a href="#pilares" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-sm font-bold text-white border-2 border-[#39A900] hover:bg-[#39A900] hover:text-white transition-all duration-200 shadow-sm backdrop-blur-sm">
+                                <i class="fas fa-shield-heart text-[#62E31D]"></i> Ejes y Protocolos
                             </a>
                         </div>
 
@@ -248,11 +255,11 @@
 
                     <!-- Right Hero: SST Image Showcase -->
                     <div class="lg:col-span-5 relative group">
-                        <!-- Resplandor sutil naranja detrás de la imagen -->
-                        <div class="absolute -inset-2 bg-gradient-to-tr from-sst-600/25 via-orange-400/15 to-transparent rounded-[2.5rem] blur-xl opacity-70 group-hover:opacity-100 transition duration-500 pointer-events-none"></div>
+                        <!-- Resplandor neón institucional detrás de la imagen -->
+                        <div class="absolute -inset-3 bg-gradient-to-tr from-[#39A900]/30 via-[#62E31D]/20 to-transparent rounded-[2.5rem] blur-2xl opacity-75 group-hover:opacity-100 transition duration-500 pointer-events-none"></div>
 
-                        <!-- Contenedor con borde naranja institucional -->
-                        <div class="relative rounded-3xl overflow-hidden shadow-xl border-2 border-orange-400/40 bg-white p-2 shadow-orange-500/10">
+                        <!-- Contenedor con borde glass y verde institucional -->
+                        <div class="relative rounded-3xl overflow-hidden shadow-2xl border-2 border-[#39A900]/50 bg-white/10 backdrop-blur-md p-2.5 shadow-[#39A900]/30">
                             <img src="{{ asset('img/mg de sst.jpg') }}" alt="Seguridad y Salud en el Trabajo" class="w-full h-auto max-h-[380px] object-cover rounded-2xl transition-transform duration-500 group-hover:scale-[1.02]">
                         </div>
                     </div>
@@ -262,14 +269,14 @@
         </section>
 
         <!-- Ejes Estratégicos de SST (Pilares) -->
-        <section class="py-20 bg-white" id="pilares">
+        <section class="py-20 bg-[#f8faf9]" id="pilares">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 <div class="text-center max-w-2xl mx-auto mb-16">
-                    <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200 uppercase tracking-wider mb-3">
-                        <i class="fas fa-layer-group text-sst-600"></i> Ejes Fundamentales
+                    <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-white text-[#001A29] border border-slate-200/90 shadow-xs uppercase tracking-wider mb-3">
+                        <i class="fas fa-layer-group text-[#39A900]"></i> Ejes Fundamentales
                     </span>
-                    <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-[#001A29] tracking-tight">
                         Pilares de la Gestión en SG-SST
                     </h2>
                     <p class="mt-3 text-slate-600 text-sm sm:text-base">
@@ -280,44 +287,44 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     
                     <!-- Pilar 1: Identificación de Peligros -->
-                    <div class="group bg-slate-50/70 rounded-3xl p-8 border border-slate-200 hover:bg-white hover:border-sst-600 shadow-card-clean hover:shadow-card-hover transition-all duration-300 flex flex-col">
-                        <div class="w-14 h-14 rounded-2xl bg-orange-50 text-sst-600 flex items-center justify-center text-2xl mb-6 group-hover:bg-sst-600 group-hover:text-white transition-all duration-300 shadow-sm">
+                    <div class="group bg-white rounded-3xl p-8 border border-slate-200 hover:border-[#39A900] shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        <div class="w-14 h-14 rounded-2xl bg-[#39A900]/10 text-[#39A900] flex items-center justify-center text-2xl mb-6 group-hover:bg-[#39A900] group-hover:text-white transition-all duration-300 shadow-xs">
                             <i class="fas fa-magnifying-glass-chart"></i>
                         </div>
-                        <h3 class="font-display text-lg font-bold text-slate-900 mb-2">Identificación de Peligros</h3>
+                        <h3 class="font-display text-lg font-bold text-[#001A29] mb-2">Identificación de Peligros</h3>
                         <p class="text-slate-600 text-sm leading-relaxed flex-grow">
                             Diagnóstico y evaluación sistemática de riesgos bajo metodología GTC 45 para controlar factores físicos, químicos, biológicos y biomecánicos.
                         </p>
                     </div>
 
                     <!-- Pilar 2: Medicina Preventiva -->
-                    <div class="group bg-slate-50/70 rounded-3xl p-8 border border-slate-200 hover:bg-white hover:border-sst-600 shadow-card-clean hover:shadow-card-hover transition-all duration-300 flex flex-col">
-                        <div class="w-14 h-14 rounded-2xl bg-orange-50 text-sst-600 flex items-center justify-center text-2xl mb-6 group-hover:bg-sst-600 group-hover:text-white transition-all duration-300 shadow-sm">
+                    <div class="group bg-white rounded-3xl p-8 border border-slate-200 hover:border-[#39A900] shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        <div class="w-14 h-14 rounded-2xl bg-[#39A900]/10 text-[#39A900] flex items-center justify-center text-2xl mb-6 group-hover:bg-[#39A900] group-hover:text-white transition-all duration-300 shadow-xs">
                             <i class="fas fa-heart-pulse"></i>
                         </div>
-                        <h3 class="font-display text-lg font-bold text-slate-900 mb-2">Medicina Preventiva</h3>
+                        <h3 class="font-display text-lg font-bold text-[#001A29] mb-2">Medicina Preventiva</h3>
                         <p class="text-slate-600 text-sm leading-relaxed flex-grow">
                             Promoción del autocuidado, exámenes ocupacionales, vigilancia epidemiológica y programas de pausas activas para aprendices y personal.
                         </p>
                     </div>
 
                     <!-- Pilar 3: Higiene y Seguridad -->
-                    <div class="group bg-slate-50/70 rounded-3xl p-8 border border-slate-200 hover:bg-white hover:border-sst-600 shadow-card-clean hover:shadow-card-hover transition-all duration-300 flex flex-col">
-                        <div class="w-14 h-14 rounded-2xl bg-orange-50 text-sst-600 flex items-center justify-center text-2xl mb-6 group-hover:bg-sst-600 group-hover:text-white transition-all duration-300 shadow-sm">
+                    <div class="group bg-white rounded-3xl p-8 border border-slate-200 hover:border-[#39A900] shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        <div class="w-14 h-14 rounded-2xl bg-[#39A900]/10 text-[#39A900] flex items-center justify-center text-2xl mb-6 group-hover:bg-[#39A900] group-hover:text-white transition-all duration-300 shadow-xs">
                             <i class="fas fa-shield-halved"></i>
                         </div>
-                        <h3 class="font-display text-lg font-bold text-slate-900 mb-2">Seguridad e Higiene</h3>
+                        <h3 class="font-display text-lg font-bold text-[#001A29] mb-2">Seguridad e Higiene</h3>
                         <p class="text-slate-600 text-sm leading-relaxed flex-grow">
                             Control de uso de EPP, inspecciones locativas periódicas, señalización preventiva y cumplimiento de normas de seguridad industrial.
                         </p>
                     </div>
 
                     <!-- Pilar 4: Emergencias y Brigadas -->
-                    <div class="group bg-slate-50/70 rounded-3xl p-8 border border-slate-200 hover:bg-white hover:border-sst-600 shadow-card-clean hover:shadow-card-hover transition-all duration-300 flex flex-col">
-                        <div class="w-14 h-14 rounded-2xl bg-orange-50 text-sst-600 flex items-center justify-center text-2xl mb-6 group-hover:bg-sst-600 group-hover:text-white transition-all duration-300 shadow-sm">
+                    <div class="group bg-white rounded-3xl p-8 border border-slate-200 hover:border-[#39A900] shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        <div class="w-14 h-14 rounded-2xl bg-[#39A900]/10 text-[#39A900] flex items-center justify-center text-2xl mb-6 group-hover:bg-[#39A900] group-hover:text-white transition-all duration-300 shadow-xs">
                             <i class="fas fa-fire-extinguisher"></i>
                         </div>
-                        <h3 class="font-display text-lg font-bold text-slate-900 mb-2">Plan de Emergencias</h3>
+                        <h3 class="font-display text-lg font-bold text-[#001A29] mb-2">Plan de Emergencias</h3>
                         <p class="text-slate-600 text-sm leading-relaxed flex-grow">
                             Brigadas entrenadas en primeros auxilios y conatos, rutas de evacuación señalizadas y cronograma anual de simulacros.
                         </p>
@@ -328,25 +335,25 @@
         </section>
 
         <!-- Matrices y Protocolos Destacados -->
-        <section class="py-20 bg-slate-100/70 border-t border-slate-200" id="matrices">
+        <section class="py-20 bg-white border-t border-slate-200/80" id="matrices">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
                     <div>
-                        <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-white text-slate-800 border border-slate-200 uppercase tracking-wider mb-2 shadow-sm">
-                            <i class="fas fa-file-shield text-sst-600"></i> Protocolos Registrados
+                        <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-[#001A29] border border-slate-200 uppercase tracking-wider mb-2 shadow-xs">
+                            <i class="fas fa-file-shield text-[#39A900]"></i> Protocolos Registrados
                         </span>
-                        <h2 class="font-display text-3xl font-extrabold text-slate-900 tracking-tight">
+                        <h2 class="font-display text-3xl font-extrabold text-[#001A29] tracking-tight">
                             Matrices y Lineamientos de Seguridad
                         </h2>
                     </div>
                     <div>
                         @auth
-                            <a href="{{ route('SST.dashboard') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition cursor-pointer">
+                            <a href="{{ route('SST.dashboard') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold text-white bg-[#39A900] hover:bg-[#2d8500] shadow-md shadow-[#39A900]/30 transition cursor-pointer">
                                 <i class="fas fa-arrow-right"></i> Ver Todas las Matrices
                             </a>
                         @else
-                            <a href="{{ route('login', ['redirect' => route('SST.dashboard')]) }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition cursor-pointer">
+                            <a href="{{ route('login', ['redirect' => route('SST.dashboard')]) }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold text-white bg-[#39A900] hover:bg-[#2d8500] shadow-md shadow-[#39A900]/30 transition cursor-pointer">
                                 <i class="fas fa-arrow-right"></i> Ver Todas las Matrices
                             </a>
                         @endauth
@@ -356,18 +363,18 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     
                     <!-- Tarjeta 1: Matriz de Riesgos -->
-                    <div class="bg-white rounded-2xl p-6 border-l-4 border-l-sst-600 border border-slate-200 shadow-card-clean hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between">
+                    <div class="bg-white rounded-2xl p-6 border-l-4 border-l-[#39A900] border border-slate-200/80 shadow-xs hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between">
                         <div>
                             <div class="flex items-center justify-between gap-2 mb-3">
-                                <span class="px-2.5 py-1 rounded-lg bg-slate-900 text-white font-mono text-xs font-bold">
+                                <span class="px-2.5 py-1 rounded-lg bg-[#001A29] text-white font-mono text-xs font-bold">
                                     SST-MAT-01
                                 </span>
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#39A900]"></span>
                                     Activa
                                 </span>
                             </div>
-                            <h4 class="font-display text-base font-bold text-slate-900 mb-2">
+                            <h4 class="font-display text-base font-bold text-[#001A29] mb-2">
                                 Matriz Integral de Identificación de Peligros y Riesgos (GTC 45)
                             </h4>
                             <p class="text-slate-600 text-xs leading-relaxed mb-4">
@@ -375,25 +382,25 @@
                             </p>
                         </div>
                         <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 font-medium">
-                            <span class="flex items-center gap-1"><i class="fas fa-tag text-sst-600"></i> Matriz GTC 45</span>
-                            <span class="flex items-center gap-1"><i class="fas fa-user-check text-slate-700"></i> Coordinación SST</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-tag text-[#39A900]"></i> Matriz GTC 45</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-user-check text-[#001A29]"></i> Coordinación SST</span>
                             <span class="flex items-center gap-1"><i class="fas fa-calendar-alt text-amber-600"></i> Vigencia: 2026</span>
                         </div>
                     </div>
 
                     <!-- Tarjeta 2: Protocolo EPP -->
-                    <div class="bg-white rounded-2xl p-6 border-l-4 border-l-sst-600 border border-slate-200 shadow-card-clean hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between">
+                    <div class="bg-white rounded-2xl p-6 border-l-4 border-l-[#39A900] border border-slate-200/80 shadow-xs hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between">
                         <div>
                             <div class="flex items-center justify-between gap-2 mb-3">
-                                <span class="px-2.5 py-1 rounded-lg bg-slate-900 text-white font-mono text-xs font-bold">
+                                <span class="px-2.5 py-1 rounded-lg bg-[#001A29] text-white font-mono text-xs font-bold">
                                     SST-EPP-02
                                 </span>
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#39A900]"></span>
                                     Activa
                                 </span>
                             </div>
-                            <h4 class="font-display text-base font-bold text-slate-900 mb-2">
+                            <h4 class="font-display text-base font-bold text-[#001A29] mb-2">
                                 Estándar Técnico de Dotación y Uso Obligatorio de EPP
                             </h4>
                             <p class="text-slate-600 text-xs leading-relaxed mb-4">
@@ -401,17 +408,17 @@
                             </p>
                         </div>
                         <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 font-medium">
-                            <span class="flex items-center gap-1"><i class="fas fa-tag text-sst-600"></i> Estándar EPP</span>
-                            <span class="flex items-center gap-1"><i class="fas fa-user-check text-slate-700"></i> Instructor Líder SST</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-tag text-[#39A900]"></i> Estándar EPP</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-user-check text-[#001A29]"></i> Instructor Líder SST</span>
                             <span class="flex items-center gap-1"><i class="fas fa-calendar-alt text-amber-600"></i> Vigencia: 2026</span>
                         </div>
                     </div>
 
                     <!-- Tarjeta 3: Investigación de Accidentes -->
-                    <div class="bg-white rounded-2xl p-6 border-l-4 border-l-amber-500 border border-slate-200 shadow-card-clean hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between">
+                    <div class="bg-white rounded-2xl p-6 border-l-4 border-l-amber-500 border border-slate-200/80 shadow-xs hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between">
                         <div>
                             <div class="flex items-center justify-between gap-2 mb-3">
-                                <span class="px-2.5 py-1 rounded-lg bg-slate-900 text-white font-mono text-xs font-bold">
+                                <span class="px-2.5 py-1 rounded-lg bg-[#001A29] text-white font-mono text-xs font-bold">
                                     SST-INV-03
                                 </span>
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
@@ -419,7 +426,7 @@
                                     En Revisión
                                 </span>
                             </div>
-                            <h4 class="font-display text-base font-bold text-slate-900 mb-2">
+                            <h4 class="font-display text-base font-bold text-[#001A29] mb-2">
                                 Protocolo de Investigación de Accidentes e Incidentes Laborales
                             </h4>
                             <p class="text-slate-600 text-xs leading-relaxed mb-4">
@@ -427,25 +434,25 @@
                             </p>
                         </div>
                         <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 font-medium">
-                            <span class="flex items-center gap-1"><i class="fas fa-tag text-sst-600"></i> Investigación AT/IT</span>
-                            <span class="flex items-center gap-1"><i class="fas fa-user-check text-slate-700"></i> Comité COPASST</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-tag text-[#39A900]"></i> Investigación AT/IT</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-user-check text-[#001A29]"></i> Comité COPASST</span>
                             <span class="flex items-center gap-1"><i class="fas fa-calendar-alt text-amber-600"></i> Vigencia: 2026</span>
                         </div>
                     </div>
 
                     <!-- Tarjeta 4: Plan de Emergencias -->
-                    <div class="bg-white rounded-2xl p-6 border-l-4 border-l-sst-600 border border-slate-200 shadow-card-clean hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between">
+                    <div class="bg-white rounded-2xl p-6 border-l-4 border-l-[#39A900] border border-slate-200/80 shadow-xs hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between">
                         <div>
                             <div class="flex items-center justify-between gap-2 mb-3">
-                                <span class="px-2.5 py-1 rounded-lg bg-slate-900 text-white font-mono text-xs font-bold">
+                                <span class="px-2.5 py-1 rounded-lg bg-[#001A29] text-white font-mono text-xs font-bold">
                                     SST-EMERG-04
                                 </span>
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#39A900]"></span>
                                     Activa
                                 </span>
                             </div>
-                            <h4 class="font-display text-base font-bold text-slate-900 mb-2">
+                            <h4 class="font-display text-base font-bold text-[#001A29] mb-2">
                                 Plan de Prevención, Preparación y Respuesta ante Emergencias
                             </h4>
                             <p class="text-slate-600 text-xs leading-relaxed mb-4">
@@ -453,8 +460,8 @@
                             </p>
                         </div>
                         <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 font-medium">
-                            <span class="flex items-center gap-1"><i class="fas fa-tag text-sst-600"></i> Plan Emergencias</span>
-                            <span class="flex items-center gap-1"><i class="fas fa-user-check text-slate-700"></i> Brigada General</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-tag text-[#39A900]"></i> Plan Emergencias</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-user-check text-[#001A29]"></i> Brigada General</span>
                             <span class="flex items-center gap-1"><i class="fas fa-calendar-alt text-amber-600"></i> Vigencia: 2026</span>
                         </div>
                     </div>
@@ -463,34 +470,34 @@
             </div>
         </section>
 
-        <!-- CTA Call to Action Banner (Fondo Carbón Elegante con Botón Naranja Sobrio) -->
-        <section class="py-16 bg-white" id="brigadas">
+        <!-- CTA Call to Action Banner (Fondo Dark / Navy con Botón Verde SENA y Acento Institucional) -->
+        <section class="py-16 bg-[#f8faf9]" id="brigadas">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="relative overflow-hidden rounded-3xl bg-slate-900 p-8 sm:p-12 lg:p-14 text-white shadow-xl">
+                <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#00131E] via-[#001A29] to-[#002D44] p-8 sm:p-12 lg:p-14 text-white shadow-2xl border-l-4 border-l-[#39A900]">
                     
                     <!-- Decorative subtle warm circle -->
-                    <div class="absolute -right-16 -bottom-16 w-72 h-72 bg-sst-600/15 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute -right-16 -bottom-16 w-72 h-72 bg-[#39A900]/20 rounded-full blur-3xl pointer-events-none"></div>
 
                     <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                         <div class="lg:col-span-8 space-y-4">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-slate-200 border border-white/15 backdrop-blur-sm">
-                                <i class="fas fa-shield-halved text-sst-500"></i> Control de Acceso y Gestión Operativa
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-white border border-white/20 backdrop-blur-sm">
+                                <i class="fas fa-shield-halved text-[#62E31D]"></i> Control de Acceso y Gestión Operativa
                             </span>
                             <h3 class="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                                 Portal de Seguridad y Salud en el Trabajo
                             </h3>
-                            <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl font-normal">
+                            <p class="text-white/80 text-sm sm:text-base leading-relaxed max-w-2xl font-normal">
                                 Los administradores, instructores técnicos, brigadistas y miembros del COPASST pueden gestionar inspecciones, reportar actos inseguros y actualizar las matrices normativas.
                             </p>
                         </div>
                         
                         <div class="lg:col-span-4 lg:text-right">
                             @auth
-                                <a href="{{ route('SST.dashboard') }}" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition-all duration-200 hover:-translate-y-0.5 cursor-pointer">
+                                <a href="{{ route('SST.dashboard') }}" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-sm font-bold text-white bg-[#39A900] hover:bg-[#2d8500] shadow-lg shadow-[#39A900]/40 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer">
                                     <i class="fas fa-gauge-high"></i> Entrar al Dashboard
                                 </a>
                             @else
-                                <a href="{{ route('login', ['redirect' => route('SST.dashboard')]) }}" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-sst-600 hover:bg-sst-700 shadow-subtle-orange transition-all duration-200 hover:-translate-y-0.5 cursor-pointer">
+                                <a href="{{ route('login', ['redirect' => route('SST.dashboard')]) }}" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-sm font-bold text-white bg-[#39A900] hover:bg-[#2d8500] shadow-lg shadow-[#39A900]/40 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer">
                                     <i class="fas fa-right-to-bracket"></i> Iniciar Sesión / Dashboard
                                 </a>
                             @endauth
@@ -502,15 +509,24 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 text-xs py-8 border-t border-slate-800">
+    <!-- Footer (Estilo Dirección: Fondo Dark #00131E) -->
+    <footer class="bg-[#00131E] text-slate-400 text-xs py-8 border-t border-white/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="text-center sm:text-left">
                     <p class="text-slate-400 font-medium">
-                        SENA Empresa &copy; 2026 • Centro de Formación Agroindustrial <strong class="text-slate-200">"La Angostura"</strong> (Campoalegre - Huila)
+                        SENA Empresa &copy; 2026 • Centro de Formación Agroindustrial <strong class="text-white">"La Angostura"</strong> (Campoalegre - Huila)
                     </p>
                 </div>
+                <div>
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] text-white/80 font-medium">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#62E31D] animate-pulse"></span>
+                        Módulo de SG-SST • Procesos de Apoyo ERP
+                    </span>
+                </div>
+            </div>
+        </div>
+    </footer>
                 <div>
                     <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-[11px] text-slate-300 font-medium">
                         <span class="w-1.5 h-1.5 rounded-full bg-sst-600"></span>

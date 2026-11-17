@@ -77,9 +77,11 @@ class RespuestaEventoController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'descripcion' => 'nullable|string',
+            'nombre' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'descripcion' => 'nullable|string|max:500',
             'estado' => 'nullable|in:activo,inactivo,Activo,Inactivo',
+        ], [
+            'nombre.regex' => 'El nombre solo debe contener letras y espacios.',
         ]);
 
         $validated['estado'] = strtolower($validated['estado'] ?? 'activo');
@@ -98,9 +100,11 @@ class RespuestaEventoController extends Controller
         $respuesta = RespuestaEvento::findOrFail($id);
 
         $validated = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'descripcion' => 'nullable|string',
+            'nombre' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
+            'descripcion' => 'nullable|string|max:500',
             'estado' => 'nullable|in:activo,inactivo,Activo,Inactivo',
+        ], [
+            'nombre.regex' => 'El nombre solo debe contener letras y espacios.',
         ]);
 
         $validated['estado'] = strtolower($validated['estado'] ?? 'activo');
@@ -131,9 +135,9 @@ class RespuestaEventoController extends Controller
         $respuesta = RespuestaEvento::findOrFail($id);
 
         $validated = $request->validate([
-            'protocolo' => 'required|string',
-            'medidas_tomadas' => 'required|string',
-            'estado' => 'nullable|string',
+            'protocolo' => 'required|string|max:200',
+            'medidas_tomadas' => 'required|string|max:1000',
+            'estado' => 'nullable|string|max:50',
         ]);
 
         $data = json_decode($respuesta->descripcion, true);

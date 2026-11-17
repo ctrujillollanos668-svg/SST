@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\SST\Http\Controllers\Admin\Cronograma;
+namespace Modules\SST\Http\Controllers\Admin\ActividadesSST;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -59,7 +59,7 @@ class CalendarioController extends Controller
             ]);
         }
 
-        return view('sst::admin.cronograma.Calendario', compact('actividades', 'lugares', 'tiposActividades'));
+        return view('sst::admin.actividades_sst.Calendario', compact('actividades', 'lugares', 'tiposActividades'));
     }
 
     /**
@@ -68,9 +68,12 @@ class CalendarioController extends Controller
     public function storeTipoActividad(Request $request)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:100|unique:tipos_actividades_sst,nombre',
+            'nombre' => ['required', 'string', 'max:100', 'unique:tipos_actividades_sst,nombre', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
             'icono' => 'nullable|string|max:50',
             'color' => 'nullable|string|max:50'
+        ], [
+            'nombre.required' => 'El nombre del tipo es obligatorio.',
+            'nombre.regex' => 'El nombre del tipo solo debe contener letras y espacios.'
         ]);
 
         $tipo = TipoActividad::create([
@@ -112,15 +115,20 @@ class CalendarioController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:150',
+            'nombre' => ['required', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
             'fecha' => 'required|date',
             'hora' => 'nullable|string',
-            'responsable' => 'required|string|max:100',
+            'responsable' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
             'tipo_actividad' => 'nullable|string|max:100',
             'id_lugar' => 'nullable|integer',
             'lugar' => 'nullable|string|max:150',
             'estado' => 'nullable|in:Programada,Realizada,Completada,Cancelada,En Ejecución',
-            'descripcion' => 'nullable|string',
+            'descripcion' => 'nullable|string|max:500',
+        ], [
+            'nombre.required' => 'El nombre de la actividad es obligatorio.',
+            'nombre.regex' => 'El nombre de la actividad solo debe contener letras y espacios.',
+            'responsable.required' => 'El responsable es obligatorio.',
+            'responsable.regex' => 'El responsable solo debe contener letras y espacios.',
         ]);
 
         $horaInicio = !empty($validated['hora']) ? date('H:i:s', strtotime($validated['hora'])) : '09:00:00';
@@ -185,16 +193,19 @@ class CalendarioController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'nombre' => 'nullable|string|max:150',
+            'nombre' => ['nullable', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
             'fecha' => 'nullable|date',
             'hora' => 'nullable|string',
-            'responsable' => 'nullable|string|max:100',
+            'responsable' => ['nullable', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
             'tipo_actividad' => 'nullable|string|max:100',
             'id_lugar' => 'nullable',
             'lugar' => 'nullable|string|max:150',
             'estado' => 'nullable|string',
-            'descripcion' => 'nullable|string',
+            'descripcion' => 'nullable|string|max:500',
             'source' => 'nullable|string'
+        ], [
+            'nombre.regex' => 'El nombre de la actividad solo debe contener letras y espacios.',
+            'responsable.regex' => 'El responsable solo debe contener letras y espacios.'
         ]);
 
         $actSST = ActividadSST::find($id);
