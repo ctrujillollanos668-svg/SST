@@ -267,38 +267,28 @@
             </div>
         </div>
 
-        <!-- 4. INSPECCIONES -->
+        <!-- 4. INSPECCIONES (Acceso Directo) -->
         @php
             $isInspecciones = request()->routeIs('SST.admin.inspecciones.*');
         @endphp
-        <div class="flex flex-col menu-wrapper relative {{ $isInspecciones ? 'open' : '' }}" id="inspeccionesWrapper">
-            <div class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isInspecciones ? 'bg-white/10 text-white font-bold border border-white/10 shadow-xs' : 'text-white hover:text-white hover:bg-white/10' }} transition cursor-pointer group" id="btnToggleInspecciones">
+        <div class="relative menu-wrapper">
+            <a href="{{ route('SST.admin.inspecciones.historial') }}" 
+               class="menu-btn-item flex items-center justify-between px-3 py-2.5 rounded-xl {{ $isInspecciones ? 'bg-white/10 text-white font-bold border border-white/10 shadow-xs' : 'text-white hover:text-white hover:bg-white/10' }} transition group cursor-pointer"
+               title="Inspecciones">
                 <div class="flex items-center gap-3">
                     <span class="w-8 h-8 rounded-xl {{ $isInspecciones ? 'bg-[#39A900] text-white shadow-md shadow-[#39A900]/30 border border-[#62E31D]/40' : 'bg-white/10 text-white group-hover:bg-[#39A900] group-hover:text-white border border-white/5' }} flex items-center justify-center transition shrink-0">
                         <i class="fa-solid fa-magnifying-glass-chart text-xs"></i>
                     </span>
                     <span class="font-bold text-[13px] sidebar-text-full">Inspecciones</span>
                 </div>
-                <span class="text-[10px] {{ $isInspecciones ? 'text-[#62E31D]' : 'text-white/70 group-hover:text-white' }} arrow-icon" id="arrowInspecciones">
-                    <i class="fa-solid fa-chevron-down"></i>
-                </span>
-            </div>
-            <!-- Acordeón Normal -->
-            <ul class="submenu-transition bg-[#071D2B]/95 rounded-xl mt-1 mx-1 p-1.5 border border-[#1A4B69] space-y-0.5">
-                @php $actInspHist = request()->routeIs('SST.admin.inspecciones.historial*'); @endphp
-                <li><a href="{{ route('SST.admin.inspecciones.historial') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actInspHist ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Historial</a></li>
-                @php $actInspReal = request()->routeIs('SST.admin.inspecciones.realizar*'); @endphp
-                <li><a href="{{ route('SST.admin.inspecciones.realizar') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actInspReal ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Realizar Inspección</a></li>
-            </ul>
+            </a>
             <!-- Tarjeta Flotante (Flyout Mini) -->
             <div class="sidebar-flyout">
-                <div class="px-3 py-2 border-b border-[#1A4B69] flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-[#62E31D]"></span>
-                    <span class="font-extrabold text-xs text-white">Inspecciones</span>
-                </div>
-                <div class="py-1 space-y-0.5">
-                    <a href="{{ route('SST.admin.inspecciones.historial') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInspHist ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Historial</span> @if($actInspHist)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
-                    <a href="{{ route('SST.admin.inspecciones.realizar') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInspReal ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Realizar Inspección</span> @if($actInspReal)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
+                <div class="px-3 py-2 border-b border-[#1A4B69]">
+                    <a href="{{ route('SST.admin.inspecciones.historial') }}" class="font-extrabold text-xs text-white hover:text-[#62E31D] flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-[#62E31D]"></span>
+                        <span>Inspecciones</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -415,7 +405,6 @@
 
         toggleMenu('btnToggleTiposEventos', 'tiposEventosWrapper');
         toggleMenu('btnToggleInformacionBasica', 'informacionBasicaWrapper');
-        toggleMenu('btnToggleInspecciones', 'inspeccionesWrapper');
         toggleMenu('btnTogglePausas', 'pausasWrapper');
         toggleMenu('btnToggleUsuarios', 'usuariosWrapper');
 

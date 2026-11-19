@@ -137,6 +137,12 @@
                 </tbody>
             </table>
         </div>
+
+        @if(isset($contactos) && method_exists($contactos, 'hasPages') && $contactos->hasPages())
+            <div class="p-4 border-t border-slate-100 bg-slate-50/50">
+                {{ $contactos->links() }}
+            </div>
+        @endif
     </div>
 
 </div>

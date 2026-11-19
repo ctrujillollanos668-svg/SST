@@ -164,6 +164,17 @@ class RegistrarInspeccionController extends Controller
             'estado' => $isSeguimiento ? 'abierto' : 'cerrado'
         ]);
 
+        // Notificar por correo real al Administrador SST sobre la nueva inspección
+        \Modules\SST\Services\SSTNotificationMailService::enviarNotificacionAdmin([
+            'tipo_evento' => "Inspección de Seguridad: {$tipoInspeccion}",
+            'categoria' => 'inspeccion',
+            'afectado' => $request->input('responsable') ?: 'Aprendiz SST',
+            'lugar' => $lugarObj ? $lugarObj->nombre : 'Ambiente SENA',
+            'fecha' => now()->format('d/m/Y - h:i A'),
+            'gravedad' => $isSeguimiento ? 'Requiere Seguimiento' : 'Normal',
+            'descripcion' => $request->input('descripcion') ?: 'Inspección de seguridad realizada.',
+        ]);
+
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
                 'success' => true,

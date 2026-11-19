@@ -192,7 +192,7 @@
             
             <div class="flex items-center gap-4">
                 <!-- Notificaciones -->
-                <button class="cursor-pointer text-slate-300 hover:text-[#62E31D] hover:bg-white/10 transition text-base relative p-2 rounded-xl" title="Notificaciones">
+                <button class="cursor-pointer text-slate-300 hover:text-[#62E31D] hover:bg-white/10 transition text-base relative p-2 rounded-xl" title="Notificaciones por Correo Activas">
                     <i class="fa-regular fa-bell"></i>
                     <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-[#62E31D] rounded-full animate-ping"></span>
                     <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-[#62E31D] rounded-full"></span>

@@ -13,7 +13,7 @@ class ContactoEmergenciaController extends Controller
      */
     public function index()
     {
-        $contactos = ContactoEmergencia::orderBy('id_contacto', 'desc')->get();
+        $contactos = ContactoEmergencia::orderBy('id_contacto', 'desc')->paginate(10);
         return view('sst::admin.informacion_basica.Contacto_emergencia', compact('contactos'));
     }
 

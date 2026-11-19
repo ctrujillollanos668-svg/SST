@@ -15,7 +15,7 @@ class RiesgosController extends Controller
     {
         $riesgos = TipoEvento::where('tipo_categoria', 'riesgo')
             ->orderBy('id_tipo_evento', 'desc')
-            ->get();
+            ->paginate(10);
 
         return view('sst::admin.tipos_eventos.Riesgos', compact('riesgos'));
     }

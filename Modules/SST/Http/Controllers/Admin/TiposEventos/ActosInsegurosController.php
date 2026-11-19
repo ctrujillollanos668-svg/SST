@@ -15,7 +15,7 @@ class ActosInsegurosController extends Controller
     {
         $actos = TipoEvento::where('tipo_categoria', 'acto_inseguro')
             ->orderBy('id_tipo_evento', 'desc')
-            ->get();
+            ->paginate(10);
 
         return view('sst::admin.tipos_eventos.Actos_inseguros', compact('actos'));
     }

@@ -167,7 +167,6 @@ class RegistrarUsuarioController extends Controller
         $user->email = $validated['email'];
         if (!empty($validated['nickname'])) {
             $user->nickname = $validated['nickname'];
-            $user->name = $validated['nickname'];
         }
 
         if (!empty($validated['password'])) {

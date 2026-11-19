@@ -3,6 +3,10 @@
 @section('title', 'Condiciones de Emergencia • SST')
 
 @section('content')
+@php
+    $maxFechaHora = now('America/Bogota')->format('Y-m-d\T23:59');
+    $minFechaHora = now('America/Bogota')->subDays(3)->format('Y-m-d\T00:00');
+@endphp
 <style>
     .line-clamp-2 {
         display: -webkit-box;
@@ -314,7 +318,9 @@
                         FECHA Y HORA DEL REPORTE <span class="text-rose-500">*</span>
                     </label>
                     <input type="datetime-local" name="fecha_hora" required 
+                        min="{{ $minFechaHora }}" max="{{ $maxFechaHora }}"
                         class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs">
+                    <p class="text-[10px] text-slate-500 font-medium">Permitido: fecha de hoy y hasta 3 días hacia atrás.</p>
                 </div>
 
                 <div class="space-y-1">
@@ -480,7 +486,9 @@
                         FECHA Y HORA DEL REPORTE <span class="text-rose-500">*</span>
                     </label>
                     <input type="datetime-local" id="editFechaHora" name="fecha_hora" required 
+                        min="{{ $minFechaHora }}" max="{{ $maxFechaHora }}"
                         class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs">
+                    <p class="text-[10px] text-slate-500 font-medium">Permitido: fecha de hoy y hasta 3 días hacia atrás.</p>
                 </div>
 
                 <div class="space-y-1">

@@ -165,6 +165,20 @@ class CalendarioController extends Controller
             'descripcion' => $validated['descripcion'] ?? null,
         ]);
 
+        // Notificar por correo real sobre la nueva actividad programada
+        \Modules\SST\Services\SSTNotificationMailService::enviarNotificacionAprendiz(
+            null,
+            'Comunidad Aprendiz SST',
+            [
+                'caso_nombre' => "Nueva Actividad: {$actividad->titulo} ({$actividad->tipo_actividad})",
+                'estado' => 'Programada',
+                'es_finalizado' => false,
+                'atendido_por' => $actividad->responsable ?? 'Administrador SST',
+                'fecha' => date('d/m/Y', strtotime($actividad->fecha)) . " - " . substr($actividad->hora_inicio, 0, 5),
+                'medidas_tomadas' => "Se ha agendado una nueva jornada de {$actividad->tipo_actividad} en {$actividad->lugar}. " . ($actividad->descripcion ?? ''),
+            ]
+        );
+
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
                 'success' => true,

@@ -43,7 +43,8 @@ class HistorialController extends Controller
                       $ql->where('nombre', 'like', "%{$s}%");
                   })
                   ->orWhereHas('user', function($qu) use ($s) {
-                      $qu->where('name', 'like', "%{$s}%");
+                      $qu->where('nickname', 'like', "%{$s}%")
+                         ->orWhere('email', 'like', "%{$s}%");
                   })
                   ->orWhereHas('hallazgos', function($qh) use ($s) {
                       $qh->where('descripcion_hallazgo', 'like', "%{$s}%")
@@ -52,7 +53,7 @@ class HistorialController extends Controller
             });
         }
 
-        $inspecciones = $query->get();
+        $inspecciones = $query->paginate(10)->withQueryString();
         return view('sst::admin.inspecciones.Historial', compact('inspecciones'));
     }
 
@@ -96,6 +97,21 @@ class HistorialController extends Controller
             $hallazgo->accion_correctiva = $validated['observacion_admin'];
         }
         $hallazgo->save();
+
+        // Notificar por correo real al Aprendiz sobre la atención de la inspección
+        $esFinalizado = in_array($validated['estado'], ['completada']);
+        \Modules\SST\Services\SSTNotificationMailService::enviarNotificacionAprendiz(
+            null,
+            $inspeccion->responsable ?? 'Aprendiz SST',
+            [
+                'caso_nombre' => "Inspección: {$inspeccion->tipo_inspeccion}",
+                'estado' => $esFinalizado ? 'atendido' : 'en_proceso',
+                'es_finalizado' => $esFinalizado,
+                'atendido_por' => auth()->check() ? (auth()->user()->full_name ?? auth()->user()->name ?? 'Administrador SST') : 'Administrador SST',
+                'fecha' => now()->format('d/m/Y - h:i A'),
+                'medidas_tomadas' => $validated['observacion_admin'] ?? "Inspección actualizada al estado: {$validated['estado']}.",
+            ]
+        );
 
         return redirect()->route('SST.admin.inspecciones.historial')
             ->with('success', '¡Inspección gestionada exitosamente! Se actualizó el estado y el seguimiento.');

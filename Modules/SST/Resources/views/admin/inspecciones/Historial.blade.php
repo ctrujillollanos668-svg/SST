@@ -68,13 +68,13 @@
 
             <div class="flex items-center gap-3">
                 <span class="text-xs font-black tracking-widest text-slate-400 uppercase">
-                    <span class="text-base text-[#39A900] font-extrabold">{{ $inspecciones->count() }}</span> REGISTROS
+                    <span class="text-base text-[#39A900] font-extrabold">{{ $inspecciones->total() }}</span> REGISTROS
                 </span>
             </div>
         </div>
 
         <!-- Barra de Filtros: Buscar, Fecha y Estado -->
-        <div class="p-4 sm:p-5 bg-slate-50/70 border-b border-slate-100 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        <form method="GET" action="{{ route('SST.admin.inspecciones.historial') }}" id="formFiltrosInspecciones" class="p-4 sm:p-5 bg-slate-50/70 border-b border-slate-100 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 flex-1">
                 <!-- 1. Buscar -->
                 <div class="relative">
@@ -83,6 +83,7 @@
                     </span>
                     <input type="text" 
                            id="filtroBuscar" 
+                           name="search"
                            oninput="filtrarInspecciones()" 
                            value="{{ request('search') }}"
                            placeholder="Buscar por lugar, responsable, líder o hallazgo..." 
@@ -96,7 +97,8 @@
                     </span>
                     <input type="date" 
                            id="filtroFecha" 
-                           onchange="filtrarInspecciones()" 
+                           name="fecha"
+                           onchange="this.form.submit()" 
                            value="{{ request('fecha') }}"
                            title="Filtrar por fecha de inspección"
                            class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-700 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition font-medium cursor-pointer">
@@ -108,7 +110,8 @@
                         <i class="fa-solid fa-circle-check text-xs"></i>
                     </span>
                     <select id="filtroEstado" 
-                            onchange="filtrarInspecciones()" 
+                            name="estado"
+                            onchange="this.form.submit()" 
                             class="w-full pl-9 pr-3 py-2 text-xs font-semibold rounded-xl bg-white border border-slate-200 text-slate-700 focus:outline-none focus:border-[#39A900] focus:ring-2 focus:ring-emerald-100 transition cursor-pointer">
                         <option value="todos" {{ request('estado') == 'todos' || !request('estado') ? 'selected' : '' }}>Todos los estados</option>
                         <option value="pendiente" {{ request('estado') == 'pendiente' ? 'selected' : '' }}>Pendiente (Requiere Revisión)</option>
@@ -118,17 +121,21 @@
                 </div>
             </div>
 
-            <!-- 4. Botón Limpiar -->
+            <!-- 4. Botón Limpiar y Buscar -->
             <div class="flex items-center gap-2 self-end md:self-auto shrink-0">
-                <button type="button" 
-                        onclick="limpiarFiltros()" 
-                        class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-600 bg-white hover:bg-slate-100 border border-slate-200/90 rounded-xl transition cursor-pointer shadow-2xs" 
-                        title="Limpiar todos los filtros">
+                <button type="submit" 
+                        class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-white bg-[#39A900] hover:bg-[#2d8500] rounded-xl transition cursor-pointer shadow-xs">
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    <span>Buscar</span>
+                </button>
+                <a href="{{ route('SST.admin.inspecciones.historial') }}" 
+                   class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-600 bg-white hover:bg-slate-100 border border-slate-200/90 rounded-xl transition cursor-pointer shadow-2xs" 
+                   title="Limpiar todos los filtros">
                     <i class="fa-solid fa-rotate-left text-xs"></i>
                     <span>Limpiar</span>
-                </button>
+                </a>
             </div>
-        </div>
+        </form>
 
         <!-- Tabla de Inspecciones -->
         <div class="overflow-x-auto">
@@ -180,7 +187,7 @@
                             data-fecha="{{ \Carbon\Carbon::parse($insp->fecha_inspeccion)->format('Y-m-d') }}"
                             data-estado="{{ $estadoActual }}"
                             data-search="{{ strtolower($lugarNombre . ' ' . $tipo . ' ' . $responsable . ' ' . $lider . ' ' . $desc) }}">
-                            <td class="py-3.5 px-3 text-center font-bold text-slate-400">{{ $index + 1 }}</td>
+                            <td class="py-3.5 px-3 text-center font-bold text-slate-400">{{ method_exists($inspecciones, 'firstItem') && $inspecciones->firstItem() ? ($inspecciones->firstItem() + $index) : ($index + 1) }}</td>
                             
                             <!-- 1. Fecha / Hora -->
                             <td class="py-3.5 px-3 whitespace-nowrap">
@@ -277,6 +284,12 @@
                 </tbody>
             </table>
         </div>
+
+        @if(isset($inspecciones) && method_exists($inspecciones, 'hasPages') && $inspecciones->hasPages())
+            <div class="p-4 border-t border-slate-100 bg-slate-50/50">
+                {{ $inspecciones->links() }}
+            </div>
+        @endif
     </div>
 </div>
 

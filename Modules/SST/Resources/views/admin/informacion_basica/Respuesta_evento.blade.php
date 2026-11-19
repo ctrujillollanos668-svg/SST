@@ -498,6 +498,9 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Paginación Dinámica para esta pestaña -->
+                <div id="paginacion_{{ $slug }}" class="p-3.5 border-t border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs"></div>
             </div>
 
         </div>
@@ -722,6 +725,109 @@
         });
     }
 
+    // =========================================================================
+    // PAGINACIÓN DINÁMICA (10 REGISTROS POR PÁGINA) Y BUSCADOR POR PESTAÑA
+    // =========================================================================
+    const paginasTab = {};
+    const itemsPorPaginaTab = 10;
+    const eventSlugs = ['accidentes', 'incidentes', 'riesgos', 'actos_inseguros', 'condiciones_inseguras', 'lesiones', 'emergencias'];
+
+    function renderPaginacionTab(slug) {
+        const input = document.getElementById('buscar_' + slug);
+        const query = (input ? input.value : '').toLowerCase().trim();
+        const rows = document.querySelectorAll('#tabla_' + slug + ' tbody tr.event-row');
+        
+        let matchingRows = [];
+        rows.forEach(tr => {
+            const text = tr.innerText.toLowerCase();
+            const match = !query || text.includes(query);
+            if (match) {
+                matchingRows.push(tr);
+            } else {
+                tr.style.display = 'none';
+            }
+        });
+
+        const total = matchingRows.length;
+        const totalPaginas = Math.ceil(total / itemsPorPaginaTab) || 1;
+        
+        if (!paginasTab[slug] || paginasTab[slug] < 1) paginasTab[slug] = 1;
+        if (paginasTab[slug] > totalPaginas) paginasTab[slug] = totalPaginas;
+
+        const actual = paginasTab[slug];
+        const start = (actual - 1) * itemsPorPaginaTab;
+        const end = start + itemsPorPaginaTab;
+
+        matchingRows.forEach((tr, index) => {
+            if (index >= start && index < end) {
+                tr.style.display = '';
+            } else {
+                tr.style.display = 'none';
+            }
+        });
+
+        // Actualizar contador del encabezado
+        const countBadge = document.getElementById('count_' + slug);
+        if (countBadge) countBadge.innerText = total;
+
+        const emptyRow = document.querySelector('#tabla_' + slug + ' tbody tr.empty-search-row');
+        if (emptyRow) {
+            emptyRow.classList.toggle('hidden', total > 0 || rows.length === 0);
+        }
+
+        // Renderizar barra de paginación
+        const nav = document.getElementById('paginacion_' + slug);
+        if (!nav) return;
+
+        if (total === 0) {
+            nav.innerHTML = '<span class="text-slate-400 font-semibold">Sin registros coincidentes</span>';
+            return;
+        }
+
+        const startNum = start + 1;
+        const endNum = Math.min(end, total);
+
+        let btnsHtml = '';
+        for (let i = 1; i <= totalPaginas; i++) {
+            if (i === actual) {
+                btnsHtml += `<button type="button" class="w-8 h-8 rounded-xl bg-[#39A900] text-white font-extrabold text-xs shadow-xs">${i}</button>`;
+            } else if (i === 1 || i === totalPaginas || (i >= actual - 1 && i <= actual + 1)) {
+                btnsHtml += `<button type="button" onclick="irPaginaTab('${slug}', ${i})" class="w-8 h-8 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs transition cursor-pointer">${i}</button>`;
+            } else if (i === actual - 2 || i === actual + 2) {
+                btnsHtml += `<span class="px-1 text-slate-400 font-bold">...</span>`;
+            }
+        }
+
+        nav.innerHTML = `
+            <div class="text-slate-500 font-semibold">
+                Mostrando <span class="font-bold text-slate-800">${startNum}</span> a <span class="font-bold text-slate-800">${endNum}</span> de <span class="font-bold text-[#39A900]">${total}</span> registros
+            </div>
+            ${totalPaginas > 1 ? `
+            <div class="flex items-center gap-1.5 self-center sm:self-auto">
+                <button type="button" onclick="irPaginaTab('${slug}', ${actual - 1})" ${actual === 1 ? 'disabled class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-300 text-xs font-bold cursor-not-allowed"' : 'class="px-2.5 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-bold transition cursor-pointer"'} title="Página anterior">
+                    <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                </button>
+                ${btnsHtml}
+                <button type="button" onclick="irPaginaTab('${slug}', ${actual + 1})" ${actual === totalPaginas ? 'disabled class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-300 text-xs font-bold cursor-not-allowed"' : 'class="px-2.5 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-bold transition cursor-pointer"'} title="Página siguiente">
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </button>
+            </div>
+            ` : ''}
+        `;
+    }
+
+    function irPaginaTab(slug, p) {
+        paginasTab[slug] = p;
+        renderPaginacionTab(slug);
+    }
+
+    // Buscador en tiempo real de filas en cada tabla con paginación
+    function filterTableRows(inputId, tableId) {
+        const slug = tableId.replace('tabla_', '');
+        paginasTab[slug] = 1;
+        renderPaginacionTab(slug);
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         try {
             const saved = sessionStorage.getItem('sst_active_event_tab');
@@ -729,27 +835,10 @@
                 switchEventTab(saved);
             }
         } catch(e) {}
+
+        // Inicializar paginación en todas las pestañas de eventos
+        eventSlugs.forEach(s => renderPaginacionTab(s));
     });
-
-    // Buscador en tiempo real de filas en cada tabla
-    function filterTableRows(inputId, tableId) {
-        const input = document.getElementById(inputId);
-        const query = (input ? input.value : '').toLowerCase().trim();
-        const rows = document.querySelectorAll(`#${tableId} tbody tr.event-row`);
-        let visibleCount = 0;
-
-        rows.forEach(tr => {
-            const text = tr.innerText.toLowerCase();
-            const match = !query || text.includes(query);
-            tr.style.display = match ? '' : 'none';
-            if (match) visibleCount++;
-        });
-
-        const emptyRow = document.querySelector(`#${tableId} tbody tr.empty-search-row`);
-        if (emptyRow) {
-            emptyRow.classList.toggle('hidden', visibleCount > 0 || rows.length === 0);
-        }
-    }
 
     // Galería Modal de Evidencias Fotográficas
     function showEvidencePhoto(inputData, title) {

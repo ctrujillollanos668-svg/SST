@@ -115,6 +115,9 @@ class RiesgosController extends Controller
 
         $evidenciaPrincipal = !empty($evidenciasUrls) ? $evidenciasUrls[0] : null;
 
+        $userEmail = auth()->check() ? (auth()->user()->email ?? (auth()->user()->person->email ?? null)) : null;
+        $userName = auth()->check() ? (auth()->user()->full_name ?? auth()->user()->name ?? (auth()->user()->nombres ?? 'Aprendiz')) : 'Aprendiz';
+
         $reportData = [
             'tipo_riesgo' => $tipoRiesgo,
             'fecha_hora' => $fecha,
@@ -126,12 +129,25 @@ class RiesgosController extends Controller
             'descripcion' => $desc,
             'evidencia' => $evidenciaPrincipal,
             'evidencias' => $evidenciasUrls,
+            'reportado_por_email' => $userEmail,
+            'reportado_por_nombre' => $userName,
         ];
 
         RespuestaEvento::create([
             'nombre' => "Riesgo: {$tipoRiesgo} ({$personaAfectada})",
             'descripcion' => json_encode($reportData, JSON_UNESCAPED_UNICODE),
             'estado' => 'activo'
+        ]);
+
+        // Notificar por correo real al Administrador SST respetando el atributo de notificaciones
+        \Modules\SST\Services\SSTNotificationMailService::enviarNotificacionAdmin([
+            'tipo_evento' => "Riesgo: {$tipoRiesgo}",
+            'categoria' => 'riesgo',
+            'afectado' => $personaAfectada,
+            'lugar' => $lugar,
+            'fecha' => $fecha,
+            'gravedad' => $gravedad,
+            'descripcion' => $desc,
         ]);
 
         return redirect()->route('SST.aprendiz.tipos_eventos.riesgos.index')
@@ -223,6 +239,9 @@ class RiesgosController extends Controller
 
         $evidenciaPrincipal = !empty($evidenciasUrls) ? $evidenciasUrls[0] : null;
 
+        $userEmail = auth()->check() ? (auth()->user()->email ?? (auth()->user()->person->email ?? null)) : null;
+        $userName = auth()->check() ? (auth()->user()->full_name ?? auth()->user()->name ?? (auth()->user()->nombres ?? 'Aprendiz')) : 'Aprendiz';
+
         $reportData = [
             'tipo_riesgo' => $tipoRiesgo,
             'fecha_hora' => $fecha,
@@ -234,6 +253,8 @@ class RiesgosController extends Controller
             'descripcion' => $desc,
             'evidencia' => $evidenciaPrincipal,
             'evidencias' => $evidenciasUrls,
+            'reportado_por_email' => $userEmail,
+            'reportado_por_nombre' => $userName,
         ];
 
         $evento->update([

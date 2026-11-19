@@ -120,6 +120,9 @@ class CondicionesInsegurasController extends Controller
 
         $evidenciaPrincipal = !empty($evidenciasUrls) ? $evidenciasUrls[0] : null;
 
+        $userEmail = auth()->check() ? (auth()->user()->email ?? (auth()->user()->person->email ?? null)) : null;
+        $userName = auth()->check() ? (auth()->user()->full_name ?? auth()->user()->name ?? (auth()->user()->nombres ?? 'Aprendiz')) : 'Aprendiz';
+
         $reportData = [
             'tipo_condicion' => $tipoCondicion,
             'tipo_suceso' => 'Condición Insegura',
@@ -133,6 +136,8 @@ class CondicionesInsegurasController extends Controller
             'descripcion' => $desc,
             'evidencia' => $evidenciaPrincipal,
             'evidencias' => $evidenciasUrls,
+            'reportado_por_email' => $userEmail,
+            'reportado_por_nombre' => $userName,
         ];
 
         $nombreRegistro = "Condición Insegura: {$tipoCondicion} ({$personaAfectada})";
@@ -141,6 +146,17 @@ class CondicionesInsegurasController extends Controller
             'nombre' => $nombreRegistro,
             'descripcion' => json_encode($reportData, JSON_UNESCAPED_UNICODE),
             'estado' => 'activo'
+        ]);
+
+        // Notificar por correo real al Administrador SST respetando el atributo de notificaciones
+        \Modules\SST\Services\SSTNotificationMailService::enviarNotificacionAdmin([
+            'tipo_evento' => "Condición Insegura: {$tipoCondicion}",
+            'categoria' => 'condicion_insegura',
+            'afectado' => $personaAfectada,
+            'lugar' => $lugar,
+            'fecha' => $fecha,
+            'gravedad' => $gravedad,
+            'descripcion' => $desc,
         ]);
 
         return redirect()->route('SST.aprendiz.tipos_eventos.condiciones_inseguras.index')
@@ -234,6 +250,9 @@ class CondicionesInsegurasController extends Controller
 
         $evidenciaPrincipal = !empty($evidenciasUrls) ? $evidenciasUrls[0] : null;
 
+        $userEmail = auth()->check() ? (auth()->user()->email ?? (auth()->user()->person->email ?? null)) : null;
+        $userName = auth()->check() ? (auth()->user()->full_name ?? auth()->user()->name ?? (auth()->user()->nombres ?? 'Aprendiz')) : 'Aprendiz';
+
         $reportData = [
             'tipo_condicion' => $tipoCondicion,
             'tipo_suceso' => 'Condición Insegura',
@@ -247,6 +266,8 @@ class CondicionesInsegurasController extends Controller
             'descripcion' => $desc,
             'evidencia' => $evidenciaPrincipal,
             'evidencias' => $evidenciasUrls,
+            'reportado_por_email' => $userEmail,
+            'reportado_por_nombre' => $userName,
         ];
 
         $nombreRegistro = "Condición Insegura: {$tipoCondicion} ({$personaAfectada})";

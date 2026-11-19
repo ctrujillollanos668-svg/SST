@@ -211,6 +211,23 @@ class RespuestaEventoController extends Controller
         $respuesta->descripcion = json_encode($data, JSON_UNESCAPED_UNICODE);
         $respuesta->save();
 
+        // Notificar por correo real al Aprendiz sobre la atención / avance del Administrador
+        $destinatarioEmail = $data['reportado_por_email'] ?? null;
+        $destinatarioNombre = $data['reportado_por_nombre'] ?? ($data['persona_afectada'] ?? 'Aprendiz');
+
+        \Modules\SST\Services\SSTNotificationMailService::enviarNotificacionAprendiz(
+            $destinatarioEmail,
+            $destinatarioNombre,
+            [
+                'caso_nombre' => $respuesta->nombre,
+                'estado' => $esFinalizado ? 'atendido' : 'en_proceso',
+                'es_finalizado' => $esFinalizado,
+                'atendido_por' => $adminName,
+                'fecha' => now()->format('d/m/Y - h:i A'),
+                'medidas_tomadas' => $procesoTexto,
+            ]
+        );
+
         $msg = $esFinalizado 
             ? '¡Caso finalizado y resuelto exitosamente!' 
             : '¡Seguimiento #' . count($seguimientos) . ' guardado exitosamente!';
@@ -233,6 +250,23 @@ class RespuestaEventoController extends Controller
         $respuesta->estado = 'activo';
         $respuesta->descripcion = json_encode($data, JSON_UNESCAPED_UNICODE);
         $respuesta->save();
+
+        // Notificar por correo real al Aprendiz sobre la finalización del caso
+        $destinatarioEmail = $data['reportado_por_email'] ?? null;
+        $destinatarioNombre = $data['reportado_por_nombre'] ?? ($data['persona_afectada'] ?? 'Aprendiz');
+
+        \Modules\SST\Services\SSTNotificationMailService::enviarNotificacionAprendiz(
+            $destinatarioEmail,
+            $destinatarioNombre,
+            [
+                'caso_nombre' => $respuesta->nombre,
+                'estado' => 'atendido',
+                'es_finalizado' => true,
+                'atendido_por' => auth()->check() ? (auth()->user()->full_name ?? auth()->user()->name ?? 'Administrador SST') : 'Administrador SST',
+                'fecha' => now()->format('d/m/Y - h:i A'),
+                'medidas_tomadas' => 'El caso ha sido solucionado y cerrado formalmente por el Administrador SST.',
+            ]
+        );
 
         return redirect()->route('SST.admin.informacion_basica.respuesta_eventos.index')
             ->with('success', '¡El caso ha sido marcado como Finalizado / Resuelto con éxito!');

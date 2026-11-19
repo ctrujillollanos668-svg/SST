@@ -107,6 +107,17 @@ class ActividadesSSTController extends Controller
 
         $actividad->update($validated);
 
+        // Notificar por correo real al Administrador SST
+        \Modules\SST\Services\SSTNotificationMailService::enviarNotificacionAdmin([
+            'tipo_evento' => 'Asistencia Registrada: ' . ($actividad->titulo ?? $actividad->tipo_actividad),
+            'categoria' => 'actividad',
+            'afectado' => "Ficha: " . ($validated['ficha_programa'] ?? 'General') . " ({$validated['numero_asistentes']} asistentes)",
+            'lugar' => $actividad->lugar ?? 'Ambiente SENA',
+            'fecha' => now()->format('d/m/Y - h:i A'),
+            'gravedad' => 'Informativa',
+            'descripcion' => "Se registró la planilla de asistencia con {$validated['numero_asistentes']} participantes. Responsable: " . ($validated['responsable'] ?? ($validated['instructor'] ?? 'Aprendiz')),
+        ]);
+
         return redirect()->route('SST.aprendiz.actividades_sst.index')
             ->with('success', '¡Asistencia registrada exitosamente para la actividad: ' . ($actividad->titulo ?? $actividad->tipo_actividad) . '! Ha sido completada y trasladada al módulo de Asistencia.');
     }

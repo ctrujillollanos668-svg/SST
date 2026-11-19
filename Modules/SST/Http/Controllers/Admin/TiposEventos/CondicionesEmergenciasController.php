@@ -15,7 +15,7 @@ class CondicionesEmergenciasController extends Controller
     {
         $emergencias = TipoEvento::where('tipo_categoria', 'tipo_emergencia')
             ->orderBy('id_tipo_evento', 'desc')
-            ->get();
+            ->paginate(10);
 
         return view('sst::admin.tipos_eventos.Condiciones_emergencias', compact('emergencias'));
     }

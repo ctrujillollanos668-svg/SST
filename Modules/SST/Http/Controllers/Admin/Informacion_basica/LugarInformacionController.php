@@ -13,7 +13,7 @@ class LugarInformacionController extends Controller
      */
     public function index()
     {
-        $lugares = LugarFormacion::orderBy('id_lugar', 'desc')->get();
+        $lugares = LugarFormacion::orderBy('id_lugar', 'desc')->paginate(10);
         return view('sst::admin.informacion_basica.Lugar_informacion', compact('lugares'));
     }
 

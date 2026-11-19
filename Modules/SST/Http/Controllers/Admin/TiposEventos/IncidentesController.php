@@ -15,7 +15,7 @@ class IncidentesController extends Controller
     {
         $incidentes = TipoEvento::where('tipo_categoria', 'incidente')
             ->orderBy('id_tipo_evento', 'desc')
-            ->get();
+            ->paginate(10);
 
         return view('sst::admin.tipos_eventos.Incidentes', compact('incidentes'));
     }

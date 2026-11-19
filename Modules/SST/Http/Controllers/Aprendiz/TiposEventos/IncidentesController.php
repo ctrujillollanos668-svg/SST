@@ -115,6 +115,9 @@ class IncidentesController extends Controller
 
         $evidenciaPrincipal = !empty($evidenciasUrls) ? $evidenciasUrls[0] : null;
 
+        $userEmail = auth()->check() ? (auth()->user()->email ?? (auth()->user()->person->email ?? null)) : null;
+        $userName = auth()->check() ? (auth()->user()->full_name ?? auth()->user()->name ?? (auth()->user()->nombres ?? 'Aprendiz')) : 'Aprendiz';
+
         // Estructura completa de datos para mostrar en las tablas
         $reportData = [
             'tipo_incidente' => $tipoIncidente,
@@ -127,12 +130,25 @@ class IncidentesController extends Controller
             'descripcion' => $desc,
             'evidencia' => $evidenciaPrincipal,
             'evidencias' => $evidenciasUrls,
+            'reportado_por_email' => $userEmail,
+            'reportado_por_nombre' => $userName,
         ];
 
         RespuestaEvento::create([
             'nombre' => "Incidente: {$tipoIncidente} ({$personaAfectada})",
             'descripcion' => json_encode($reportData, JSON_UNESCAPED_UNICODE),
             'estado' => 'activo'
+        ]);
+
+        // Notificar por correo real al Administrador SST respetando el atributo de notificaciones
+        \Modules\SST\Services\SSTNotificationMailService::enviarNotificacionAdmin([
+            'tipo_evento' => "Incidente: {$tipoIncidente}",
+            'categoria' => 'incidente',
+            'afectado' => $personaAfectada,
+            'lugar' => $lugar,
+            'fecha' => $fecha,
+            'gravedad' => $gravedad,
+            'descripcion' => $desc,
         ]);
 
         return redirect()->route('SST.aprendiz.tipos_eventos.incidentes.index')
