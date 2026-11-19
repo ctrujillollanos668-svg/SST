@@ -114,6 +114,12 @@
                 </tbody>
             </table>
         </div>
+
+        @if(isset($condiciones) && method_exists($condiciones, 'hasPages') && $condiciones->hasPages())
+            <div class="p-4 border-t border-slate-100 bg-slate-50/50">
+                {{ $condiciones->links() }}
+            </div>
+        @endif
     </div>
 </div>
 

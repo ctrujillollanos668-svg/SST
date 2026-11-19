@@ -114,6 +114,12 @@
                 </tbody>
             </table>
         </div>
+
+        @if(isset($riesgos) && method_exists($riesgos, 'hasPages') && $riesgos->hasPages())
+            <div class="p-4 border-t border-slate-100 bg-slate-50/50">
+                {{ $riesgos->links() }}
+            </div>
+        @endif
     </div>
 </div>
 
