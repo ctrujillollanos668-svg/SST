@@ -1084,9 +1084,8 @@
                 ` : '';
 
                 const card = document.createElement('div');
-                card.className = 'relative pl-6 pb-2 border-l-2 border-emerald-300 last:border-l-transparent';
+                card.className = 'w-full';
                 card.innerHTML = `
-                    <span class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white shadow-2xs"></span>
                     <div class="bg-slate-50/80 hover:bg-white rounded-2xl border border-slate-200/90 p-4 shadow-2xs transition">
                         <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-100">
                             <div class="flex items-center gap-2">

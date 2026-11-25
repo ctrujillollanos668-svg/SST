@@ -248,8 +248,6 @@
             <ul class="submenu-transition bg-[#071D2B]/95 rounded-xl mt-1 mx-1 p-1.5 border border-[#1A4B69] space-y-0.5">
                 @php $actInfCont = request()->routeIs('SST.admin.informacion_basica.contacto_emergencia*'); @endphp
                 <li><a href="{{ route('SST.admin.informacion_basica.contacto_emergencia.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actInfCont ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Contactos de Emergencia</a></li>
-                @php $actInfLug = request()->routeIs('SST.admin.informacion_basica.lugar_informacion*'); @endphp
-                <li><a href="{{ route('SST.admin.informacion_basica.lugar_informacion.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actInfLug ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Lugares e Instalaciones</a></li>
                 @php $actInfResp = request()->routeIs('SST.admin.informacion_basica.respuesta_evento*'); @endphp
                 <li><a href="{{ route('SST.admin.informacion_basica.respuesta_eventos.index') }}" class="submenu-item flex items-center pl-7 pr-3 py-1.5 rounded-lg text-xs {{ $actInfResp ? 'active-sub' : '' }}"><span class="sub-dot text-[6px] mr-2.5"><i class="fa-solid fa-circle"></i></span> Respuesta a Eventos</a></li>
             </ul>
@@ -261,7 +259,6 @@
                 </div>
                 <div class="py-1 space-y-0.5">
                     <a href="{{ route('SST.admin.informacion_basica.contacto_emergencia.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInfCont ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Contactos Emergencia</span> @if($actInfCont)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
-                    <a href="{{ route('SST.admin.informacion_basica.lugar_informacion.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInfLug ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Lugares e Instalaciones</span> @if($actInfLug)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
                     <a href="{{ route('SST.admin.informacion_basica.respuesta_eventos.index') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ $actInfResp ? 'bg-white/15 text-white font-bold border border-white/20' : 'text-white hover:bg-white/10 hover:text-white' }}"><span>Respuesta a Eventos</span> @if($actInfResp)<span class="w-1.5 h-1.5 rounded-full bg-[#62E31D]"></span>@endif</a>
                 </div>
             </div>

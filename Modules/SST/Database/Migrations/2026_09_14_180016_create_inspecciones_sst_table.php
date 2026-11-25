@@ -23,7 +23,7 @@ return new class extends Migration
                 $table->text('observaciones')->nullable();
                 $table->timestamps();
 
-                $table->foreign('lugar_id')->references('id_lugar')->on('lugares_formacion')->onDelete('set null');
+                $table->foreign('lugar_id')->references('id')->on('environments')->onDelete('set null');
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             });
         }

@@ -10,7 +10,6 @@ use Modules\SST\Http\Controllers\Admin\TiposEventos\CondicionesInsegurasControll
 use Modules\SST\Http\Controllers\Admin\TiposEventos\LesionesController;
 use Modules\SST\Http\Controllers\Admin\TiposEventos\CondicionesEmergenciasController;
 use Modules\SST\Http\Controllers\Admin\Inspecciones\HistorialController;
-use Modules\SST\Http\Controllers\Admin\Informacion_basica\LugarInformacionController;
 use Modules\SST\Http\Controllers\Admin\Informacion_basica\RespuestaEventoController;
 use Modules\SST\Http\Controllers\Admin\Informacion_basica\ContactoEmergenciaController;
 use Modules\SST\Http\Controllers\Admin\AdminController;
@@ -54,7 +53,6 @@ Route::prefix('Sst')->name('SST.')->group(function () {
             Route::post('respuesta-eventos/{id}/atender', [RespuestaEventoController::class, 'atender'])->name('respuesta_eventos.atender');
             Route::post('respuesta-eventos/{id}/finalizar', [RespuestaEventoController::class, 'finalizar'])->name('respuesta_eventos.finalizar');
             Route::resource('respuesta-eventos', RespuestaEventoController::class)->names('respuesta_eventos')->only(['index', 'store', 'update', 'destroy']);
-            Route::resource('lugar-informacion', LugarInformacionController::class)->names('lugar_informacion')->only(['index', 'store', 'update', 'destroy']);
             Route::resource('contacto-emergencia', ContactoEmergenciaController::class)->names('contacto_emergencia')->only(['index', 'store', 'update', 'destroy']);
         });
 

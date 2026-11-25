@@ -16,10 +16,8 @@ class SeguimientoController extends Controller
      */
     public function seguimiento(Request $request)
     {
-        $lugares = LugarFormacion::where('estado', 'activo')->orderBy('nombre', 'asc')->get();
-        if ($lugares->isEmpty()) {
-            $lugares = LugarFormacion::orderBy('nombre', 'asc')->get();
-        }
+        // Consultar las unidades productivas / lugares de formación registrados en el ERP
+        $lugares = LugarFormacion::orderBy('name', 'asc')->get();
 
         $todasInspecciones = InspeccionSST::with(['lugar', 'user', 'hallazgos'])->orderBy('id_inspeccion', 'desc')->get();
 
@@ -50,7 +48,7 @@ class SeguimientoController extends Controller
         $inspeccion = InspeccionSST::findOrFail($id);
 
         $request->validate([
-            'lugar_id' => 'required|exists:lugares_formacion,id_lugar',
+            'lugar_id' => 'required|exists:environments,id',
             'responsable' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
             'lider_unidad' => ['nullable', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
             'fecha_inspeccion' => 'nullable|date',

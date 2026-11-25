@@ -18,11 +18,8 @@ class RegistrarInspeccionController extends Controller
      */
     public function registrar(Request $request)
     {
-        // Consultar únicamente los lugares registrados por el administrador
-        $lugares = LugarFormacion::where('estado', 'activo')->orderBy('nombre', 'asc')->get();
-        if ($lugares->isEmpty()) {
-            $lugares = LugarFormacion::orderBy('nombre', 'asc')->get();
-        }
+        // Consultar las unidades productivas / lugares de formación registrados en el ERP
+        $lugares = LugarFormacion::orderBy('name', 'asc')->get();
 
         $filtro = $request->get('filtro');
 
@@ -63,7 +60,7 @@ class RegistrarInspeccionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'lugar_id' => 'required|exists:lugares_formacion,id_lugar',
+            'lugar_id' => 'required|exists:environments,id',
             'responsable' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
             'lider_unidad' => ['nullable', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u'],
             'fecha_inspeccion' => 'nullable|date',

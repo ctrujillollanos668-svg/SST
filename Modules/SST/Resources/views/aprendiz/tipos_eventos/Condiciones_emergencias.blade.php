@@ -76,13 +76,53 @@
             <div class="pt-6">
                 @if($emergencias->count() > 0)
                     <!-- Barra de Búsqueda -->
-                    <div class="mb-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-                        <div class="w-full sm:w-80 relative">
-                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-xs">
-                                <i class="fa-solid fa-magnifying-glass"></i>
+                    <div class="mb-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                                                <div class="flex flex-wrap items-center gap-2.5 w-full lg:w-auto flex-1">
+                            <div class="w-full sm:w-64 relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-xs">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </div>
+                                <input type="text" id="inputBuscarEvento" placeholder="Buscar condición de emergencia..." 
+                                    class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition">
                             </div>
-                            <input type="text" id="inputBuscarEvento" placeholder="Buscar condición de emergencia..." 
-                                class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition">
+
+                            <div class="w-full sm:w-40 relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
+                                    <i class="fa-regular fa-calendar"></i>
+                                </div>
+                                <select id="selectFiltroMes" onchange="if(typeof paginaActualEvento!=='undefined') paginaActualEvento=1; filtrarEventos();" class="w-full pl-8 pr-7 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition cursor-pointer appearance-none">
+                                    <option value="">Todos los meses</option>
+                                    <option value="01">Enero</option>
+                                    <option value="02">Febrero</option>
+                                    <option value="03">Marzo</option>
+                                    <option value="04">Abril</option>
+                                    <option value="05">Mayo</option>
+                                    <option value="06">Junio</option>
+                                    <option value="07">Julio</option>
+                                    <option value="08">Agosto</option>
+                                    <option value="09">Septiembre</option>
+                                    <option value="10">Octubre</option>
+                                    <option value="11">Noviembre</option>
+                                    <option value="12">Diciembre</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none text-slate-400 text-[10px]">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                            </div>
+
+                            <div class="w-full sm:w-40 relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
+                                    <i class="fa-regular fa-calendar-days"></i>
+                                </div>
+                                <input type="date" id="inputFiltroFecha" onchange="if(typeof paginaActualEvento!=='undefined') paginaActualEvento=1; filtrarEventos();"
+                                    class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition cursor-pointer">
+                            </div>
+
+                            <button type="button" onclick="limpiarFiltrosEventos()" title="Limpiar todos los filtros"
+                                class="inline-flex items-center justify-center px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-800 transition cursor-pointer text-xs font-semibold gap-1.5 shrink-0">
+                                <i class="fa-solid fa-rotate-left text-[11px]"></i>
+                                <span class="hidden sm:inline">Limpiar</span>
+                            </button>
                         </div>
                         <span class="text-xs font-bold text-slate-400 self-end sm:self-auto">
                             <span id="conteoEventos" class="text-slate-700">{{ $emergencias->count() }}</span> {{ $emergencias->count() == 1 ? 'emergencia registrada' : 'emergencias registradas' }}
@@ -151,16 +191,33 @@
                                 $nombreLugar = !empty($data['tipo_emergencia']) ? "{$data['tipo_emergencia']} — {$data['lugar_formacion']}" : ($data['lugar_formacion'] ?? 'Lugar de Emergencia');
                                 $encodedData = base64_encode(json_encode($data, JSON_UNESCAPED_UNICODE));
                             @endphp
+                            @php
+                                $mesEvento = '';
+                                $fechaEvento = '';
+                                if (!empty($item->created_at)) {
+                                    $mesEvento = $item->created_at->format('m');
+                                    $fechaEvento = $item->created_at->format('Y-m-d');
+                                } elseif (!empty($data['fecha_hora'])) {
+                                    $fh = str_replace('/', '-', $data['fecha_hora']);
+                                    $ts = strtotime($fh);
+                                    if ($ts) {
+                                        $mesEvento = date('m', $ts);
+                                        $fechaEvento = date('Y-m-d', $ts);
+                                    }
+                                }
+                            @endphp
                             <div class="item-card bg-slate-50/70 hover:bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-emerald-300 transition-all flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 cursor-pointer group"
                                  onclick="openDetailModal(this)"
                                  data-id="{{ $item->id_respuesta }}"
+                                 data-mes="{{ $mesEvento }}"
                                  data-title="{{ $nombreLugar }}"
                                  data-modulo="{{ $data['lugar_formacion'] ?? 'General' }}"
                                  data-prioridad="{{ $data['prioridad'] ?? 'Media' }}"
                                  data-afectado="{{ $data['persona_afectada'] ?? $data['personas_involucradas'] ?? 'Personal en Zona' }}"
                                  data-personas="{{ $data['personas_involucradas'] ?? 'Personal en Zona' }}"
                                  data-instructor="{{ $data['instructor_responsable'] ?? '' }}"
-                                 data-fecha="{{ $fechaFormateada }}"
+                                 data-fecha-formateada="{{ $fechaFormateada }}"
+                                 data-fecha="{{ $fechaEvento }}"
                                  data-desc="{{ $data['descripcion'] ?? 'Sin descripción adicional.' }}"
                                  data-raw="{{ $encodedData }}">
                                 
@@ -1174,7 +1231,7 @@
         const prioridad = card.getAttribute('data-prioridad');
         const afectado = card.getAttribute('data-afectado');
         const instructor = card.getAttribute('data-instructor');
-        const fecha = card.getAttribute('data-fecha');
+        const fecha = card.getAttribute('data-fecha-formateada') || card.getAttribute('data-fecha');
         const desc = card.getAttribute('data-desc');
 
         document.getElementById('modalDetalleTitulo').textContent = title || 'Detalle del Reporte';
@@ -1351,28 +1408,49 @@
     }
 
     function filtrarEventos() {
-        const inputBuscar = document.getElementById('inputBuscarEvento');
-        const query = (inputBuscar ? inputBuscar.value : '').toLowerCase().trim();
-        const contenedor = document.getElementById('contenedorEventos');
-        if (!contenedor) return;
-        const cards = Array.from(contenedor.getElementsByClassName('item-card'));
+        const input = document.getElementById('inputBuscarEvento');
+        const q = (input ? input.value : '').toLowerCase().trim();
+        const selectMes = document.getElementById('selectFiltroMes');
+        const mesFiltro = selectMes ? selectMes.value : '';
+        const inputFecha = document.getElementById('inputFiltroFecha');
+        const fechaFiltro = inputFecha ? inputFecha.value : '';
+
+        const cards = Array.from(document.getElementsByClassName('item-card'));
         const noResults = document.getElementById('noResultsMsg');
-        const conteo = document.getElementById('conteoEventos');
 
         cards.forEach(card => card.style.display = 'none');
 
         const matching = cards.filter(card => {
-            const title = (card.getAttribute('data-title') || '').toLowerCase();
-            const modulo = (card.getAttribute('data-modulo') || '').toLowerCase();
-            const desc = (card.getAttribute('data-desc') || '').toLowerCase();
-            const afectado = (card.getAttribute('data-afectado') || '').toLowerCase();
-            return !query || (title.includes(query) || modulo.includes(query) || desc.includes(query) || afectado.includes(query));
+            const t = (card.dataset.title || card.getAttribute('data-title') || '').toLowerCase();
+            const m = (card.dataset.modulo || card.getAttribute('data-modulo') || '').toLowerCase();
+            const d = (card.dataset.desc || card.getAttribute('data-desc') || '').toLowerCase();
+            const a = (card.dataset.afectado || card.getAttribute('data-afectado') || '').toLowerCase();
+            const cardMes = card.dataset.mes || card.getAttribute('data-mes') || '';
+            const cardFecha = card.dataset.fecha || card.getAttribute('data-fecha') || '';
+
+            const matchTexto = (!q || (t.includes(q) || m.includes(q) || d.includes(q) || a.includes(q)));
+            const matchMes = (!mesFiltro || cardMes === mesFiltro);
+            const matchFecha = (!fechaFiltro || cardFecha === fechaFiltro);
+
+            return matchTexto && matchMes && matchFecha;
         });
 
         renderPaginacionEventos(matching);
 
+        const conteo = document.getElementById('conteoEventos');
         if (conteo) conteo.textContent = matching.length;
         if (noResults) noResults.classList.toggle('hidden', matching.length > 0);
+    }
+
+    function limpiarFiltrosEventos() {
+        const input = document.getElementById('inputBuscarEvento');
+        const selectMes = document.getElementById('selectFiltroMes');
+        const inputFecha = document.getElementById('inputFiltroFecha');
+        if (input) input.value = '';
+        if (selectMes) selectMes.value = '';
+        if (inputFecha) inputFecha.value = '';
+        if (typeof paginaActualEvento !== 'undefined') paginaActualEvento = 1;
+        filtrarEventos();
     }
 
     // Buscador en Tiempo Real & Drag and drop
@@ -1380,6 +1458,13 @@
         const inputBuscar = document.getElementById('inputBuscarEvento');
         if (inputBuscar) {
             inputBuscar.addEventListener('input', function () {
+                paginaActualEvento = 1;
+                filtrarEventos();
+            });
+        }
+        const selectMes = document.getElementById('selectFiltroMes');
+        if (selectMes) {
+            selectMes.addEventListener('change', function () {
                 paginaActualEvento = 1;
                 filtrarEventos();
             });

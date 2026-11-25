@@ -495,266 +495,276 @@
                     </p>
                 </div>
 
-                <!-- Cuadrícula de Acordeones en 2 Columnas -->
+                <!-- Cuadrícula de Acordeones en 2 Columnas Independientes (Sin huecos en blanco) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5 items-start">
 
-                    <!-- 01. ACCIDENTES DE TRABAJO (Abierto por defecto) -->
-                    <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden transition-all duration-200">
-                        <button type="button" onclick="toggleDefItem(1)" class="w-full flex items-center justify-between p-5 sm:p-6 text-left select-none cursor-pointer group hover:bg-slate-50/60 transition">
-                            <div class="flex items-center gap-4 sm:gap-5">
-                                <span class="font-display font-extrabold text-xl sm:text-2xl text-orange-500 shrink-0">01</span>
-                                <span id="title-def-1" class="font-display font-extrabold text-base sm:text-lg text-[#39A900] transition-colors">
-                                    Accidentes de Trabajo
-                                </span>
-                            </div>
-                            <i id="icon-def-1" class="fas fa-chevron-up text-[#39A900] text-sm transition-transform duration-300"></i>
-                        </button>
-                        <div id="body-def-1" class="px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 text-slate-600 text-sm sm:text-[15px] leading-relaxed space-y-4">
-                            <p>
-                                <strong class="text-[#001A29]">¿Qué es?</strong> Es todo suceso repentino que sobrevenga por causa o con ocasión del trabajo o formación, produciendo en el trabajador o aprendiz una lesión orgánica, una perturbación funcional o psiquiátrica, una invalidez o la muerte (Ley 1562 de 2012 / Decreto 1072 de 2015).
-                            </p>
-                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
-                                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                                    <i class="fas fa-shield-halved text-[#39A900]"></i> ¿Cómo prevenirlo?
-                                </span>
-                                <ul class="space-y-2 text-xs sm:text-sm text-slate-600 font-medium">
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Uso obligatorio y permanente de los Elementos de Protección Personal (EPP) certificados según la labor.</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Inspección pre-operacional rigurosa de maquinarias, equipos y herramientas manuales de taller antes de su uso.</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Respetar los bloqueos de seguridad y nunca operar maquinaria sin la debida autorización e inducción del instructor.</span>
-                                    </li>
-                                </ul>
+                    <!-- Columna Izquierda (Impares: 01, 03, 05, 07) -->
+                    <div class="space-y-4 lg:space-y-5">
+
+                        <!-- 01. ACCIDENTES DE TRABAJO (Abierto por defecto) -->
+                        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden transition-all duration-200">
+                            <button type="button" onclick="toggleDefItem(1)" class="w-full flex items-center justify-between p-5 sm:p-6 text-left select-none cursor-pointer group hover:bg-slate-50/60 transition">
+                                <div class="flex items-center gap-4 sm:gap-5">
+                                    <span class="font-display font-extrabold text-xl sm:text-2xl text-orange-500 shrink-0">01</span>
+                                    <span id="title-def-1" class="font-display font-extrabold text-base sm:text-lg text-[#39A900] transition-colors">
+                                        Accidentes de Trabajo
+                                    </span>
+                                </div>
+                                <i id="icon-def-1" class="fas fa-chevron-up text-[#39A900] text-sm transition-transform duration-300"></i>
+                            </button>
+                            <div id="body-def-1" class="px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 text-slate-600 text-sm sm:text-[15px] leading-relaxed space-y-4">
+                                <p>
+                                    <strong class="text-[#001A29]">¿Qué es?</strong> Es todo suceso repentino que sobrevenga por causa o con ocasión del trabajo o formación, produciendo en el trabajador o aprendiz una lesión orgánica, una perturbación funcional o psiquiátrica, una invalidez o la muerte (Ley 1562 de 2012 / Decreto 1072 de 2015).
+                                </p>
+                                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                        <i class="fas fa-shield-halved text-[#39A900]"></i> ¿Cómo prevenirlo?
+                                    </span>
+                                    <ul class="space-y-2 text-xs sm:text-sm text-slate-600 font-medium">
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Uso obligatorio y permanente de los Elementos de Protección Personal (EPP) certificados según la labor.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Inspección pre-operacional rigurosa de maquinarias, equipos y herramientas manuales de taller antes de su uso.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Respetar los bloqueos de seguridad y nunca operar maquinaria sin la debida autorización e inducción del instructor.</span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
+
+                        <!-- 03. RIESGOS LABORALES -->
+                        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden transition-all duration-200">
+                            <button type="button" onclick="toggleDefItem(3)" class="w-full flex items-center justify-between p-5 sm:p-6 text-left select-none cursor-pointer group hover:bg-slate-50/60 transition">
+                                <div class="flex items-center gap-4 sm:gap-5">
+                                    <span class="font-display font-extrabold text-xl sm:text-2xl text-orange-500 shrink-0">03</span>
+                                    <span id="title-def-3" class="font-display font-extrabold text-base sm:text-lg text-slate-800 group-hover:text-[#39A900] transition-colors">
+                                        Riesgos Laborales
+                                    </span>
+                                </div>
+                                <i id="icon-def-3" class="fas fa-chevron-down text-slate-400 text-sm transition-transform duration-300"></i>
+                            </button>
+                            <div id="body-def-3" class="hidden px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 text-slate-600 text-sm sm:text-[15px] leading-relaxed space-y-4">
+                                <p>
+                                    <strong class="text-[#001A29]">¿Qué es?</strong> Combinación de la probabilidad de que ocurra una o más exposiciones a eventos peligrosos y la severidad del daño o deterioro de la salud que puede causar (físico, químico, biológico, biomecánico, psicosocial o de condiciones de seguridad).
+                                </p>
+                                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                        <i class="fas fa-shield-halved text-[#39A900]"></i> ¿Cómo prevenirlo?
+                                    </span>
+                                    <ul class="space-y-2 text-xs sm:text-sm text-slate-600 font-medium">
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Consultar y respetar la Matriz Integral de Peligros y Riesgos GTC 45 de cada ambiente formativo.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Aplicar la jerarquía de controles: eliminación, sustitución, controles de ingeniería, señalización y EPP.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Realizar pausas activas diarias para prevenir fatiga muscular y desórdenes musculoesqueléticos.</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 05. CONDICIONES INSEGURAS -->
+                        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden transition-all duration-200">
+                            <button type="button" onclick="toggleDefItem(5)" class="w-full flex items-center justify-between p-5 sm:p-6 text-left select-none cursor-pointer group hover:bg-slate-50/60 transition">
+                                <div class="flex items-center gap-4 sm:gap-5">
+                                    <span class="font-display font-extrabold text-xl sm:text-2xl text-orange-500 shrink-0">05</span>
+                                    <span id="title-def-5" class="font-display font-extrabold text-base sm:text-lg text-slate-800 group-hover:text-[#39A900] transition-colors">
+                                        Condiciones Inseguras / Ambientales
+                                    </span>
+                                </div>
+                                <i id="icon-def-5" class="fas fa-chevron-down text-slate-400 text-sm transition-transform duration-300"></i>
+                            </button>
+                            <div id="body-def-5" class="hidden px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 text-slate-600 text-sm sm:text-[15px] leading-relaxed space-y-4">
+                                <p>
+                                    <strong class="text-[#001A29]">¿Qué es?</strong> Defectos o desperfectos en las instalaciones locativas, maquinaria, pisos, iluminación, ventilación o herramientas que representan un peligro intrínseco para las personas en el entorno laboral.
+                                </p>
+                                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                        <i class="fas fa-shield-halved text-[#39A900]"></i> ¿Cómo prevenirlo?
+                                    </span>
+                                    <ul class="space-y-2 text-xs sm:text-sm text-slate-600 font-medium">
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Realizar inspecciones periódicas de seguridad locativa y registrar novedades de inmediato en el módulo SST.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Delimitar y señalizar inmediatamente zonas con derrames, escaleras averiadas o desniveles estructurales.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Mantener y sostener la metodología de orden y aseo 5S en talleres, depósitos y laboratorios.</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 07. CONDICIONES DE EMERGENCIAS -->
+                        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden transition-all duration-200">
+                            <button type="button" onclick="toggleDefItem(7)" class="w-full flex items-center justify-between p-5 sm:p-6 text-left select-none cursor-pointer group hover:bg-slate-50/60 transition">
+                                <div class="flex items-center gap-4 sm:gap-5">
+                                    <span class="font-display font-extrabold text-xl sm:text-2xl text-orange-500 shrink-0">07</span>
+                                    <span id="title-def-7" class="font-display font-extrabold text-base sm:text-lg text-slate-800 group-hover:text-[#39A900] transition-colors">
+                                        Condiciones de Emergencias
+                                    </span>
+                                </div>
+                                <i id="icon-def-7" class="fas fa-chevron-down text-slate-400 text-sm transition-transform duration-300"></i>
+                            </button>
+                            <div id="body-def-7" class="hidden px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 text-slate-600 text-sm sm:text-[15px] leading-relaxed space-y-4">
+                                <p>
+                                    <strong class="text-[#001A29]">¿Qué es?</strong> Situaciones extraordinarias e imprevistas provocadas por desastres naturales (sismos, inundaciones), tecnológicas (incendios, explosiones, fugas) o de orden social que amenazan la vida y las instalaciones de SENA Empresa.
+                                </p>
+                                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                        <i class="fas fa-shield-halved text-[#39A900]"></i> ¿Cómo prevenirlo?
+                                    </span>
+                                    <ul class="space-y-2 text-xs sm:text-sm text-slate-600 font-medium">
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Conocer y memorizar las rutas de evacuación señalizadas y los Puntos de Encuentro seguros del centro.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Mantener despejadas en todo momento las puertas de salida de emergencia y los accesos a extintores y gabinetes.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Participar activamente con seriedad en los simulacros de evacuación y acatar las indicaciones de la brigada.</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
-                    <!-- 02. INCIDENTES LABORALES -->
-                    <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden transition-all duration-200">
-                        <button type="button" onclick="toggleDefItem(2)" class="w-full flex items-center justify-between p-5 sm:p-6 text-left select-none cursor-pointer group hover:bg-slate-50/60 transition">
-                            <div class="flex items-center gap-4 sm:gap-5">
-                                <span class="font-display font-extrabold text-xl sm:text-2xl text-orange-500 shrink-0">02</span>
-                                <span id="title-def-2" class="font-display font-extrabold text-base sm:text-lg text-slate-800 group-hover:text-[#39A900] transition-colors">
-                                    Incidentes Laborales (Casi-Accidentes)
-                                </span>
-                            </div>
-                            <i id="icon-def-2" class="fas fa-chevron-down text-slate-400 text-sm transition-transform duration-300"></i>
-                        </button>
-                        <div id="body-def-2" class="hidden px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 text-slate-600 text-sm sm:text-[15px] leading-relaxed space-y-4">
-                            <p>
-                                <strong class="text-[#001A29]">¿Qué es?</strong> Suceso acontecido durante la jornada en el que hubo personas involucradas sin que sufrieran lesiones corporales, o donde solo se registraron daños materiales leves o pérdidas menores (Resolución 1401 de 2007).
-                            </p>
-                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
-                                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                                    <i class="fas fa-shield-halved text-[#39A900]"></i> ¿Cómo prevenirlo?
-                                </span>
-                                <ul class="space-y-2 text-xs sm:text-sm text-slate-600 font-medium">
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Reportar oportunamente todo casi-accidente en el módulo SST para corregir la falla antes de que ocasione una lesión grave.</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Canalizar cables sueltos en el suelo y señalizar áreas con piso resbaladizo o desniveles de manera inmediata.</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Participar en las investigaciones de incidentes lideradas por el COPASST mediante la metodología de árbol de causas.</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Columna Derecha (Pares: 02, 04, 06) -->
+                    <div class="space-y-4 lg:space-y-5">
 
-                    <!-- 03. RIESGOS LABORALES -->
-                    <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden transition-all duration-200">
-                        <button type="button" onclick="toggleDefItem(3)" class="w-full flex items-center justify-between p-5 sm:p-6 text-left select-none cursor-pointer group hover:bg-slate-50/60 transition">
-                            <div class="flex items-center gap-4 sm:gap-5">
-                                <span class="font-display font-extrabold text-xl sm:text-2xl text-orange-500 shrink-0">03</span>
-                                <span id="title-def-3" class="font-display font-extrabold text-base sm:text-lg text-slate-800 group-hover:text-[#39A900] transition-colors">
-                                    Riesgos Laborales
-                                </span>
-                            </div>
-                            <i id="icon-def-3" class="fas fa-chevron-down text-slate-400 text-sm transition-transform duration-300"></i>
-                        </button>
-                        <div id="body-def-3" class="hidden px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 text-slate-600 text-sm sm:text-[15px] leading-relaxed space-y-4">
-                            <p>
-                                <strong class="text-[#001A29]">¿Qué es?</strong> Combinación de la probabilidad de que ocurra una o más exposiciones a eventos peligrosos y la severidad del daño o deterioro de la salud que puede causar (físico, químico, biológico, biomecánico, psicosocial o de condiciones de seguridad).
-                            </p>
-                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
-                                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                                    <i class="fas fa-shield-halved text-[#39A900]"></i> ¿Cómo prevenirlo?
-                                </span>
-                                <ul class="space-y-2 text-xs sm:text-sm text-slate-600 font-medium">
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Consultar y respetar la Matriz Integral de Peligros y Riesgos GTC 45 de cada ambiente formativo.</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Aplicar la jerarquía de controles: eliminación, sustitución, controles de ingeniería, señalización y EPP.</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Realizar pausas activas diarias para prevenir fatiga muscular y desórdenes musculoesqueléticos.</span>
-                                    </li>
-                                </ul>
+                        <!-- 02. INCIDENTES LABORALES -->
+                        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden transition-all duration-200">
+                            <button type="button" onclick="toggleDefItem(2)" class="w-full flex items-center justify-between p-5 sm:p-6 text-left select-none cursor-pointer group hover:bg-slate-50/60 transition">
+                                <div class="flex items-center gap-4 sm:gap-5">
+                                    <span class="font-display font-extrabold text-xl sm:text-2xl text-orange-500 shrink-0">02</span>
+                                    <span id="title-def-2" class="font-display font-extrabold text-base sm:text-lg text-slate-800 group-hover:text-[#39A900] transition-colors">
+                                        Incidentes Laborales (Casi-Accidentes)
+                                    </span>
+                                </div>
+                                <i id="icon-def-2" class="fas fa-chevron-down text-slate-400 text-sm transition-transform duration-300"></i>
+                            </button>
+                            <div id="body-def-2" class="hidden px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 text-slate-600 text-sm sm:text-[15px] leading-relaxed space-y-4">
+                                <p>
+                                    <strong class="text-[#001A29]">¿Qué es?</strong> Suceso acontecido durante la jornada en el que hubo personas involucradas sin que sufrieran lesiones corporales, o donde solo se registraron daños materiales leves o pérdidas menores (Resolución 1401 de 2007).
+                                </p>
+                                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                        <i class="fas fa-shield-halved text-[#39A900]"></i> ¿Cómo prevenirlo?
+                                    </span>
+                                    <ul class="space-y-2 text-xs sm:text-sm text-slate-600 font-medium">
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Reportar oportunamente todo casi-accidente en el módulo SST para corregir la falla antes de que ocasione una lesión grave.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Canalizar cables sueltos en el suelo y señalizar áreas con piso resbaladizo o desniveles de manera inmediata.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Participar en las investigaciones de incidentes lideradas por el COPASST mediante la metodología de árbol de causas.</span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 04. ACTOS INSEGUROS -->
-                    <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden transition-all duration-200">
-                        <button type="button" onclick="toggleDefItem(4)" class="w-full flex items-center justify-between p-5 sm:p-6 text-left select-none cursor-pointer group hover:bg-slate-50/60 transition">
-                            <div class="flex items-center gap-4 sm:gap-5">
-                                <span class="font-display font-extrabold text-xl sm:text-2xl text-orange-500 shrink-0">04</span>
-                                <span id="title-def-4" class="font-display font-extrabold text-base sm:text-lg text-slate-800 group-hover:text-[#39A900] transition-colors">
-                                    Actos Inseguros / Subestándar
-                                </span>
-                            </div>
-                            <i id="icon-def-4" class="fas fa-chevron-down text-slate-400 text-sm transition-transform duration-300"></i>
-                        </button>
-                        <div id="body-def-4" class="hidden px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 text-slate-600 text-sm sm:text-[15px] leading-relaxed space-y-4">
-                            <p>
-                                <strong class="text-[#001A29]">¿Qué es?</strong> Acciones, comportamientos u omisiones cometidas por las personas que violan las normas de seguridad establecidas por la institución, posibilitando la ocurrencia de accidentes.
-                            </p>
-                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
-                                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                                    <i class="fas fa-shield-halved text-[#39A900]"></i> ¿Cómo prevenirlo?
-                                </span>
-                                <ul class="space-y-2 text-xs sm:text-sm text-slate-600 font-medium">
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Prohibido el uso de teléfonos celulares o elementos de distracción mientras se operan maquinarias o herramientas.</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>No anular ni retirar nunca las protecciones o guardas de seguridad instaladas en las máquinas.</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Fomentar la cultura de autocuidado y participar con compromiso en las charlas de seguridad de 5 minutos.</span>
-                                    </li>
-                                </ul>
+                        <!-- 04. ACTOS INSEGUROS -->
+                        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden transition-all duration-200">
+                            <button type="button" onclick="toggleDefItem(4)" class="w-full flex items-center justify-between p-5 sm:p-6 text-left select-none cursor-pointer group hover:bg-slate-50/60 transition">
+                                <div class="flex items-center gap-4 sm:gap-5">
+                                    <span class="font-display font-extrabold text-xl sm:text-2xl text-orange-500 shrink-0">04</span>
+                                    <span id="title-def-4" class="font-display font-extrabold text-base sm:text-lg text-slate-800 group-hover:text-[#39A900] transition-colors">
+                                        Actos Inseguros / Subestándar
+                                    </span>
+                                </div>
+                                <i id="icon-def-4" class="fas fa-chevron-down text-slate-400 text-sm transition-transform duration-300"></i>
+                            </button>
+                            <div id="body-def-4" class="hidden px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 text-slate-600 text-sm sm:text-[15px] leading-relaxed space-y-4">
+                                <p>
+                                    <strong class="text-[#001A29]">¿Qué es?</strong> Acciones, comportamientos u omisiones cometidas por las personas que violan las normas de seguridad establecidas por la institución, posibilitando la ocurrencia de accidentes.
+                                </p>
+                                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                        <i class="fas fa-shield-halved text-[#39A900]"></i> ¿Cómo prevenirlo?
+                                    </span>
+                                    <ul class="space-y-2 text-xs sm:text-sm text-slate-600 font-medium">
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Prohibido el uso de teléfonos celulares o elementos de distracción mientras se operan maquinarias o herramientas.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>No anular ni retirar nunca las protecciones o guardas de seguridad instaladas en las máquinas.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Fomentar la cultura de autocuidado y participar con compromiso en las charlas de seguridad de 5 minutos.</span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 05. CONDICIONES INSEGURAS -->
-                    <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden transition-all duration-200">
-                        <button type="button" onclick="toggleDefItem(5)" class="w-full flex items-center justify-between p-5 sm:p-6 text-left select-none cursor-pointer group hover:bg-slate-50/60 transition">
-                            <div class="flex items-center gap-4 sm:gap-5">
-                                <span class="font-display font-extrabold text-xl sm:text-2xl text-orange-500 shrink-0">05</span>
-                                <span id="title-def-5" class="font-display font-extrabold text-base sm:text-lg text-slate-800 group-hover:text-[#39A900] transition-colors">
-                                    Condiciones Inseguras / Ambientales
-                                </span>
-                            </div>
-                            <i id="icon-def-5" class="fas fa-chevron-down text-slate-400 text-sm transition-transform duration-300"></i>
-                        </button>
-                        <div id="body-def-5" class="hidden px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 text-slate-600 text-sm sm:text-[15px] leading-relaxed space-y-4">
-                            <p>
-                                <strong class="text-[#001A29]">¿Qué es?</strong> Defectos o desperfectos en las instalaciones locativas, maquinaria, pisos, iluminación, ventilación o herramientas que representan un peligro intrínseco para las personas en el entorno laboral.
-                            </p>
-                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
-                                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                                    <i class="fas fa-shield-halved text-[#39A900]"></i> ¿Cómo prevenirlo?
-                                </span>
-                                <ul class="space-y-2 text-xs sm:text-sm text-slate-600 font-medium">
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Realizar inspecciones periódicas de seguridad locativa y registrar novedades de inmediato en el módulo SST.</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Delimitar y señalizar inmediatamente zonas con derrames, escaleras averiadas o desniveles estructurales.</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Mantener y sostener la metodología de orden y aseo 5S en talleres, depósitos y laboratorios.</span>
-                                    </li>
-                                </ul>
+                        <!-- 06. LESIONES LABORALES -->
+                        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden transition-all duration-200">
+                            <button type="button" onclick="toggleDefItem(6)" class="w-full flex items-center justify-between p-5 sm:p-6 text-left select-none cursor-pointer group hover:bg-slate-50/60 transition">
+                                <div class="flex items-center gap-4 sm:gap-5">
+                                    <span class="font-display font-extrabold text-xl sm:text-2xl text-orange-500 shrink-0">06</span>
+                                    <span id="title-def-6" class="font-display font-extrabold text-base sm:text-lg text-slate-800 group-hover:text-[#39A900] transition-colors">
+                                        Lesiones Laborales
+                                    </span>
+                                </div>
+                                <i id="icon-def-6" class="fas fa-chevron-down text-slate-400 text-sm transition-transform duration-300"></i>
+                            </button>
+                            <div id="body-def-6" class="hidden px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 text-slate-600 text-sm sm:text-[15px] leading-relaxed space-y-4">
+                                <p>
+                                    <strong class="text-[#001A29]">¿Qué es?</strong> Daño corporal, anatómico o funcional, tales como heridas, contusiones, fracturas, quemaduras o afecciones a la salud causadas por accidentes o exposición prolongada a factores de riesgo sin control.
+                                </p>
+                                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                        <i class="fas fa-shield-halved text-[#39A900]"></i> ¿Cómo prevenirlo?
+                                    </span>
+                                    <ul class="space-y-2 text-xs sm:text-sm text-slate-600 font-medium">
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Adoptar técnicas ergonómicas de levantamiento manual de cargas (máximo 25 kg en hombres y 12.5 kg en mujeres).</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Utilizar siempre calzado de seguridad con puntera certificada y guantes adecuados según el material a manipular.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
+                                            <span>Acudir inmediatamente al punto de primeros auxilios ante cualquier raspadura, cortadura o golpe.</span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 06. LESIONES LABORALES -->
-                    <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden transition-all duration-200">
-                        <button type="button" onclick="toggleDefItem(6)" class="w-full flex items-center justify-between p-5 sm:p-6 text-left select-none cursor-pointer group hover:bg-slate-50/60 transition">
-                            <div class="flex items-center gap-4 sm:gap-5">
-                                <span class="font-display font-extrabold text-xl sm:text-2xl text-orange-500 shrink-0">06</span>
-                                <span id="title-def-6" class="font-display font-extrabold text-base sm:text-lg text-slate-800 group-hover:text-[#39A900] transition-colors">
-                                    Lesiones Laborales
-                                </span>
-                            </div>
-                            <i id="icon-def-6" class="fas fa-chevron-down text-slate-400 text-sm transition-transform duration-300"></i>
-                        </button>
-                        <div id="body-def-6" class="hidden px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 text-slate-600 text-sm sm:text-[15px] leading-relaxed space-y-4">
-                            <p>
-                                <strong class="text-[#001A29]">¿Qué es?</strong> Daño corporal, anatómico o funcional, tales como heridas, contusiones, fracturas, quemaduras o afecciones a la salud causadas por accidentes o exposición prolongada a factores de riesgo sin control.
-                            </p>
-                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
-                                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                                    <i class="fas fa-shield-halved text-[#39A900]"></i> ¿Cómo prevenirlo?
-                                </span>
-                                <ul class="space-y-2 text-xs sm:text-sm text-slate-600 font-medium">
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Adoptar técnicas ergonómicas de levantamiento manual de cargas (máximo 25 kg en hombres y 12.5 kg en mujeres).</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Utilizar siempre calzado de seguridad con puntera certificada y guantes adecuados según el material a manipular.</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Acudir inmediatamente al punto de primeros auxilios ante cualquier raspadura, cortadura o golpe.</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 07. CONDICIONES DE EMERGENCIAS -->
-                    <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden transition-all duration-200">
-                        <button type="button" onclick="toggleDefItem(7)" class="w-full flex items-center justify-between p-5 sm:p-6 text-left select-none cursor-pointer group hover:bg-slate-50/60 transition">
-                            <div class="flex items-center gap-4 sm:gap-5">
-                                <span class="font-display font-extrabold text-xl sm:text-2xl text-orange-500 shrink-0">07</span>
-                                <span id="title-def-7" class="font-display font-extrabold text-base sm:text-lg text-slate-800 group-hover:text-[#39A900] transition-colors">
-                                    Condiciones de Emergencias
-                                </span>
-                            </div>
-                            <i id="icon-def-7" class="fas fa-chevron-down text-slate-400 text-sm transition-transform duration-300"></i>
-                        </button>
-                        <div id="body-def-7" class="hidden px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 text-slate-600 text-sm sm:text-[15px] leading-relaxed space-y-4">
-                            <p>
-                                <strong class="text-[#001A29]">¿Qué es?</strong> Situaciones extraordinarias e imprevistas provocadas por desastres naturales (sismos, inundaciones), tecnológicas (incendios, explosiones, fugas) o de orden social que amenazan la vida y las instalaciones de SENA Empresa.
-                            </p>
-                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
-                                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                                    <i class="fas fa-shield-halved text-[#39A900]"></i> ¿Cómo prevenirlo?
-                                </span>
-                                <ul class="space-y-2 text-xs sm:text-sm text-slate-600 font-medium">
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Conocer y memorizar las rutas de evacuación señalizadas y los Puntos de Encuentro seguros del centro.</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Mantener despejadas en todo momento las puertas de salida de emergencia y los accesos a extintores y gabinetes.</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <i class="fas fa-circle-check text-[#39A900] text-xs mt-1 shrink-0"></i>
-                                        <span>Participar activamente con seriedad en los simulacros de evacuación y acatar las indicaciones de la brigada.</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
                     </div>
 
                 </div>

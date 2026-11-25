@@ -4,6 +4,7 @@ namespace Modules\SST\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use Modules\SICA\Entities\ProductiveUnit;
 
 class InspeccionSST extends Model
 {
@@ -22,7 +23,7 @@ class InspeccionSST extends Model
 
     public function lugar()
     {
-        return $this->belongsTo(LugarFormacion::class, 'lugar_id', 'id_lugar');
+        return $this->belongsTo(LugarFormacion::class, 'lugar_id', 'id');
     }
 
     public function user()
