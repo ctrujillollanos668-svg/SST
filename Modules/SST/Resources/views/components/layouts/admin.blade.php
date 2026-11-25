@@ -557,6 +557,8 @@
                         } catch (err) {}
                     }
                 }
+            });
+
             // Inicializar Selects Buscables con filtro por inicial
             setupSSTSearchableSelects(document);
         });
