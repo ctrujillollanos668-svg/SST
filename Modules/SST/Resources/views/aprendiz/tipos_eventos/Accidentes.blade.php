@@ -1107,8 +1107,12 @@
         document.getElementById('edit_fecha_hora').value = f.substring(0, 16);
         document.getElementById('edit_lugar_formacion').value = data.lugar_formacion || '';
         const tipoAccidenteInput = document.getElementById('edit_tipo_accidente');
-        tipoAccidenteInput.value = data.tipo_accidente || '';
-        filtrarSugerenciasTipoAccidente(tipoAccidenteInput);
+        if (tipoAccidenteInput) {
+            tipoAccidenteInput.value = data.tipo_accidente || '';
+            if (typeof filtrarSugerenciasTipoAccidente === 'function') {
+                filtrarSugerenciasTipoAccidente(tipoAccidenteInput);
+            }
+        }
         document.getElementById('edit_gravedad').value = data.gravedad || 'Leve';
         document.getElementById('edit_persona_afectada').value = data.persona_afectada || data.personas_involucradas || '';
         document.getElementById('edit_personas_involucradas').value = data.personas_involucradas || '';

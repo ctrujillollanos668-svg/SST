@@ -408,7 +408,7 @@
                         TIPO DE CONDICIÓN INSEGURA <span class="text-rose-500">*</span>
                     </label>
                     <select name="tipo_condicion" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
+                        class="sst-searchable w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
                         <option value="">Seleccione el tipo de condición...</option>
                         @if(isset($catalogoCondiciones) && $catalogoCondiciones->count() > 0)
                             @foreach($catalogoCondiciones as $cond)
@@ -599,7 +599,7 @@
                         TIPO DE CONDICIÓN INSEGURA <span class="text-rose-500">*</span>
                     </label>
                     <select id="editTipoCondicion" name="tipo_condicion" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
+                        class="sst-searchable w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
                         <option value="">Seleccione el tipo de condición...</option>
                         @if(isset($catalogoCondiciones) && $catalogoCondiciones->count() > 0)
                             @foreach($catalogoCondiciones as $cond)
@@ -1111,6 +1111,7 @@
         document.getElementById('editFechaHora').value = f.substring(0, 16);
         document.getElementById('editLugarFormacion').value = data.lugar_formacion || '';
         if (document.getElementById('editTipoCondicion')) document.getElementById('editTipoCondicion').value = data.tipo_condicion || '';
+        const el_editTipoCondicion = document.getElementById('editTipoCondicion'); if (el_editTipoCondicion) el_editTipoCondicion.dispatchEvent(new Event('change', { bubbles: true }));
         document.getElementById('editLugarEspecifico').value = data.lugar_especifico || '';
         document.getElementById('editGravedad').value = data.gravedad || 'Leve';
         if (document.getElementById('editPersonaAfectada')) {

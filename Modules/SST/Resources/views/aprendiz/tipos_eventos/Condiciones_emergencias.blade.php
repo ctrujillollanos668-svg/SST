@@ -396,7 +396,7 @@
                         TIPO DE CONDICIÓN DE EMERGENCIA <span class="text-rose-500">*</span>
                     </label>
                     <select name="tipo_emergencia" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
+                        class="sst-searchable w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
                         <option value="">Seleccione el tipo de emergencia...</option>
                         @if(isset($catalogoEmergencias) && $catalogoEmergencias->count() > 0)
                             @foreach($catalogoEmergencias as $em)
@@ -564,7 +564,7 @@
                         TIPO DE CONDICIÓN DE EMERGENCIA <span class="text-rose-500">*</span>
                     </label>
                     <select id="editTipoEmergencia" name="tipo_emergencia" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
+                        class="sst-searchable w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
                         <option value="">Seleccione el tipo de emergencia...</option>
                         @if(isset($catalogoEmergencias) && $catalogoEmergencias->count() > 0)
                             @foreach($catalogoEmergencias as $em)
@@ -1062,7 +1062,10 @@
         if (elLugar) elLugar.value = data.lugar_formacion || '';
 
         const elTipoEmergencia = document.getElementById('editTipoEmergencia');
-        if (elTipoEmergencia) elTipoEmergencia.value = data.tipo_emergencia || '';
+        if (elTipoEmergencia) {
+            elTipoEmergencia.value = data.tipo_emergencia || '';
+            elTipoEmergencia.dispatchEvent(new Event('change', { bubbles: true }));
+        }
 
         const elPrio = document.getElementById('editPrioridad');
         if (elPrio) elPrio.value = data.prioridad || data.gravedad || 'Media';

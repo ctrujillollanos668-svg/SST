@@ -233,7 +233,7 @@
 
         @if(isset($usuarios) && $usuarios->hasPages())
             <div class="p-4 border-t border-slate-100 bg-slate-50/50">
-                {{ $usuarios->links() }}
+                {{ $usuarios->links('sst::components.pagination') }}
             </div>
         @endif
     </div>

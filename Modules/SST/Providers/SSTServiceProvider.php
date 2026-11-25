@@ -35,6 +35,15 @@ class SSTServiceProvider extends ModuleServiceProvider
     ];
 
     /**
+     * Boot the application events.
+     */
+    public function boot(): void
+    {
+        parent::boot();
+        \Illuminate\Pagination\Paginator::defaultView('sst::components.pagination');
+    }
+
+    /**
      * Define module schedules.
      * 
      * @param $schedule

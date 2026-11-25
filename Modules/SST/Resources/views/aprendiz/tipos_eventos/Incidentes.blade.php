@@ -400,7 +400,7 @@
                         TIPO DE INCIDENTE <span class="text-rose-500">*</span>
                     </label>
                     <select name="tipo_incidente" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
+                        class="sst-searchable w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
                         <option value="">Seleccione el tipo de incidente...</option>
                         @if(isset($catalogoIncidentes) && $catalogoIncidentes->count() > 0)
                             @foreach($catalogoIncidentes as $inc)
@@ -581,7 +581,7 @@
                         TIPO DE INCIDENTE <span class="text-rose-500">*</span>
                     </label>
                     <select id="edit_tipo_incidente" name="tipo_incidente" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
+                        class="sst-searchable w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
                         <option value="">Seleccione el tipo de incidente...</option>
                         @if(isset($catalogoIncidentes) && $catalogoIncidentes->count() > 0)
                             @foreach($catalogoIncidentes as $inc)
@@ -1076,6 +1076,7 @@
         document.getElementById('edit_fecha_hora').value = f.substring(0, 16);
         document.getElementById('edit_lugar_formacion').value = data.lugar_formacion || '';
         document.getElementById('edit_tipo_incidente').value = data.tipo_incidente || '';
+        const el_edit_tipo_incidente = document.getElementById('edit_tipo_incidente'); if (el_edit_tipo_incidente) el_edit_tipo_incidente.dispatchEvent(new Event('change', { bubbles: true }));
         document.getElementById('edit_gravedad').value = data.gravedad || 'Leve';
         document.getElementById('edit_persona_afectada').value = data.persona_afectada || data.personas_involucradas || '';
         document.getElementById('edit_personas_involucradas').value = data.personas_involucradas || '';

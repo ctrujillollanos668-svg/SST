@@ -397,7 +397,7 @@
                         TIPO DE RIESGO <span class="text-rose-500">*</span>
                     </label>
                     <select name="tipo_riesgo" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
+                        class="sst-searchable w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
                         <option value="">Seleccione el tipo de riesgo...</option>
                         @if(isset($catalogoRiesgos) && $catalogoRiesgos->count() > 0)
                             @foreach($catalogoRiesgos as $rie)
@@ -587,7 +587,7 @@
                         TIPO DE RIESGO <span class="text-rose-500">*</span>
                     </label>
                     <select id="editTipoRiesgo" name="tipo_riesgo" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
+                        class="sst-searchable w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
                         <option value="">Seleccione el tipo de riesgo...</option>
                         @if(isset($catalogoRiesgos) && $catalogoRiesgos->count() > 0)
                             @foreach($catalogoRiesgos as $rie)
@@ -1092,6 +1092,7 @@
         document.getElementById('editFechaHora').value = f.substring(0, 16);
         document.getElementById('editLugarFormacion').value = data.lugar_formacion || '';
         document.getElementById('editTipoRiesgo').value = data.tipo_riesgo || '';
+        const el_editTipoRiesgo = document.getElementById('editTipoRiesgo'); if (el_editTipoRiesgo) el_editTipoRiesgo.dispatchEvent(new Event('change', { bubbles: true }));
         document.getElementById('editGravedad').value = data.gravedad || 'Medio';
         document.getElementById('edit_persona_afectada').value = data.persona_afectada || data.personas_involucradas || '';
         document.getElementById('editPersonasInvolucradas').value = data.personas_involucradas || '';

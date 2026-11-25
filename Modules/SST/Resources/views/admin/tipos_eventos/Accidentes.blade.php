@@ -117,7 +117,7 @@
 
         @if(isset($accidentes) && method_exists($accidentes, 'hasPages') && $accidentes->hasPages())
             <div class="p-4 border-t border-slate-100 bg-slate-50/50">
-                {{ $accidentes->links() }}
+                {{ $accidentes->links('sst::components.pagination') }}
             </div>
         @endif
     </div>

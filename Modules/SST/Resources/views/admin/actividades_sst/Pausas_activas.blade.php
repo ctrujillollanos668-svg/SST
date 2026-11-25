@@ -262,7 +262,7 @@
 
         @if($actividades->hasPages())
             <div class="p-4 border-t border-slate-100">
-                {{ $actividades->links() }}
+                {{ $actividades->links('sst::components.pagination') }}
             </div>
         @endif
     </div>

@@ -21,6 +21,17 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- Script de Precarga Inmediata del Modo Sidebar (Zero-Flicker) -->
+    <script>
+        (function() {
+            try {
+                if (localStorage.getItem('sst_sidebar_mode') === 'mini' && window.innerWidth >= 1024) {
+                    document.documentElement.classList.add('sst-mini-sidebar');
+                }
+            } catch (e) {}
+        })();
+    </script>
+
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
 
@@ -138,6 +149,34 @@
             margin-left: 0 !important;
         }
 
+        /* Soporte Zero-Flicker para Modo Mini en Precarga */
+        html.sst-mini-sidebar #sidebarMenu {
+            width: 76px !important;
+            overflow: visible !important;
+            transition: none !important;
+        }
+        html.sst-mini-sidebar #mainContentWrapper {
+            margin-left: 76px !important;
+            transition: none !important;
+        }
+        html.sst-mini-sidebar #sidebarMenu .sidebar-text-full,
+        html.sst-mini-sidebar #sidebarMenu .arrow-icon,
+        html.sst-mini-sidebar #sidebarMenu .submenu-transition,
+        html.sst-mini-sidebar #sidebarMenu .logo-full {
+            display: none !important;
+        }
+        html.sst-mini-sidebar #sidebarMenu .logo-mini {
+            display: flex !important;
+        }
+        html.sst-mini-sidebar #sidebarMenu .menu-btn-item {
+            justify-content: center !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        html.sst-mini-sidebar #sidebarMenu .sidebar-flyout {
+            display: block;
+        }
+
         /* Animación suave para el menú desplegable */
         .dropdown-menu {
             transform-origin: top right;
@@ -165,6 +204,18 @@
 
     <!-- 2. Contenedor Principal -->
     <div id="mainContentWrapper" class="flex-1 ml-[270px] min-h-screen flex flex-col w-full">
+    <script>
+        (function() {
+            try {
+                if (localStorage.getItem('sst_sidebar_mode') === 'mini' && window.innerWidth >= 1024) {
+                    var sb = document.getElementById('sidebarMenu');
+                    var mc = document.getElementById('mainContentWrapper');
+                    if (sb) sb.classList.add('sidebar-mini');
+                    if (mc) mc.classList.add('mini-content');
+                }
+            } catch(e) {}
+        })();
+    </script>
         
         <!-- Top Navbar del Admin (Estilo Ejecutivo Dirección) -->
         <header class="h-16 bg-gradient-to-r from-[#0A2333] via-[#0F3247] to-[#0A2333] border-b-[3px] border-[#39A900] sticky top-0 z-20 px-4 sm:px-6 flex items-center justify-between shadow-lg text-white">
@@ -278,6 +329,7 @@
                 toggleBtn.addEventListener('click', function () {
                     if (window.innerWidth >= 1024) {
                         // En escritorio: alternar modo mini / completo
+                        document.documentElement.classList.remove('sst-mini-sidebar');
                         const isMini = sidebar.classList.toggle('sidebar-mini');
                         mainContent.classList.toggle('mini-content', isMini);
                         localStorage.setItem('sst_sidebar_mode', isMini ? 'mini' : 'expanded');
@@ -505,9 +557,203 @@
                         } catch (err) {}
                     }
                 }
-            });
-
+            // Inicializar Selects Buscables con filtro por inicial
+            setupSSTSearchableSelects(document);
         });
+
+        // =========================================================================
+        // SST • SELECTS BUSCABLES CON FILTRADO POR INICIAL
+        // =========================================================================
+        function setupSSTSearchableSelects(container) {
+            const root = container || document;
+            const selects = root.querySelectorAll ? root.querySelectorAll('select.sst-searchable') : [];
+
+            selects.forEach(select => {
+                if (select.dataset.searchableInit === 'true') return;
+                select.dataset.searchableInit = 'true';
+
+                const isRequired = select.hasAttribute('required');
+                if (isRequired) {
+                    select.removeAttribute('required');
+                }
+
+                select.style.position = 'absolute';
+                select.style.opacity = '0';
+                select.style.pointerEvents = 'none';
+                select.style.height = '0';
+                select.style.width = '0';
+                select.tabIndex = -1;
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'relative sst-searchable-wrapper w-full';
+                select.parentNode.insertBefore(wrapper, select);
+                wrapper.appendChild(select);
+
+                const inputContainer = document.createElement('div');
+                inputContainer.className = 'relative w-full';
+
+                const visibleInput = document.createElement('input');
+                visibleInput.type = 'text';
+                visibleInput.autocomplete = 'off';
+                if (isRequired) visibleInput.required = true;
+                visibleInput.placeholder = select.options[0] ? select.options[0].text : 'Seleccione o escriba...';
+                visibleInput.className = 'w-full pl-3.5 pr-8 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer';
+
+                const chevron = document.createElement('div');
+                chevron.className = 'absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400 text-xs transition-transform duration-200';
+                chevron.innerHTML = '<i class="fa-solid fa-chevron-down text-[10px]"></i>';
+
+                inputContainer.appendChild(visibleInput);
+                inputContainer.appendChild(chevron);
+                wrapper.appendChild(inputContainer);
+
+                const list = document.createElement('div');
+                list.className = 'sst-dropdown-list hidden absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 max-h-52 overflow-y-auto p-1.5 space-y-0.5 animate-in fade-in zoom-in-95 duration-150';
+                wrapper.appendChild(list);
+
+                function buildList(filterQuery = '') {
+                    list.innerHTML = '';
+                    const q = (filterQuery || '').trim().toLowerCase();
+                    let matchCount = 0;
+
+                    Array.from(select.options).forEach((opt, idx) => {
+                        if (idx === 0 && !opt.value) return;
+                        const text = opt.text.trim();
+                        const lowerText = text.toLowerCase();
+                        const words = lowerText.split(/\s+/);
+
+                        // Filtro por primera letra o inicio de palabra
+                        const matches = !q || lowerText.startsWith(q) || words.some(w => w.startsWith(q));
+
+                        if (matches) {
+                            matchCount++;
+                            const item = document.createElement('div');
+                            const isSelected = select.value === opt.value;
+                            item.className = 'px-3 py-2 text-xs font-semibold rounded-xl cursor-pointer transition flex items-center justify-between ' + 
+                                            (isSelected ? 'bg-emerald-50 text-[#39A900] font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-[#39A900]');
+                            item.textContent = text;
+                            if (isSelected) {
+                                item.innerHTML += '<i class="fa-solid fa-check text-[#39A900] text-xs"></i>';
+                            }
+                            item.addEventListener('mousedown', (e) => {
+                                e.preventDefault();
+                                select.value = opt.value;
+                                visibleInput.value = text;
+                                visibleInput.setCustomValidity('');
+                                select.dispatchEvent(new Event('change', { bubbles: true }));
+                                closeList();
+                            });
+                            list.appendChild(item);
+                        }
+                    });
+
+                    if (matchCount === 0) {
+                        const emptyMsg = document.createElement('div');
+                        emptyMsg.className = 'px-3 py-3 text-center text-xs text-slate-400 font-medium';
+                        emptyMsg.textContent = 'No hay opciones que inicien con "' + filterQuery + '"';
+                        list.appendChild(emptyMsg);
+                    }
+                }
+
+                function openList() {
+                    closeAllSearchableLists();
+                    buildList('');
+                    list.classList.remove('hidden');
+                    chevron.querySelector('i').classList.add('rotate-180');
+                }
+
+                function closeList() {
+                    list.classList.add('hidden');
+                    chevron.querySelector('i').classList.remove('rotate-180');
+                    const currentText = visibleInput.value.trim().toLowerCase();
+                    const matchedOpt = Array.from(select.options).find(o => o.text.trim().toLowerCase() === currentText && o.value);
+                    if (matchedOpt) {
+                        select.value = matchedOpt.value;
+                        visibleInput.value = matchedOpt.text.trim();
+                        visibleInput.setCustomValidity('');
+                    } else if (!select.value) {
+                        visibleInput.value = '';
+                    } else {
+                        const selectedOpt = select.options[select.selectedIndex];
+                        visibleInput.value = (selectedOpt && selectedOpt.value) ? selectedOpt.text.trim() : '';
+                        visibleInput.setCustomValidity('');
+                    }
+                }
+
+                visibleInput.addEventListener('focus', () => {
+                    openList();
+                    visibleInput.select();
+                });
+
+                visibleInput.addEventListener('click', () => {
+                    if (list.classList.contains('hidden')) {
+                        openList();
+                    }
+                });
+
+                visibleInput.addEventListener('input', () => {
+                    if (list.classList.contains('hidden')) {
+                        list.classList.remove('hidden');
+                        chevron.querySelector('i').classList.add('rotate-180');
+                    }
+                    buildList(visibleInput.value);
+                    if (!visibleInput.value.trim()) {
+                        select.value = '';
+                    }
+                });
+
+                visibleInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        closeList();
+                        visibleInput.blur();
+                    } else if (e.key === 'Enter') {
+                        const firstMatch = list.querySelector('.dropdown-item, [class*="cursor-pointer"]');
+                        if (firstMatch && !list.classList.contains('hidden')) {
+                            e.preventDefault();
+                            firstMatch.click();
+                        }
+                    }
+                });
+
+                select.addEventListener('change', () => {
+                    const selectedOpt = select.options[select.selectedIndex];
+                    visibleInput.value = (selectedOpt && selectedOpt.value) ? selectedOpt.text.trim() : '';
+                    if (visibleInput.value) visibleInput.setCustomValidity('');
+                });
+
+                // Si se resetea el formulario padre, limpiar visibleInput
+                const parentForm = select.closest('form');
+                if (parentForm) {
+                    parentForm.addEventListener('reset', () => {
+                        setTimeout(() => {
+                            select.value = '';
+                            visibleInput.value = '';
+                            visibleInput.setCustomValidity('');
+                        }, 10);
+                    });
+                }
+
+                // Sincronizar valor inicial si ya viene seleccionado
+                if (select.value) {
+                    const selectedOpt = select.options[select.selectedIndex];
+                    visibleInput.value = (selectedOpt && selectedOpt.value) ? selectedOpt.text.trim() : '';
+                }
+            });
+        }
+
+        function closeAllSearchableLists() {
+            document.querySelectorAll('.sst-dropdown-list').forEach(l => l.classList.add('hidden'));
+            document.querySelectorAll('.sst-searchable-wrapper i.fa-chevron-down').forEach(i => i.classList.remove('rotate-180'));
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.sst-searchable-wrapper')) {
+                closeAllSearchableLists();
+            }
+        });
+
+        window.setupSSTSearchableSelects = setupSSTSearchableSelects;
+        window.closeAllSearchableLists = closeAllSearchableLists;
 
         // =========================================================================
         // =========================================================================
@@ -615,7 +861,8 @@
         // Interceptor Global de Formularios de Eliminación en SST Admin
         document.addEventListener('submit', function(e) {
             const form = e.target;
-            if (form.dataset.confirmed === 'true') {
+            // Si ya fue confirmado o si el formulario está dentro de un modal propio de confirmación, permitir envío directo
+            if (form.dataset.confirmed === 'true' || form.closest('#modalDelete, #deleteModal, #modalEliminarOverlay, [id*="modalDelete"], [id*="deleteModal"], [id*="modalEliminar"]')) {
                 return;
             }
 

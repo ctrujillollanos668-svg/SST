@@ -292,7 +292,7 @@
 
         <!-- Paginación -->
         <div class="pt-4">
-            {{ $asistencias->links() }}
+            {{ $asistencias->links('sst::components.pagination') }}
         </div>
     @else
         <!-- Estado Vacío -->
