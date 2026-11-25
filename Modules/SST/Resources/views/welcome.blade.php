@@ -58,21 +58,21 @@
         }
     </script>
 </head>
-<body class="font-sans bg-[#f8faf9] text-slate-800 flex flex-col min-h-screen antialiased selection:bg-[#39A900] selection:text-white">
+<body class="font-sans bg-[#f8faf9] text-slate-800 flex flex-col min-h-screen min-w-0 antialiased selection:bg-[#39A900] selection:text-white">
     <!-- Top Navigation Bar (Estilo Dirección: Fondo Azul Noche / Dark con Línea Verde SENA) -->
     <header class="sticky top-0 z-50 bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#00131E] border-b-[3px] border-[#39A900] shadow-lg transition-all duration-200">
 
         <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20 gap-4">
+            <div class="flex flex-wrap items-center justify-between min-h-20 gap-x-4 gap-y-3 py-3">
 
                 <!-- Logo & Marca -->
-                <a href="#inicio" class="flex items-center gap-3 group select-none shrink-0">
+                <a href="#inicio" class="order-1 flex items-center gap-3 group select-none shrink-0" aria-label="Inicio SST">
                     <div class="w-11 h-11 rounded-xl bg-white p-1 flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300 overflow-hidden ring-2 ring-[#39A900]/30">
                         <img src="{{ asset('img/logodesst.jpeg') }}" alt="Logo SST" class="max-w-full max-h-full object-contain rounded-lg">
                     </div>
 
                     <!-- Textos Marca -->
-                    <div class="flex flex-col whitespace-nowrap">
+                    <div class="hidden sm:flex flex-col whitespace-nowrap">
                         <div class="flex items-center gap-1.5">
                             <span class="text-white font-display font-extrabold text-base lg:text-lg tracking-tight leading-none">
                                 SENA <span class="text-[#62E31D]">EMPRESA</span>
@@ -89,7 +89,7 @@
                 </a>
 
                 <!-- Desktop Navigation Links -->
-                <nav class="hidden xl:flex items-center space-x-1 lg:space-x-2 shrink-0">
+                <nav aria-label="Secciones de SST" class="order-3 hidden lg:flex w-full min-w-0 items-center justify-center gap-1 border-t border-white/10 pt-2">
                     <a href="#inicio" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
                         <i class="fas fa-home me-1 text-[#62E31D]"></i> Inicio
                     </a>
@@ -108,7 +108,7 @@
                 </nav>
 
                 <!-- Action Area -->
-                <div class="flex items-center gap-2.5 sm:gap-3 shrink-0">
+                <div class="order-2 ml-auto flex min-w-0 items-center gap-2 sm:gap-3">
                     
                     <!-- Botón Volver al ERP General -->
                     <a href="{{ route('home') }}" class="hidden lg:inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold text-white/90 hover:text-white bg-white/10 hover:bg-white/15 border border-white/20 shadow-xs transition-all duration-200 whitespace-nowrap" title="Volver al Portal ERP Principal">
@@ -125,13 +125,13 @@
                     @else
                         <!-- Si el usuario YA inició sesión: Cápsula de Usuario Estilizada -->
                         <div class="relative">
-                            <button id="sstUserMenuBtn" type="button" class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 shadow-xs transition-all duration-200 focus:outline-none cursor-pointer">
+                            <button id="sstUserMenuBtn" type="button" aria-label="Menú de usuario SST" aria-controls="sstUserDropdown" aria-expanded="false" class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 shadow-xs transition-all duration-200 focus:outline-none cursor-pointer">
                                 <!-- Avatar con iniciales -->
                                 <div class="w-8 h-8 rounded-full bg-[#39A900] text-white flex items-center justify-center text-xs font-black shadow-xs shrink-0 ring-2 ring-[#62E31D]/40">
                                     {{ Auth::user()->initials ?? 'US' }}
                                 </div>
                                 <!-- Nombre y Rol -->
-                                <div class="text-left hidden sm:block leading-tight">
+                                <div class="text-left hidden md:block leading-tight">
                                     <span class="text-xs font-bold text-white block truncate max-w-[150px]">
                                         {{ Auth::user()->full_name }}
                                     </span>
@@ -143,7 +143,7 @@
                             </button>
 
                             <!-- Dropdown flotante -->
-                            <div id="sstUserDropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                            <div id="sstUserDropdown" class="hidden absolute right-0 mt-2 w-64 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                                 <!-- Header -->
                                 <div class="px-4 py-3 border-b border-slate-100 bg-slate-50/70 rounded-t-2xl">
                                     <p class="text-xs font-bold text-[#001A29] truncate">{{ Auth::user()->full_name }}</p>
@@ -177,14 +177,14 @@
                         </div>
 
                         <!-- Botón Panel de Gestión -->
-                        <a href="{{ route('SST.dashboard') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold text-white bg-[#39A900] hover:bg-[#2d8500] shadow-md shadow-[#39A900]/30 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer whitespace-nowrap">
+                        <a href="{{ route('SST.dashboard') }}" class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold text-white bg-[#39A900] hover:bg-[#2d8500] shadow-md shadow-[#39A900]/30 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer whitespace-nowrap">
                             <i class="fas fa-sliders text-xs"></i>
                             <span>Panel de Gestión</span>
                         </a>
                     @endguest
 
                     <!-- Mobile Menu Trigger -->
-                    <button id="mobileMenuBtn" class="xl:hidden p-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer">
+                    <button id="mobileMenuBtn" type="button" aria-label="Abrir menú de SST" aria-controls="mobileMenu" aria-expanded="false" class="lg:hidden p-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer">
                         <i class="fas fa-bars text-lg"></i>
                     </button>
 
@@ -194,7 +194,12 @@
         </div>
 
         <!-- Mobile Drawer -->
-        <div id="mobileMenu" class="hidden md:hidden px-4 pt-2 pb-6 bg-[#001A29] border-t border-white/10 space-y-2">
+        <div id="mobileMenu" class="hidden lg:hidden px-4 pt-2 pb-6 bg-[#001A29] border-t border-white/10 space-y-2">
+            @auth
+                <a href="{{ route('SST.dashboard') }}" class="block px-3 py-2 rounded-lg text-sm font-bold text-[#62E31D] hover:bg-white/10">
+                    <i class="fas fa-sliders me-2"></i> Panel de Gestión
+                </a>
+            @endauth
             <a href="#inicio" class="block px-3 py-2 rounded-lg text-sm font-medium text-white/80 hover:bg-white/10 hover:text-[#62E31D]">
                 <i class="fas fa-home me-2 text-[#62E31D]"></i> Inicio
             </a>
@@ -219,7 +224,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-grow" id="inicio">
+    <main class="flex-grow min-w-0" id="inicio">
 
         <!-- Hero Section (Estilo Dirección: Fondo Dark / Navy Ejecutivo con Textos Nítidos y Acentos Verde Institucional) -->
         <section class="bg-gradient-to-br from-[#00131E] via-[#001A29] to-[#002D44] pt-20 pb-24 border-b-2 border-[#39A900]/30 relative overflow-hidden text-white">
@@ -878,7 +883,18 @@
         // Drawer móvil
         document.getElementById('mobileMenuBtn')?.addEventListener('click', function() {
             const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('hidden');
+            const isHidden = menu.classList.toggle('hidden');
+            this.setAttribute('aria-expanded', String(!isHidden));
+            this.setAttribute('aria-label', isHidden ? 'Abrir menú de SST' : 'Cerrar menú de SST');
+        });
+
+        document.querySelectorAll('#mobileMenu a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                document.getElementById('mobileMenu').classList.add('hidden');
+                const button = document.getElementById('mobileMenuBtn');
+                button.setAttribute('aria-expanded', 'false');
+                button.setAttribute('aria-label', 'Abrir menú de SST');
+            });
         });
 
         // Dropdown de Usuario en Navbar
@@ -890,6 +906,7 @@
             sstUserBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 const isHidden = sstUserDropdown.classList.toggle('hidden');
+                sstUserBtn.setAttribute('aria-expanded', String(!isHidden));
                 if (sstUserChevron) {
                     sstUserChevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
                 }
@@ -898,7 +915,17 @@
             document.addEventListener('click', function(e) {
                 if (!sstUserBtn.contains(e.target) && !sstUserDropdown.contains(e.target)) {
                     sstUserDropdown.classList.add('hidden');
+                    sstUserBtn.setAttribute('aria-expanded', 'false');
                     if (sstUserChevron) sstUserChevron.style.transform = 'rotate(0deg)';
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !sstUserDropdown.classList.contains('hidden')) {
+                    sstUserDropdown.classList.add('hidden');
+                    sstUserBtn.setAttribute('aria-expanded', 'false');
+                    if (sstUserChevron) sstUserChevron.style.transform = 'rotate(0deg)';
+                    sstUserBtn.focus();
                 }
             });
         }
