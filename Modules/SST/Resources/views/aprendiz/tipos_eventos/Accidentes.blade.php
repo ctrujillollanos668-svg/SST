@@ -398,15 +398,18 @@
                     <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
                         TIPO DE ACCIDENTE <span class="text-rose-500">*</span>
                     </label>
-                    <select name="tipo_accidente" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
-                        <option value="">Seleccione el tipo de accidente...</option>
-                        @if(isset($catalogoAccidentes) && $catalogoAccidentes->count() > 0)
-                            @foreach($catalogoAccidentes as $acc)
-                                <option value="{{ $acc->nombre }}">{{ $acc->nombre }}</option>
-                            @endforeach
-                        @endif
-                    </select>
+                    <input type="text" name="tipo_accidente" list="catalogoTiposAccidente" data-tipo-accidente-autocomplete required maxlength="100"
+                        placeholder="{{ $catalogoAccidentes->isEmpty() ? 'No hay tipos activos disponibles' : 'Escriba para buscar un tipo...' }}"
+                        {{ $catalogoAccidentes->isEmpty() ? 'readonly' : '' }}
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs">
+                    <datalist id="catalogoTiposAccidente">
+                        @foreach($catalogoAccidentes as $acc)
+                            <option value="{{ $acc->nombre }}"></option>
+                        @endforeach
+                    </datalist>
+                    @if($catalogoAccidentes->isEmpty())
+                        <p class="text-[10px] text-amber-700 font-medium">El administrador debe registrar y activar al menos un tipo de accidente.</p>
+                    @endif
                 </div>
 
                 <div class="space-y-1">
@@ -575,15 +578,15 @@
                     <label class="block text-[11px] font-extrabold tracking-wider uppercase text-slate-700">
                         TIPO DE ACCIDENTE <span class="text-rose-500">*</span>
                     </label>
-                    <select id="edit_tipo_accidente" name="tipo_accidente" required 
-                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs cursor-pointer">
-                        <option value="">Seleccione el tipo de accidente...</option>
-                        @if(isset($catalogoAccidentes) && $catalogoAccidentes->count() > 0)
-                            @foreach($catalogoAccidentes as $acc)
-                                <option value="{{ $acc->nombre }}">{{ $acc->nombre }}</option>
-                            @endforeach
-                        @endif
-                    </select>
+                    <input type="text" id="edit_tipo_accidente" name="tipo_accidente" list="catalogoTiposAccidenteEditar" data-tipo-accidente-autocomplete required maxlength="100"
+                        placeholder="{{ $catalogoAccidentes->isEmpty() ? 'No hay tipos activos disponibles' : 'Escriba para buscar un tipo...' }}"
+                        {{ $catalogoAccidentes->isEmpty() ? 'readonly' : '' }}
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#39A900]/20 focus:border-[#39A900] transition shadow-2xs">
+                    <datalist id="catalogoTiposAccidenteEditar">
+                        @foreach($catalogoAccidentes as $acc)
+                            <option value="{{ $acc->nombre }}"></option>
+                        @endforeach
+                    </datalist>
                 </div>
 
                 <div class="space-y-1">
@@ -878,6 +881,31 @@
 @push('scripts')
 <script>
     const URL_BASE = "{{ url('Sst/aprendiz/tipos-eventos/accidentes') }}";
+    const tiposAccidenteCatalogo = @json($catalogoAccidentes->pluck('nombre')->values());
+
+    function normalizarTipoAccidente(valor) {
+        return valor.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es');
+    }
+
+    function filtrarSugerenciasTipoAccidente(input) {
+        const datalist = document.getElementById(input.getAttribute('list'));
+        if (!datalist) return;
+
+        const consulta = normalizarTipoAccidente(input.value.trim());
+        const sugerencias = consulta
+            ? tiposAccidenteCatalogo.filter(tipo => normalizarTipoAccidente(tipo).startsWith(consulta))
+            : tiposAccidenteCatalogo;
+
+        datalist.replaceChildren(...sugerencias.map(tipo => {
+            const opcion = document.createElement('option');
+            opcion.value = tipo;
+            return opcion;
+        }));
+    }
+
+    document.querySelectorAll('[data-tipo-accidente-autocomplete]').forEach(input => {
+        input.addEventListener('input', () => filtrarSugerenciasTipoAccidente(input));
+    });
 
     // Visor de Imágenes en Modal Mediano (Lightbox interno)
     let visorGaleria = [];
@@ -1078,7 +1106,9 @@
         if (f.includes(' ')) f = f.replace(' ', 'T');
         document.getElementById('edit_fecha_hora').value = f.substring(0, 16);
         document.getElementById('edit_lugar_formacion').value = data.lugar_formacion || '';
-        document.getElementById('edit_tipo_accidente').value = data.tipo_accidente || '';
+        const tipoAccidenteInput = document.getElementById('edit_tipo_accidente');
+        tipoAccidenteInput.value = data.tipo_accidente || '';
+        filtrarSugerenciasTipoAccidente(tipoAccidenteInput);
         document.getElementById('edit_gravedad').value = data.gravedad || 'Leve';
         document.getElementById('edit_persona_afectada').value = data.persona_afectada || data.personas_involucradas || '';
         document.getElementById('edit_personas_involucradas').value = data.personas_involucradas || '';

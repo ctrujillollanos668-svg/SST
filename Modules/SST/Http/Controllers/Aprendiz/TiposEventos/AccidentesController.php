@@ -9,6 +9,7 @@ use App\Models\User;
 use Modules\SST\Entities\TipoEvento;
 use Modules\SST\Entities\LugarFormacion;
 use Modules\SST\Entities\RespuestaEvento;
+use Illuminate\Validation\Rule;
 
 class AccidentesController extends Controller
 {
@@ -42,11 +43,7 @@ class AccidentesController extends Controller
                 ->orderBy('nombre', 'asc')
                 ->get();
 
-            $catalogoAccidentes = TipoEvento::where(function($q) {
-                    $q->where('tipo_categoria', 'accidente')
-                      ->orWhere('tipo_categoria', 'Accidente')
-                      ->orWhereRaw('LOWER(tipo_categoria) = ?', ['accidente']);
-                })
+            $catalogoAccidentes = TipoEvento::where('tipo_categoria', 'accidente')
                 ->where('estado', 'activo')
                 ->orderBy('nombre', 'asc')
                 ->get();
@@ -63,7 +60,15 @@ class AccidentesController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'tipo_accidente' => 'nullable|string|max:150',
+            'tipo_accidente' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::exists('tipos_eventos', 'nombre')->where(function ($query) {
+                    $query->where('tipo_categoria', 'accidente')
+                        ->where('estado', 'activo');
+                }),
+            ],
             'fecha_hora' => 'nullable',
             'lugar_formacion' => 'nullable|string|max:150',
             'gravedad' => 'nullable|string|max:50',
@@ -167,7 +172,15 @@ class AccidentesController extends Controller
         $evento = RespuestaEvento::findOrFail($id);
 
         $validated = $request->validate([
-            'tipo_accidente' => 'nullable|string|max:150',
+            'tipo_accidente' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::exists('tipos_eventos', 'nombre')->where(function ($query) {
+                    $query->where('tipo_categoria', 'accidente')
+                        ->where('estado', 'activo');
+                }),
+            ],
             'fecha_hora' => 'nullable',
             'lugar_formacion' => 'nullable|string|max:150',
             'gravedad' => 'nullable|string|max:50',
