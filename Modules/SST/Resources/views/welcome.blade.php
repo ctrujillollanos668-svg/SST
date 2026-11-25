@@ -57,13 +57,30 @@
             }
         }
     </script>
+    <style>
+        html {
+            scroll-padding-top: 9rem;
+            background-color: #00131E;
+        }
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: clip;
+            overscroll-behavior-x: none;
+        }
+        #sstHeader nav {
+            justify-content: safe center;
+            scrollbar-width: thin;
+            scrollbar-color: #39A900 #001A29;
+        }
+    </style>
 </head>
 <body class="font-sans bg-[#f8faf9] text-slate-800 flex flex-col min-h-screen min-w-0 antialiased selection:bg-[#39A900] selection:text-white">
     <!-- Top Navigation Bar (Estilo Dirección: Fondo Azul Noche / Dark con Línea Verde SENA) -->
-    <header class="sticky top-0 z-50 bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#00131E] border-b-[3px] border-[#39A900] shadow-lg transition-all duration-200">
+    <header id="sstHeader" class="sticky top-0 z-50 bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#00131E] border-b-[3px] border-[#39A900] shadow-lg">
 
-        <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-wrap items-center justify-between min-h-20 gap-x-4 gap-y-3 py-3">
+        <div class="max-w-[1600px] mx-auto px-4">
+            <div class="flex flex-wrap xl:flex-nowrap items-center justify-between min-h-20 gap-x-2 gap-y-3 py-3">
 
                 <!-- Logo & Marca -->
                 <a href="#inicio" class="order-1 flex items-center gap-3 group select-none shrink-0" aria-label="Inicio SST">
@@ -89,7 +106,7 @@
                 </a>
 
                 <!-- Desktop Navigation Links -->
-                <nav aria-label="Secciones de SST" class="order-3 hidden lg:flex w-full min-w-0 items-center justify-center gap-1 border-t border-white/10 pt-2">
+                <nav aria-label="Secciones de SST" class="order-2 hidden xl:flex flex-1 min-w-0 flex-nowrap overflow-x-auto items-center gap-1 [&>a]:shrink-0 [&>a]:px-1 [&>a]:text-[13px] [&>a]:leading-5">
                     <a href="#inicio" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
                         <i class="fas fa-home me-1 text-[#62E31D]"></i> Inicio
                     </a>
@@ -108,10 +125,10 @@
                 </nav>
 
                 <!-- Action Area -->
-                <div class="order-2 ml-auto flex min-w-0 items-center gap-2 sm:gap-3">
+                <div class="order-3 ml-auto flex min-w-0 shrink-0 items-center gap-2">
                     
                     <!-- Botón Volver al ERP General -->
-                    <a href="{{ route('home') }}" class="hidden lg:inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold text-white/90 hover:text-white bg-white/10 hover:bg-white/15 border border-white/20 shadow-xs transition-all duration-200 whitespace-nowrap" title="Volver al Portal ERP Principal">
+                    <a href="{{ route('home') }}" class="hidden lg:inline-flex items-center gap-2 px-3 py-2 rounded-full text-[13px] font-bold text-white/90 hover:text-white bg-white/10 hover:bg-white/15 border border-white/20 shadow-xs transition-all duration-200 whitespace-nowrap" title="Volver al Portal ERP Principal">
                         <i class="fas fa-arrow-left text-white/60 text-xs"></i>
                         <span>Portal ERP</span>
                     </a>
@@ -125,21 +142,11 @@
                     @else
                         <!-- Si el usuario YA inició sesión: Cápsula de Usuario Estilizada -->
                         <div class="relative">
-                            <button id="sstUserMenuBtn" type="button" aria-label="Menú de usuario SST" aria-controls="sstUserDropdown" aria-expanded="false" class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 shadow-xs transition-all duration-200 focus:outline-none cursor-pointer">
+                            <button id="sstUserMenuBtn" type="button" aria-label="Menú de usuario SST" aria-controls="sstUserDropdown" aria-expanded="false" class="flex items-center justify-center p-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 shadow-xs transition-all duration-200 focus:outline-none cursor-pointer">
                                 <!-- Avatar con iniciales -->
                                 <div class="w-8 h-8 rounded-full bg-[#39A900] text-white flex items-center justify-center text-xs font-black shadow-xs shrink-0 ring-2 ring-[#62E31D]/40">
                                     {{ Auth::user()->initials ?? 'US' }}
                                 </div>
-                                <!-- Nombre y Rol -->
-                                <div class="text-left hidden md:block leading-tight">
-                                    <span class="text-xs font-bold text-white block truncate max-w-[150px]">
-                                        {{ Auth::user()->full_name }}
-                                    </span>
-                                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-[#62E31D] mt-0.5 whitespace-nowrap">
-                                        <i class="fas fa-user-shield text-[8px] text-[#62E31D]"></i> {{ Auth::user()->primary_role }}
-                                    </span>
-                                </div>
-                                <i class="fas fa-chevron-down text-[9px] text-white/60 ml-1 transition-transform duration-200" id="sstUserChevron"></i>
                             </button>
 
                             <!-- Dropdown flotante -->
@@ -184,7 +191,7 @@
                     @endguest
 
                     <!-- Mobile Menu Trigger -->
-                    <button id="mobileMenuBtn" type="button" aria-label="Abrir menú de SST" aria-controls="mobileMenu" aria-expanded="false" class="lg:hidden p-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer">
+                    <button id="mobileMenuBtn" type="button" aria-label="Abrir menú de SST" aria-controls="mobileMenu" aria-expanded="false" class="xl:hidden p-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer">
                         <i class="fas fa-bars text-lg"></i>
                     </button>
 
@@ -194,7 +201,7 @@
         </div>
 
         <!-- Mobile Drawer -->
-        <div id="mobileMenu" class="hidden lg:hidden px-4 pt-2 pb-6 bg-[#001A29] border-t border-white/10 space-y-2">
+        <div id="mobileMenu" class="hidden xl:hidden px-4 pt-2 pb-6 bg-[#001A29] border-t border-white/10 space-y-2">
             @auth
                 <a href="{{ route('SST.dashboard') }}" class="block px-3 py-2 rounded-lg text-sm font-bold text-[#62E31D] hover:bg-white/10">
                     <i class="fas fa-sliders me-2"></i> Panel de Gestión
