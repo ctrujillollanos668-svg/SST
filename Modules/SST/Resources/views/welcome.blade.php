@@ -58,30 +58,30 @@
         }
     </script>
 </head>
-<body class="font-sans bg-[#f8faf9] text-slate-800 flex flex-col min-h-screen min-w-0 antialiased selection:bg-[#39A900] selection:text-white overflow-x-hidden">
+<body class="font-sans bg-[#f8faf9] text-slate-800 flex flex-col min-h-screen min-w-0 antialiased selection:bg-[#39A900] selection:text-white">
     <!-- Top Navigation Bar (Estilo Dirección: Fondo Azul Noche / Dark con Línea Verde SENA) -->
     <header class="sticky top-0 z-50 bg-gradient-to-r from-[#00131E] via-[#001A29] to-[#00131E] border-b-[3px] border-[#39A900] shadow-lg transition-all duration-200">
 
-        <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20 gap-3">
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap items-center justify-between min-h-20 gap-x-4 gap-y-3 py-3">
 
                 <!-- Logo & Marca -->
-                <a href="#inicio" class="flex items-center gap-2.5 sm:gap-3 group select-none shrink-0" aria-label="Inicio SST">
-                    <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white p-1 flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300 overflow-hidden ring-2 ring-[#39A900]/30 shrink-0">
+                <a href="#inicio" class="order-1 flex items-center gap-3 group select-none shrink-0" aria-label="Inicio SST">
+                    <div class="w-11 h-11 rounded-xl bg-white p-1 flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300 overflow-hidden ring-2 ring-[#39A900]/30">
                         <img src="{{ asset('img/logodesst.jpeg') }}" alt="Logo SST" class="max-w-full max-h-full object-contain rounded-lg">
                     </div>
 
                     <!-- Textos Marca -->
                     <div class="hidden sm:flex flex-col whitespace-nowrap">
                         <div class="flex items-center gap-1.5">
-                            <span class="text-white font-display font-extrabold text-sm sm:text-base lg:text-lg tracking-tight leading-none">
+                            <span class="text-white font-display font-extrabold text-base lg:text-lg tracking-tight leading-none">
                                 SENA <span class="text-[#62E31D]">EMPRESA</span>
                             </span>
-                            <span class="px-1.5 py-0.5 rounded text-[8px] sm:text-[9px] font-extrabold bg-white/10 text-white uppercase tracking-wider leading-none border border-white/20">
+                            <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-white/10 text-white uppercase tracking-wider leading-none border border-white/20">
                                 ERP
                             </span>
                         </div>
-                        <p class="text-[10px] sm:text-[11px] text-white/70 font-medium tracking-normal mt-1 leading-none flex items-center gap-1.5">
+                        <p class="text-[11px] text-white/70 font-medium tracking-normal mt-1 leading-none flex items-center gap-1.5">
                             <span class="w-1.5 h-1.5 rounded-full bg-[#62E31D] animate-pulse"></span>
                             Gestión Integral • <span class="text-[#62E31D] font-bold">SG-SST</span>
                         </p>
@@ -89,57 +89,57 @@
                 </a>
 
                 <!-- Desktop Navigation Links -->
-                <nav aria-label="Secciones de SST" class="hidden lg:flex items-center space-x-1 xl:space-x-1.5 shrink-0">
-                    <a href="#inicio" class="px-2.5 py-1.5 rounded-xl text-xs xl:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
+                <nav aria-label="Secciones de SST" class="order-3 hidden lg:flex w-full min-w-0 items-center justify-center gap-1 border-t border-white/10 pt-2">
+                    <a href="#inicio" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
                         <i class="fas fa-home me-1 text-[#62E31D]"></i> Inicio
                     </a>
-                    <a href="#pilares" class="px-2.5 py-1.5 rounded-xl text-xs xl:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
+                    <a href="#pilares" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
                         <i class="fas fa-shield-heart me-1 text-[#62E31D]"></i> Ejes SST
                     </a>
-                    <a href="#matrices" class="px-2.5 py-1.5 rounded-xl text-xs xl:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
-                        <i class="fas fa-clipboard-list me-1 text-[#62E31D]"></i> Matrices
+                    <a href="#matrices" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
+                        <i class="fas fa-clipboard-list me-1 text-[#62E31D]"></i> Matrices & Protocolos
                     </a>
-                    <a href="#definiciones" class="px-2.5 py-1.5 rounded-xl text-xs xl:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
-                        <i class="fas fa-book-medical me-1 text-[#62E31D]"></i> Glosario
+                    <a href="#definiciones" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
+                        <i class="fas fa-book-medical me-1 text-[#62E31D]"></i> Glosario & Prevención
                     </a>
-                    <a href="#brigadas" class="px-2.5 py-1.5 rounded-xl text-xs xl:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
-                        <i class="fas fa-fire-extinguisher me-1 text-[#62E31D]"></i> Brigadas
+                    <a href="#brigadas" class="px-3 py-2 rounded-xl text-xs lg:text-[13px] font-semibold text-white/85 hover:text-[#62E31D] hover:bg-white/10 transition whitespace-nowrap">
+                        <i class="fas fa-fire-extinguisher me-1 text-[#62E31D]"></i> Brigadas & Emergencias
                     </a>
                 </nav>
 
                 <!-- Action Area -->
-                <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+                <div class="order-2 ml-auto flex min-w-0 items-center gap-2 sm:gap-3">
                     
                     <!-- Botón Volver al ERP General -->
-                    <a href="{{ route('home') }}" class="hidden xl:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white/80 hover:text-white bg-white/10 hover:bg-white/15 border border-white/15 shadow-xs transition whitespace-nowrap shrink-0" title="Volver al Portal ERP Principal">
+                    <a href="{{ route('home') }}" class="hidden lg:inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold text-white/90 hover:text-white bg-white/10 hover:bg-white/15 border border-white/20 shadow-xs transition-all duration-200 whitespace-nowrap" title="Volver al Portal ERP Principal">
                         <i class="fas fa-arrow-left text-white/60 text-xs"></i>
                         <span>Portal ERP</span>
                     </a>
 
                     @guest
                         <!-- Si el usuario NO ha iniciado sesión -->
-                        <a href="{{ route('login', ['redirect' => route('SST.dashboard')]) }}" class="inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold text-white bg-[#39A900] hover:bg-[#2d8500] shadow-md shadow-[#39A900]/30 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer whitespace-nowrap">
+                        <a href="{{ route('login', ['redirect' => route('SST.dashboard')]) }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold text-white bg-[#39A900] hover:bg-[#2d8500] shadow-md shadow-[#39A900]/30 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer whitespace-nowrap">
                             <i class="fas fa-right-to-bracket"></i>
                             <span>Iniciar Sesión</span>
                         </a>
                     @else
                         <!-- Si el usuario YA inició sesión: Cápsula de Usuario Estilizada -->
-                        <div class="relative shrink-0">
-                            <button id="sstUserMenuBtn" type="button" aria-label="Menú de usuario SST" aria-controls="sstUserDropdown" aria-expanded="false" class="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 shadow-xs transition focus:outline-none cursor-pointer">
+                        <div class="relative">
+                            <button id="sstUserMenuBtn" type="button" aria-label="Menú de usuario SST" aria-controls="sstUserDropdown" aria-expanded="false" class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 shadow-xs transition-all duration-200 focus:outline-none cursor-pointer">
                                 <!-- Avatar con iniciales -->
-                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#39A900] text-white flex items-center justify-center text-xs font-black shadow-xs shrink-0 ring-2 ring-[#62E31D]/40">
+                                <div class="w-8 h-8 rounded-full bg-[#39A900] text-white flex items-center justify-center text-xs font-black shadow-xs shrink-0 ring-2 ring-[#62E31D]/40">
                                     {{ Auth::user()->initials ?? 'US' }}
                                 </div>
                                 <!-- Nombre y Rol -->
-                                <div class="text-left hidden sm:block leading-tight">
-                                    <span class="text-xs font-bold text-white block truncate max-w-[100px] xl:max-w-[130px]">
+                                <div class="text-left hidden md:block leading-tight">
+                                    <span class="text-xs font-bold text-white block truncate max-w-[150px]">
                                         {{ Auth::user()->full_name }}
                                     </span>
                                     <span class="inline-flex items-center gap-1 text-[10px] font-bold text-[#62E31D] mt-0.5 whitespace-nowrap">
                                         <i class="fas fa-user-shield text-[8px] text-[#62E31D]"></i> {{ Auth::user()->primary_role }}
                                     </span>
                                 </div>
-                                <i class="fas fa-chevron-down text-[9px] text-white/60 ml-0.5 transition-transform duration-200" id="sstUserChevron"></i>
+                                <i class="fas fa-chevron-down text-[9px] text-white/60 ml-1 transition-transform duration-200" id="sstUserChevron"></i>
                             </button>
 
                             <!-- Dropdown flotante -->
@@ -177,9 +177,9 @@
                         </div>
 
                         <!-- Botón Panel de Gestión -->
-                        <a href="{{ route('SST.dashboard') }}" class="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-full text-xs font-bold text-white bg-[#39A900] hover:bg-[#2d8500] shadow-md shadow-[#39A900]/30 transition shrink-0 whitespace-nowrap" title="Ir a Panel de Gestión">
+                        <a href="{{ route('SST.dashboard') }}" class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold text-white bg-[#39A900] hover:bg-[#2d8500] shadow-md shadow-[#39A900]/30 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer whitespace-nowrap">
                             <i class="fas fa-sliders text-xs"></i>
-                            <span>Panel</span>
+                            <span>Panel de Gestión</span>
                         </a>
                     @endguest
 
